@@ -1,0 +1,56 @@
+name: Test ChatGPT Portable 0.1.25 native patch
+
+on:
+  push:
+    paths:
+      - 'chatgpt-portable-0.1.25/**'
+      - '.github/workflows/test-chatgpt-portable-0.1.25-patch.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download exact Electron runtime
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $ver='46.0.0-nightly.20261016'
+          $url="https://github.com/electron/nightlies/releases/download/v$ver/electron-v$ver-win32-x64.zip"
+          Invoke-WebRequest -Uri $url -OutFile electron.zip
+          $h=(Get-FileHash electron.zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($h -ne '1d986c61270c82d205bb658153dff2f7850bd4ad702ef335e367dc0a7359f4a8') { throw "ZIP SHA mismatch $h" }
+          Expand-Archive electron.zip runtime
+          New-Item -ItemType Directory -Force -Path 'mock\resources\app' | Out-Null
+          Copy-Item 'runtime\electron.exe' 'mock\ChatGPT Portable.exe'
+      - name: Parse PowerShell script
+        shell: pwsh
+        run: |
+          $tokens=$null; $errors=$null
+          [void][System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path 'chatgpt-portable-0.1.25\PATCH-0.1.24R2-TO-0.1.25.ps1'),[ref]$tokens,[ref]$errors)
+          if ($errors.Count) { $errors | Format-List *; throw 'PowerShell parser errors' }
+          Write-Host '[OK] PowerShell parser PASS'
+      - name: Apply native patch end-to-end
+        shell: pwsh
+        run: |
+          & 'chatgpt-portable-0.1.25\PATCH-0.1.24R2-TO-0.1.25.ps1' -PortablePath (Resolve-Path mock)
+          if ($LASTEXITCODE -ne 0) { throw "Patch exit $LASTEXITCODE" }
+          $h=(Get-FileHash 'mock\ChatGPT Portable.exe' -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($h -ne '5ef1227723cacd884b433e34589c2b63fd70bb30753cad18c0a60344dde6aa88') { throw "Patched SHA mismatch $h" }
+          $fs=[IO.File]::OpenRead('mock\ChatGPT Portable.exe')
+          try { [void]$fs.Seek(0xA38EB2F,[IO.SeekOrigin]::Begin); $a=$fs.ReadByte(); $b=$fs.ReadByte() } finally { $fs.Dispose() }
+          if ($a -ne 0xB1 -or $b -ne 0x01) { throw ('Patched bytes mismatch {0:X2} {1:X2}' -f $a,$b) }
+          Write-Host '[OK] Native patch end-to-end PASS'
+      - name: Apply second time idempotently
+        shell: pwsh
+        run: |
+          & 'chatgpt-portable-0.1.25\PATCH-0.1.24R2-TO-0.1.25.ps1' -PortablePath (Resolve-Path mock)
+          if ($LASTEXITCODE -ne 0) { throw "Second patch exit $LASTEXITCODE" }
+          $h=(Get-FileHash 'mock\ChatGPT Portable.exe' -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($h -ne '5ef1227723cacd884b433e34589c2b63fd70bb30753cad18c0a60344dde6aa88') { throw "Second-run SHA mismatch $h" }
+          Write-Host '[OK] Idempotence PASS'
