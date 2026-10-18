@@ -18,7 +18,6 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
-          echo 'temporary native-drop analysis run'
           mkdir -p work/runtime work/symbols out
           python3 -m pip install --user pefile capstone
 
@@ -37,29 +36,69 @@ jobs:
           cp work/runtime/electron.exe out/electron.exe
           sha256sum out/electron.exe | tee out/electron.exe.sha256
 
+      - name: Inventory symbol package
+        shell: bash
+        run: |
+          set -euxo pipefail
+          find work/symbols -type f -printf '%s %p\n' | sort -nr | head -100 | tee out/symbol-files.txt
+          find work/symbols -type f -maxdepth 8 -exec file {} \; | head -100 | tee out/symbol-filetypes.txt
+          grep -aR -n -m 20 'OnDragUpdated' work/symbols | tee out/grep-OnDragUpdated.txt || true
+          grep -aR -n -m 20 'WebContentsViewAura' work/symbols | tee out/grep-WebContentsViewAura.txt || true
+
       - name: Resolve and disassemble WebContentsViewAura OnDragUpdated
         shell: bash
         run: |
           set -euxo pipefail
           python3 - <<'PY'
-          import os,sys,json,hashlib
+          import os,sys,json,hashlib,gzip,zipfile,io
           import pefile
           from capstone import Cs, CS_ARCH_X86, CS_MODE_64
-          root='work/symbols'; matches=[]
-          for dp,_,fs in os.walk(root):
+
+          target=b'OnDragUpdated'
+          candidates=[]
+          for dp,_,fs in os.walk('work/symbols'):
               for fn in fs:
                   p=os.path.join(dp,fn)
                   try:
-                      with open(p,'r',encoding='utf-8',errors='ignore') as fh:
-                          for line in fh:
-                              if 'WebContentsViewAura::OnDragUpdated' in line and line.startswith('FUNC '):
-                                  matches.append((p,line.rstrip()))
+                      data=open(p,'rb').read()
                   except OSError:
-                      pass
+                      continue
+                  blobs=[(p,data)]
+                  if data[:2]==b'\x1f\x8b':
+                      try: blobs.append((p+'::gunzip',gzip.decompress(data)))
+                      except Exception: pass
+                  if data[:4]==b'PK\x03\x04':
+                      try:
+                          z=zipfile.ZipFile(io.BytesIO(data))
+                          for n in z.namelist():
+                              if not n.endswith('/'):
+                                  blobs.append((p+'::'+n,z.read(n)))
+                      except Exception: pass
+                  for label,b in blobs:
+                      if target in b:
+                          candidates.append((label,b))
+                          print('STRING_CANDIDATE',label,'size',len(b))
+          if not candidates:
+              print('No file containing OnDragUpdated', file=sys.stderr)
+              sys.exit(2)
+
+          matches=[]
+          for label,data in candidates:
+              text=data.decode('utf-8','ignore')
+              for line in text.splitlines():
+                  if 'WebContentsViewAura::OnDragUpdated' in line and line.startswith('FUNC '):
+                      matches.append((label,line))
           if not matches:
-              print('No FUNC symbol found', file=sys.stderr); sys.exit(2)
-          for m in matches: print('MATCH',m)
-          p,line=matches[0]
+              print('Found string but no matching FUNC line', file=sys.stderr)
+              for label,data in candidates:
+                  text=data.decode('utf-8','ignore')
+                  for line in text.splitlines():
+                      if 'OnDragUpdated' in line:
+                          print('LINE',label,line[:1000])
+              sys.exit(3)
+
+          for m in matches: print('FUNC_MATCH',m)
+          label,line=matches[0]
           parts=line.split(' ',4)
           rva=int(parts[1],16); size=int(parts[2],16); name=parts[4]
           pe=pefile.PE('out/electron.exe', fast_load=False)
@@ -68,10 +107,10 @@ jobs:
               f.seek(off); code=f.read(size)
           md=Cs(CS_ARCH_X86, CS_MODE_64)
           with open('out/OnDragUpdated.disasm.txt','w',encoding='utf-8') as o:
-              o.write(f'symbol_file={p}\nname={name}\nrva=0x{rva:x}\nsize=0x{size:x}\nfile_offset=0x{off:x}\nimage_base=0x{image_base:x}\n\n')
+              o.write(f'symbol_source={label}\nname={name}\nrva=0x{rva:x}\nsize=0x{size:x}\nfile_offset=0x{off:x}\nimage_base=0x{image_base:x}\n\n')
               for ins in md.disasm(code, image_base+rva):
                   o.write(f'{ins.address:016x}: {ins.bytes.hex():<32} {ins.mnemonic:<8} {ins.op_str}\n')
-          meta={'symbol_file':p,'symbol':name,'rva':rva,'size':size,'file_offset':off,'image_base':image_base,'function_sha256':hashlib.sha256(code).hexdigest(),'function_hex':code.hex()}
+          meta={'symbol_source':label,'symbol':name,'rva':rva,'size':size,'file_offset':off,'image_base':image_base,'function_sha256':hashlib.sha256(code).hexdigest(),'function_hex':code.hex()}
           with open('out/OnDragUpdated.json','w') as f: json.dump(meta,f,indent=2)
           with open('out/OnDragUpdated.bin','wb') as f: f.write(code)
           print(json.dumps(meta,indent=2))
@@ -79,17 +118,19 @@ jobs:
           cat out/OnDragUpdated.disasm.txt
 
       - name: Upload analysis
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: electron-native-drop-analysis
           path: |
-            out/OnDragUpdated.disasm.txt
-            out/OnDragUpdated.json
-            out/OnDragUpdated.bin
+            out/*.txt
+            out/*.json
+            out/*.bin
             out/electron.exe.sha256
-          if-no-files-found: error
+          if-no-files-found: warn
 
       - name: Upload Electron executable
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: electron-win32-x64-original
