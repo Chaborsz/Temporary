@@ -1,0 +1,108 @@
+name: Analyze Electron native file drop
+
+on:
+  push:
+    paths:
+      - '.github/workflows/analyze-electron-native-drop.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Prepare
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/runtime work/symbols out
+          python3 -m pip install --user pefile capstone
+
+      - name: Download official Electron runtime and Breakpad symbols
+        shell: bash
+        run: |
+          set -euxo pipefail
+          VER='46.0.0-nightly.20261016'
+          BASE="https://github.com/electron/nightlies/releases/download/v${VER}"
+          curl -fL --retry 5 --retry-delay 2 "$BASE/electron-v${VER}-win32-x64.zip" -o work/electron.zip
+          curl -fL --retry 5 --retry-delay 2 "$BASE/electron-v${VER}-win32-x64-symbols.zip" -o work/symbols.zip
+          echo '1d986c61270c82d205bb658153dff2f7850bd4ad702ef335e367dc0a7359f4a8  work/electron.zip' | sha256sum -c -
+          echo 'e28fd477f2b7457541058432d0a175c5e9d976f2aa4eceb9a0d7a96fcfabe595  work/symbols.zip' | sha256sum -c -
+          unzip -q work/electron.zip -d work/runtime
+          unzip -q work/symbols.zip -d work/symbols
+          cp work/runtime/electron.exe out/electron.exe
+          sha256sum out/electron.exe | tee out/electron.exe.sha256
+
+      - name: Resolve and disassemble WebContentsViewAura OnDragUpdated
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          import os,re,sys,json,hashlib
+          import pefile
+          from capstone import Cs, CS_ARCH_X86, CS_MODE_64
+
+          root='work/symbols'
+          matches=[]
+          for dp,_,fs in os.walk(root):
+              for f in fs:
+                  p=os.path.join(dp,f)
+                  try:
+                      if os.path.getsize(p) > 300_000_000: continue
+                      with open(p,'r',encoding='utf-8',errors='ignore') as fh:
+                          for line in fh:
+                              if 'WebContentsViewAura::OnDragUpdated' in line and line.startswith('FUNC '):
+                                  matches.append((p,line.rstrip()))
+                  except OSError:
+                      pass
+          if not matches:
+              print('No FUNC symbol found', file=sys.stderr)
+              sys.exit(2)
+          print('MATCHES:')
+          for x in matches: print(x)
+          # Prefer electron module symbol file if several matches exist.
+          p,line=matches[0]
+          parts=line.split(' ',4)
+          rva=int(parts[1],16); size=int(parts[2],16); name=parts[4]
+          pe=pefile.PE('out/electron.exe', fast_load=False)
+          off=pe.get_offset_from_rva(rva)
+          with open('out/electron.exe','rb') as f:
+              f.seek(off); code=f.read(size)
+          image_base=pe.OPTIONAL_HEADER.ImageBase
+          md=Cs(CS_ARCH_X86, CS_MODE_64)
+          md.detail=False
+          with open('out/OnDragUpdated.disasm.txt','w',encoding='utf-8') as o:
+              o.write(f'symbol_file={p}\n')
+              o.write(f'name={name}\n')
+              o.write(f'rva=0x{rva:x}\nsize=0x{size:x}\nfile_offset=0x{off:x}\nimage_base=0x{image_base:x}\n\n')
+              for ins in md.disasm(code, image_base+rva):
+                  o.write(f'{ins.address:016x}: {ins.bytes.hex():<32} {ins.mnemonic:<8} {ins.op_str}\n')
+          meta={'symbol_file':p,'symbol':name,'rva':rva,'size':size,'file_offset':off,'image_base':image_base,
+                'function_sha256':hashlib.sha256(code).hexdigest(),'function_hex':code.hex()}
+          with open('out/OnDragUpdated.json','w') as f: json.dump(meta,f,indent=2)
+          with open('out/OnDragUpdated.bin','wb') as f: f.write(code)
+          print(json.dumps(meta,indent=2))
+          PY
+          cat out/OnDragUpdated.disasm.txt
+
+      - name: Upload analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: electron-native-drop-analysis
+          path: |
+            out/OnDragUpdated.disasm.txt
+            out/OnDragUpdated.json
+            out/OnDragUpdated.bin
+            out/electron.exe.sha256
+          if-no-files-found: error
+
+      - name: Upload Electron executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: electron-win32-x64-original
+          path: out/electron.exe
+          compression-level: 0
+          if-no-files-found: error
