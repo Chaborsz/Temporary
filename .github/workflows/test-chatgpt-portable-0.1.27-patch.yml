@@ -1,0 +1,52 @@
+name: Test ChatGPT Portable 0.1.27 native patch
+
+on:
+  push:
+    paths:
+      - 'chatgpt-portable-0.1.27/**'
+      - '.github/workflows/test-chatgpt-portable-0.1.27-patch.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download exact Electron runtime
+        shell: pwsh
+        run: |
+          $v='46.0.0-nightly.20261016'
+          $u="https://github.com/electron/nightlies/releases/download/v$v/electron-v$v-win32-x64.zip"
+          Invoke-WebRequest $u -OutFile electron.zip
+          if((Get-FileHash electron.zip -Algorithm SHA256).Hash.ToLowerInvariant() -ne '1d986c61270c82d205bb658153dff2f7850bd4ad702ef335e367dc0a7359f4a8'){throw 'zip sha'}
+          Expand-Archive electron.zip runtime
+          if((Get-FileHash runtime/electron.exe -Algorithm SHA256).Hash.ToLowerInvariant() -ne '5008929104e3514ecfe5975ea6baa31b68607e898e0b0236733fa388dfc6d61b'){throw 'exe sha'}
+      - name: Prepare original 0.1.25 and 0.1.26 inputs
+        shell: pwsh
+        run: |
+          foreach($n in @('orig','p125','p126')){New-Item -ItemType Directory -Force "test/$n/resources/app"|Out-Null;Copy-Item runtime/electron.exe "test/$n/ChatGPT Portable.exe"}
+          $p='test/p125/ChatGPT Portable.exe';$f=[IO.File]::Open($p,'Open','ReadWrite','None');try{[void]$f.Seek(0xA38EB2F,'Begin');$f.WriteByte(0xB1);$f.WriteByte(0x01);$f.Flush($true)}finally{$f.Dispose()}
+          if((Get-FileHash $p -Algorithm SHA256).Hash.ToLowerInvariant() -ne '5ef1227723cacd884b433e34589c2b63fd70bb30753cad18c0a60344dde6aa88'){throw 'p125 sha'}
+          $p='test/p126/ChatGPT Portable.exe';$f=[IO.File]::Open($p,'Open','ReadWrite','None');try{[void]$f.Seek(0xA38EAE0,'Begin');$f.Write(([byte[]](0xE9,0xFB,0x02,0x00,0x00)),0,5);[void]$f.Seek(0xA38EB2F,'Begin');$f.Write(([byte[]](0x31,0xC9)),0,2);$f.Flush($true)}finally{$f.Dispose()}
+          if((Get-FileHash $p -Algorithm SHA256).Hash.ToLowerInvariant() -ne 'a34d64d7af007b1a1068bc7694f86c0023d247c0f2a2dd8888d8c0eeddee4e6f'){throw 'p126 sha'}
+      - name: Parse PowerShell
+        shell: pwsh
+        run: |
+          $e=$null;[void][Management.Automation.Language.Parser]::ParseFile((Resolve-Path 'chatgpt-portable-0.1.27/PATCH-TO-0.1.27.ps1'),[ref]$null,[ref]$e);if($e.Count){$e|Format-List|Out-String|Write-Host;throw 'parser'}
+      - name: Apply all three inputs
+        shell: pwsh
+        run: |
+          foreach($n in @('orig','p125','p126')){
+            & ./chatgpt-portable-0.1.27/PATCH-TO-0.1.27.ps1 -PortablePath (Resolve-Path "test/$n")
+            $p="test/$n/ChatGPT Portable.exe";$sha=(Get-FileHash $p -Algorithm SHA256).Hash.ToLowerInvariant();if($sha -ne '0c9be9f4d51978180afe65907401a6ee36f169b0615e99a36766287a2de7c8c8'){throw "$n final $sha"}
+            $b=[IO.File]::ReadAllBytes($p)
+            $u=(($b[0x6F80B70..0x6F80B75]|%{$_.ToString('X2')}) -join ' ');if($u -ne '44 89 F3 83 E3 01'){throw "$n update bytes $u"}
+            $e=(($b[0xA38EAE0..0xA38EAE4]|%{$_.ToString('X2')}) -join ' ');if($e -ne '56 57 48 83 EC'){throw "$n entry $e"}
+            $o=(($b[0xA38EB2F..0xA38EB30]|%{$_.ToString('X2')}) -join ' ');if($o -ne '31 C9'){throw "$n old $o"}
+            & ./chatgpt-portable-0.1.27/PATCH-TO-0.1.27.ps1 -PortablePath (Resolve-Path "test/$n")
+            if((Get-FileHash $p -Algorithm SHA256).Hash.ToLowerInvariant() -ne '0c9be9f4d51978180afe65907401a6ee36f169b0615e99a36766287a2de7c8c8'){throw "$n idempotence"}
+          }
