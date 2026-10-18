@@ -18,6 +18,7 @@ jobs:
         shell: bash
         run: |
           set -euxo pipefail
+          echo 'temporary native-drop analysis run'
           mkdir -p work/runtime work/symbols out
           python3 -m pip install --user pefile capstone
 
@@ -41,17 +42,14 @@ jobs:
         run: |
           set -euxo pipefail
           python3 - <<'PY'
-          import os,re,sys,json,hashlib
+          import os,sys,json,hashlib
           import pefile
           from capstone import Cs, CS_ARCH_X86, CS_MODE_64
-
-          root='work/symbols'
-          matches=[]
+          root='work/symbols'; matches=[]
           for dp,_,fs in os.walk(root):
-              for f in fs:
-                  p=os.path.join(dp,f)
+              for fn in fs:
+                  p=os.path.join(dp,fn)
                   try:
-                      if os.path.getsize(p) > 300_000_000: continue
                       with open(p,'r',encoding='utf-8',errors='ignore') as fh:
                           for line in fh:
                               if 'WebContentsViewAura::OnDragUpdated' in line and line.startswith('FUNC '):
@@ -59,29 +57,21 @@ jobs:
                   except OSError:
                       pass
           if not matches:
-              print('No FUNC symbol found', file=sys.stderr)
-              sys.exit(2)
-          print('MATCHES:')
-          for x in matches: print(x)
-          # Prefer electron module symbol file if several matches exist.
+              print('No FUNC symbol found', file=sys.stderr); sys.exit(2)
+          for m in matches: print('MATCH',m)
           p,line=matches[0]
           parts=line.split(' ',4)
           rva=int(parts[1],16); size=int(parts[2],16); name=parts[4]
           pe=pefile.PE('out/electron.exe', fast_load=False)
-          off=pe.get_offset_from_rva(rva)
+          off=pe.get_offset_from_rva(rva); image_base=pe.OPTIONAL_HEADER.ImageBase
           with open('out/electron.exe','rb') as f:
               f.seek(off); code=f.read(size)
-          image_base=pe.OPTIONAL_HEADER.ImageBase
           md=Cs(CS_ARCH_X86, CS_MODE_64)
-          md.detail=False
           with open('out/OnDragUpdated.disasm.txt','w',encoding='utf-8') as o:
-              o.write(f'symbol_file={p}\n')
-              o.write(f'name={name}\n')
-              o.write(f'rva=0x{rva:x}\nsize=0x{size:x}\nfile_offset=0x{off:x}\nimage_base=0x{image_base:x}\n\n')
+              o.write(f'symbol_file={p}\nname={name}\nrva=0x{rva:x}\nsize=0x{size:x}\nfile_offset=0x{off:x}\nimage_base=0x{image_base:x}\n\n')
               for ins in md.disasm(code, image_base+rva):
                   o.write(f'{ins.address:016x}: {ins.bytes.hex():<32} {ins.mnemonic:<8} {ins.op_str}\n')
-          meta={'symbol_file':p,'symbol':name,'rva':rva,'size':size,'file_offset':off,'image_base':image_base,
-                'function_sha256':hashlib.sha256(code).hexdigest(),'function_hex':code.hex()}
+          meta={'symbol_file':p,'symbol':name,'rva':rva,'size':size,'file_offset':off,'image_base':image_base,'function_sha256':hashlib.sha256(code).hexdigest(),'function_hex':code.hex()}
           with open('out/OnDragUpdated.json','w') as f: json.dump(meta,f,indent=2)
           with open('out/OnDragUpdated.bin','wb') as f: f.write(code)
           print(json.dumps(meta,indent=2))
