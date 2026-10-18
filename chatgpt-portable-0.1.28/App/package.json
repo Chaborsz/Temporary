@@ -1,6 +1,0 @@
-{
-  "name": "chatgpt-portable-electron",
-  "version": "0.1.28",
-  "private": true,
-  "main": "main.js"
-}
