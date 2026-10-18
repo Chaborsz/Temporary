@@ -21,6 +21,7 @@ on:
       - ".github/scripts/lolisnatcher_v5_login_cloudflare_patch.py"
       - ".github/scripts/lolisnatcher_v6_nginx_antiddos_patch.py"
       - ".github/scripts/lolisnatcher_v7_native_inappbrowser_patch.py"
+      - ".github/scripts/lolisnatcher_v7_import_fix.py"
       - ".github/scripts/lolisnatcher_sync_esmx.py"
 
 permissions:
@@ -80,6 +81,7 @@ jobs:
           Set-Content -Path $path -Value ($text.Replace($old, $new)) -Encoding UTF8 -NoNewline
           python ..\builder\.github\scripts\lolisnatcher_v6_nginx_antiddos_patch.py
           python ..\builder\.github\scripts\lolisnatcher_v7_native_inappbrowser_patch.py
+          python ..\builder\.github\scripts\lolisnatcher_v7_import_fix.py
           'PATCH_CHAIN_V7=PASS'
 
       - name: Set up Flutter
@@ -177,7 +179,7 @@ jobs:
             "PORTABLE_MODE=TRUE"
             "PATCH_LEVEL=TRUE_PORTABLE_V7_NATIVE_INAPPBROWSER"
             "WINDOWS_LOGIN_BROWSER=NATIVE_INAPPBROWSER"
-            "WINDOWS_EMBEDDED_COMPOSITION=BYpassed_FOR_LOGIN_AND_CHALLENGE"
+            "WINDOWS_EMBEDDED_COMPOSITION=BYPASSED_FOR_LOGIN_AND_CHALLENGE"
             "WEBVIEW_DIAGNOSTIC=.\Data\webview-diagnostic.txt"
             "ENABLED_LOCALE=es_MX"
             "INAPPWEBVIEW_WINDOWS_FIX=FULL_PR2838_832d6517b50b3b8094d2658800aa84ee5b9294bf"
