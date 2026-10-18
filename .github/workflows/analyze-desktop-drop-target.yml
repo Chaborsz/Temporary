@@ -1,0 +1,79 @@
+name: Analyze Chromium DesktopDropTargetWin
+
+on:
+  push:
+    paths:
+      - '.github/workflows/analyze-desktop-drop-target.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Prepare and download
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/runtime work/symbols out
+          python3 -m pip install --user pefile capstone
+          VER='46.0.0-nightly.20261016'
+          BASE="https://github.com/electron/nightlies/releases/download/v${VER}"
+          curl -fL --retry 5 "$BASE/electron-v${VER}-win32-x64.zip" -o work/electron.zip
+          curl -fL --retry 5 "$BASE/electron-v${VER}-win32-x64-symbols.zip" -o work/symbols.zip
+          echo '1d986c61270c82d205bb658153dff2f7850bd4ad702ef335e367dc0a7359f4a8  work/electron.zip' | sha256sum -c -
+          echo 'e28fd477f2b7457541058432d0a175c5e9d976f2aa4eceb9a0d7a96fcfabe595  work/symbols.zip' | sha256sum -c -
+          unzip -q work/electron.zip -d work/runtime
+          unzip -q work/symbols.zip -d work/symbols
+          cp work/runtime/electron.exe out/electron.exe
+
+      - name: Resolve DesktopDropTargetWin symbols
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          import os,json,hashlib
+          import pefile
+          from capstone import Cs,CS_ARCH_X86,CS_MODE_64
+          symfiles=[]
+          for dp,_,fs in os.walk('work/symbols'):
+              for fn in fs:
+                  p=os.path.join(dp,fn)
+                  try:
+                      b=open(p,'rb').read()
+                  except OSError: continue
+                  if b'DesktopDropTargetWin::' in b: symfiles.append((p,b))
+          if not symfiles: raise SystemExit('No DesktopDropTargetWin symbol file')
+          funcs=[]
+          wanted=('DesktopDropTargetWin::OnDragEnter','DesktopDropTargetWin::OnDragOver','DesktopDropTargetWin::OnDrop')
+          for p,b in symfiles:
+              for line in b.decode('utf-8','ignore').splitlines():
+                  if line.startswith('FUNC ') and any(w in line for w in wanted):
+                      funcs.append((p,line))
+          if not funcs: raise SystemExit('No wanted FUNC symbols')
+          pe=pefile.PE('out/electron.exe'); base=pe.OPTIONAL_HEADER.ImageBase
+          md=Cs(CS_ARCH_X86,CS_MODE_64)
+          report=[]
+          with open('out/DesktopDropTargetWin.disasm.txt','w') as o:
+              for p,line in funcs:
+                  parts=line.split(' ',4); rva=int(parts[1],16); size=int(parts[2],16); name=parts[4]
+                  off=pe.get_offset_from_rva(rva)
+                  with open('out/electron.exe','rb') as f: f.seek(off); code=f.read(size)
+                  rec={'name':name,'rva':rva,'size':size,'file_offset':off,'sha256':hashlib.sha256(code).hexdigest(),'hex':code.hex()}
+                  report.append(rec)
+                  o.write(f'\n=== {name} ===\nrva=0x{rva:x} size=0x{size:x} file_offset=0x{off:x}\n')
+                  for ins in md.disasm(code,base+rva):
+                      o.write(f'{ins.address:016x}: {ins.bytes.hex():<32} {ins.mnemonic:<8} {ins.op_str}\n')
+          json.dump(report,open('out/DesktopDropTargetWin.json','w'),indent=2)
+          print(open('out/DesktopDropTargetWin.disasm.txt').read())
+          PY
+
+      - name: Upload analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-drop-target-analysis
+          path: out/DesktopDropTargetWin.*
+          if-no-files-found: error
