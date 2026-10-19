@@ -24,7 +24,8 @@ replace_once(
 # Windows visual-cache v3:
 # - gallery thumbnails are converted once to <=512px lossy WebP;
 # - conversion is limited to two background isolates;
-# - animated/unsupported thumbnails fall back to their source bytes;
+# - AVIF/animated previews stay in their original bytes so their dedicated
+#   decoders keep receiving the format they expect;
 # - samples remain source bytes for compatibility, but Windows gallery no longer
 #   selects samples and the full-res viewer stays memory-only;
 # - v2 thumbnail rows are discarded once so they can be rebuilt as WebP.
@@ -39,11 +40,67 @@ import 'package:sqflite/sqflite.dart';
 
 import 'package:lolisnatcher/src/handlers/service_handler.dart';
 
+bool _startsWithBytes(Uint8List bytes, List<int> signature) {
+  if (bytes.length < signature.length) return false;
+  for (int i = 0; i < signature.length; i++) {
+    if (bytes[i] != signature[i]) return false;
+  }
+  return true;
+}
+
+bool _containsBytes(Uint8List bytes, List<int> token, {required int scanLimit}) {
+  if (bytes.length < token.length) return false;
+  final int end = bytes.length < scanLimit ? bytes.length : scanLimit;
+  for (int i = 0; i <= end - token.length; i++) {
+    bool matched = true;
+    for (int j = 0; j < token.length; j++) {
+      if (bytes[i + j] != token[j]) {
+        matched = false;
+        break;
+      }
+    }
+    if (matched) return true;
+  }
+  return false;
+}
+
+bool _mustKeepThumbnailSourceFormat(Uint8List bytes) {
+  // GIF thumbnails can be animated; preserve animation instead of flattening.
+  if (_startsWithBytes(bytes, const <int>[0x47, 0x49, 0x46, 0x38])) {
+    return true;
+  }
+
+  // CustomNetworkAvifImage validates the AVIF magic after loading, so AVIF
+  // payloads must never be replaced with WebP bytes underneath that provider.
+  final bool isIsoBmff = _containsBytes(
+    bytes,
+    const <int>[0x66, 0x74, 0x79, 0x70], // ftyp
+    scanLimit: 16,
+  );
+  if (isIsoBmff &&
+      (_containsBytes(bytes, const <int>[0x61, 0x76, 0x69, 0x66], scanLimit: 48) || // avif
+          _containsBytes(bytes, const <int>[0x61, 0x76, 0x69, 0x73], scanLimit: 48))) {
+    // avis
+    return true;
+  }
+
+  // Animated WebP contains an ANIM chunk near the beginning. Keep it animated.
+  if (_containsBytes(bytes, const <int>[0x41, 0x4e, 0x49, 0x4d], scanLimit: 96)) {
+    return true;
+  }
+
+  return false;
+}
+
 Uint8List? _encodeVisualThumbnailWebP(Map<String, Object> args) {
   final Uint8List bytes = args['bytes']! as Uint8List;
   final int maxDimension = args['maxDimension']! as int;
 
   try {
+    if (_mustKeepThumbnailSourceFormat(bytes)) {
+      return null;
+    }
+
     img.Image? decoded = img.decodeImage(bytes);
     if (decoded == null || decoded.numFrames != 1) {
       return null;
@@ -394,31 +451,33 @@ replace_once(
 )
 
 
-# Windows grid: always request the booru thumbnail, never the larger sample.
-# Clicking the card then opens the original file in the viewer.
+# Windows grid: prefer the booru thumbnail and never choose the larger sample
+# when a real thumbnail URL exists. If a provider has no thumbnail URL, keep the
+# upstream sample fallback rather than trying to load an empty URL.
 replace_once(
     'lib/src/widgets/thumbnail/thumbnail.dart',
     """    isThumbQuality =
         settingsHandler.previewMode.isThumbnail ||
 """,
     """    isThumbQuality =
-        Platform.isWindows ||
+        (Platform.isWindows && widget.item.thumbnailURL.isNotEmpty) ||
         settingsHandler.previewMode.isThumbnail ||
 """,
     'windows-grid-thumbnail-only',
 )
 
 
-# Windows viewer: always use the real original file URL/format. The v8 viewer
-# patch already disables persistent media caching for imageFolder == 'media',
-# so these original bytes stay memory-only.
+# Windows viewer: prefer the real original file URL/format whenever it is known.
+# If fileURL is absent, preserve upstream sample behavior instead of failing an
+# otherwise viewable post. The v8 viewer patch already disables persistent media
+# caching for imageFolder == 'media', so original bytes stay memory-only.
 replace_once(
     'lib/src/widgets/image/image_viewer.dart',
     """  bool get useFullImage => settingsHandler.galleryMode.isFullRes
       ? !widget.booruItem.toggleQuality.value
       : widget.booruItem.toggleQuality.value;
 """,
-    """  bool get useFullImage => Platform.isWindows
+    """  bool get useFullImage => Platform.isWindows && widget.booruItem.fileURL.isNotEmpty
       ? true
       : settingsHandler.galleryMode.isFullRes
           ? !widget.booruItem.toggleQuality.value
@@ -449,8 +508,9 @@ checks = {
     'lossy webp encoder': 'lossless: false' in cache_text and 'quality: 74' in cache_text,
     'thumbnail max dimension': 'maxDimension: 512' in cache_text,
     'two conversion workers': 'static const int _maxParallel = 2;' in cache_text,
-    'windows thumbnail-only grid': 'Platform.isWindows ||\n        settingsHandler.previewMode.isThumbnail' in thumb_text,
-    'windows full original viewer': 'bool get useFullImage => Platform.isWindows' in viewer_text,
+    'avif source preservation': '_mustKeepThumbnailSourceFormat' in cache_text and '0x61, 0x76, 0x69, 0x66' in cache_text,
+    'windows thumbnail grid': '(Platform.isWindows && widget.item.thumbnailURL.isNotEmpty)' in thumb_text,
+    'windows original viewer': 'Platform.isWindows && widget.booruItem.fileURL.isNotEmpty' in viewer_text,
 }
 for label, ok in checks.items():
     if not ok:
@@ -460,5 +520,6 @@ print('V8_2_WEBP_THUMBNAIL_CACHE=PASS')
 print('V8_2_WEBP_MAX_DIMENSION=512')
 print('V8_2_WEBP_QUALITY=74')
 print('V8_2_WEBP_WORKERS=2')
-print('V8_2_WINDOWS_GRID_THUMBNAIL_ONLY=PASS')
+print('V8_2_AVIF_ANIMATION_FALLBACK=PASS')
+print('V8_2_WINDOWS_GRID_THUMBNAIL_PREFERRED=PASS')
 print('V8_2_WINDOWS_VIEWER_ORIGINAL_MEMORY_ONLY=PASS')
