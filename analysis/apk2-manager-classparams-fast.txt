@@ -1,0 +1,17 @@
+ClassParams 0x14a1dede0
+ClassNoRegister 0x1450ce860 
+Config 0x0 
+CppInfo 0x14a1dea70 
+Deps 0x14a1dea60 
+FuncInfo 0x0 
+Props 0x14a1dea78 
+Interfaces 0x0 
+packed 0x10002 classflags 0xa0
+decode_A deps 2 funcs 0 props 2 ifaces 0
+raw_qwords 0x1450ce860 0x0 0x14a1dea70 0x14a1dea60 0x0 0x14a1dea78 0x0 0xa000010002 0x14a1d4678 0x0
+
+FUNCTION_TABLE_CANDIDATES
+
+PROPERTY_TABLE_CANDIDATES
+0 desc 0x14a1dead0 name 'EncryptKey' pflags 0x20080000010001 typeobj 0x4500000015 gen 0x15 setter 0x0 getter 0x0 tail 0x300001 arraydim 1 offset 0x30 nmeta 0
+1 desc 0x14a1dea90 name 'SaveGame' pflags 0x40000000000000 typeobj 0x4500000012 gen 0x12 setter 0x0 getter 0x0 tail 0x400001 arraydim 1 offset 0x40 nmeta 0
