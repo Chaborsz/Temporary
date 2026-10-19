@@ -1,0 +1,86 @@
+name: APK2 manager callbacks fast
+on:
+  push:
+    paths: ['.github/workflows/apk2-manager-callbacks-fast.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Decode exact callback targets
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' -o /tmp/a.exe
+          python3 -m pip -q install pefile capstone
+          mkdir -p /tmp/out
+          python3 - <<'PY' > /tmp/out/apk2-manager-callbacks-fast.txt
+          from pathlib import Path
+          import pefile,bisect
+          from capstone import Cs,CS_ARCH_X86,CS_MODE_64
+          from capstone.x86 import X86_OP_MEM,X86_REG_RIP
+          b=Path('/tmp/a.exe').read_bytes(); pe=pefile.PE('/tmp/a.exe',fast_load=False); base=pe.OPTIONAL_HEADER.ImageBase
+          secs=[]
+          for s in pe.sections: secs.append((s.VirtualAddress,s.SizeOfRawData,s.PointerToRawData,s.Name.rstrip(b'\0').decode('ascii','replace'),s.Characteristics))
+          def vo(v):
+            r=v-base
+            for sr,sz,raw,n,ch in secs:
+              if sr<=r<sr+sz:return raw+r-sr
+          def si(v):
+            r=v-base
+            for sr,sz,raw,n,ch in secs:
+              if sr<=r<sr+sz:return n,ch
+            return None,0
+          fs=[]
+          for e in pe.DIRECTORY_ENTRY_EXCEPTION:
+            s=base+e.struct.BeginAddress;e2=base+e.struct.EndAddress
+            if s<e2:fs.append((s,e2))
+          fs.sort(); ss=[x[0] for x in fs]
+          def cf(v):
+            i=bisect.bisect_right(ss,v)-1
+            return fs[i] if i>=0 and fs[i][0]<=v<fs[i][1] else None
+          md=Cs(CS_ARCH_X86,CS_MODE_64);md.detail=True
+          targets=[0x141199450,0x1413af040,0x141109430,0x14119c740,0x1450d58c0,0x1450ce860,0x1450ceb20,0x1450ceb50]
+          for v in targets:
+            off=vo(v);n,ch=si(v);f=cf(v)
+            print(f'\n=== 0x{v:x} sec={n} pdata={f} ===')
+            if off is None:continue
+            start=f[0] if f else v; end=f[1] if f else v+0x180; so=vo(start)
+            for x in md.disasm(b[so:so+min(end-start,0x1000)],start):
+              extras=[]
+              for op in x.operands:
+                if op.type==X86_OP_MEM and op.mem.base==X86_REG_RIP:
+                  dst=x.address+x.size+op.mem.disp; do=vo(dst); sn,_=si(dst)
+                  if do is not None:
+                    raw=b[do:do+80]; a=''.join(chr(c) if 32<=c<127 else '.' for c in raw[:40])
+                    w=''
+                    try:w=raw.decode('utf-16le',errors='ignore').split('\x00')[0]
+                    except:pass
+                    extras.append(f'0x{dst:x}/{sn} A={a!r} W={w!r}')
+              print(f'0x{x.address:x}: {x.mnemonic} {x.op_str}'+((' ; '+' | '.join(extras)) if extras else ''))
+          for v,count in [(0x14920e100,54),(0x149e3f000,128),(0x1491e3a70,128)]:
+            off=vo(v);raw=b[off:off+count]
+            print(f'\n=== DATA 0x{v:x} ===')
+            print('HEX',raw.hex())
+            print('ASCII',''.join(chr(c) if 32<=c<127 else '.' for c in raw))
+            print('UTF16',raw.decode('utf-16le',errors='replace'))
+          PY
+          wc -l -c /tmp/out/apk2-manager-callbacks-fast.txt
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin apk2-analysis-output
+          git checkout -B apk2-analysis-output origin/apk2-analysis-output
+          mkdir -p analysis
+          cp /tmp/out/apk2-manager-callbacks-fast.txt analysis/
+          git add analysis/apk2-manager-callbacks-fast.txt
+          git commit -m 'Decode APK2 manager callbacks' || true
+          git push origin HEAD:apk2-analysis-output
