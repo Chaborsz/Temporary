@@ -1,0 +1,2597 @@
+
+===== METHOD 0x1450ceb50-0x1450cec23 SIZE=0xd3 VTABLE_INDICES=[0] =====
+0x1450ceb50: mov       qword ptr [rsp + 8], rbx
+0x1450ceb55: push      rdi
+0x1450ceb56: sub       rsp, 0x20
+0x1450ceb5a: lea       rax, [rip + 0x510ffa7] ; RIP->0x14a1deb08(.shared)
+0x1450ceb61: mov       rbx, rcx
+0x1450ceb64: mov       qword ptr [rcx], rax
+0x1450ceb67: mov       edi, edx
+0x1450ceb69: mov       rcx, qword ptr [rcx + 0x30] ; OBJDISP=0x30
+0x1450ceb6d: test      rcx, rcx
+0x1450ceb70: je        0x1450ceb77
+0x1450ceb72: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1450ceb77: lea       rax, [rip + 0x4d0a1da] ; RIP->0x149dd8d58(.shared)
+0x1450ceb7e: mov       rcx, rbx
+0x1450ceb81: mov       qword ptr [rbx], rax
+0x1450ceb84: call      0x14154bc70 ; CALL->0x14154bc70 pdata=(5391039600, 5391039654)
+0x1450ceb89: test      dil, 1
+0x1450ceb8d: je        0x1450cebed
+0x1450ceb8f: test      dil, 4
+0x1450ceb93: jne       0x1450cebe0
+0x1450ceb95: mov       r8, qword ptr [rip + 0x66e5e3c] ; RIP->0x14b7b49d8(.data2)
+0x1450ceb9c: test      r8, r8
+0x1450ceb9f: jne       0x1450cebc6
+0x1450ceba1: mov       rax, qword ptr gs:[0x58]
+0x1450cebaa: mov       edx, 0xdc
+0x1450cebaf: mov       rcx, qword ptr [rax]
+0x1450cebb2: mov       eax, dword ptr [rdx + rcx]
+0x1450cebb5: cmp       dword ptr [rip + 0x67da0e5], eax ; RIP->0x14b8a8ca0(.data2)
+0x1450cebbb: jg        0x1450cebfb
+0x1450cebbd: jmp       0x1450cebc6
+0x1450cebbf: mov       r8, qword ptr [rip + 0x66e5e12] ; RIP->0x14b7b49d8(.data2)
+0x1450cebc6: mov       rax, qword ptr [r8]
+0x1450cebc9: mov       rdx, rbx
+0x1450cebcc: mov       rcx, r8
+0x1450cebcf: call      qword ptr [rax + 0x48] ; OBJDISP=0x48
+0x1450cebd2: mov       rax, rbx
+0x1450cebd5: mov       rbx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x1450cebda: add       rsp, 0x20
+0x1450cebde: pop       rdi
+0x1450cebdf: ret       
+0x1450cebe0: mov       edx, 0x58
+0x1450cebe5: mov       rcx, rbx
+0x1450cebe8: call      0x141199450 ; CALL->0x141199450 pdata=None
+0x1450cebed: mov       rax, rbx
+0x1450cebf0: mov       rbx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x1450cebf5: add       rsp, 0x20
+0x1450cebf9: pop       rdi
+0x1450cebfa: ret       
+0x1450cebfb: lea       rcx, [rip + 0x67da09e] ; RIP->0x14b8a8ca0(.data2)
+0x1450cec02: call      0x147bce000 ; CALL->0x147bce000 pdata=(5498527744, 5498527847)
+0x1450cec07: cmp       dword ptr [rip + 0x67da092], -1 ; RIP->0x14b8a8ca0(.data2)
+0x1450cec0e: jne       0x1450cebbf
+0x1450cec10: call      0x141200cb0 ; CALL->0x141200cb0 pdata=(5387586736, 5387587710)
+0x1450cec15: lea       rcx, [rip + 0x67da084] ; RIP->0x14b8a8ca0(.data2)
+0x1450cec1c: call      0x147bcdfa0 ; CALL->0x147bcdfa0 pdata=(5498527648, 5498527744)
+0x1450cec21: jmp       0x1450cebbf
+CALLS=0x141199450,0x141200cb0,0x141201300,0x14154bc70,0x147bcdfa0,0x147bce000
+
+===== METHOD 0x1450ce860-0x1450ce90e SIZE=0xae VTABLE_INDICES=[91] =====
+0x1450ce860: mov       r11, rsp
+0x1450ce863: sub       rsp, 0x78
+0x1450ce867: mov       rax, qword ptr [rip + 0x67a812a] ; RIP->0x14b876998(.data2)
+0x1450ce86e: test      rax, rax
+0x1450ce871: jne       0x1450ce909
+0x1450ce877: lea       rax, [rip - 0x3f3542e] ; RIP->0x141199450(.sdata)
+0x1450ce87e: mov       qword ptr [r11 + 8], rax
+0x1450ce882: lea       r9, [rip - 0x3f35439] ; RIP->0x141199450(.sdata)
+0x1450ce889: lea       rax, [rip - 0x3d1f850] ; RIP->0x1413af040(.sdata)
+0x1450ce890: mov       qword ptr [r11 - 0x10], rax
+0x1450ce894: lea       r8, [rip + 0x67a80fd] ; RIP->0x14b876998(.data2)
+0x1450ce89b: lea       rax, [rip - 0x3fc472] ; RIP->0x144cd2430(.sdata)
+0x1450ce8a2: mov       qword ptr [r11 - 0x18], rax
+0x1450ce8a6: lea       rdx, [rip + 0x5105d25] ; RIP->0x14a1d45d2(.shared) WIDE='APKSaveGameManager'
+0x1450ce8ad: lea       rax, [r11 + 8]
+0x1450ce8b1: mov       qword ptr [r11 - 0x20], rax
+0x1450ce8b5: lea       rcx, [rip + 0x4d70744] ; RIP->0x149e3f000(.shared) WIDE='/Script/APK2'
+0x1450ce8bc: lea       rax, [rip - 0x3f32183] ; RIP->0x14119c740(.sdata)
+0x1450ce8c3: mov       qword ptr [r11 - 0x28], rax
+0x1450ce8c7: lea       rax, [rip + 0x6ff2] ; RIP->0x1450d58c0(.sdata)
+0x1450ce8ce: mov       qword ptr [r11 - 0x30], rax
+0x1450ce8d2: lea       rax, [rip + 0x4115197] ; RIP->0x1491e3a70(.shared) WIDE='Engine'
+0x1450ce8d9: mov       qword ptr [r11 - 0x38], rax
+0x1450ce8dd: mov       qword ptr [r11 - 0x40], 0
+0x1450ce8e5: mov       dword ptr [rsp + 0x30], 0x10000000 ; OBJDISP=0x30
+0x1450ce8ed: mov       dword ptr [rsp + 0x28], 8
+0x1450ce8f5: mov       dword ptr [rsp + 0x20], 0x58
+0x1450ce8fd: call      0x141433f00 ; CALL->0x141433f00 pdata=(5389893376, 5389894192)
+0x1450ce902: mov       rax, qword ptr [rip + 0x67a808f] ; RIP->0x14b876998(.data2)
+0x1450ce909: add       rsp, 0x78
+0x1450ce90d: ret       
+CALLS=0x141433f00
+
+===== METHOD 0x1450dc5a0-0x1450dc681 SIZE=0xe1 VTABLE_INDICES=[118] =====
+0x1450dc5a0: mov       qword ptr [rsp + 0x10], rbx
+0x1450dc5a5: mov       qword ptr [rsp + 0x18], rsi
+0x1450dc5aa: push      rdi
+0x1450dc5ab: sub       rsp, 0x20
+0x1450dc5af: xor       edi, edi
+0x1450dc5b1: mov       rbx, rdx
+0x1450dc5b4: mov       qword ptr [rsp + 0x30], rdi ; OBJDISP=0x30
+0x1450dc5b9: mov       rsi, rcx
+0x1450dc5bc: call      0x1414e30e0 ; CALL->0x1414e30e0 pdata=(5390610656, 5390610813)
+0x1450dc5c1: mov       rax, qword ptr [rbx + 0x20]
+0x1450dc5c5: test      rax, rax
+0x1450dc5c8: je        0x1450dc5f1
+0x1450dc5ca: movzx     r8d, byte ptr [rax]
+0x1450dc5ce: lea       r9, [rip + 0x654ebeb] ; RIP->0x14b62b1c0(.data2)
+0x1450dc5d5: mov       rcx, qword ptr [rbx + 0x18]
+0x1450dc5d9: inc       rax
+0x1450dc5dc: mov       qword ptr [rbx + 0x20], rax
+0x1450dc5e0: mov       rdx, rbx
+0x1450dc5e3: mov       eax, r8d
+0x1450dc5e6: lea       r8, [rsp + 0x30] ; OBJDISP=0x30
+0x1450dc5eb: call      qword ptr [r9 + rax*8]
+0x1450dc5ef: jmp       0x1450dc658
+0x1450dc5f1: mov       rcx, qword ptr [rbx + 0x88]
+0x1450dc5f8: mov       rax, qword ptr [rcx + 0x18]
+0x1450dc5fc: mov       qword ptr [rbx + 0x88], rax
+0x1450dc603: mov       eax, dword ptr [rcx + 0x38] ; OBJDISP=0x38
+0x1450dc606: bt        rax, 8
+0x1450dc60b: jae       0x1450dc637
+0x1450dc60d: mov       rax, qword ptr [rbx + 0x80]
+0x1450dc614: cmp       qword ptr [rax], rcx
+0x1450dc617: je        0x1450dc629
+0x1450dc619: nop       dword ptr [rax]
+0x1450dc620: mov       rax, qword ptr [rax + 0x10]
+0x1450dc624: cmp       qword ptr [rax], rcx
+0x1450dc627: jne       0x1450dc620
+0x1450dc629: mov       rax, qword ptr [rax + 8]
+0x1450dc62d: mov       qword ptr [rbx + 0x38], rax ; OBJDISP=0x38
+0x1450dc631: mov       qword ptr [rbx + 0x40], rdi ; OBJDISP=0x40
+0x1450dc635: jmp       0x1450dc658
+0x1450dc637: movsxd    rax, dword ptr [rcx + 0x44]
+0x1450dc63b: lea       rdx, [rsp + 0x30] ; OBJDISP=0x30
+0x1450dc640: mov       r8, qword ptr [rbx + 0x28]
+0x1450dc644: add       rax, r8
+0x1450dc647: mov       qword ptr [rbx + 0x40], r8 ; OBJDISP=0x40
+0x1450dc64b: mov       qword ptr [rbx + 0x38], rax ; OBJDISP=0x38
+0x1450dc64f: mov       rax, qword ptr [rcx]
+0x1450dc652: call      qword ptr [rax + 0x110]
+0x1450dc658: mov       rax, qword ptr [rbx + 0x20]
+0x1450dc65c: test      rax, rax
+0x1450dc65f: setne     dil
+0x1450dc663: add       rdi, rax
+0x1450dc666: mov       qword ptr [rbx + 0x20], rdi
+0x1450dc66a: mov       rbx, qword ptr [rsp + 0x38] ; OBJDISP=0x38
+0x1450dc66f: mov       byte ptr [rsi + 0x83], 1
+0x1450dc676: mov       rsi, qword ptr [rsp + 0x40] ; OBJDISP=0x40
+0x1450dc67b: add       rsp, 0x20
+0x1450dc67f: pop       rdi
+0x1450dc680: ret       
+CALLS=0x1414e30e0
+
+===== METHOD 0x1450dc550-0x1450dc57f SIZE=0x2f VTABLE_INDICES=[133] =====
+0x1450dc550: sub       rsp, 0x28
+0x1450dc554: mov       rax, qword ptr [rip + 0x679a4dd] ; RIP->0x14b876a38(.data2)
+0x1450dc55b: test      rax, rax
+0x1450dc55e: jne       0x1450dc57a
+0x1450dc560: lea       rdx, [rip + 0x6113e79] ; RIP->0x14b1f03e0(.data2)
+0x1450dc567: lea       rcx, [rip + 0x679a4ca] ; RIP->0x14b876a38(.data2)
+0x1450dc56e: call      0x14155d510 ; CALL->0x14155d510 pdata=(5391111440, 5391111556)
+0x1450dc573: mov       rax, qword ptr [rip + 0x679a4be] ; RIP->0x14b876a38(.data2)
+0x1450dc57a: add       rsp, 0x28
+0x1450dc57e: ret       
+CALLS=0x14155d510
+
+===== METHOD 0x1450d9910-0x1450d993f SIZE=0x2f VTABLE_INDICES=[135] =====
+0x1450d9910: sub       rsp, 0x28
+0x1450d9914: mov       rax, qword ptr [rip + 0x679d3c5] ; RIP->0x14b876ce0(.data2)
+0x1450d991b: test      rax, rax
+0x1450d991e: jne       0x1450d993a
+0x1450d9920: lea       rdx, [rip + 0x5109299] ; RIP->0x14a1e2bc0(.shared)
+0x1450d9927: lea       rcx, [rip + 0x679d3b2] ; RIP->0x14b876ce0(.data2)
+0x1450d992e: call      0x14155e850 ; CALL->0x14155e850 pdata=(5391116368, 5391116438)
+0x1450d9933: mov       rax, qword ptr [rip + 0x679d3a6] ; RIP->0x14b876ce0(.data2)
+0x1450d993a: add       rsp, 0x28
+0x1450d993e: ret       
+CALLS=0x14155e850
+
+===== METHOD 0x144e60480-0x144e604af SIZE=0x2f VTABLE_INDICES=[136, 255] =====
+0x144e60480: sub       rsp, 0x28
+0x144e60484: mov       rax, qword ptr [rip + 0x69feddd] ; RIP->0x14b85f268(.data2)
+0x144e6048b: test      rax, rax
+0x144e6048e: jne       0x144e604aa
+0x144e60490: lea       rdx, [rip + 0x4fe4de9] ; RIP->0x149e45280(.shared)
+0x144e60497: lea       rcx, [rip + 0x69fedca] ; RIP->0x14b85f268(.data2)
+0x144e6049e: call      0x14155e250 ; CALL->0x14155e250 pdata=(5391114832, 5391114892)
+0x144e604a3: mov       rax, qword ptr [rip + 0x69fedbe] ; RIP->0x14b85f268(.data2)
+0x144e604aa: add       rsp, 0x28
+0x144e604ae: ret       
+CALLS=0x14155e250
+
+===== METHOD 0x1450dc750-0x1450dc803 SIZE=0xb3 VTABLE_INDICES=[137] =====
+0x1450dc750: mov       qword ptr [rsp + 8], rbx
+0x1450dc755: push      rdi
+0x1450dc756: sub       rsp, 0x20
+0x1450dc75a: mov       edi, edx
+0x1450dc75c: mov       rbx, rcx
+0x1450dc75f: call      0x1450dc810 ; CALL->0x1450dc810 pdata=None
+0x1450dc764: test      dil, 1
+0x1450dc768: je        0x1450dc7cd
+0x1450dc76a: test      dil, 4
+0x1450dc76e: jne       0x1450dc7c0
+0x1450dc770: test      rbx, rbx
+0x1450dc773: je        0x1450dc7cd
+0x1450dc775: mov       r8, qword ptr [rip + 0x66d825c] ; RIP->0x14b7b49d8(.data2)
+0x1450dc77c: test      r8, r8
+0x1450dc77f: jne       0x1450dc7a6
+0x1450dc781: mov       rax, qword ptr gs:[0x58]
+0x1450dc78a: mov       edx, 0xdc
+0x1450dc78f: mov       rcx, qword ptr [rax]
+0x1450dc792: mov       eax, dword ptr [rdx + rcx]
+0x1450dc795: cmp       dword ptr [rip + 0x67cc505], eax ; RIP->0x14b8a8ca0(.data2)
+0x1450dc79b: jg        0x1450dc7db
+0x1450dc79d: jmp       0x1450dc7a6
+0x1450dc79f: mov       r8, qword ptr [rip + 0x66d8232] ; RIP->0x14b7b49d8(.data2)
+0x1450dc7a6: mov       rax, qword ptr [r8]
+0x1450dc7a9: mov       rdx, rbx
+0x1450dc7ac: mov       rcx, r8
+0x1450dc7af: call      qword ptr [rax + 0x48] ; OBJDISP=0x48
+0x1450dc7b2: mov       rax, rbx
+0x1450dc7b5: mov       rbx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x1450dc7ba: add       rsp, 0x20
+0x1450dc7be: pop       rdi
+0x1450dc7bf: ret       
+0x1450dc7c0: mov       edx, 0xf8
+0x1450dc7c5: mov       rcx, rbx
+0x1450dc7c8: call      0x141199450 ; CALL->0x141199450 pdata=None
+0x1450dc7cd: mov       rax, rbx
+0x1450dc7d0: mov       rbx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x1450dc7d5: add       rsp, 0x20
+0x1450dc7d9: pop       rdi
+0x1450dc7da: ret       
+0x1450dc7db: lea       rcx, [rip + 0x67cc4be] ; RIP->0x14b8a8ca0(.data2)
+0x1450dc7e2: call      0x147bce000 ; CALL->0x147bce000 pdata=(5498527744, 5498527847)
+0x1450dc7e7: cmp       dword ptr [rip + 0x67cc4b2], -1 ; RIP->0x14b8a8ca0(.data2)
+0x1450dc7ee: jne       0x1450dc79f
+0x1450dc7f0: call      0x141200cb0 ; CALL->0x141200cb0 pdata=(5387586736, 5387587710)
+0x1450dc7f5: lea       rcx, [rip + 0x67cc4a4] ; RIP->0x14b8a8ca0(.data2)
+0x1450dc7fc: call      0x147bcdfa0 ; CALL->0x147bcdfa0 pdata=(5498527648, 5498527744)
+0x1450dc801: jmp       0x1450dc79f
+CALLS=0x141199450,0x141200cb0,0x1450dc810,0x147bcdfa0,0x147bce000
+
+===== METHOD 0x14154bd80-0x14154bfb6 SIZE=0x236 VTABLE_INDICES=[139] =====
+0x14154bd80: mov       qword ptr [rsp + 0x10], rbx
+0x14154bd85: push      rbp
+0x14154bd86: push      rsi
+0x14154bd87: push      rdi
+0x14154bd88: lea       rbp, [rsp - 0x380]
+0x14154bd90: sub       rsp, 0x480
+0x14154bd97: mov       rax, qword ptr [rip + 0x9b359a2] ; RIP->0x14b081740(.data2)
+0x14154bd9e: xor       rax, rsp
+0x14154bda1: mov       qword ptr [rbp + 0x370], rax
+0x14154bda8: mov       rsi, rcx
+0x14154bdab: mov       rdi, r9
+0x14154bdae: mov       rcx, r8
+0x14154bdb1: mov       rbx, rdx
+0x14154bdb4: call      0x1415529d0 ; CALL->0x1415529d0 pdata=(5391067600, 5391067820)
+0x14154bdb9: mov       qword ptr [rsp + 0x50], rdi ; OBJDISP=0x50
+0x14154bdbe: mov       rdx, rdi
+0x14154bdc1: or        dword ptr [rax + 0x3c], 0x10
+0x14154bdc5: mov       qword ptr [rsi + 0x10], rbx
+0x14154bdc9: xor       ebx, ebx
+0x14154bdcb: mov       qword ptr [rsi + 0x20], rax
+0x14154bdcf: mov       r8d, ebx
+0x14154bdd2: test      rdi, rdi
+0x14154bdd5: je        0x14154bdf2
+0x14154bdd7: movzx     eax, word ptr [rdi]
+0x14154bdda: test      ax, ax
+0x14154bddd: je        0x14154bdf2
+0x14154bddf: nop       
+0x14154bde0: add       rdx, 2
+0x14154bde4: movzx     eax, ax
+0x14154bde7: or        r8d, eax
+0x14154bdea: movzx     eax, word ptr [rdx]
+0x14154bded: test      ax, ax
+0x14154bdf0: jne       0x14154bde0
+0x14154bdf2: test      r8d, 0xffffff80
+0x14154bdf9: setne     byte ptr [rsp + 0x5c]
+0x14154bdfe: sub       rdx, rdi
+0x14154be01: sar       rdx, 1
+0x14154be04: mov       dword ptr [rsp + 0x58], edx
+0x14154be08: movaps    xmm0, xmmword ptr [rsp + 0x50] ; OBJDISP=0x50
+0x14154be0d: movdqa    xmmword ptr [rsp + 0x50], xmm0 ; OBJDISP=0x50
+0x14154be13: test      edx, edx
+0x14154be15: je        0x14154bf32
+0x14154be1b: lea       rdx, [rsp + 0x58]
+0x14154be20: mov       rcx, rdi
+0x14154be23: call      0x14135fb10 ; CALL->0x14135fb10 pdata=(5389024016, 5389024217)
+0x14154be28: mov       rdx, qword ptr [rsp + 0x58]
+0x14154be2d: mov       edi, eax
+0x14154be2f: test      edx, edx
+0x14154be31: je        0x14154bf32
+0x14154be37: mov       rcx, rdx
+0x14154be3a: shr       rcx, 0x20
+0x14154be3e: test      cl, cl
+0x14154be40: jne       0x14154bf23
+0x14154be46: mov       ecx, 0x400
+0x14154be4b: cmp       edx, ecx
+0x14154be4d: cmovl     ecx, edx
+0x14154be50: movsxd    r8, ecx
+0x14154be53: test      ecx, ecx
+0x14154be55: jle       0x14154be71
+0x14154be57: mov       r9, qword ptr [rsp + 0x50] ; OBJDISP=0x50
+0x14154be5c: mov       rcx, rbx
+0x14154be5f: nop       
+0x14154be60: movzx     eax, byte ptr [r9 + rcx*2]
+0x14154be65: mov       byte ptr [rsp + rcx + 0x70], al
+0x14154be69: inc       rcx
+0x14154be6c: cmp       rcx, r8
+0x14154be6f: jl        0x14154be60
+0x14154be71: lea       rax, [rsp + 0x70]
+0x14154be76: mov       byte ptr [rsp + 0x3c], bl
+0x14154be7a: mov       dword ptr [rsp + 0x38], edx ; OBJDISP=0x38
+0x14154be7e: mov       qword ptr [rsp + 0x30], rax ; OBJDISP=0x30
+0x14154be83: cmp       edx, 0x400
+0x14154be89: jb        0x14154bec7
+0x14154be8b: lea       rax, [rip + 0x7cab6ce] ; RIP->0x1491f7560(.shared) ASCII='ERROR_NAME_SIZE_EXCEEDED'
+0x14154be92: mov       dword ptr [rsp + 0x38], 0x18 ; OBJDISP=0x38
+0x14154be9a: mov       qword ptr [rsp + 0x30], rax ; OBJDISP=0x30
+0x14154be9f: lea       rcx, [rsp + 0x60]
+0x14154bea4: mov       byte ptr [rsp + 0x3c], bl
+0x14154bea8: mov       edx, 1
+0x14154bead: movaps    xmm0, xmmword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x14154beb2: movdqa    xmmword ptr [rsp + 0x60], xmm0
+0x14154beb8: call      0x141345490 ; CALL->0x141345490 pdata=(5388915856, 5388916171)
+0x14154bebd: mov       dword ptr [rsp + 0x30], eax ; OBJDISP=0x30
+0x14154bec1: mov       dword ptr [rsp + 0x34], edi
+0x14154bec5: jmp       0x14154bf37
+0x14154bec7: cmp       byte ptr [rip + 0xa1c1c41], bl ; RIP->0x14b70db0e(.data2)
+0x14154becd: je        0x14154bed8
+0x14154becf: lea       rax, [rip + 0xa1c9cea] ; RIP->0x14b715bc0(.data2)
+0x14154bed6: jmp       0x14154beeb
+0x14154bed8: lea       rcx, [rip + 0xa1c9ce1] ; RIP->0x14b715bc0(.data2)
+0x14154bedf: call      0x141340590 ; CALL->0x141340590 pdata=(5388895632, 5388911593)
+0x14154bee4: mov       byte ptr [rip + 0xa1c1c23], 1 ; RIP->0x14b70db0e(.data2)
+0x14154beeb: movaps    xmm0, xmmword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x14154bef0: lea       r8, [rsp + 0x60]
+0x14154bef5: lea       rdx, [rsp + 0x40] ; OBJDISP=0x40
+0x14154befa: movdqa    xmmword ptr [rsp + 0x60], xmm0
+0x14154bf00: mov       rcx, rax
+0x14154bf03: call      0x1413443f0 ; CALL->0x1413443f0 pdata=(5388911600, 5388911630)
+0x14154bf08: mov       eax, dword ptr [rsp + 0x40] ; OBJDISP=0x40
+0x14154bf0c: mov       dword ptr [rsp + 0x30], eax ; OBJDISP=0x30
+0x14154bf10: mov       dword ptr [rsp + 0x34], eax
+0x14154bf14: mov       rax, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x14154bf19: mov       dword ptr [rsp + 0x30], eax ; OBJDISP=0x30
+0x14154bf1d: mov       dword ptr [rsp + 0x34], edi
+0x14154bf21: jmp       0x14154bf37
+0x14154bf23: mov       rax, qword ptr [rsp + 0x50] ; OBJDISP=0x50
+0x14154bf28: mov       byte ptr [rsp + 0x3c], 1
+0x14154bf2d: jmp       0x14154be7a
+0x14154bf32: mov       qword ptr [rsp + 0x30], rbx ; OBJDISP=0x30
+0x14154bf37: mov       rdx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x14154bf3c: mov       r9d, 0xffffffff
+0x14154bf42: xor       r8d, r8d
+0x14154bf45: mov       dword ptr [rsp + 0x20], ebx
+0x14154bf49: mov       rcx, rsi
+0x14154bf4c: call      0x14154bfc0 ; CALL->0x14154bfc0 pdata=(5391040448, 5391040609)
+0x14154bf51: mov       eax, dword ptr [rsi + 0xc]
+0x14154bf54: cmp       eax, dword ptr [rip + 0x9b4dd4a] ; RIP->0x14b099ca4(.data2)
+0x14154bf5a: jge       0x14154bf78
+0x14154bf5c: mov       ecx, eax
+0x14154bf5e: movzx     eax, ax
+0x14154bf61: shr       rcx, 0x10
+0x14154bf65: lea       rdx, [rax + rax*2]
+0x14154bf69: mov       rax, qword ptr [rip + 0x9b4dd20] ; RIP->0x14b099c90(.data2)
+0x14154bf70: mov       rcx, qword ptr [rax + rcx*8]
+0x14154bf74: lea       rbx, [rcx + rdx*8]
+0x14154bf78: mov       eax, dword ptr [rbx + 8]
+0x14154bf7b: test      eax, eax
+0x14154bf7d: jns       0x14154bf94
+0x14154bf7f: nop       
+0x14154bf80: mov       ecx, eax
+0x14154bf82: btr       ecx, 0x1f
+0x14154bf86: lock cmpxchg dword ptr [rbx + 8], ecx
+0x14154bf8b: je        0x14154bf94
+0x14154bf8d: mov       eax, dword ptr [rbx + 8]
+0x14154bf90: test      eax, eax
+0x14154bf92: js        0x14154bf80
+0x14154bf94: mov       rcx, qword ptr [rbp + 0x370]
+0x14154bf9b: xor       rcx, rsp
+0x14154bf9e: call      0x147bcdde0 ; CALL->0x147bcdde0 pdata=(5498527200, 5498527230)
+0x14154bfa3: mov       rbx, qword ptr [rsp + 0x4a8]
+0x14154bfab: add       rsp, 0x480
+0x14154bfb2: pop       rdi
+0x14154bfb3: pop       rsi
+0x14154bfb4: pop       rbp
+0x14154bfb5: ret       
+CALLS=0x141340590,0x1413443f0,0x141345490,0x14135fb10,0x14154bfc0,0x1415529d0,0x147bcdde0
+
+===== METHOD 0x141550700-0x141550a47 SIZE=0x347 VTABLE_INDICES=[143] =====
+0x141550700: mov       qword ptr [rsp + 8], rbx
+0x141550705: mov       qword ptr [rsp + 0x10], rsi
+0x14155070a: mov       qword ptr [rsp + 0x18], rdi
+0x14155070f: push      rbp
+0x141550710: push      r12
+0x141550712: push      r13
+0x141550714: push      r14
+0x141550716: push      r15
+0x141550718: sub       rsp, 0x170
+0x14155071f: lea       rbp, [rsp + 0x60]
+0x141550724: and       rbp, 0xffffffffffffffc0
+0x141550728: mov       eax, dword ptr [rcx + 0xc]
+0x14155072b: xor       r13d, r13d
+0x14155072e: cmp       eax, dword ptr [rip + 0x9b49570] ; RIP->0x14b099ca4(.data2)
+0x141550734: mov       rdi, rcx
+0x141550737: jge       0x141550757
+0x141550739: mov       ecx, eax
+0x14155073b: movzx     eax, ax
+0x14155073e: shr       rcx, 0x10
+0x141550742: lea       rdx, [rax + rax*2]
+0x141550746: mov       rax, qword ptr [rip + 0x9b49543] ; RIP->0x14b099c90(.data2)
+0x14155074d: mov       rcx, qword ptr [rax + rcx*8]
+0x141550751: lea       rbx, [rcx + rdx*8]
+0x141550755: jmp       0x14155075a
+0x141550757: mov       rbx, r13
+0x14155075a: cmp       dword ptr [rbx + 0xc], r13d
+0x14155075e: jne       0x141550a1e
+0x141550764: mov       eax, dword ptr [rbx + 8]
+0x141550767: shr       eax, 0x18
+0x14155076a: test      al, 1
+0x14155076c: jne       0x141550a1e
+0x141550772: mov       edx, dword ptr [rdi + 0xc]
+0x141550775: call      0x14154f750 ; CALL->0x14154f750 pdata=(5391054672, 5391054848)
+0x14155077a: movsxd    r12, eax
+0x14155077d: lea       r14, [r12 + r12*4]
+0x141550781: shl       r14, 4
+0x141550785: add       r14, qword ptr [rip + 0xa149d4c] ; RIP->0x14b69a4d8(.data2)
+0x14155078c: cmp       dword ptr [r14 + 0x14], 0x40
+0x141550791: jge       0x1415507a1
+0x141550793: mov       edx, 0x40
+0x141550798: lea       rcx, [r14 + 8]
+0x14155079c: call      0x1411c0ef0 ; CALL->0x1411c0ef0 pdata=(5387325168, 5387325288)
+0x1415507a1: mov       rcx, rdi
+0x1415507a4: call      0x14154ed60 ; CALL->0x14154ed60 pdata=(5391052128, 5391052196)
+0x1415507a9: mov       ecx, dword ptr [rdi + 0xc]
+0x1415507ac: mov       esi, 1
+0x1415507b1: mov       dword ptr [rbp + 0x38], ecx ; OBJDISP=0x38
+0x1415507b4: mov       qword ptr [rbp + 0x40], r14 ; OBJDISP=0x40
+0x1415507b8: mov       qword ptr [rbp + 0x48], rax ; OBJDISP=0x48
+0x1415507bc: mov       qword ptr [rbp + 0x80], r13
+0x1415507c3: mov       qword ptr [rbp + 0xa8], r13
+0x1415507ca: mov       qword ptr [rbp + 0xb8], r13
+0x1415507d1: mov       dword ptr [rbp + 0xc0], r13d
+0x1415507d8: mov       qword ptr [rbp + 0xc8], r13
+0x1415507df: mov       qword ptr [rbp + 0xd0], r13
+0x1415507e6: mov       qword ptr [rbp + 0xd8], r13
+0x1415507ed: nop       dword ptr [rax]
+0x1415507f0: mov       rax, qword ptr [rip + 0xa26f749] ; RIP->0x14b7bff40(.data2)
+0x1415507f7: mov       r8, rsi
+0x1415507fa: not       rax
+0x1415507fd: bsf       rcx, rax
+0x141550801: mov       eax, 0x40
+0x141550806: mov       dword ptr [rbp + 0x18], ecx
+0x141550809: cmovne    eax, ecx
+0x14155080c: movzx     ecx, al
+0x14155080f: mov       edx, eax
+0x141550811: shl       r8, cl
+0x141550814: prefetchw byte ptr [rip + 0xa26f725] ; RIP->0x14b7bff40(.data2)
+0x14155081b: mov       rax, qword ptr [rip + 0xa26f71e] ; RIP->0x14b7bff40(.data2)
+0x141550822: nop       dword ptr [rax]
+0x141550826: nop       word ptr [rax + rax]
+0x141550830: mov       rcx, rax
+0x141550833: or        rcx, r8
+0x141550836: lock cmpxchg qword ptr [rip + 0xa26f701], rcx ; RIP->0x14b7bff40(.data2)
+0x14155083f: jne       0x141550830
+0x141550841: test      r8, rax
+0x141550844: jne       0x1415507f0
+0x141550846: mov       dword ptr [rbp + 0xb0], edx
+0x14155084c: call      0x141481cc0 ; CALL->0x141481cc0 pdata=(5390212288, 5390212340)
+0x141550851: mov       qword ptr [rbp + 0xa0], rax
+0x141550858: lea       rcx, [rbp + 8]
+0x14155085c: xor       r8d, r8d
+0x14155085f: mov       qword ptr [rbp + 8], r13
+0x141550863: mov       edx, esi
+0x141550865: mov       dword ptr [rbp + 0x10], esi
+0x141550868: mov       qword ptr [rax], r13
+0x14155086b: mov       rax, qword ptr [rbp + 0xa0]
+0x141550872: add       rax, 8
+0x141550876: mov       qword ptr [rbp + 0x98], rax
+0x14155087d: call      0x14148b1f0 ; CALL->0x14148b1f0 pdata=(5390250480, 5390250631)
+0x141550882: movsxd    r9, dword ptr [rbp + 0x10]
+0x141550886: mov       r8, qword ptr [rbp + 8]
+0x14155088a: mov       qword ptr [r8], rdi
+0x14155088d: mov       rdi, r9
+0x141550890: test      r9d, r9d
+0x141550893: je        0x1415508de
+0x141550895: lea       edx, [r9 + 0x10]
+0x141550899: test      edx, edx
+0x14155089b: js        0x141550a3f
+0x1415508a1: cmp       edx, dword ptr [rbp + 0x14]
+0x1415508a4: jle       0x1415508b7
+0x1415508a6: lea       rcx, [rbp + 8]
+0x1415508aa: call      0x1411ab850 ; CALL->0x1411ab850 pdata=(5387237456, 5387237576)
+0x1415508af: mov       r9d, dword ptr [rbp + 0x10]
+0x1415508b3: mov       r8, qword ptr [rbp + 8]
+0x1415508b7: lea       eax, [r9 - 1]
+0x1415508bb: movsxd    rcx, eax
+0x1415508be: lea       rdi, [r8 + rdi*8]
+0x1415508c2: lea       rdx, [rdi + 0x80]
+0x1415508c9: cmp       rdi, rdx
+0x1415508cc: mov       rax, qword ptr [r8 + rcx*8]
+0x1415508d0: mov       ecx, 0x10
+0x1415508d5: cmova     rcx, r13
+0x1415508d9: ja        0x1415508de
+0x1415508db: rep stosq qword ptr [rdi], rax
+0x1415508de: mov       qword ptr [rbp + 0x28], r8
+0x1415508e2: lea       rax, [rbp + 0x38] ; OBJDISP=0x38
+0x1415508e6: mov       dword ptr [rbp + 0x30], r9d ; OBJDISP=0x30
+0x1415508ea: lea       rdx, [rbp + 0x80]
+0x1415508f1: movups    xmm0, xmmword ptr [rbp + 0x28]
+0x1415508f5: lea       rcx, [rbp + 0x20]
+0x1415508f9: mov       qword ptr [rbp + 0x20], rax
+0x1415508fd: movups    xmmword ptr [rbp + 0x88], xmm0
+0x141550904: call      0x141569c00 ; CALL->0x141569c00 pdata=(5391162368, 5391169540)
+0x141550909: mov       eax, 0xffffffff
+0x14155090e: sub       eax, r12d
+0x141550911: mov       dword ptr [rbx + 0xc], eax
+0x141550914: mov       eax, dword ptr [rbx + 8]
+0x141550917: bt        eax, 0x18
+0x14155091b: jb        0x141550936
+0x14155091d: nop       dword ptr [rax]
+0x141550920: mov       ecx, eax
+0x141550922: bts       ecx, 0x18
+0x141550926: lock cmpxchg dword ptr [rbx + 8], ecx
+0x14155092b: je        0x141550936
+0x14155092d: mov       eax, dword ptr [rbx + 8]
+0x141550930: bt        eax, 0x18
+0x141550934: jae       0x141550920
+0x141550936: mov       eax, dword ptr [rip + 0x9b33bf0] ; RIP->0x14b08452c(.data2)
+0x14155093c: cmp       eax, esi
+0x14155093e: cmovl     eax, esi
+0x141550941: cmp       dword ptr [r14 + 0x10], eax
+0x141550945: jl        0x14155098b
+0x141550947: movzx     r8d, byte ptr [rbp]
+0x14155094c: lea       r9, [rbp]
+0x141550950: mov       edx, dword ptr [r14 + 0x10]
+0x141550954: mov       rcx, qword ptr [r14 + 8]
+0x141550958: call      0x14156e650 ; CALL->0x14156e650 pdata=(5391181392, 5391181450)
+0x14155095d: movzx     r8d, byte ptr [rbp + 1]
+0x141550962: lea       r9, [rbp + 1]
+0x141550966: mov       edx, dword ptr [r14 + 0x20]
+0x14155096a: mov       rcx, qword ptr [r14 + 0x18]
+0x14155096e: call      0x14156e650 ; CALL->0x14156e650 pdata=(5391181392, 5391181450)
+0x141550973: movzx     r8d, byte ptr [rbp + 2]
+0x141550978: lea       r9, [rbp + 2]
+0x14155097c: mov       edx, dword ptr [r14 + 0x30] ; OBJDISP=0x30
+0x141550980: mov       rcx, qword ptr [r14 + 0x28]
+0x141550984: call      0x14156e650 ; CALL->0x14156e650 pdata=(5391181392, 5391181450)
+0x141550989: jmp       0x1415509d0
+0x14155098b: mov       rdi, qword ptr [r14 + 8]
+0x14155098f: movsxd    rax, dword ptr [r14 + 0x10]
+0x141550993: lea       r8, [rdi + rax*4]
+0x141550997: cmp       rdi, r8
+0x14155099a: je        0x1415509c8
+0x14155099c: nop       dword ptr [rax]
+0x1415509a0: mov       eax, dword ptr [rdi]
+0x1415509a2: add       rdi, 4
+0x1415509a6: mov       ecx, eax
+0x1415509a8: movzx     eax, ax
+0x1415509ab: shr       rcx, 0x10
+0x1415509af: lea       rdx, [rax + rax*2]
+0x1415509b3: mov       rax, qword ptr [rip + 0x9b492d6] ; RIP->0x14b099c90(.data2)
+0x1415509ba: mov       rcx, qword ptr [rax + rcx*8]
+0x1415509be: mov       dword ptr [rcx + rdx*8 + 0xc], r13d
+0x1415509c3: cmp       rdi, r8
+0x1415509c6: jne       0x1415509a0
+0x1415509c8: mov       edx, r12d
+0x1415509cb: call      0x14154f800 ; CALL->0x14154f800 pdata=(5391054848, 5391054863)
+0x1415509d0: mov       rcx, qword ptr [rbp + 8]
+0x1415509d4: test      rcx, rcx
+0x1415509d7: je        0x1415509de
+0x1415509d9: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1415509de: mov       ecx, dword ptr [rbp + 0xb0]
+0x1415509e4: cmp       ecx, -1
+0x1415509e7: je        0x141550a01
+0x1415509e9: shl       rsi, cl
+0x1415509ec: not       rsi
+0x1415509ef: lock and  qword ptr [rip + 0xa26f549], rsi ; RIP->0x14b7bff40(.data2)
+0x1415509f7: mov       dword ptr [rbp + 0xb0], 0xffffffff
+0x141550a01: mov       rcx, qword ptr [rbp + 0xd0]
+0x141550a08: test      rcx, rcx
+0x141550a0b: je        0x141550a12
+0x141550a0d: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x141550a12: lea       rcx, [rbp + 0x98]
+0x141550a19: call      0x1411af3d0 ; CALL->0x1411af3d0 pdata=(5387252688, 5387252816)
+0x141550a1e: lea       r11, [rsp + 0x170]
+0x141550a26: mov       rbx, qword ptr [r11 + 0x30] ; OBJDISP=0x30
+0x141550a2a: mov       rsi, qword ptr [r11 + 0x38] ; OBJDISP=0x38
+0x141550a2e: mov       rdi, qword ptr [r11 + 0x40] ; OBJDISP=0x40
+0x141550a32: mov       rsp, r11
+0x141550a35: pop       r15
+0x141550a37: pop       r14
+0x141550a39: pop       r13
+0x141550a3b: pop       r12
+0x141550a3d: pop       rbp
+0x141550a3e: ret       
+0x141550a3f: mov       ecx, edx
+0x141550a41: call      0x1411b62c0 ; CALL->0x1411b62c0 pdata=(5387281088, 5387281128)
+0x141550a46: int3      
+CALLS=0x1411ab850,0x1411af3d0,0x1411b62c0,0x1411c0ef0,0x141201300,0x141481cc0,0x14148b1f0,0x14154ed60,0x14154f750,0x14154f800,0x141569c00,0x14156e650
+
+===== METHOD 0x1413dd410-0x1413dd488 SIZE=0x78 VTABLE_INDICES=[145] =====
+0x1413dd410: push      rbx
+0x1413dd412: sub       rsp, 0x20
+0x1413dd416: xor       eax, eax
+0x1413dd418: mov       rbx, rdx
+0x1413dd41b: mov       qword ptr [rdx], rax
+0x1413dd41e: mov       rcx, rbx
+0x1413dd421: mov       qword ptr [rdx + 8], rax
+0x1413dd425: lea       edx, [rax + 0x1b]
+0x1413dd428: call      0x1411c6fe0 ; CALL->0x1411c6fe0 pdata=(5387349984, 5387350102)
+0x1413dd42d: mov       edx, dword ptr [rbx + 8]
+0x1413dd430: lea       eax, [rdx + 0x1b]
+0x1413dd433: mov       dword ptr [rbx + 8], eax
+0x1413dd436: mov       eax, dword ptr [rbx + 0xc]
+0x1413dd439: sub       eax, edx
+0x1413dd43b: cmp       eax, 0x1b
+0x1413dd43e: jae       0x1413dd448
+0x1413dd440: mov       rcx, rbx
+0x1413dd443: call      0x1411c17f0 ; CALL->0x1411c17f0 pdata=(5387327472, 5387327625)
+0x1413dd448: movups    xmm0, xmmword ptr [rip + 0x7e30cb1] ; RIP->0x14920e100(.shared) WIDE='No_Detailed_Info_Specified'
+0x1413dd44f: mov       rcx, qword ptr [rbx]
+0x1413dd452: movups    xmmword ptr [rcx], xmm0
+0x1413dd455: movups    xmm1, xmmword ptr [rip + 0x7e30cb4] ; RIP->0x14920e110(.shared) WIDE='led_Info_Specified'
+0x1413dd45c: movups    xmmword ptr [rcx + 0x10], xmm1
+0x1413dd460: movups    xmm0, xmmword ptr [rip + 0x7e30cb9] ; RIP->0x14920e120(.shared) WIDE='_Specified'
+0x1413dd467: movups    xmmword ptr [rcx + 0x20], xmm0
+0x1413dd46b: mov       eax, dword ptr [rip + 0x7e30cbf] ; RIP->0x14920e130(.shared) WIDE='ed'
+0x1413dd471: mov       dword ptr [rcx + 0x30], eax ; OBJDISP=0x30
+0x1413dd474: movzx     eax, word ptr [rip + 0x7e30cb9] ; RIP->0x14920e134(.shared)
+0x1413dd47b: mov       word ptr [rcx + 0x34], ax
+0x1413dd47f: mov       rax, rbx
+0x1413dd482: add       rsp, 0x20
+0x1413dd486: pop       rbx
+0x1413dd487: ret       
+CALLS=0x1411c17f0,0x1411c6fe0
+
+===== METHOD 0x1415596d0-0x1415596f8 SIZE=0x28 VTABLE_INDICES=[146] =====
+0x1415596d0: sub       rsp, 0x38
+0x1415596d4: mov       rdx, rcx
+0x1415596d7: mov       qword ptr [rsp + 0x20], 0
+0x1415596e0: mov       rcx, qword ptr [rcx + 0x10]
+0x1415596e4: xor       r9d, r9d
+0x1415596e7: mov       r8b, 1
+0x1415596ea: mov       rax, qword ptr [rcx]
+0x1415596ed: call      qword ptr [rax + 0x398]
+0x1415596f3: add       rsp, 0x38
+0x1415596f7: ret       
+CALLS=
+
+===== METHOD 0x1414c5e30-0x1414c5eac SIZE=0x7c VTABLE_INDICES=[157] =====
+0x1414c5e30: mov       qword ptr [rsp + 8], rbx
+0x1414c5e35: push      rdi
+0x1414c5e36: sub       rsp, 0x30
+0x1414c5e3a: mov       rax, qword ptr [rcx + 0x10]
+0x1414c5e3e: xor       edi, edi
+0x1414c5e40: mov       rbx, rcx
+0x1414c5e43: mov       edx, dword ptr [rax + 0xd4]
+0x1414c5e49: shr       edx, 0xa
+0x1414c5e4c: test      dl, 1
+0x1414c5e4f: je        0x1414c5e63
+0x1414c5e51: xor       r9d, r9d
+0x1414c5e54: mov       qword ptr [rsp + 0x20], rdi
+0x1414c5e59: xor       r8d, r8d
+0x1414c5e5c: xor       edx, edx
+0x1414c5e5e: call      0x1414c8a00 ; CALL->0x1414c8a00 pdata=(5390502400, 5390503327)
+0x1414c5e63: mov       eax, dword ptr [rbx + 8]
+0x1414c5e66: test      eax, 0x3400
+0x1414c5e6b: jne       0x1414c5ea1
+0x1414c5e6d: mov       eax, dword ptr [rbx + 8]
+0x1414c5e70: test      eax, 0x60000000
+0x1414c5e75: jne       0x1414c5ea1
+0x1414c5e77: mov       eax, dword ptr [rbx + 0xc]
+0x1414c5e7a: cmp       eax, dword ptr [rip + 0x9bd3e24] ; RIP->0x14b099ca4(.data2)
+0x1414c5e80: jge       0x1414c5e9e
+0x1414c5e82: mov       ecx, eax
+0x1414c5e84: movzx     eax, ax
+0x1414c5e87: shr       rcx, 0x10
+0x1414c5e8b: lea       rdx, [rax + rax*2]
+0x1414c5e8f: mov       rax, qword ptr [rip + 0x9bd3dfa] ; RIP->0x14b099c90(.data2)
+0x1414c5e96: mov       rcx, qword ptr [rax + rcx*8]
+0x1414c5e9a: lea       rdi, [rcx + rdx*8]
+0x1414c5e9e: mov       eax, dword ptr [rdi + 8]
+0x1414c5ea1: mov       rbx, qword ptr [rsp + 0x40] ; OBJDISP=0x40
+0x1414c5ea6: add       rsp, 0x30
+0x1414c5eaa: pop       rdi
+0x1414c5eab: ret       
+CALLS=0x1414c8a00
+
+===== METHOD 0x1414c6ae0-0x1414c6b48 SIZE=0x68 VTABLE_INDICES=[158] =====
+0x1414c6ae0: push      rbx
+0x1414c6ae2: sub       rsp, 0x20
+0x1414c6ae6: mov       rax, qword ptr [rcx + 0x10]
+0x1414c6aea: mov       rbx, rcx
+0x1414c6aed: mov       ecx, dword ptr [rax + 0xd4]
+0x1414c6af3: shr       ecx, 0x17
+0x1414c6af6: test      cl, 1
+0x1414c6af9: je        0x1414c6b30
+0x1414c6afb: mov       rcx, qword ptr [rbx + 0x20]
+0x1414c6aff: test      rcx, rcx
+0x1414c6b02: je        0x1414c6b30
+0x1414c6b04: mov       eax, dword ptr [rcx + 8]
+0x1414c6b07: shr       eax, 0xd
+0x1414c6b0a: test      al, 1
+0x1414c6b0c: je        0x1414c6b30
+0x1414c6b0e: mov       eax, dword ptr [rcx + 8]
+0x1414c6b11: shr       eax, 0xc
+0x1414c6b14: test      al, 1
+0x1414c6b16: je        0x1414c6b1f
+0x1414c6b18: call      0x1414c6a00 ; CALL->0x1414c6a00 pdata=(5390494208, 5390494418)
+0x1414c6b1d: jmp       0x1414c6b26
+0x1414c6b1f: xor       edx, edx
+0x1414c6b21: call      0x1414c6b50 ; CALL->0x1414c6b50 pdata=(5390494544, 5390494657)
+0x1414c6b26: mov       eax, dword ptr [rbx + 8]
+0x1414c6b29: shr       eax, 0xd
+0x1414c6b2c: test      al, 1
+0x1414c6b2e: je        0x1414c6b42
+0x1414c6b30: mov       edx, 0x2000
+0x1414c6b35: mov       rcx, rbx
+0x1414c6b38: add       rsp, 0x20
+0x1414c6b3c: pop       rbx
+0x1414c6b3d: jmp       0x1413de6e0
+0x1414c6b42: add       rsp, 0x20
+0x1414c6b46: pop       rbx
+0x1414c6b47: ret       
+CALLS=0x1414c6a00,0x1414c6b50
+
+===== METHOD 0x1414c6650-0x1414c6719 SIZE=0xc9 VTABLE_INDICES=[159] =====
+0x1414c6650: push      rbx
+0x1414c6652: sub       rsp, 0x40
+0x1414c6656: mov       eax, dword ptr [rcx + 8]
+0x1414c6659: mov       rbx, rcx
+0x1414c665c: shr       eax, 0xf
+0x1414c665f: test      al, 1
+0x1414c6661: jne       0x1414c66c1
+0x1414c6663: mov       rax, qword ptr [rcx + 0x18]
+0x1414c6667: lea       rdx, [rsp + 0x30] ; OBJDISP=0x30
+0x1414c666c: lea       rcx, [rsp + 0x58]
+0x1414c6671: mov       qword ptr [rsp + 0x58], rax
+0x1414c6676: call      0x141345f40 ; CALL->0x141345f40 pdata=(5388918592, 5388918956)
+0x1414c667b: cmp       dword ptr [rsp + 0x38], 0 ; OBJDISP=0x38
+0x1414c6680: lea       rax, [rip + 0x7cf699d] ; RIP->0x1491bd024(.shared)
+0x1414c6687: mov       r8, qword ptr [rsp + 0x48] ; OBJDISP=0x48
+0x1414c668c: lea       r9, [rip + 0x7d6ba6d] ; RIP->0x149232100(.shared) WIDE='Trying to call UObject::BeginDestroy from outside of UObject::ConditionalBeginDestroy on object %s. '
+0x1414c6693: cmovne    rax, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x1414c6699: lea       rcx, [rip + 0x7d6b840] ; RIP->0x149231ee0(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\Engine\\Source\\Runtime\\CoreUObject\\Private\\UObject\\Obj.cpp'
+0x1414c66a0: mov       edx, 0x3b1
+0x1414c66a5: mov       qword ptr [rsp + 0x20], rax
+0x1414c66aa: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x1414c66af: cmp       qword ptr [rsp + 0x30], 0 ; OBJDISP=0x30
+0x1414c66b5: je        0x1414c66c1
+0x1414c66b7: mov       rcx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x1414c66bc: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1414c66c1: xor       edx, edx
+0x1414c66c3: mov       r9b, 1
+0x1414c66c6: mov       rcx, rbx
+0x1414c66c9: lea       r8d, [rdx - 1]
+0x1414c66cd: call      0x141565bb0 ; CALL->0x141565bb0 pdata=(5391145904, 5391146944)
+0x1414c66d2: xor       eax, eax
+0x1414c66d4: mov       rcx, rbx
+0x1414c66d7: mov       qword ptr [rsp + 0x50], rax ; OBJDISP=0x50
+0x1414c66dc: call      0x141564880 ; CALL->0x141564880 pdata=(5391140992, 5391141055)
+0x1414c66e1: mov       rax, qword ptr [rsp + 0x50] ; OBJDISP=0x50
+0x1414c66e6: mov       rcx, rbx
+0x1414c66e9: mov       qword ptr [rbx + 0x18], rax
+0x1414c66ed: call      0x141564160 ; CALL->0x141564160 pdata=(5391139168, 5391139229)
+0x1414c66f2: cmp       qword ptr [rbx + 0x20], 0
+0x1414c66f7: je        0x1414c6713
+0x1414c66f9: mov       rcx, rbx
+0x1414c66fc: call      0x1415656c0 ; CALL->0x1415656c0 pdata=(5391144640, 5391144656)
+0x1414c6701: mov       edx, 0x10000000
+0x1414c6706: mov       rcx, rbx
+0x1414c6709: add       rsp, 0x40
+0x1414c670d: pop       rbx
+0x1414c670e: jmp       0x1413de6e0
+0x1414c6713: add       rsp, 0x40
+0x1414c6717: pop       rbx
+0x1414c6718: ret       
+CALLS=0x141201300,0x1412a3b90,0x141345f40,0x141564160,0x141564880,0x1415656c0,0x141565bb0
+
+===== METHOD 0x1414c6720-0x1414c67f5 SIZE=0xd5 VTABLE_INDICES=[161] =====
+0x1414c6720: mov       qword ptr [rsp + 0x10], rbx
+0x1414c6725: push      rdi
+0x1414c6726: sub       rsp, 0x40
+0x1414c672a: mov       eax, dword ptr [rcx + 8]
+0x1414c672d: mov       rdi, rcx
+0x1414c6730: shr       eax, 0x10
+0x1414c6733: test      al, 1
+0x1414c6735: jne       0x1414c6793
+0x1414c6737: mov       rax, qword ptr [rcx + 0x18]
+0x1414c673b: lea       rdx, [rsp + 0x30] ; OBJDISP=0x30
+0x1414c6740: lea       rcx, [rsp + 0x50] ; OBJDISP=0x50
+0x1414c6745: mov       qword ptr [rsp + 0x50], rax ; OBJDISP=0x50
+0x1414c674a: call      0x141345f40 ; CALL->0x141345f40 pdata=(5388918592, 5388918956)
+0x1414c674f: cmp       dword ptr [rsp + 0x38], 0 ; OBJDISP=0x38
+0x1414c6754: lea       rax, [rip + 0x7cf68c9] ; RIP->0x1491bd024(.shared)
+0x1414c675b: mov       rbx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x1414c6760: lea       r9, [rip + 0x7d6b889] ; RIP->0x149231ff0(.shared) WIDE='Trying to call UObject::FinishDestroy from outside of UObject::ConditionalFinishDestroy on object %s'
+0x1414c6767: mov       r8, qword ptr [rsp + 0x48] ; OBJDISP=0x48
+0x1414c676c: lea       rcx, [rip + 0x7d6b76d] ; RIP->0x149231ee0(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\Engine\\Source\\Runtime\\CoreUObject\\Private\\UObject\\Obj.cpp'
+0x1414c6773: cmovne    rax, rbx
+0x1414c6777: mov       edx, 0x3de
+0x1414c677c: mov       qword ptr [rsp + 0x20], rax
+0x1414c6781: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x1414c6786: test      rbx, rbx
+0x1414c6789: je        0x1414c6793
+0x1414c678b: mov       rcx, rbx
+0x1414c678e: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1414c6793: mov       rcx, qword ptr [rdi + 0x10]
+0x1414c6797: xor       r8d, r8d
+0x1414c679a: mov       rdx, rdi
+0x1414c679d: mov       rax, qword ptr [rcx]
+0x1414c67a0: call      qword ptr [rax + 0x3a0]
+0x1414c67a6: mov       rbx, qword ptr [rdi + 0x10]
+0x1414c67aa: mov       rbx, qword ptr [rbx + 0x80]
+0x1414c67b1: test      rbx, rbx
+0x1414c67b4: je        0x1414c67ea
+0x1414c67b6: nop       word ptr [rax + rax]
+0x1414c67c0: mov       rax, qword ptr [rbx + 0x38] ; OBJDISP=0x38
+0x1414c67c4: shr       rax, 0x24
+0x1414c67c8: not       al
+0x1414c67ca: test      al, 1
+0x1414c67cc: je        0x1414c67e1
+0x1414c67ce: movsxd    rdx, dword ptr [rbx + 0x44]
+0x1414c67d2: mov       rcx, rbx
+0x1414c67d5: mov       rax, qword ptr [rbx]
+0x1414c67d8: add       rdx, rdi
+0x1414c67db: call      qword ptr [rax + 0x138]
+0x1414c67e1: mov       rbx, qword ptr [rbx + 0x58]
+0x1414c67e5: test      rbx, rbx
+0x1414c67e8: jne       0x1414c67c0
+0x1414c67ea: mov       rbx, qword ptr [rsp + 0x58]
+0x1414c67ef: add       rsp, 0x40
+0x1414c67f3: pop       rdi
+0x1414c67f4: ret       
+CALLS=0x141201300,0x1412a3b90,0x141345f40
+
+===== METHOD 0x1414c6de0-0x1414c6f06 SIZE=0x126 VTABLE_INDICES=[162] =====
+0x1414c6de0: push      rbx
+0x1414c6de2: push      rsi
+0x1414c6de3: push      rdi
+0x1414c6de4: sub       rsp, 0x20
+0x1414c6de8: mov       rax, qword ptr [rdx]
+0x1414c6deb: mov       rbx, rdx
+0x1414c6dee: mov       rdx, qword ptr [rcx + 0x10]
+0x1414c6df2: mov       rsi, rcx
+0x1414c6df5: mov       rdi, qword ptr [rax + 8]
+0x1414c6df9: mov       rax, qword ptr [rcx + 0x20]
+0x1414c6dfd: mov       qword ptr [rsp + 0x50], rax ; OBJDISP=0x50
+0x1414c6e02: mov       rax, qword ptr [rcx + 0x18]
+0x1414c6e06: mov       qword ptr [rsp + 0x48], rax ; OBJDISP=0x48
+0x1414c6e0b: mov       qword ptr [rsp + 0x40], rdx ; OBJDISP=0x40
+0x1414c6e10: mov       eax, dword ptr [rdx + 8]
+0x1414c6e13: shr       eax, 0xa
+0x1414c6e16: test      al, 1
+0x1414c6e18: je        0x1414c6e5d
+0x1414c6e1a: mov       rax, qword ptr [rdi]
+0x1414c6e1d: mov       rcx, rdi
+0x1414c6e20: mov       rdx, qword ptr [rsp + 0x40] ; OBJDISP=0x40
+0x1414c6e25: call      qword ptr [rax + 0x198]
+0x1414c6e2b: mov       eax, dword ptr [rsi + 8]
+0x1414c6e2e: shr       eax, 4
+0x1414c6e31: test      al, 1
+0x1414c6e33: jne       0x1414c6e5d
+0x1414c6e35: mov       rdx, qword ptr [rsp + 0x40] ; OBJDISP=0x40
+0x1414c6e3a: cmp       qword ptr [rdx + 0x110], 0
+0x1414c6e42: je        0x1414c6e5d
+0x1414c6e44: cmp       dword ptr [rdx + 0x58], 0
+0x1414c6e48: jle       0x1414c6e5d
+0x1414c6e4a: mov       rax, qword ptr [rdi]
+0x1414c6e4d: mov       rcx, rdi
+0x1414c6e50: mov       rdx, qword ptr [rdx + 0x110]
+0x1414c6e57: call      qword ptr [rax + 0x198]
+0x1414c6e5d: test      byte ptr [rdi + 0x28], 5
+0x1414c6e61: jne       0x1414c6eb4
+0x1414c6e63: test      byte ptr [rdi + 0x2b], 1
+0x1414c6e67: jne       0x1414c6eb4
+0x1414c6e69: mov       rax, qword ptr [rbx]
+0x1414c6e6c: lea       rdx, [rsp + 0x48] ; OBJDISP=0x48
+0x1414c6e71: mov       rcx, qword ptr [rax + 8]
+0x1414c6e75: mov       rax, qword ptr [rcx]
+0x1414c6e78: call      qword ptr [rax + 0x160]
+0x1414c6e7e: test      byte ptr [rdi + 0x2a], 0x10
+0x1414c6e82: jne       0x1414c6e99
+0x1414c6e84: mov       rax, qword ptr [rbx]
+0x1414c6e87: lea       rdx, [rsp + 0x50] ; OBJDISP=0x50
+0x1414c6e8c: mov       rcx, qword ptr [rax + 8]
+0x1414c6e90: mov       rax, qword ptr [rcx]
+0x1414c6e93: call      qword ptr [rax + 0x150]
+0x1414c6e99: test      byte ptr [rdi + 0x2a], 0x40
+0x1414c6e9d: jne       0x1414c6eb4
+0x1414c6e9f: mov       rax, qword ptr [rbx]
+0x1414c6ea2: lea       rdx, [rsp + 0x40] ; OBJDISP=0x40
+0x1414c6ea7: mov       rcx, qword ptr [rax + 8]
+0x1414c6eab: mov       rax, qword ptr [rcx]
+0x1414c6eae: call      qword ptr [rax + 0x150]
+0x1414c6eb4: call      0x1413de500 ; CALL->0x1413de500 pdata=(5389542656, 5389542830)
+0x1414c6eb9: cmp       qword ptr [rsp + 0x40], rax ; OBJDISP=0x40
+0x1414c6ebe: je        0x1414c6ecb
+0x1414c6ec0: mov       rdx, rbx
+0x1414c6ec3: mov       rcx, rsi
+0x1414c6ec6: call      0x1414c6f70 ; CALL->0x1414c6f70 pdata=(5390495600, 5390495924)
+0x1414c6ecb: mov       rdx, rbx
+0x1414c6ece: mov       rcx, rsi
+0x1414c6ed1: call      0x1414a74b0 ; CALL->0x1414a74b0 pdata=(5390365872, 5390366507)
+0x1414c6ed6: mov       rax, qword ptr [rsi + 0x10]
+0x1414c6eda: mov       rcx, rdi
+0x1414c6edd: mov       r8d, dword ptr [rax + 0x5c]
+0x1414c6ee1: mov       edx, dword ptr [rax + 0x58]
+0x1414c6ee4: dec       edx
+0x1414c6ee6: add       edx, r8d
+0x1414c6ee9: neg       r8d
+0x1414c6eec: movsxd    rax, r8d
+0x1414c6eef: movsxd    rdx, edx
+0x1414c6ef2: and       rdx, rax
+0x1414c6ef5: mov       rax, qword ptr [rdi]
+0x1414c6ef8: mov       r8, rdx
+0x1414c6efb: call      qword ptr [rax + 0x10]
+0x1414c6efe: add       rsp, 0x20
+0x1414c6f02: pop       rdi
+0x1414c6f03: pop       rsi
+0x1414c6f04: pop       rbx
+0x1414c6f05: ret       
+CALLS=0x1413de500,0x1414a74b0,0x1414c6f70
+
+===== METHOD 0x1414c6d80-0x1414c6de0 SIZE=0x60 VTABLE_INDICES=[163] =====
+0x1414c6d80: sub       rsp, 0x1c8
+0x1414c6d87: mov       rax, qword ptr [rip + 0x9bba9b2] ; RIP->0x14b081740(.data2)
+0x1414c6d8e: xor       rax, rsp
+0x1414c6d91: mov       qword ptr [rsp + 0x1b0], rax
+0x1414c6d99: lea       rax, [rip + 0x7d2d4c0] ; RIP->0x1491f4260(.shared)
+0x1414c6da0: mov       qword ptr [rsp + 0x28], rdx
+0x1414c6da5: mov       qword ptr [rsp + 0x20], rax
+0x1414c6daa: lea       rdx, [rsp + 0x30] ; OBJDISP=0x30
+0x1414c6daf: lea       rax, [rsp + 0x20]
+0x1414c6db4: mov       qword ptr [rsp + 0x30], rax ; OBJDISP=0x30
+0x1414c6db9: lea       rax, [rsp + 0x30] ; OBJDISP=0x30
+0x1414c6dbe: mov       qword ptr [rsp + 0x38], rax ; OBJDISP=0x38
+0x1414c6dc3: call      0x1414c6de0 ; CALL->0x1414c6de0 pdata=(5390495200, 5390495494)
+0x1414c6dc8: mov       rcx, qword ptr [rsp + 0x1b0]
+0x1414c6dd0: xor       rcx, rsp
+0x1414c6dd3: call      0x147bcdde0 ; CALL->0x147bcdde0 pdata=(5498527200, 5498527230)
+0x1414c6dd8: add       rsp, 0x1c8
+0x1414c6ddf: ret       
+CALLS=0x1414c6de0,0x147bcdde0
+
+===== METHOD 0x1414c6630-0x1414c664e SIZE=0x1e VTABLE_INDICES=[170] =====
+0x1414c6630: sub       rsp, 0x28
+0x1414c6634: mov       rdx, qword ptr [rcx + 0x10]
+0x1414c6638: lea       rcx, [rip + 0xa1d3b41] ; RIP->0x14b69a180(.data2)
+0x1414c663f: call      0x1414c5eb0 ; CALL->0x1414c5eb0 pdata=(5390491312, 5390491360)
+0x1414c6644: test      al, al
+0x1414c6646: sete      al
+0x1414c6649: add       rsp, 0x28
+0x1414c664d: ret       
+CALLS=0x1414c5eb0
+
+===== METHOD 0x1414c6610-0x1414c662e SIZE=0x1e VTABLE_INDICES=[171] =====
+0x1414c6610: sub       rsp, 0x28
+0x1414c6614: mov       rdx, qword ptr [rcx + 0x10]
+0x1414c6618: lea       rcx, [rip + 0xa1d39f1] ; RIP->0x14b69a010(.data2)
+0x1414c661f: call      0x1414c5eb0 ; CALL->0x1414c5eb0 pdata=(5390491312, 5390491360)
+0x1414c6624: test      al, al
+0x1414c6626: sete      al
+0x1414c6629: add       rsp, 0x28
+0x1414c662d: ret       
+CALLS=0x1414c5eb0
+
+===== METHOD 0x1414c6be0-0x1414c6bfd SIZE=0x1d VTABLE_INDICES=[178] =====
+0x1414c6be0: mov       r11, rsp
+0x1414c6be3: push      rbx
+0x1414c6be4: sub       rsp, 0x770
+0x1414c6beb: mov       rax, qword ptr [rip + 0x9bbab4e] ; RIP->0x14b081740(.data2)
+0x1414c6bf2: xor       rax, rsp
+0x1414c6bf5: mov       qword ptr [rsp + 0x758], rax
+CALLS=
+
+===== METHOD 0x1414c5790-0x1414c5e25 SIZE=0x695 VTABLE_INDICES=[184] =====
+0x1414c5790: push      rbp
+0x1414c5792: push      rbx
+0x1414c5793: push      rsi
+0x1414c5794: push      rdi
+0x1414c5795: push      r12
+0x1414c5797: push      r13
+0x1414c5799: push      r14
+0x1414c579b: push      r15
+0x1414c579d: lea       rbp, [rsp - 0x3c8]
+0x1414c57a5: sub       rsp, 0x4c8
+0x1414c57ac: mov       rax, qword ptr [rip + 0x9bbbf8d] ; RIP->0x14b081740(.data2)
+0x1414c57b3: xor       rax, rsp
+0x1414c57b6: mov       qword ptr [rbp + 0x3b0], rax
+0x1414c57bd: xor       esi, esi
+0x1414c57bf: mov       dword ptr [rsp + 0x50], r9d ; OBJDISP=0x50
+0x1414c57c4: lea       rbx, [rip + 0x7cf7859] ; RIP->0x1491bd024(.shared)
+0x1414c57cb: mov       r12d, r9d
+0x1414c57ce: mov       r13, r8
+0x1414c57d1: mov       r15, rdx
+0x1414c57d4: mov       r14, rcx
+0x1414c57d7: test      r8, r8
+0x1414c57da: je        0x1414c5913
+0x1414c57e0: mov       rax, qword ptr [rcx + 0x10]
+0x1414c57e4: mov       rdx, qword ptr [rax + 0xe0]
+0x1414c57eb: mov       rax, qword ptr [r8 + 0x10]
+0x1414c57ef: add       rdx, 0x30
+0x1414c57f3: movsxd    rcx, dword ptr [rdx + 8]
+0x1414c57f7: cmp       ecx, dword ptr [rax + 0x38] ; OBJDISP=0x38
+0x1414c57fa: jg        0x1414c580a
+0x1414c57fc: mov       rax, qword ptr [rax + 0x30] ; OBJDISP=0x30
+0x1414c5800: cmp       qword ptr [rax + rcx*8], rdx
+0x1414c5804: je        0x1414c5913
+0x1414c580a: mov       eax, dword ptr [r14 + 8]
+0x1414c580e: test      al, 0x30
+0x1414c5810: jne       0x1414c5913
+0x1414c5816: cmp       r13, qword ptr [rip + 0xa2fa83b] ; RIP->0x14b7c0058(.data2)
+0x1414c581d: je        0x1414c5913
+0x1414c5823: test      r12b, 2
+0x1414c5827: jne       0x1414c5b16
+0x1414c582d: mov       rax, qword ptr [r14 + 0x10]
+0x1414c5831: lea       rdx, [rsp + 0x40] ; OBJDISP=0x40
+0x1414c5836: mov       rcx, qword ptr [rax + 0xe0]
+0x1414c583d: mov       rax, qword ptr [rcx + 0x18]
+0x1414c5841: lea       rcx, [rbp - 0x80]
+0x1414c5845: mov       qword ptr [rbp - 0x80], rax
+0x1414c5849: call      0x141345f40 ; CALL->0x141345f40 pdata=(5388918592, 5388918956)
+0x1414c584e: cmp       dword ptr [rsp + 0x48], esi ; OBJDISP=0x48
+0x1414c5852: lea       rcx, [rbp - 0x68]
+0x1414c5856: mov       rdi, rbx
+0x1414c5859: mov       qword ptr [rbp - 0x68], rsi
+0x1414c585d: cmovne    rdi, qword ptr [rsp + 0x40] ; OBJDISP=0x40
+0x1414c5863: mov       edx, 0x81
+0x1414c5868: mov       qword ptr [rbp - 0x60], rsi
+0x1414c586c: call      0x1411c6fe0 ; CALL->0x1411c6fe0 pdata=(5387349984, 5387350102)
+0x1414c5871: lea       r8, [rbp - 0x68]
+0x1414c5875: xor       edx, edx
+0x1414c5877: mov       rcx, r13
+0x1414c587a: call      0x14154e920 ; CALL->0x14154e920 pdata=(5391051040, 5391051075)
+0x1414c587f: cmp       dword ptr [rbp - 0x60], esi
+0x1414c5882: lea       rcx, [rbp - 0x78]
+0x1414c5886: mov       edx, 0x81
+0x1414c588b: mov       qword ptr [rbp - 0x78], rsi
+0x1414c588f: cmovne    rbx, qword ptr [rbp - 0x68]
+0x1414c5894: mov       qword ptr [rbp - 0x70], rsi
+0x1414c5898: call      0x1411c6fe0 ; CALL->0x1411c6fe0 pdata=(5387349984, 5387350102)
+0x1414c589d: lea       r8, [rbp - 0x78]
+0x1414c58a1: xor       edx, edx
+0x1414c58a3: mov       rcx, r14
+0x1414c58a6: call      0x14154e920 ; CALL->0x14154e920 pdata=(5391051040, 5391051075)
+0x1414c58ab: cmp       dword ptr [rbp - 0x70], esi
+0x1414c58ae: lea       rax, [rip + 0x7cf776f] ; RIP->0x1491bd024(.shared)
+0x1414c58b5: mov       r8, qword ptr [rbp + 0x408]
+0x1414c58bc: lea       r9, [rip + 0x7d6c9ed] ; RIP->0x1492322b0(.shared) WIDE='Cannot rename %s into Outer %s as it is not of type %s'
+0x1414c58c3: cmovne    rax, qword ptr [rbp - 0x78]
+0x1414c58c8: lea       rcx, [rip + 0x7d6c611] ; RIP->0x149231ee0(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\Engine\\Source\\Runtime\\CoreUObject\\Private\\UObject\\Obj.cpp'
+0x1414c58cf: mov       qword ptr [rsp + 0x30], rdi ; OBJDISP=0x30
+0x1414c58d4: mov       edx, 0xe3
+0x1414c58d9: mov       qword ptr [rsp + 0x28], rbx
+0x1414c58de: mov       qword ptr [rsp + 0x20], rax
+0x1414c58e3: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x1414c58e8: mov       rcx, qword ptr [rbp - 0x78]
+0x1414c58ec: test      rcx, rcx
+0x1414c58ef: je        0x1414c58f6
+0x1414c58f1: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1414c58f6: mov       rcx, qword ptr [rbp - 0x68]
+0x1414c58fa: test      rcx, rcx
+0x1414c58fd: je        0x1414c5904
+0x1414c58ff: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1414c5904: mov       rcx, qword ptr [rsp + 0x40] ; OBJDISP=0x40
+0x1414c5909: test      rcx, rcx
+0x1414c590c: je        0x1414c5913
+0x1414c590e: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1414c5913: test      r15, r15
+0x1414c5916: je        0x1414c5a69
+0x1414c591c: test      r12b, 0x40
+0x1414c5920: jne       0x1414c593d
+0x1414c5922: mov       rdx, r13
+0x1414c5925: test      r13, r13
+0x1414c5928: jne       0x1414c592e
+0x1414c592a: mov       rdx, qword ptr [r14 + 0x20]
+0x1414c592e: mov       r9b, 1
+0x1414c5931: mov       r8, r15
+0x1414c5934: xor       ecx, ecx
+0x1414c5936: call      0x141550fc0 ; CALL->0x141550fc0 pdata=(5391060928, 5391062410)
+0x1414c593b: jmp       0x1414c5953
+0x1414c593d: xor       r9d, r9d
+0x1414c5940: mov       qword ptr [rsp + 0x20], rsi
+0x1414c5945: mov       rdx, r15
+0x1414c5948: xor       ecx, ecx
+0x1414c594a: lea       r8d, [r9 + 2]
+0x1414c594e: call      0x141551730 ; CALL->0x141551730 pdata=(5391062832, 5391065862)
+0x1414c5953: mov       rbx, rax
+0x1414c5956: cmp       rax, r14
+0x1414c5959: jne       0x1414c5b07
+0x1414c595f: mov       rax, qword ptr [rax + 0x18]
+0x1414c5963: lea       rdx, [rsp + 0x70]
+0x1414c5968: lea       rcx, [rbp - 0x80]
+0x1414c596c: mov       qword ptr [rbp - 0x80], rax
+0x1414c5970: call      0x141345f40 ; CALL->0x141345f40 pdata=(5388918592, 5388918956)
+0x1414c5975: mov       eax, esi
+0x1414c5977: mov       r12, rsi
+0x1414c597a: mov       edi, esi
+0x1414c597c: mov       dword ptr [rsp + 0x6c], eax
+0x1414c5980: mov       qword ptr [rsp + 0x60], rsi
+0x1414c5985: mov       dword ptr [rsp + 0x68], esi
+0x1414c5989: cmp       word ptr [r15], si
+0x1414c598d: je        0x1414c59f8
+0x1414c598f: mov       rbx, 0xffffffffffffffff
+0x1414c5996: inc       rbx
+0x1414c5999: cmp       word ptr [r15 + rbx*2], ax
+0x1414c599e: jne       0x1414c5996
+0x1414c59a0: add       ebx, 1
+0x1414c59a3: js        0x1414c5e1d
+0x1414c59a9: test      ebx, ebx
+0x1414c59ab: jle       0x1414c59c6
+0x1414c59ad: mov       edx, ebx
+0x1414c59af: lea       rcx, [rsp + 0x60]
+0x1414c59b4: call      0x1411c6fe0 ; CALL->0x1411c6fe0 pdata=(5387349984, 5387350102)
+0x1414c59b9: mov       eax, dword ptr [rsp + 0x6c]
+0x1414c59bd: mov       edi, dword ptr [rsp + 0x68]
+0x1414c59c1: mov       r12, qword ptr [rsp + 0x60]
+0x1414c59c6: mov       edx, edi
+0x1414c59c8: add       edi, ebx
+0x1414c59ca: sub       eax, edx
+0x1414c59cc: mov       dword ptr [rsp + 0x68], edi
+0x1414c59d0: cmp       ebx, eax
+0x1414c59d2: jbe       0x1414c59e7
+0x1414c59d4: lea       rcx, [rsp + 0x60]
+0x1414c59d9: call      0x1411c17f0 ; CALL->0x1411c17f0 pdata=(5387327472, 5387327625)
+0x1414c59de: mov       edi, dword ptr [rsp + 0x68]
+0x1414c59e2: mov       r12, qword ptr [rsp + 0x60]
+0x1414c59e7: movsxd    r8, ebx
+0x1414c59ea: mov       rdx, r15
+0x1414c59ed: add       r8, r8
+0x1414c59f0: mov       rcx, r12
+0x1414c59f3: call      0x147bd0738 ; CALL->0x147bd0738 pdata=None
+0x1414c59f8: mov       eax, dword ptr [rsp + 0x78]
+0x1414c59fc: mov       r9, qword ptr [rsp + 0x70]
+0x1414c5a01: cmp       eax, edi
+0x1414c5a03: je        0x1414c5a0f
+0x1414c5a05: add       eax, edi
+0x1414c5a07: cmp       eax, 1
+0x1414c5a0a: sete      bl
+0x1414c5a0d: jmp       0x1414c5a3d
+0x1414c5a0f: cmp       eax, 1
+0x1414c5a12: jle       0x1414c5a3b
+0x1414c5a14: mov       r8, r12
+0x1414c5a17: mov       rax, r9
+0x1414c5a1a: sub       r8, r9
+0x1414c5a1d: nop       dword ptr [rax]
+0x1414c5a20: movzx     edx, word ptr [rax]
+0x1414c5a23: movzx     ecx, word ptr [rax + r8]
+0x1414c5a28: sub       edx, ecx
+0x1414c5a2a: jne       0x1414c5a34
+0x1414c5a2c: add       rax, 2
+0x1414c5a30: test      ecx, ecx
+0x1414c5a32: jne       0x1414c5a20
+0x1414c5a34: test      edx, edx
+0x1414c5a36: sete      bl
+0x1414c5a39: jmp       0x1414c5a3d
+0x1414c5a3b: mov       bl, 1
+0x1414c5a3d: test      r12, r12
+0x1414c5a40: je        0x1414c5a4f
+0x1414c5a42: mov       rcx, r12
+0x1414c5a45: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1414c5a4a: mov       r9, qword ptr [rsp + 0x70]
+0x1414c5a4f: test      r9, r9
+0x1414c5a52: je        0x1414c5a5c
+0x1414c5a54: mov       rcx, r9
+0x1414c5a57: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1414c5a5c: test      bl, bl
+0x1414c5a5e: jne       0x1414c5df8
+0x1414c5a64: mov       r12d, dword ptr [rsp + 0x50] ; OBJDISP=0x50
+0x1414c5a69: test      r12b, 2
+0x1414c5a6d: jne       0x1414c5df8
+0x1414c5a73: test      r12b, 1
+0x1414c5a77: jne       0x1414c5a89
+0x1414c5a79: mov       rcx, r14
+0x1414c5a7c: call      0x14154ed60 ; CALL->0x14154ed60 pdata=(5391052128, 5391052196)
+0x1414c5a81: mov       rcx, rax
+0x1414c5a84: call      0x1414a8e40 ; CALL->0x1414a8e40 pdata=None
+0x1414c5a89: mov       rbx, qword ptr [r14 + 0x18]
+0x1414c5a8d: mov       qword ptr [rbp - 0x80], rbx
+0x1414c5a91: call      0x14155fc80 ; CALL->0x14155fc80 pdata=(5391121536, 5391121978)
+0x1414c5a96: mov       rcx, rax
+0x1414c5a99: call      qword ptr [rip + 0x68bd009] ; RIP->0x147d82aa8(.shared)
+0x1414c5a9f: test      r15, r15
+0x1414c5aa2: jne       0x1414c5be0
+0x1414c5aa8: test      r13, r13
+0x1414c5aab: je        0x1414c5ace
+0x1414c5aad: mov       dword ptr [rsp + 0x28], esi
+0x1414c5ab1: xor       r9d, r9d
+0x1414c5ab4: mov       r8, rbx
+0x1414c5ab7: mov       dword ptr [rsp + 0x20], esi
+0x1414c5abb: mov       rdx, r13
+0x1414c5abe: xor       ecx, ecx
+0x1414c5ac0: call      0x141560e60 ; CALL->0x141560e60 pdata=(5391126112, 5391126218)
+0x1414c5ac5: test      rax, rax
+0x1414c5ac8: je        0x1414c5d88
+0x1414c5ace: mov       eax, r12d
+0x1414c5ad1: mov       qword ptr [rsp + 0x58], rsi
+0x1414c5ad6: shr       eax, 5
+0x1414c5ad9: mov       rdx, r13
+0x1414c5adc: and       eax, 2
+0x1414c5adf: test      r13, r13
+0x1414c5ae2: jne       0x1414c5ae8
+0x1414c5ae4: mov       rdx, qword ptr [r14 + 0x20]
+0x1414c5ae8: mov       r9, qword ptr [rsp + 0x58]
+0x1414c5aed: lea       rcx, [rsp + 0x50] ; OBJDISP=0x50
+0x1414c5af2: mov       r8, qword ptr [r14 + 0x10]
+0x1414c5af6: mov       dword ptr [rsp + 0x20], eax
+0x1414c5afa: call      0x141557100 ; CALL->0x141557100 pdata=(5391085824, 5391086950)
+0x1414c5aff: mov       rbx, qword ptr [rax]
+0x1414c5b02: jmp       0x1414c5d88
+0x1414c5b07: test      rbx, rbx
+0x1414c5b0a: je        0x1414c5a69
+0x1414c5b10: test      r12b, 2
+0x1414c5b14: je        0x1414c5b1d
+0x1414c5b16: xor       al, al
+0x1414c5b18: jmp       0x1414c5dfa
+0x1414c5b1d: mov       edx, 0x81
+0x1414c5b22: mov       qword ptr [rsp + 0x70], rsi
+0x1414c5b27: lea       rcx, [rsp + 0x70]
+0x1414c5b2c: mov       qword ptr [rsp + 0x78], rsi
+0x1414c5b31: call      0x1411c6fe0 ; CALL->0x1411c6fe0 pdata=(5387349984, 5387350102)
+0x1414c5b36: lea       r8, [rsp + 0x70]
+0x1414c5b3b: xor       edx, edx
+0x1414c5b3d: mov       rcx, rbx
+0x1414c5b40: call      0x14154e920 ; CALL->0x14154e920 pdata=(5391051040, 5391051075)
+0x1414c5b45: cmp       dword ptr [rsp + 0x78], esi
+0x1414c5b49: lea       rbx, [rip + 0x7cf74d4] ; RIP->0x1491bd024(.shared)
+0x1414c5b50: mov       rdi, qword ptr [rsp + 0x70]
+0x1414c5b55: lea       rcx, [rsp + 0x60]
+0x1414c5b5a: mov       edx, 0x81
+0x1414c5b5f: mov       qword ptr [rsp + 0x60], rsi
+0x1414c5b64: cmovne    rbx, rdi
+0x1414c5b68: mov       qword ptr [rsp + 0x68], rsi
+0x1414c5b6d: call      0x1411c6fe0 ; CALL->0x1411c6fe0 pdata=(5387349984, 5387350102)
+0x1414c5b72: lea       r8, [rsp + 0x60]
+0x1414c5b77: xor       edx, edx
+0x1414c5b79: mov       rcx, r14
+0x1414c5b7c: call      0x14154e920 ; CALL->0x14154e920 pdata=(5391051040, 5391051075)
+0x1414c5b81: cmp       dword ptr [rsp + 0x68], esi
+0x1414c5b85: lea       rax, [rip + 0x7cf7498] ; RIP->0x1491bd024(.shared)
+0x1414c5b8c: mov       r8, qword ptr [rbp + 0x408]
+0x1414c5b93: lea       r9, [rip + 0x7d6c676] ; RIP->0x149232210(.shared) WIDE='Renaming an object (%s) on top of an existing object (%s) is not allowed'
+0x1414c5b9a: cmovne    rax, qword ptr [rsp + 0x60]
+0x1414c5ba0: lea       rcx, [rip + 0x7d6c339] ; RIP->0x149231ee0(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\Engine\\Source\\Runtime\\CoreUObject\\Private\\UObject\\Obj.cpp'
+0x1414c5ba7: mov       qword ptr [rsp + 0x28], rbx
+0x1414c5bac: mov       edx, 0x109
+0x1414c5bb1: mov       qword ptr [rsp + 0x20], rax
+0x1414c5bb6: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x1414c5bbb: mov       rcx, qword ptr [rsp + 0x60]
+0x1414c5bc0: test      rcx, rcx
+0x1414c5bc3: je        0x1414c5bca
+0x1414c5bc5: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1414c5bca: test      rdi, rdi
+0x1414c5bcd: je        0x1414c5a73
+0x1414c5bd3: mov       rcx, rdi
+0x1414c5bd6: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1414c5bdb: jmp       0x1414c5a73
+0x1414c5be0: movzx     eax, word ptr [r15]
+0x1414c5be4: mov       edx, esi
+0x1414c5be6: mov       qword ptr [rsp + 0x40], r15 ; OBJDISP=0x40
+0x1414c5beb: mov       rcx, r15
+0x1414c5bee: test      ax, ax
+0x1414c5bf1: je        0x1414c5c11
+0x1414c5bf3: nop       dword ptr [rax]
+0x1414c5bf7: nop       word ptr [rax + rax]
+0x1414c5c00: add       rcx, 2
+0x1414c5c04: movzx     eax, ax
+0x1414c5c07: or        edx, eax
+0x1414c5c09: movzx     eax, word ptr [rcx]
+0x1414c5c0c: test      ax, ax
+0x1414c5c0f: jne       0x1414c5c00
+0x1414c5c11: test      edx, 0xffffff80
+0x1414c5c17: setne     byte ptr [rsp + 0x4c] ; OBJDISP=0x4c
+0x1414c5c1c: sub       rcx, r15
+0x1414c5c1f: sar       rcx, 1
+0x1414c5c22: mov       dword ptr [rsp + 0x48], ecx ; OBJDISP=0x48
+0x1414c5c26: movaps    xmm0, xmmword ptr [rsp + 0x40] ; OBJDISP=0x40
+0x1414c5c2b: movdqa    xmmword ptr [rsp + 0x70], xmm0
+0x1414c5c31: test      ecx, ecx
+0x1414c5c33: je        0x1414c5d7e
+0x1414c5c39: lea       rdx, [rsp + 0x78]
+0x1414c5c3e: mov       rcx, r15
+0x1414c5c41: call      0x14135fb10 ; CALL->0x14135fb10 pdata=(5389024016, 5389024217)
+0x1414c5c46: mov       rdx, qword ptr [rsp + 0x78]
+0x1414c5c4b: mov       ebx, eax
+0x1414c5c4d: test      edx, edx
+0x1414c5c4f: je        0x1414c5d7e
+0x1414c5c55: mov       rcx, rdx
+0x1414c5c58: shr       rcx, 0x20
+0x1414c5c5c: test      cl, cl
+0x1414c5c5e: jne       0x1414c5d47
+0x1414c5c64: mov       ecx, 0x400
+0x1414c5c69: cmp       edx, ecx
+0x1414c5c6b: cmovl     ecx, edx
+0x1414c5c6e: movsxd    r8, ecx
+0x1414c5c71: test      ecx, ecx
+0x1414c5c73: jle       0x1414c5c90
+0x1414c5c75: mov       rcx, qword ptr [rsp + 0x70]
+0x1414c5c7a: nop       word ptr [rax + rax]
+0x1414c5c80: movzx     eax, byte ptr [rcx + rsi*2]
+0x1414c5c84: mov       byte ptr [rbp + rsi - 0x50], al
+0x1414c5c88: inc       rsi
+0x1414c5c8b: cmp       rsi, r8
+0x1414c5c8e: jl        0x1414c5c80
+0x1414c5c90: mov       dword ptr [rsp + 0x48], edx ; OBJDISP=0x48
+0x1414c5c94: lea       rax, [rbp - 0x50]
+0x1414c5c98: mov       qword ptr [rsp + 0x40], rax ; OBJDISP=0x40
+0x1414c5c9d: mov       byte ptr [rsp + 0x4c], 0 ; OBJDISP=0x4c
+0x1414c5ca2: cmp       edx, 0x400
+0x1414c5ca8: jb        0x1414c5cea
+0x1414c5caa: mov       byte ptr [rsp + 0x4c], 0 ; OBJDISP=0x4c
+0x1414c5caf: mov       dword ptr [rsp + 0x48], 0x18 ; OBJDISP=0x48
+0x1414c5cb7: lea       rax, [rip + 0x7d318a2] ; RIP->0x1491f7560(.shared) ASCII='ERROR_NAME_SIZE_EXCEEDED'
+0x1414c5cbe: mov       qword ptr [rsp + 0x40], rax ; OBJDISP=0x40
+0x1414c5cc3: lea       rcx, [rsp + 0x40] ; OBJDISP=0x40
+0x1414c5cc8: movaps    xmm0, xmmword ptr [rsp + 0x40] ; OBJDISP=0x40
+0x1414c5ccd: mov       edx, 1
+0x1414c5cd2: movdqa    xmmword ptr [rsp + 0x40], xmm0 ; OBJDISP=0x40
+0x1414c5cd8: call      0x141345490 ; CALL->0x141345490 pdata=(5388915856, 5388916171)
+0x1414c5cdd: mov       dword ptr [rsp + 0x58], eax
+0x1414c5ce1: mov       dword ptr [rsp + 0x5c], ebx
+0x1414c5ce5: jmp       0x1414c5d83
+0x1414c5cea: cmp       byte ptr [rip + 0xa247e1d], 0 ; RIP->0x14b70db0e(.data2)
+0x1414c5cf1: je        0x1414c5cfc
+0x1414c5cf3: lea       rax, [rip + 0xa24fec6] ; RIP->0x14b715bc0(.data2)
+0x1414c5cfa: jmp       0x1414c5d0f
+0x1414c5cfc: lea       rcx, [rip + 0xa24febd] ; RIP->0x14b715bc0(.data2)
+0x1414c5d03: call      0x141340590 ; CALL->0x141340590 pdata=(5388895632, 5388911593)
+0x1414c5d08: mov       byte ptr [rip + 0xa247dff], 1 ; RIP->0x14b70db0e(.data2)
+0x1414c5d0f: movaps    xmm0, xmmword ptr [rsp + 0x40] ; OBJDISP=0x40
+0x1414c5d14: lea       r8, [rsp + 0x40] ; OBJDISP=0x40
+0x1414c5d19: lea       rdx, [rsp + 0x50] ; OBJDISP=0x50
+0x1414c5d1e: movdqa    xmmword ptr [rsp + 0x40], xmm0 ; OBJDISP=0x40
+0x1414c5d24: mov       rcx, rax
+0x1414c5d27: call      0x1413443f0 ; CALL->0x1413443f0 pdata=(5388911600, 5388911630)
+0x1414c5d2c: mov       eax, dword ptr [rsp + 0x50] ; OBJDISP=0x50
+0x1414c5d30: mov       dword ptr [rsp + 0x50], eax ; OBJDISP=0x50
+0x1414c5d34: mov       dword ptr [rsp + 0x54], eax
+0x1414c5d38: mov       rax, qword ptr [rsp + 0x50] ; OBJDISP=0x50
+0x1414c5d3d: mov       dword ptr [rsp + 0x58], eax
+0x1414c5d41: mov       dword ptr [rsp + 0x5c], ebx
+0x1414c5d45: jmp       0x1414c5d83
+0x1414c5d47: mov       rax, qword ptr [rsp + 0x70]
+0x1414c5d4c: mov       qword ptr [rsp + 0x40], rax ; OBJDISP=0x40
+0x1414c5d51: mov       dword ptr [rsp + 0x48], edx ; OBJDISP=0x48
+0x1414c5d55: mov       byte ptr [rsp + 0x4c], 1 ; OBJDISP=0x4c
+0x1414c5d5a: cmp       edx, 0x400
+0x1414c5d60: jb        0x1414c5d6c
+0x1414c5d62: mov       byte ptr [rsp + 0x4c], sil ; OBJDISP=0x4c
+0x1414c5d67: jmp       0x1414c5caf
+0x1414c5d6c: cmp       byte ptr [rip + 0xa247d9b], sil ; RIP->0x14b70db0e(.data2)
+0x1414c5d73: je        0x1414c5cfc
+0x1414c5d75: lea       rax, [rip + 0xa24fe44] ; RIP->0x14b715bc0(.data2)
+0x1414c5d7c: jmp       0x1414c5d0f
+0x1414c5d7e: mov       qword ptr [rsp + 0x58], rsi
+0x1414c5d83: mov       rbx, qword ptr [rsp + 0x58]
+0x1414c5d88: mov       eax, dword ptr [r14 + 8]
+0x1414c5d8c: mov       rdi, qword ptr [r14 + 0x20]
+0x1414c5d90: test      al, 1
+0x1414c5d92: je        0x1414c5d99
+0x1414c5d94: call      0x1413dde10 ; CALL->0x1413dde10 pdata=(5389540880, 5389541053)
+0x1414c5d99: test      r13, r13
+0x1414c5d9c: je        0x1414c5dba
+0x1414c5d9e: test      r12b, 4
+0x1414c5da2: jne       0x1414c5dba
+0x1414c5da4: mov       rcx, r13
+0x1414c5da7: call      0x14154f3c0 ; CALL->0x14154f3c0 pdata=(5391053760, 5391053783)
+0x1414c5dac: mov       rcx, r14
+0x1414c5daf: call      0x141564880 ; CALL->0x141564880 pdata=(5391140992, 5391141055)
+0x1414c5db4: mov       qword ptr [r14 + 0x18], rbx
+0x1414c5db8: jmp       0x1414c5dcb
+0x1414c5dba: mov       rcx, r14
+0x1414c5dbd: call      0x141564880 ; CALL->0x141564880 pdata=(5391140992, 5391141055)
+0x1414c5dc2: mov       qword ptr [r14 + 0x18], rbx
+0x1414c5dc6: test      r13, r13
+0x1414c5dc9: je        0x1414c5dcf
+0x1414c5dcb: mov       qword ptr [r14 + 0x20], r13
+0x1414c5dcf: mov       rcx, r14
+0x1414c5dd2: call      0x141564160 ; CALL->0x141564160 pdata=(5391139168, 5391139229)
+0x1414c5dd7: call      0x14155fc80 ; CALL->0x14155fc80 pdata=(5391121536, 5391121978)
+0x1414c5ddc: mov       rcx, rax
+0x1414c5ddf: call      qword ptr [rip + 0x68bccbb] ; RIP->0x147d82aa0(.shared)
+0x1414c5de5: mov       rax, qword ptr [r14]
+0x1414c5de8: mov       rdx, rdi
+0x1414c5deb: mov       r8, qword ptr [rbp - 0x80]
+0x1414c5def: mov       rcx, r14
+0x1414c5df2: call      qword ptr [rax + 0xe8]
+0x1414c5df8: mov       al, 1
+0x1414c5dfa: mov       rcx, qword ptr [rbp + 0x3b0]
+0x1414c5e01: xor       rcx, rsp
+0x1414c5e04: call      0x147bcdde0 ; CALL->0x147bcdde0 pdata=(5498527200, 5498527230)
+0x1414c5e09: add       rsp, 0x4c8
+0x1414c5e10: pop       r15
+0x1414c5e12: pop       r14
+0x1414c5e14: pop       r13
+0x1414c5e16: pop       r12
+0x1414c5e18: pop       rdi
+0x1414c5e19: pop       rsi
+0x1414c5e1a: pop       rbx
+0x1414c5e1b: pop       rbp
+0x1414c5e1c: ret       
+0x1414c5e1d: mov       ecx, ebx
+0x1414c5e1f: call      0x1411b62c0 ; CALL->0x1411b62c0 pdata=(5387281088, 5387281128)
+0x1414c5e24: int3      
+CALLS=0x1411b62c0,0x1411c17f0,0x1411c6fe0,0x141201300,0x1412a3b90,0x141340590,0x1413443f0,0x141345490,0x141345f40,0x14135fb10,0x1413dde10,0x1414a8e40,0x14154e920,0x14154ed60,0x14154f3c0,0x141550fc0,0x141551730,0x141557100,0x14155fc80,0x141560e60,0x141564160,0x141564880,0x147bcdde0,0x147bd0738
+
+===== METHOD 0x144d5fb90-0x144d5fc62 SIZE=0xd2 VTABLE_INDICES=[186] =====
+0x144d5fb90: push      rdi
+0x144d5fb92: sub       rsp, 0x20
+0x144d5fb96: mov       rdi, rcx
+0x144d5fb99: mov       rcx, qword ptr [rip + 0x6ae9ff0] ; RIP->0x14b849b90(.data2)
+0x144d5fba0: test      rcx, rcx
+0x144d5fba3: je        0x144d5fbc0
+0x144d5fba5: mov       rcx, qword ptr [rcx + 0x310]
+0x144d5fbac: test      rcx, rcx
+0x144d5fbaf: je        0x144d5fbc0
+0x144d5fbb1: mov       rax, qword ptr [rcx]
+0x144d5fbb4: add       rsp, 0x20
+0x144d5fbb8: pop       rdi
+0x144d5fbb9: jmp       qword ptr [rax + 0x188]
+0x144d5fbc0: mov       rcx, qword ptr [rdi + 0x20]
+0x144d5fbc4: mov       qword ptr [rsp + 0x30], rbx ; OBJDISP=0x30
+0x144d5fbc9: test      rcx, rcx
+0x144d5fbcc: je        0x144d5fbdf
+0x144d5fbce: mov       rax, qword ptr [rcx]
+0x144d5fbd1: call      qword ptr [rax + 0x188]
+0x144d5fbd7: mov       rbx, rax
+0x144d5fbda: test      rax, rax
+0x144d5fbdd: jne       0x144d5fc54
+0x144d5fbdf: mov       r8, qword ptr [rdi + 0x28]
+0x144d5fbe3: xor       ebx, ebx
+0x144d5fbe5: test      r8, r8
+0x144d5fbe8: je        0x144d5fc54
+0x144d5fbea: mov       eax, dword ptr [r8 + 8]
+0x144d5fbee: shr       eax, 4
+0x144d5fbf1: test      al, 1
+0x144d5fbf3: jne       0x144d5fc54
+0x144d5fbf5: mov       rax, qword ptr [r8 + 0x20]
+0x144d5fbf9: test      rax, rax
+0x144d5fbfc: je        0x144d5fc54
+0x144d5fbfe: mov       eax, dword ptr [rax + 8]
+0x144d5fc01: shr       eax, 0xf
+0x144d5fc04: test      al, 1
+0x144d5fc06: jne       0x144d5fc54
+0x144d5fc08: mov       rax, qword ptr [r8 + 0x20]
+0x144d5fc0c: mov       ecx, dword ptr [rax + 0xc]
+0x144d5fc0f: cmp       ecx, dword ptr [rip + 0x633a08f] ; RIP->0x14b099ca4(.data2)
+0x144d5fc15: jge       0x144d5fc33
+0x144d5fc17: movzx     eax, cx
+0x144d5fc1a: shr       rcx, 0x10
+0x144d5fc1e: lea       rdx, [rax + rax*2]
+0x144d5fc22: mov       rax, qword ptr [rip + 0x633a067] ; RIP->0x14b099c90(.data2)
+0x144d5fc29: mov       rcx, qword ptr [rax + rcx*8]
+0x144d5fc2d: lea       rax, [rcx + rdx*8]
+0x144d5fc31: jmp       0x144d5fc36
+0x144d5fc33: mov       rax, rbx
+0x144d5fc36: mov       eax, dword ptr [rax + 8]
+0x144d5fc39: shr       eax, 0x1c
+0x144d5fc3c: test      al, 1
+0x144d5fc3e: jne       0x144d5fc54
+0x144d5fc40: mov       rcx, r8
+0x144d5fc43: call      0x14345b1b0 ; CALL->0x14345b1b0 pdata=(5423608240, 5423608321)
+0x144d5fc48: test      rax, rax
+0x144d5fc4b: je        0x144d5fc54
+0x144d5fc4d: mov       rbx, qword ptr [rax + 0xb8]
+0x144d5fc54: mov       rax, rbx
+0x144d5fc57: mov       rbx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x144d5fc5c: add       rsp, 0x20
+0x144d5fc60: pop       rdi
+0x144d5fc61: ret       
+CALLS=0x14345b1b0
+
+===== METHOD 0x1414c7980-0x1414c798e SIZE=0xe VTABLE_INDICES=[192] =====
+0x1414c7980: mov       rax, rsp
+0x1414c7983: push      rbp
+0x1414c7984: mov       rbp, rsp
+0x1414c7987: sub       rsp, 0x80
+CALLS=
+
+===== METHOD 0x1414c85f0-0x1414c867c SIZE=0x8c VTABLE_INDICES=[194] =====
+0x1414c85f0: push      rbx
+0x1414c85f2: sub       rsp, 0x20
+0x1414c85f6: mov       eax, dword ptr [rcx + 8]
+0x1414c85f9: mov       rbx, rcx
+0x1414c85fc: test      al, 0x50
+0x1414c85fe: jne       0x1414c8674
+0x1414c8600: mov       eax, dword ptr [rcx + 8]
+0x1414c8603: test      al, 1
+0x1414c8605: je        0x1414c8674
+0x1414c8607: mov       eax, dword ptr [rcx + 8]
+0x1414c860a: test      eax, 0x60000000
+0x1414c860f: jne       0x1414c8674
+0x1414c8611: mov       rax, qword ptr [rcx + 0x10]
+0x1414c8615: mov       ecx, dword ptr [rax + 0xd4]
+0x1414c861b: shr       ecx, 4
+0x1414c861e: test      cl, 1
+0x1414c8621: jne       0x1414c8674
+0x1414c8623: mov       rbx, qword ptr [rbx + 0x20]
+0x1414c8627: test      rbx, rbx
+0x1414c862a: je        0x1414c8674
+0x1414c862c: call      0x1413dde10 ; CALL->0x1413dde10 pdata=(5389540880, 5389541053)
+0x1414c8631: mov       rdx, qword ptr [rbx + 0x10]
+0x1414c8635: lea       r8, [rax + 0x30] ; OBJDISP=0x30
+0x1414c8639: movsxd    rax, dword ptr [rax + 0x38] ; OBJDISP=0x38
+0x1414c863d: cmp       eax, dword ptr [rdx + 0x38] ; OBJDISP=0x38
+0x1414c8640: jg        0x1414c8674
+0x1414c8642: mov       rcx, rax
+0x1414c8645: mov       rax, qword ptr [rdx + 0x30] ; OBJDISP=0x30
+0x1414c8649: cmp       qword ptr [rax + rcx*8], r8
+0x1414c864d: jne       0x1414c8674
+0x1414c864f: cmp       rbx, qword ptr [rip + 0xa2f7a02] ; RIP->0x14b7c0058(.data2)
+0x1414c8656: je        0x1414c8674
+0x1414c8658: mov       eax, dword ptr [rbx + 8]
+0x1414c865b: shr       eax, 6
+0x1414c865e: test      al, 1
+0x1414c8660: jne       0x1414c8674
+0x1414c8662: mov       eax, dword ptr [rbx + 0x3c]
+0x1414c8665: shr       eax, 0x14
+0x1414c8668: test      al, 1
+0x1414c866a: jne       0x1414c8674
+0x1414c866c: mov       al, 1
+0x1414c866e: add       rsp, 0x20
+0x1414c8672: pop       rbx
+0x1414c8673: ret       
+0x1414c8674: xor       al, al
+0x1414c8676: add       rsp, 0x20
+0x1414c867a: pop       rbx
+0x1414c867b: ret       
+CALLS=0x1413dde10
+
+===== METHOD 0x1414c8680-0x1414c871f SIZE=0x9f VTABLE_INDICES=[195] =====
+0x1414c8680: mov       qword ptr [rsp + 8], rbx
+0x1414c8685: push      rdi
+0x1414c8686: sub       rsp, 0x20
+0x1414c868a: cmp       dword ptr [rip + 0xa1d1f57], 0 ; RIP->0x14b69a5e8(.data2)
+0x1414c8691: mov       rbx, rdx
+0x1414c8694: mov       rdi, rcx
+0x1414c8697: je        0x1414c8705
+0x1414c8699: mov       rcx, qword ptr [rip + 0xa1d1f40] ; RIP->0x14b69a5e0(.data2)
+0x1414c86a0: test      rcx, rcx
+0x1414c86a3: je        0x1414c8705
+0x1414c86a5: mov       rax, qword ptr [rcx]
+0x1414c86a8: call      qword ptr [rax + 0x30] ; OBJDISP=0x30
+0x1414c86ab: test      al, al
+0x1414c86ad: je        0x1414c8705
+0x1414c86af: mov       rax, qword ptr [rdi]
+0x1414c86b2: mov       rcx, rdi
+0x1414c86b5: call      qword ptr [rax + 0x1c8]
+0x1414c86bb: test      al, al
+0x1414c86bd: jne       0x1414c86db
+0x1414c86bf: mov       eax, dword ptr [rdi + 8]
+0x1414c86c2: shr       eax, 4
+0x1414c86c5: test      al, 1
+0x1414c86c7: je        0x1414c8705
+0x1414c86c9: mov       rax, qword ptr [rdi + 0x10]
+0x1414c86cd: mov       ecx, dword ptr [rax + 0xd4]
+0x1414c86d3: shr       ecx, 7
+0x1414c86d6: test      cl, 1
+0x1414c86d9: jne       0x1414c8705
+0x1414c86db: xor       ecx, ecx
+0x1414c86dd: mov       r8, rdi
+0x1414c86e0: cmp       dword ptr [rip + 0xa1d1f02], ecx ; RIP->0x14b69a5e8(.data2)
+0x1414c86e6: mov       rdx, rbx
+0x1414c86e9: cmovne    rcx, qword ptr [rip + 0xa1d1eef] ; RIP->0x14b69a5e0(.data2)
+0x1414c86f1: mov       rax, qword ptr [rcx]
+0x1414c86f4: call      qword ptr [rax + 0x58]
+0x1414c86f7: mov       rax, rbx
+0x1414c86fa: mov       rbx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x1414c86ff: add       rsp, 0x20
+0x1414c8703: pop       rdi
+0x1414c8704: ret       
+0x1414c8705: xor       ecx, ecx
+0x1414c8707: mov       rax, rbx
+0x1414c870a: mov       qword ptr [rbx + 8], rcx
+0x1414c870e: mov       dword ptr [rbx + 0xc], ecx
+0x1414c8711: mov       qword ptr [rbx], rcx
+0x1414c8714: mov       rbx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x1414c8719: add       rsp, 0x20
+0x1414c871d: pop       rdi
+0x1414c871e: ret       
+CALLS=
+
+===== METHOD 0x1414c8720-0x1414c87c5 SIZE=0xa5 VTABLE_INDICES=[196] =====
+0x1414c8720: mov       qword ptr [rsp + 0x10], rbx
+0x1414c8725: mov       qword ptr [rsp + 0x18], rsi
+0x1414c872a: push      rdi
+0x1414c872b: sub       rsp, 0x40
+0x1414c872f: xor       edi, edi
+0x1414c8731: cmp       qword ptr [rcx + 0x20], rdi
+0x1414c8735: lea       rbx, [rcx + 0x20]
+0x1414c8739: je        0x1414c8752
+0x1414c873b: mov       eax, dword ptr [rcx + 8]
+0x1414c873e: mov       rdx, rdi
+0x1414c8741: bt        eax, 0x1c
+0x1414c8745: jae       0x1414c874f
+0x1414c8747: call      0x141565a90 ; CALL->0x141565a90 pdata=(5391145616, 5391145904)
+0x1414c874c: mov       rdx, rax
+0x1414c874f: mov       rcx, rdx
+0x1414c8752: test      rcx, rcx
+0x1414c8755: jne       0x1414c875c
+0x1414c8757: mov       rcx, qword ptr [rbx]
+0x1414c875a: jmp       0x1414c8731
+0x1414c875c: lea       r8, [rsp + 0x20]
+0x1414c8761: mov       qword ptr [rsp + 0x20], rdi
+0x1414c8766: xor       edx, edx
+0x1414c8768: mov       qword ptr [rsp + 0x28], rdi
+0x1414c876d: call      0x14154e630 ; CALL->0x14154e630 pdata=(5391050288, 5391050323)
+0x1414c8772: mov       eax, dword ptr [rsp + 0x28]
+0x1414c8776: mov       rsi, qword ptr [rsp + 0x20]
+0x1414c877b: mov       qword ptr [rsp + 0x30], rsi ; OBJDISP=0x30
+0x1414c8780: test      eax, eax
+0x1414c8782: je        0x1414c8787
+0x1414c8784: lea       edi, [rax - 1]
+0x1414c8787: mov       dword ptr [rsp + 0x38], edi ; OBJDISP=0x38
+0x1414c878b: lea       rcx, [rsp + 0x30] ; OBJDISP=0x30
+0x1414c8790: movaps    xmm0, xmmword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x1414c8795: movdqa    xmmword ptr [rsp + 0x30], xmm0 ; OBJDISP=0x30
+0x1414c879b: call      0x1413ca5b0 ; CALL->0x1413ca5b0 pdata=(5389460912, 5389461006)
+0x1414c87a0: test      al, al
+0x1414c87a2: setne     bl
+0x1414c87a5: test      rsi, rsi
+0x1414c87a8: je        0x1414c87b2
+0x1414c87aa: mov       rcx, rsi
+0x1414c87ad: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x1414c87b2: mov       rsi, qword ptr [rsp + 0x60]
+0x1414c87b7: movzx     eax, bl
+0x1414c87ba: mov       rbx, qword ptr [rsp + 0x58]
+0x1414c87bf: add       rsp, 0x40
+0x1414c87c3: pop       rdi
+0x1414c87c4: ret       
+CALLS=0x141201300,0x1413ca5b0,0x14154e630,0x141565a90
+
+===== METHOD 0x1414c87d0-0x1414c87fb SIZE=0x2b VTABLE_INDICES=[197] =====
+0x1414c87d0: push      rbx
+0x1414c87d2: sub       rsp, 0x20
+0x1414c87d6: mov       rbx, rcx
+0x1414c87d9: call      0x1413bc040 ; CALL->0x1413bc040 pdata=(5389402176, 5389402309)
+0x1414c87de: test      al, al
+0x1414c87e0: jne       0x1414c87f3
+0x1414c87e2: mov       eax, dword ptr [rbx + 8]
+0x1414c87e5: test      eax, 0x60000000
+0x1414c87ea: sete      al
+0x1414c87ed: add       rsp, 0x20
+0x1414c87f1: pop       rbx
+0x1414c87f2: ret       
+0x1414c87f3: xor       al, al
+0x1414c87f5: add       rsp, 0x20
+0x1414c87f9: pop       rbx
+0x1414c87fa: ret       
+CALLS=0x1413bc040
+
+===== METHOD 0x1414c8800-0x1414c881c SIZE=0x1c VTABLE_INDICES=[198] =====
+0x1414c8800: mov       r11, rsp
+0x1414c8803: sub       rsp, 0xf8
+0x1414c880a: mov       rax, qword ptr [rip + 0x9bb8f2f] ; RIP->0x14b081740(.data2)
+0x1414c8811: xor       rax, rsp
+0x1414c8814: mov       qword ptr [rsp + 0xd0], rax
+CALLS=
+
+===== METHOD 0x1414cebd0-0x1414cec2e SIZE=0x5e VTABLE_INDICES=[202] =====
+0x1414cebd0: sub       rsp, 0x28
+0x1414cebd4: mov       eax, dword ptr [rcx + 8]
+0x1414cebd7: mov       r8, rcx
+0x1414cebda: test      eax, 0xc0010
+0x1414cebdf: jne       0x1414cec27
+0x1414cebe1: mov       eax, dword ptr [rcx + 0xc]
+0x1414cebe4: cmp       eax, dword ptr [rip + 0x9bcb0ba] ; RIP->0x14b099ca4(.data2)
+0x1414cebea: jge       0x1414cec0a
+0x1414cebec: mov       ecx, eax
+0x1414cebee: movzx     eax, ax
+0x1414cebf1: shr       rcx, 0x10
+0x1414cebf5: lea       rdx, [rax + rax*2]
+0x1414cebf9: mov       rax, qword ptr [rip + 0x9bcb090] ; RIP->0x14b099c90(.data2)
+0x1414cec00: mov       rcx, qword ptr [rax + rcx*8]
+0x1414cec04: lea       rax, [rcx + rdx*8]
+0x1414cec08: jmp       0x1414cec0c
+0x1414cec0a: xor       eax, eax
+0x1414cec0c: mov       eax, dword ptr [rax + 8]
+0x1414cec0f: shr       eax, 0x19
+0x1414cec12: test      al, 1
+0x1414cec14: jne       0x1414cec27
+0x1414cec16: mov       rcx, r8
+0x1414cec19: call      0x14154f700 ; CALL->0x14154f700 pdata=(5391054592, 5391054629)
+0x1414cec1e: test      al, al
+0x1414cec20: jne       0x1414cec27
+0x1414cec22: add       rsp, 0x28
+0x1414cec26: ret       
+0x1414cec27: mov       al, 1
+0x1414cec29: add       rsp, 0x28
+0x1414cec2d: ret       
+CALLS=0x14154f700
+
+===== METHOD 0x1414cec30-0x1414cec67 SIZE=0x37 VTABLE_INDICES=[203] =====
+0x1414cec30: push      rbx
+0x1414cec32: sub       rsp, 0x20
+0x1414cec36: mov       rbx, rcx
+0x1414cec39: mov       rcx, qword ptr [rcx + 0x20]
+0x1414cec3d: test      rcx, rcx
+0x1414cec40: je        0x1414cec55
+0x1414cec42: mov       rax, qword ptr [rcx]
+0x1414cec45: call      qword ptr [rax + 0x208]
+0x1414cec4b: test      al, al
+0x1414cec4d: jne       0x1414cec55
+0x1414cec4f: add       rsp, 0x20
+0x1414cec53: pop       rbx
+0x1414cec54: ret       
+0x1414cec55: mov       rax, qword ptr [rbx]
+0x1414cec58: mov       rcx, rbx
+0x1414cec5b: add       rsp, 0x20
+0x1414cec5f: pop       rbx
+0x1414cec60: jmp       qword ptr [rax + 0x208]
+CALLS=
+
+===== METHOD 0x1414c70c0-0x1414c71a1 SIZE=0xe1 VTABLE_INDICES=[210] =====
+0x1414c70c0: mov       qword ptr [rsp + 8], rbx
+0x1414c70c5: mov       qword ptr [rsp + 0x18], rsi
+0x1414c70ca: mov       qword ptr [rsp + 0x10], rdx
+0x1414c70cf: push      rdi
+0x1414c70d0: sub       rsp, 0x60
+0x1414c70d4: mov       rsi, r8
+0x1414c70d7: mov       rdi, rcx
+0x1414c70da: nop       word ptr [rax + rax]
+0x1414c70e0: cmp       qword ptr [rcx + 0x20], 0
+0x1414c70e5: lea       rbx, [rcx + 0x20]
+0x1414c70e9: je        0x1414c7101
+0x1414c70eb: mov       eax, dword ptr [rcx + 8]
+0x1414c70ee: xor       edx, edx
+0x1414c70f0: bt        eax, 0x1c
+0x1414c70f4: jae       0x1414c70fe
+0x1414c70f6: call      0x141565a90 ; CALL->0x141565a90 pdata=(5391145616, 5391145904)
+0x1414c70fb: mov       rdx, rax
+0x1414c70fe: mov       rcx, rdx
+0x1414c7101: test      rcx, rcx
+0x1414c7104: jne       0x1414c710b
+0x1414c7106: mov       rcx, qword ptr [rbx]
+0x1414c7109: jmp       0x1414c70e0
+0x1414c710b: mov       rcx, qword ptr [rsp + 0x78]
+0x1414c7110: cmp       qword ptr [rcx + 0x20], 0
+0x1414c7115: lea       rbx, [rcx + 0x20]
+0x1414c7119: je        0x1414c7131
+0x1414c711b: mov       eax, dword ptr [rcx + 8]
+0x1414c711e: xor       edx, edx
+0x1414c7120: bt        eax, 0x1c
+0x1414c7124: jae       0x1414c712e
+0x1414c7126: call      0x141565a90 ; CALL->0x141565a90 pdata=(5391145616, 5391145904)
+0x1414c712b: mov       rdx, rax
+0x1414c712e: mov       rcx, rdx
+0x1414c7131: test      rcx, rcx
+0x1414c7134: jne       0x1414c713b
+0x1414c7136: mov       rcx, qword ptr [rbx]
+0x1414c7139: jmp       0x1414c7110
+0x1414c713b: lea       rax, [rsp + 0x78]
+0x1414c7140: mov       qword ptr [rsp + 0x30], rsi ; OBJDISP=0x30
+0x1414c7145: mov       qword ptr [rsp + 0x38], rax ; OBJDISP=0x38
+0x1414c714a: lea       rdx, [rsp + 0x50] ; OBJDISP=0x50
+0x1414c714f: lea       rax, [rip + 0xd3ca] ; RIP->0x1414d4520(.sdata)
+0x1414c7156: mov       dword ptr [rsp + 0x20], 0x200000
+0x1414c715e: mov       qword ptr [rsp + 0x40], rax ; OBJDISP=0x40
+0x1414c7163: xor       r8d, r8d
+0x1414c7166: lea       rax, [rsp + 0x30] ; OBJDISP=0x30
+0x1414c716b: mov       rcx, rdi
+0x1414c716e: mov       qword ptr [rsp + 0x48], rax ; OBJDISP=0x48
+0x1414c7173: lea       rax, [rsp + 0x40] ; OBJDISP=0x40
+0x1414c7178: mov       qword ptr [rsp + 0x58], rax
+0x1414c717d: lea       rax, [rip - 0xa8e04] ; RIP->0x14141e380(.sdata)
+0x1414c7184: mov       qword ptr [rsp + 0x50], rax ; OBJDISP=0x50
+0x1414c7189: call      0x141562470 ; CALL->0x141562470 pdata=(5391131760, 5391133445)
+0x1414c718e: mov       rbx, qword ptr [rsp + 0x70]
+0x1414c7193: mov       rsi, qword ptr [rsp + 0x80]
+0x1414c719b: add       rsp, 0x60
+0x1414c719f: pop       rdi
+0x1414c71a0: ret       
+CALLS=0x141562470,0x141565a90
+
+===== METHOD 0x141532910-0x141532dbc SIZE=0x4ac VTABLE_INDICES=[214] =====
+0x141532910: push      rbp
+0x141532912: push      rsi
+0x141532913: push      rdi
+0x141532914: push      r12
+0x141532916: push      r13
+0x141532918: push      r14
+0x14153291a: push      r15
+0x14153291c: sub       rsp, 0x110
+0x141532923: lea       rbp, [rsp + 0x30] ; OBJDISP=0x30
+0x141532928: mov       qword ptr [rbp + 0x138], rbx
+0x14153292f: mov       rax, qword ptr [rip + 0x9b4ee0a] ; RIP->0x14b081740(.data2)
+0x141532936: xor       rax, rbp
+0x141532939: mov       qword ptr [rbp + 0xd0], rax
+0x141532940: mov       r13, r8
+0x141532943: mov       rsi, rdx
+0x141532946: mov       r15, rcx
+0x141532949: test      rcx, rcx
+0x14153294c: je        0x141532d93
+0x141532952: mov       eax, dword ptr [rcx + 8]
+0x141532955: test      eax, 0x60000000
+0x14153295a: jne       0x141532d93
+0x141532960: xor       r14d, r14d
+0x141532963: test      dword ptr [rdx + 0xb0], 0x400
+0x14153296d: je        0x1415329a1
+0x14153296f: mov       rax, qword ptr [rcx]
+0x141532972: xor       r8d, r8d
+0x141532975: call      qword ptr [rax + 0x270]
+0x14153297b: mov       ebx, eax
+0x14153297d: test      al, 1
+0x14153297f: je        0x14153299c
+0x141532981: mov       r10, qword ptr [r15]
+0x141532984: xor       r9d, r9d
+0x141532987: mov       r8, r13
+0x14153298a: mov       qword ptr [rsp + 0x20], r14
+0x14153298f: mov       rdx, rsi
+0x141532992: mov       rcx, r15
+0x141532995: call      qword ptr [r10 + 0x278]
+0x14153299c: test      bl, 2
+0x14153299f: jmp       0x1415329a5
+0x1415329a1: cmp       dword ptr [rdx + 0x68], r14d
+0x1415329a5: je        0x141532d93
+0x1415329ab: mov       rcx, qword ptr [rsi + 0xc8]
+0x1415329b2: test      rcx, rcx
+0x1415329b5: je        0x1415329c7
+0x1415329b7: mov       eax, dword ptr [rsi + 0xd0]
+0x1415329bd: lea       r13, [rbp]
+0x1415329c1: mov       dword ptr [rbp], eax
+0x1415329c4: mov       rsi, rcx
+0x1415329c7: test      dword ptr [rsi + 0xb0], 0x8000
+0x1415329d1: mov       rdi, r14
+0x1415329d4: je        0x1415329ec
+0x1415329d6: mov       rcx, qword ptr [rsi + 0x20]
+0x1415329da: mov       r8, rsi
+0x1415329dd: mov       rdx, r15
+0x1415329e0: mov       rax, qword ptr [rcx]
+0x1415329e3: call      qword ptr [rax + 0x390]
+0x1415329e9: mov       rdi, rax
+0x1415329ec: mov       rcx, qword ptr gs:[0x58]
+0x1415329f5: mov       rbx, rdi
+0x1415329f8: mov       qword ptr [rbp + 0x10], rdi
+0x1415329fc: mov       r12, qword ptr [rcx]
+0x1415329ff: mov       ecx, 0xdc8
+0x141532a04: mov       eax, dword ptr [rcx + r12]
+0x141532a08: test      al, 1
+0x141532a0a: jne       0x141532a4e
+0x141532a0c: or        eax, 1
+0x141532a0f: mov       ebx, 0xdd0
+0x141532a14: add       rbx, r12
+0x141532a17: mov       dword ptr [rcx + r12], eax
+0x141532a1b: mov       qword ptr [rbx], r14
+0x141532a1e: mov       dword ptr [rbx + 8], r14d
+0x141532a22: mov       qword ptr [rbx + 0x10], r14
+0x141532a26: mov       qword ptr [rbx + 0x18], r14
+0x141532a2a: call      0x141353960 ; CALL->0x141353960 pdata=(5388974432, 5388974527)
+0x141532a2f: lea       rcx, [rip + 0x66f05da] ; RIP->0x147c23010(.sdata)
+0x141532a36: mov       qword ptr [rbx + 0x28], rax
+0x141532a3a: mov       byte ptr [rbx + 0x30], r14b ; OBJDISP=0x30
+0x141532a3e: mov       qword ptr [rbx + 0x38], r14 ; OBJDISP=0x38
+0x141532a42: mov       qword ptr [rbx + 0x20], r14
+0x141532a46: call      0x147bce408 ; CALL->0x147bce408 pdata=(5498528776, 5498528928)
+0x141532a4b: mov       rbx, rdi
+0x141532a4e: test      rdi, rdi
+0x141532a51: jne       0x141532af6
+0x141532a57: mov       edx, dword ptr [rsi + 0x58]
+0x141532a5a: test      edx, edx
+0x141532a5c: jne       0x141532a63
+0x141532a5e: mov       rdi, r14
+0x141532a61: jmp       0x141532add
+0x141532a63: movsxd    r8, dword ptr [rsi + 0x5c]
+0x141532a67: cmp       r8d, 0x10
+0x141532a6b: jg        0x141532aa1
+0x141532a6d: lea       eax, [rdx + 0xf]
+0x141532a70: movsxd    rcx, eax
+0x141532a73: lea       rax, [rcx + 0xf]
+0x141532a77: cmp       rax, rcx
+0x141532a7a: ja        0x141532a86
+0x141532a7c: movabs    rax, 0xffffffffffffff0
+0x141532a86: and       rax, 0xfffffffffffffff0
+0x141532a8a: call      0x147bce780 ; CALL->0x147bce780 pdata=(5498529664, 5498529742)
+0x141532a8f: sub       rsp, rax
+0x141532a92: lea       rdi, [rsp + 0x30] ; OBJDISP=0x30
+0x141532a97: add       rdi, 0xf
+0x141532a9b: and       rdi, 0xfffffffffffffff0
+0x141532a9f: jmp       0x141532add
+0x141532aa1: lea       eax, [rdx - 1]
+0x141532aa4: add       eax, r8d
+0x141532aa7: movsxd    rcx, eax
+0x141532aaa: lea       rax, [rcx + 0xf]
+0x141532aae: cmp       rax, rcx
+0x141532ab1: ja        0x141532abd
+0x141532ab3: movabs    rax, 0xffffffffffffff0
+0x141532abd: and       rax, 0xfffffffffffffff0
+0x141532ac1: call      0x147bce780 ; CALL->0x147bce780 pdata=(5498529664, 5498529742)
+0x141532ac6: sub       rsp, rax
+0x141532ac9: lea       rdi, [rsp + 0x30] ; OBJDISP=0x30
+0x141532ace: dec       rdi
+0x141532ad1: add       rdi, r8
+0x141532ad4: neg       r8d
+0x141532ad7: movsxd    rax, r8d
+0x141532ada: and       rdi, rax
+0x141532add: movzx     eax, word ptr [rsi + 0xb6]
+0x141532ae4: sub       edx, eax
+0x141532ae6: je        0x141532af6
+0x141532ae8: movsxd    r8, edx
+0x141532aeb: lea       rcx, [rdi + rax]
+0x141532aef: xor       edx, edx
+0x141532af1: call      0x147bd073e ; CALL->0x147bd073e pdata=None
+0x141532af6: movzx     eax, word ptr [rsi + 0xb6]
+0x141532afd: test      ax, ax
+0x141532b00: je        0x141532b10
+0x141532b02: mov       r8d, eax
+0x141532b05: mov       rdx, r13
+0x141532b08: mov       rcx, rdi
+0x141532b0b: call      0x147bd0738 ; CALL->0x147bd0738 pdata=None
+0x141532b10: test      dword ptr [rsi + 0xb0], 0x400000
+0x141532b1a: lea       rax, [rip + 0x7d12067] ; RIP->0x149244b88(.shared)
+0x141532b21: mov       rcx, qword ptr [rsi + 0x50] ; OBJDISP=0x50
+0x141532b25: lea       r8, [rbp + 0x20]
+0x141532b29: mov       edx, 0x288
+0x141532b2e: xorps     xmm0, xmm0
+0x141532b31: mov       qword ptr [rbp + 0x20], rax
+0x141532b35: mov       rax, qword ptr [rsi + 0x60]
+0x141532b39: mov       qword ptr [rbp + 0x40], rax ; OBJDISP=0x40
+0x141532b3d: mov       rax, qword ptr [rdx + r12]
+0x141532b41: mov       qword ptr [rbp + 0xb8], rax
+0x141532b48: mov       word ptr [rbp + 0x28], 0x100
+0x141532b4e: mov       qword ptr [rbp + 0x30], rsi ; OBJDISP=0x30
+0x141532b52: mov       qword ptr [rbp + 0x38], r15 ; OBJDISP=0x38
+0x141532b56: mov       qword ptr [rbp + 0x48], rdi ; OBJDISP=0x48
+0x141532b5a: movdqa    xmmword ptr [rbp + 0x50], xmm0 ; OBJDISP=0x50
+0x141532b5f: mov       qword ptr [rbp + 0x60], r14
+0x141532b63: mov       qword ptr [rbp + 0x88], r14
+0x141532b6a: mov       dword ptr [rbp + 0x90], r14d
+0x141532b71: mov       dword ptr [rbp + 0x94], 8
+0x141532b7b: mov       qword ptr [rbp + 0x98], r14
+0x141532b82: mov       qword ptr [rbp + 0xa0], r14
+0x141532b89: mov       qword ptr [rbp + 0xa8], rcx
+0x141532b90: mov       qword ptr [rbp + 0xb0], r14
+0x141532b97: mov       word ptr [rbp + 0xc0], r14w
+0x141532b9f: mov       qword ptr [rdx + r12], r8
+0x141532ba3: je        0x141532c19
+0x141532ba5: lea       r8, [rbp + 0xa0]
+0x141532bac: test      rcx, rcx
+0x141532baf: je        0x141532c09
+0x141532bb1: mov       rax, qword ptr [rcx + 0x38] ; OBJDISP=0x38
+0x141532bb5: test      al, al
+0x141532bb7: jns       0x141532c05
+0x141532bb9: bt        rax, 8
+0x141532bbe: jae       0x141532bfc
+0x141532bc0: mov       eax, dword ptr [rsp]
+0x141532bc3: sub       rsp, 0x30
+0x141532bc7: lea       rdx, [rsp + 0x30] ; OBJDISP=0x30
+0x141532bcc: mov       eax, dword ptr [rdx]
+0x141532bce: movsxd    rax, dword ptr [rcx + 0x44]
+0x141532bd2: add       rdx, 0xf
+0x141532bd6: and       rdx, 0xfffffffffffffff0
+0x141532bda: add       rax, r13
+0x141532bdd: mov       qword ptr [rdx + 8], rax
+0x141532be1: mov       qword ptr [rdx], rcx
+0x141532be4: mov       rax, qword ptr [r8]
+0x141532be7: test      rax, rax
+0x141532bea: je        0x141532bf9
+0x141532bec: mov       qword ptr [rax + 0x10], rdx
+0x141532bf0: mov       r8, qword ptr [r8]
+0x141532bf3: add       r8, 0x10
+0x141532bf7: jmp       0x141532bfc
+0x141532bf9: mov       qword ptr [r8], rdx
+0x141532bfc: mov       rcx, qword ptr [rcx + 0x18]
+0x141532c00: test      rcx, rcx
+0x141532c03: jne       0x141532bb1
+0x141532c05: mov       rdi, qword ptr [rbp + 0x48] ; OBJDISP=0x48
+0x141532c09: mov       rax, qword ptr [r8]
+0x141532c0c: test      rax, rax
+0x141532c0f: je        0x141532c19
+0x141532c11: mov       qword ptr [rax + 0x10], r14
+0x141532c15: mov       rdi, qword ptr [rbp + 0x48] ; OBJDISP=0x48
+0x141532c19: test      rbx, rbx
+0x141532c1c: jne       0x141532c78
+0x141532c1e: mov       rbx, qword ptr [rsi + 0xc0]
+0x141532c25: test      rbx, rbx
+0x141532c28: je        0x141532c78
+0x141532c2a: nop       word ptr [rax + rax]
+0x141532c30: mov       eax, dword ptr [rbx + 0x38] ; OBJDISP=0x38
+0x141532c33: bt        rax, 9
+0x141532c38: jae       0x141532c56
+0x141532c3a: movsxd    r8, dword ptr [rbx + 0x34]
+0x141532c3e: xor       edx, edx
+0x141532c40: movsxd    rax, dword ptr [rbx + 0x30] ; OBJDISP=0x30
+0x141532c44: movsxd    rcx, dword ptr [rbx + 0x44]
+0x141532c48: imul      r8, rax
+0x141532c4c: add       rcx, rdi
+0x141532c4f: call      0x147bd073e ; CALL->0x147bd073e pdata=None
+0x141532c54: jmp       0x141532c69
+0x141532c56: movsxd    rdx, dword ptr [rbx + 0x44]
+0x141532c5a: mov       rcx, rbx
+0x141532c5d: mov       rax, qword ptr [rbx]
+0x141532c60: add       rdx, rdi
+0x141532c63: call      qword ptr [rax + 0x140]
+0x141532c69: mov       rbx, qword ptr [rbx + 0x60]
+0x141532c6d: test      rbx, rbx
+0x141532c70: je        0x141532c78
+0x141532c72: mov       rdi, qword ptr [rbp + 0x48] ; OBJDISP=0x48
+0x141532c76: jmp       0x141532c30
+0x141532c78: movzx     eax, word ptr [rsi + 0xb8]
+0x141532c7f: mov       ecx, 0xffff
+0x141532c84: cmp       ax, cx
+0x141532c87: je        0x141532c8d
+0x141532c89: lea       r14, [rax + r13]
+0x141532c8d: mov       rbx, qword ptr [rsi + 0x20]
+0x141532c91: call      0x14143b850 ; CALL->0x14143b850 pdata=(5389924432, 5389924599)
+0x141532c96: test      rax, rax
+0x141532c99: je        0x141532cc3
+0x141532c9b: lea       rdx, [rax + 0x30] ; OBJDISP=0x30
+0x141532c9f: movsxd    rax, dword ptr [rax + 0x38] ; OBJDISP=0x38
+0x141532ca3: cmp       eax, dword ptr [rbx + 0x38] ; OBJDISP=0x38
+0x141532ca6: jg        0x141532cc3
+0x141532ca8: mov       rcx, rax
+0x141532cab: mov       rax, qword ptr [rbx + 0x30] ; OBJDISP=0x30
+0x141532caf: cmp       qword ptr [rax + rcx*8], rdx
+0x141532cb3: jne       0x141532cc3
+0x141532cb5: mov       rdx, rbx
+0x141532cb8: mov       rcx, r15
+0x141532cbb: call      0x14154f5a0 ; CALL->0x14154f5a0 pdata=(5391054240, 5391054324)
+0x141532cc0: mov       r15, rax
+0x141532cc3: mov       rbx, qword ptr [rbp + 0xb0]
+0x141532cca: lea       rdx, [rbp + 0x20]
+0x141532cce: mov       r8, r14
+0x141532cd1: mov       qword ptr [rbp + 0xb0], rsi
+0x141532cd8: mov       rcx, r15
+0x141532cdb: call      qword ptr [rsi + 0xd8]
+0x141532ce1: cmp       qword ptr [rbp + 0x10], 0
+0x141532ce6: mov       qword ptr [rbp + 0xb0], rbx
+0x141532ced: jne       0x141532d67
+0x141532cef: mov       rbx, qword ptr [rsi + 0x80]
+0x141532cf6: test      rbx, rbx
+0x141532cf9: je        0x141532d67
+0x141532cfb: nop       dword ptr [rax + rax]
+0x141532d00: mov       r8d, dword ptr [rbx + 0x34]
+0x141532d04: imul      r8d, dword ptr [rbx + 0x30] ; OBJDISP=0x30
+0x141532d09: movsxd    r9, dword ptr [rbx + 0x44]
+0x141532d0d: movzx     eax, word ptr [rsi + 0xb6]
+0x141532d14: mov       rdx, qword ptr [rbx + 0x38] ; OBJDISP=0x38
+0x141532d18: lea       ecx, [r9 + r8]
+0x141532d1c: cmp       ecx, eax
+0x141532d1e: jle       0x141532d40
+0x141532d20: shr       rdx, 0x24
+0x141532d24: not       dl
+0x141532d26: test      dl, 1
+0x141532d29: je        0x141532d5e
+0x141532d2b: mov       rax, qword ptr [rbx]
+0x141532d2e: mov       rdx, r9
+0x141532d31: add       rdx, qword ptr [rbp + 0x48] ; OBJDISP=0x48
+0x141532d35: mov       rcx, rbx
+0x141532d38: call      qword ptr [rax + 0x138]
+0x141532d3e: jmp       0x141532d5e
+0x141532d40: shr       rdx, 8
+0x141532d44: not       dl
+0x141532d46: test      dl, 1
+0x141532d49: je        0x141532d5e
+0x141532d4b: mov       rdx, qword ptr [rbp + 0x48] ; OBJDISP=0x48
+0x141532d4f: lea       rcx, [r9 + r13]
+0x141532d53: add       rdx, r9
+0x141532d56: movsxd    r8, r8d
+0x141532d59: call      0x147bd0738 ; CALL->0x147bd0738 pdata=None
+0x141532d5e: mov       rbx, qword ptr [rbx + 0x58]
+0x141532d62: test      rbx, rbx
+0x141532d65: jne       0x141532d00
+0x141532d67: lea       rax, [rip + 0x7d11e1a] ; RIP->0x149244b88(.shared)
+0x141532d6e: mov       ecx, 0x288
+0x141532d73: mov       qword ptr [rbp + 0x20], rax
+0x141532d77: mov       rax, qword ptr [rbp + 0xb8]
+0x141532d7e: mov       qword ptr [rcx + r12], rax
+0x141532d82: mov       rcx, qword ptr [rbp + 0x88]
+0x141532d89: test      rcx, rcx
+0x141532d8c: je        0x141532d93
+0x141532d8e: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x141532d93: mov       rcx, qword ptr [rbp + 0xd0]
+0x141532d9a: xor       rcx, rbp
+0x141532d9d: call      0x147bcdde0 ; CALL->0x147bcdde0 pdata=(5498527200, 5498527230)
+0x141532da2: mov       rbx, qword ptr [rbp + 0x138]
+0x141532da9: lea       rsp, [rbp + 0xe0]
+0x141532db0: pop       r15
+0x141532db2: pop       r14
+0x141532db4: pop       r13
+0x141532db6: pop       r12
+0x141532db8: pop       rdi
+0x141532db9: pop       rsi
+0x141532dba: pop       rbp
+0x141532dbb: ret       
+CALLS=0x141201300,0x141353960,0x14143b850,0x14154f5a0,0x147bcdde0,0x147bce408,0x147bce780,0x147bd0738,0x147bd073e
+
+===== METHOD 0x1413dd3d0-0x1413dd3e3 SIZE=0x13 VTABLE_INDICES=[217] =====
+0x1413dd3d0: sub       rsp, 0x38
+0x1413dd3d4: mov       byte ptr [rsp + 0x20], 0
+0x1413dd3d9: call      0x1415318e0 ; CALL->0x1415318e0 pdata=(5390932192, 5390936092)
+0x1413dd3de: add       rsp, 0x38
+0x1413dd3e2: ret       
+CALLS=0x1415318e0
+
+===== METHOD 0x1414c7460-0x1414c74eb SIZE=0x8b VTABLE_INDICES=[220] =====
+0x1414c7460: push      rbx
+0x1414c7462: push      rdi
+0x1414c7463: push      r12
+0x1414c7465: push      r13
+0x1414c7467: push      r15
+0x1414c7469: sub       rsp, 0x50
+0x1414c746d: mov       r13, qword ptr [rcx + 0x10]
+0x1414c7471: test      rcx, rcx
+0x1414c7474: mov       r15, rcx
+0x1414c7477: setne     r12b
+0x1414c747b: call      0x1413ddb50 ; CALL->0x1413ddb50 pdata=(5389540176, 5389540350)
+0x1414c7480: xor       edi, edi
+0x1414c7482: cmp       r13, rax
+0x1414c7485: je        0x1414c75d2
+0x1414c748b: lea       rax, [rip + 0x7d6c7e6] ; RIP->0x149233c78(.shared)
+0x1414c7492: mov       qword ptr [rsp + 0x20], rdi
+0x1414c7497: mov       qword ptr [rsp + 0x30], rax ; OBJDISP=0x30
+0x1414c749c: lea       rax, [rsp + 0x20]
+0x1414c74a1: mov       qword ptr [rsp + 0x40], rax ; OBJDISP=0x40
+0x1414c74a6: mov       qword ptr [rsp + 0x28], rdi
+0x1414c74ab: mov       qword ptr [rsp + 0x38], rdi ; OBJDISP=0x38
+0x1414c74b0: mov       qword ptr [rsp + 0x48], r15 ; OBJDISP=0x48
+0x1414c74b5: mov       rbx, qword ptr [r15 + 0x10]
+0x1414c74b9: call      0x1413de500 ; CALL->0x1413de500 pdata=(5389542656, 5389542830)
+0x1414c74be: test      rax, rax
+0x1414c74c1: je        0x1414c74e1
+0x1414c74c3: lea       rdx, [rax + 0x30] ; OBJDISP=0x30
+0x1414c74c7: movsxd    rax, dword ptr [rax + 0x38] ; OBJDISP=0x38
+0x1414c74cb: cmp       eax, dword ptr [rbx + 0x38] ; OBJDISP=0x38
+0x1414c74ce: jg        0x1414c74e1
+0x1414c74d0: mov       rcx, rax
+0x1414c74d3: mov       rax, qword ptr [rbx + 0x30] ; OBJDISP=0x30
+0x1414c74d7: cmp       qword ptr [rax + rcx*8], rdx
+0x1414c74db: je        0x1414c7582
+0x1414c74e1: mov       rbx, qword ptr [rsp + 0x48] ; OBJDISP=0x48
+0x1414c74e6: lea       rcx, [rsp + 0x30] ; OBJDISP=0x30
+CALLS=0x1413ddb50,0x1413de500
+
+===== METHOD 0x1458d6a20-0x1458d6bbc SIZE=0x19c VTABLE_INDICES=[226] =====
+0x1458d6a20: mov       qword ptr [rsp + 0x20], rbx
+0x1458d6a25: push      rbp
+0x1458d6a26: push      rdi
+0x1458d6a27: push      r15
+0x1458d6a29: lea       rbp, [rsp - 0x380]
+0x1458d6a31: sub       rsp, 0x480
+0x1458d6a38: mov       rax, qword ptr [rip + 0x57aad01] ; RIP->0x14b081740(.data2)
+0x1458d6a3f: xor       rax, rsp
+0x1458d6a42: mov       qword ptr [rbp + 0x370], rax
+0x1458d6a49: xor       r15d, r15d
+0x1458d6a4c: mov       rdi, rcx
+0x1458d6a4f: test      rcx, rcx
+0x1458d6a52: je        0x1458d6b14
+0x1458d6a58: mov       rax, qword ptr [rcx]
+0x1458d6a5b: call      qword ptr [rax + 0x188]
+0x1458d6a61: mov       rbx, rax
+0x1458d6a64: test      rax, rax
+0x1458d6a67: je        0x1458d6b14
+0x1458d6a6d: cmp       qword ptr [rax + 0x158], r15
+0x1458d6a74: je        0x1458d6aaf
+0x1458d6a76: call      0x144eabb30 ; CALL->0x144eabb30 pdata=(5451201328, 5451201502)
+0x1458d6a7b: mov       rdx, qword ptr [rbx + 0x158]
+0x1458d6a82: mov       rcx, rax
+0x1458d6a85: test      rdx, rdx
+0x1458d6a88: je        0x1458d6aaf
+0x1458d6a8a: mov       rax, qword ptr [rdx + 0x10]
+0x1458d6a8e: test      rax, rax
+0x1458d6a91: je        0x1458d6aaf
+0x1458d6a93: test      rcx, rcx
+0x1458d6a96: je        0x1458d6aaf
+0x1458d6a98: lea       r8, [rcx + 0x30] ; OBJDISP=0x30
+0x1458d6a9c: movsxd    rcx, dword ptr [rcx + 0x38] ; OBJDISP=0x38
+0x1458d6aa0: cmp       ecx, dword ptr [rax + 0x38] ; OBJDISP=0x38
+0x1458d6aa3: jg        0x1458d6aaf
+0x1458d6aa5: mov       rax, qword ptr [rax + 0x30] ; OBJDISP=0x30
+0x1458d6aa9: cmp       qword ptr [rax + rcx*8], r8
+0x1458d6aad: je        0x1458d6ab2
+0x1458d6aaf: mov       rdx, r15
+0x1458d6ab2: test      rdx, rdx
+0x1458d6ab5: je        0x1458d6b14
+0x1458d6ab7: mov       edx, dword ptr [rdx + 0xc]
+0x1458d6aba: mov       dword ptr [rdi + 0x58], edx
+0x1458d6abd: call      0x141544e90 ; CALL->0x141544e90 pdata=(5391011472, 5391011525)
+0x1458d6ac2: mov       dword ptr [rdi + 0x5c], eax
+0x1458d6ac5: mov       r9d, eax
+0x1458d6ac8: test      eax, eax
+0x1458d6aca: je        0x1458d6b18
+0x1458d6acc: mov       ecx, dword ptr [rdi + 0x58]
+0x1458d6acf: test      ecx, ecx
+0x1458d6ad1: js        0x1458d6b18
+0x1458d6ad3: cmp       ecx, dword ptr [rip + 0x57c31cb] ; RIP->0x14b099ca4(.data2)
+0x1458d6ad9: jge       0x1458d6b18
+0x1458d6adb: mov       eax, ecx
+0x1458d6add: movzx     r8d, cx
+0x1458d6ae1: shr       eax, 0x10
+0x1458d6ae4: mov       ecx, eax
+0x1458d6ae6: mov       rax, qword ptr [rip + 0x57c31a3] ; RIP->0x14b099c90(.data2)
+0x1458d6aed: mov       rdx, qword ptr [rax + rcx*8]
+0x1458d6af1: lea       rcx, [r8 + r8*2]
+0x1458d6af5: lea       r8, [rdx + rcx*8]
+0x1458d6af9: test      r8, r8
+0x1458d6afc: je        0x1458d6b18
+0x1458d6afe: cmp       dword ptr [r8 + 0x10], r9d
+0x1458d6b02: jne       0x1458d6b18
+0x1458d6b04: mov       eax, dword ptr [r8 + 8]
+0x1458d6b08: test      eax, 0x30200000
+0x1458d6b0d: jne       0x1458d6b18
+0x1458d6b0f: mov       rax, qword ptr [r8]
+0x1458d6b12: jmp       0x1458d6b1b
+0x1458d6b14: mov       qword ptr [rdi + 0x58], r15
+0x1458d6b18: mov       rax, r15
+0x1458d6b1b: mov       rcx, qword ptr [rax + 0x418]
+0x1458d6b22: test      rcx, rcx
+0x1458d6b25: je        0x1458d6b34
+0x1458d6b27: mov       edx, dword ptr [rcx + 0xc]
+0x1458d6b2a: mov       dword ptr [rdi + 0x60], edx
+0x1458d6b2d: call      0x141544e90 ; CALL->0x141544e90 pdata=(5391011472, 5391011525)
+0x1458d6b32: jmp       0x1458d6b3b
+0x1458d6b34: mov       dword ptr [rdi + 0x60], r15d
+0x1458d6b38: mov       eax, r15d
+0x1458d6b3b: mov       dword ptr [rdi + 0x64], eax
+0x1458d6b3e: mov       rcx, rdi
+0x1458d6b41: mov       rax, qword ptr [rdi]
+0x1458d6b44: call      qword ptr [rax + 0x300]
+0x1458d6b4a: mov       rax, qword ptr [rdi]
+0x1458d6b4d: mov       rcx, rdi
+0x1458d6b50: call      qword ptr [rax + 0x308]
+0x1458d6b56: mov       rax, qword ptr [rdi + 0x68]
+0x1458d6b5a: movzx     ecx, byte ptr [rax + 0xec]
+0x1458d6b61: mov       byte ptr [rdi + 0x9c], cl
+0x1458d6b67: call      0x144d0a150 ; CALL->0x144d0a150 pdata=(5449490768, 5449490871)
+0x1458d6b6c: test      rax, rax
+0x1458d6b6f: je        0x1458d6b97
+0x1458d6b71: mov       rcx, rax
+0x1458d6b74: call      0x1451f4810 ; CALL->0x1451f4810 pdata=(5454645264, 5454645324)
+0x1458d6b79: test      al, al
+0x1458d6b7b: je        0x1458d6b97
+0x1458d6b7d: call      0x1452e1340 ; CALL->0x1452e1340 pdata=(5455614784, 5455614856)
+0x1458d6b82: test      rax, rax
+0x1458d6b85: je        0x1458d6b97
+0x1458d6b87: mov       rax, qword ptr [rax + 0x50] ; OBJDISP=0x50
+0x1458d6b8b: test      rax, rax
+0x1458d6b8e: je        0x1458d6b97
+0x1458d6b90: mov       byte ptr [rax + 0xd1], r15b
+0x1458d6b97: mov       rax, qword ptr [rdi]
+0x1458d6b9a: mov       rcx, rdi
+0x1458d6b9d: call      qword ptr [rax + 0x310]
+0x1458d6ba3: mov       rdx, qword ptr [rdi]
+0x1458d6ba6: mov       rcx, rdi
+0x1458d6ba9: test      al, al
+0x1458d6bab: je        0x1458d6bbc
+0x1458d6bad: mov       byte ptr [rdi + 0x79], 1
+0x1458d6bb1: call      qword ptr [rdx + 0x318]
+0x1458d6bb7: jmp       0x1458d7165
+CALLS=0x141544e90,0x144d0a150,0x144eabb30,0x1451f4810,0x1452e1340
+
+===== METHOD 0x1458d7c80-0x1458d7edf SIZE=0x25f VTABLE_INDICES=[227] =====
+0x1458d7c80: mov       qword ptr [rsp + 8], rbx
+0x1458d7c85: push      rdi
+0x1458d7c86: sub       rsp, 0x30
+0x1458d7c8a: movaps    xmmword ptr [rsp + 0x20], xmm6
+0x1458d7c8f: mov       rbx, rcx
+0x1458d7c92: movaps    xmm6, xmm1
+0x1458d7c95: call      0x144d0a150 ; CALL->0x144d0a150 pdata=(5449490768, 5449490871)
+0x1458d7c9a: test      rax, rax
+0x1458d7c9d: je        0x1458d7d82
+0x1458d7ca3: mov       eax, dword ptr [rax + 0x3a8]
+0x1458d7ca9: cmp       eax, 2
+0x1458d7cac: je        0x1458d7cb7
+0x1458d7cae: cmp       eax, 1
+0x1458d7cb1: jne       0x1458d7d82
+0x1458d7cb7: cmp       byte ptr [rbx + 0x85], 0
+0x1458d7cbe: jne       0x1458d7d16
+0x1458d7cc0: lea       rcx, [rsp + 0x50] ; OBJDISP=0x50
+0x1458d7cc5: mov       dword ptr [rsp + 0x50], 0 ; OBJDISP=0x50
+0x1458d7ccd: call      0x145704f10 ; CALL->0x145704f10 pdata=(5459955472, 5459955871)
+0x1458d7cd2: test      al, al
+0x1458d7cd4: je        0x1458d7d82
+0x1458d7cda: mov       eax, dword ptr [rsp + 0x50] ; OBJDISP=0x50
+0x1458d7cde: mov       byte ptr [rbx + 0x85], 1
+0x1458d7ce5: cmp       eax, 6
+0x1458d7ce8: ja        0x1458d7d00
+0x1458d7cea: mov       ecx, 0x4a
+0x1458d7cef: bt        ecx, eax
+0x1458d7cf2: jae       0x1458d7d00
+0x1458d7cf4: call      0x145700550 ; CALL->0x145700550 pdata=(5459936592, 5459936673)
+0x1458d7cf9: mov       byte ptr [rax + 0x1d0], 1
+0x1458d7d00: call      0x145b06480 ; CALL->0x145b06480 pdata=(5464155264, 5464155345)
+0x1458d7d05: test      rax, rax
+0x1458d7d08: je        0x1458d7d82
+0x1458d7d0a: xor       edx, edx
+0x1458d7d0c: mov       rcx, rax
+0x1458d7d0f: call      0x145b648a0 ; CALL->0x145b648a0 pdata=(5464541344, 5464541951)
+0x1458d7d14: jmp       0x1458d7d82
+0x1458d7d16: call      0x145b65df0 ; CALL->0x145b65df0 pdata=(5464546800, 5464546814)
+0x1458d7d1b: test      al, al
+0x1458d7d1d: jne       0x1458d7d82
+0x1458d7d1f: mov       rax, qword ptr [rbx]
+0x1458d7d22: mov       rcx, rbx
+0x1458d7d25: call      qword ptr [rax + 0x188]
+0x1458d7d2b: test      rax, rax
+0x1458d7d2e: je        0x1458d7d82
+0x1458d7d30: mov       rdi, qword ptr [rax + 0x1b8]
+0x1458d7d37: test      rdi, rdi
+0x1458d7d3a: je        0x1458d7d5f
+0x1458d7d3c: call      0x144ccac60 ; CALL->0x144ccac60 pdata=(5449231456, 5449231630)
+0x1458d7d41: mov       rdx, qword ptr [rdi + 0x10]
+0x1458d7d45: lea       r8, [rax + 0x30] ; OBJDISP=0x30
+0x1458d7d49: movsxd    rax, dword ptr [rax + 0x38] ; OBJDISP=0x38
+0x1458d7d4d: cmp       eax, dword ptr [rdx + 0x38] ; OBJDISP=0x38
+0x1458d7d50: jg        0x1458d7d5f
+0x1458d7d52: mov       rcx, rax
+0x1458d7d55: mov       rax, qword ptr [rdx + 0x30] ; OBJDISP=0x30
+0x1458d7d59: cmp       qword ptr [rax + rcx*8], r8
+0x1458d7d5d: je        0x1458d7d61
+0x1458d7d5f: xor       edi, edi
+0x1458d7d61: test      rdi, rdi
+0x1458d7d64: je        0x1458d7d82
+0x1458d7d66: mov       rcx, qword ptr [rdi + 0x230]
+0x1458d7d6d: test      rcx, rcx
+0x1458d7d70: je        0x1458d7d82
+0x1458d7d72: xor       r9d, r9d
+0x1458d7d75: xor       r8d, r8d
+0x1458d7d78: mov       edx, 0x8d
+0x1458d7d7d: call      0x144d5fda0 ; CALL->0x144d5fda0 pdata=(5449842080, 5449842704)
+0x1458d7d82: call      0x144d0a150 ; CALL->0x144d0a150 pdata=(5449490768, 5449490871)
+0x1458d7d87: test      rax, rax
+0x1458d7d8a: je        0x1458d7dfa
+0x1458d7d8c: mov       ecx, dword ptr [rax + 0x3a8]
+0x1458d7d92: cmp       ecx, 2
+0x1458d7d95: je        0x1458d7d9c
+0x1458d7d97: cmp       ecx, 1
+0x1458d7d9a: jne       0x1458d7dfa
+0x1458d7d9c: movaps    xmm1, xmm6
+0x1458d7d9f: mov       rcx, rbx
+0x1458d7da2: call      0x1457050a0 ; CALL->0x1457050a0 pdata=(5459955872, 5459955905)
+0x1458d7da7: call      0x144d09cf0 ; CALL->0x144d09cf0 pdata=(5449489648, 5449489756)
+0x1458d7dac: test      rax, rax
+0x1458d7daf: je        0x1458d7dfa
+0x1458d7db1: mov       rcx, rax
+0x1458d7db4: call      0x145272ad0 ; CALL->0x145272ad0 pdata=(5455162064, 5455162148)
+0x1458d7db9: mov       rdi, rax
+0x1458d7dbc: test      rax, rax
+0x1458d7dbf: je        0x1458d7dfa
+0x1458d7dc1: call      0x144f115c0 ; CALL->0x144f115c0 pdata=(5451617728, 5451617902)
+0x1458d7dc6: mov       rcx, qword ptr [rdi + 0x10]
+0x1458d7dca: add       rax, 0x30
+0x1458d7dce: movsxd    rdx, dword ptr [rax + 8]
+0x1458d7dd2: cmp       edx, dword ptr [rcx + 0x38] ; OBJDISP=0x38
+0x1458d7dd5: jg        0x1458d7dfa
+0x1458d7dd7: mov       rcx, qword ptr [rcx + 0x30] ; OBJDISP=0x30
+0x1458d7ddb: cmp       qword ptr [rcx + rdx*8], rax
+0x1458d7ddf: jne       0x1458d7dfa
+0x1458d7de1: mov       rcx, qword ptr [rdi + 0x620]
+0x1458d7de8: test      rcx, rcx
+0x1458d7deb: je        0x1458d7dfa
+0x1458d7ded: call      0x1456915b0 ; CALL->0x1456915b0 pdata=(5459482032, 5459482096)
+0x1458d7df2: test      al, al
+0x1458d7df4: jne       0x1458d7ecf
+0x1458d7dfa: call      0x144d09d60 ; CALL->0x144d09d60 pdata=(5449489760, 5449489863)
+0x1458d7dff: mov       rdi, rax
+0x1458d7e02: test      rax, rax
+0x1458d7e05: je        0x1458d7e57
+0x1458d7e07: call      0x144f341f0 ; CALL->0x144f341f0 pdata=(5451760112, 5451760286)
+0x1458d7e0c: mov       rcx, qword ptr [rdi + 0x10]
+0x1458d7e10: add       rax, 0x30
+0x1458d7e14: movsxd    rdx, dword ptr [rax + 8]
+0x1458d7e18: cmp       edx, dword ptr [rcx + 0x38] ; OBJDISP=0x38
+0x1458d7e1b: jg        0x1458d7e57
+0x1458d7e1d: mov       rcx, qword ptr [rcx + 0x30] ; OBJDISP=0x30
+0x1458d7e21: cmp       qword ptr [rcx + rdx*8], rax
+0x1458d7e25: jne       0x1458d7e57
+0x1458d7e27: mov       rdi, qword ptr [rdi + 0x3c0]
+0x1458d7e2e: test      rdi, rdi
+0x1458d7e31: je        0x1458d7e57
+0x1458d7e33: mov       rdi, qword ptr [rdi + 0x2b0]
+0x1458d7e3a: test      rdi, rdi
+0x1458d7e3d: je        0x1458d7e57
+0x1458d7e3f: mov       rcx, rdi
+0x1458d7e42: call      0x1457b2510 ; CALL->0x1457b2510 pdata=(5460665616, 5460665790)
+0x1458d7e47: test      al, al
+0x1458d7e49: jne       0x1458d7e57
+0x1458d7e4b: mov       rax, qword ptr [rdi]
+0x1458d7e4e: mov       rcx, rdi
+0x1458d7e51: call      qword ptr [rax + 0x4d0]
+0x1458d7e57: mov       rcx, qword ptr [rbx + 0x48] ; OBJDISP=0x48
+0x1458d7e5b: movaps    xmm1, xmm6
+0x1458d7e5e: mov       rax, qword ptr [rcx]
+0x1458d7e61: call      qword ptr [rax + 0x18]
+0x1458d7e64: mov       rcx, qword ptr [rbx + 0x48] ; OBJDISP=0x48
+0x1458d7e68: mov       rax, qword ptr [rcx]
+0x1458d7e6b: call      qword ptr [rax + 0x20]
+0x1458d7e6e: test      al, al
+0x1458d7e70: je        0x1458d7ecf
+0x1458d7e72: mov       rax, qword ptr [rbx]
+0x1458d7e75: mov       rcx, rbx
+0x1458d7e78: call      qword ptr [rax + 0x188]
+0x1458d7e7e: test      rax, rax
+0x1458d7e81: je        0x1458d7ecf
+0x1458d7e83: mov       rbx, qword ptr [rax + 0x1b8]
+0x1458d7e8a: test      rbx, rbx
+0x1458d7e8d: je        0x1458d7eb2
+0x1458d7e8f: call      0x144ccac60 ; CALL->0x144ccac60 pdata=(5449231456, 5449231630)
+0x1458d7e94: mov       rdx, qword ptr [rbx + 0x10]
+0x1458d7e98: lea       r8, [rax + 0x30] ; OBJDISP=0x30
+0x1458d7e9c: movsxd    rax, dword ptr [rax + 0x38] ; OBJDISP=0x38
+0x1458d7ea0: cmp       eax, dword ptr [rdx + 0x38] ; OBJDISP=0x38
+0x1458d7ea3: jg        0x1458d7eb2
+0x1458d7ea5: mov       rcx, rax
+0x1458d7ea8: mov       rax, qword ptr [rdx + 0x30] ; OBJDISP=0x30
+0x1458d7eac: cmp       qword ptr [rax + rcx*8], r8
+0x1458d7eb0: je        0x1458d7eb4
+0x1458d7eb2: xor       ebx, ebx
+0x1458d7eb4: test      rbx, rbx
+0x1458d7eb7: je        0x1458d7ecf
+0x1458d7eb9: mov       rcx, qword ptr [rbx + 0x230]
+0x1458d7ec0: test      rcx, rcx
+0x1458d7ec3: je        0x1458d7ecf
+0x1458d7ec5: xor       r8d, r8d
+0x1458d7ec8: xor       edx, edx
+0x1458d7eca: call      0x144d60010 ; CALL->0x144d60010 pdata=(5449842704, 5449842757)
+0x1458d7ecf: mov       rbx, qword ptr [rsp + 0x40] ; OBJDISP=0x40
+0x1458d7ed4: movaps    xmm6, xmmword ptr [rsp + 0x20]
+0x1458d7ed9: add       rsp, 0x30
+0x1458d7edd: pop       rdi
+0x1458d7ede: ret       
+CALLS=0x144ccac60,0x144d09cf0,0x144d09d60,0x144d0a150,0x144d5fda0,0x144d60010,0x144f115c0,0x144f341f0,0x145272ad0,0x1456915b0,0x145700550,0x145704f10,0x1457050a0,0x1457b2510,0x145b06480,0x145b648a0,0x145b65df0
+
+===== METHOD 0x1458d7790-0x1458d77c0 SIZE=0x30 VTABLE_INDICES=[229] =====
+0x1458d7790: push      rbp
+0x1458d7792: push      rdi
+0x1458d7793: lea       rbp, [rsp - 0x368]
+0x1458d779b: sub       rsp, 0x468
+0x1458d77a2: mov       rax, qword ptr [rip + 0x57a9f97] ; RIP->0x14b081740(.data2)
+0x1458d77a9: xor       rax, rsp
+0x1458d77ac: mov       qword ptr [rbp + 0x340], rax
+0x1458d77b3: cmp       byte ptr [rcx + 0x79], 0
+0x1458d77b7: mov       rdi, rcx
+0x1458d77ba: jne       0x1458d7c63
+CALLS=
+
+===== METHOD 0x1450dc3d0-0x1450dc402 SIZE=0x32 VTABLE_INDICES=[233] =====
+0x1450dc3d0: sub       rsp, 0x38
+0x1450dc3d4: mov       r8, qword ptr [rsp + 0x38] ; OBJDISP=0x38
+0x1450dc3d9: lea       rax, [rip + 0x510ae20] ; RIP->0x14a1e7200(.shared) WIDE='InitializeByMode'
+0x1450dc3e0: lea       r9, [rip + 0x4116209] ; RIP->0x1491f25f0(.shared) WIDE='Pure virtual not implemented (%s)'
+0x1450dc3e7: mov       qword ptr [rsp + 0x20], rax
+0x1450dc3ec: mov       edx, 0x75
+0x1450dc3f1: lea       rcx, [rip + 0x510ae38] ; RIP->0x14a1e7230(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\APK2\\Source\\APK2\\Scene\\Battle\\APKSceneBattleStartDemo.h'
+0x1450dc3f8: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x1450dc3fd: add       rsp, 0x38
+0x1450dc401: ret       
+CALLS=0x1412a3b90
+
+===== METHOD 0x1450dc410-0x1450dc442 SIZE=0x32 VTABLE_INDICES=[234] =====
+0x1450dc410: sub       rsp, 0x38
+0x1450dc414: mov       r8, qword ptr [rsp + 0x38] ; OBJDISP=0x38
+0x1450dc419: lea       rax, [rip + 0x510ae68] ; RIP->0x14a1e7288(.shared) WIDE='GetMasterData'
+0x1450dc420: lea       r9, [rip + 0x41161c9] ; RIP->0x1491f25f0(.shared) WIDE='Pure virtual not implemented (%s)'
+0x1450dc427: mov       qword ptr [rsp + 0x20], rax
+0x1450dc42c: mov       edx, 0x78
+0x1450dc431: lea       rcx, [rip + 0x510adf8] ; RIP->0x14a1e7230(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\APK2\\Source\\APK2\\Scene\\Battle\\APKSceneBattleStartDemo.h'
+0x1450dc438: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x1450dc43d: add       rsp, 0x38
+0x1450dc441: ret       
+CALLS=0x1412a3b90
+
+===== METHOD 0x1450dc450-0x1450dc484 SIZE=0x34 VTABLE_INDICES=[235] =====
+0x1450dc450: sub       rsp, 0x38
+0x1450dc454: mov       r8, qword ptr [rsp + 0x38] ; OBJDISP=0x38
+0x1450dc459: lea       rax, [rip + 0x510ae48] ; RIP->0x14a1e72a8(.shared) WIDE='CheckAllSkip'
+0x1450dc460: lea       r9, [rip + 0x4116189] ; RIP->0x1491f25f0(.shared) WIDE='Pure virtual not implemented (%s)'
+0x1450dc467: mov       qword ptr [rsp + 0x20], rax
+0x1450dc46c: mov       edx, 0x7b
+0x1450dc471: lea       rcx, [rip + 0x510adb8] ; RIP->0x14a1e7230(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\APK2\\Source\\APK2\\Scene\\Battle\\APKSceneBattleStartDemo.h'
+0x1450dc478: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x1450dc47d: mov       al, 1
+0x1450dc47f: add       rsp, 0x38
+0x1450dc483: ret       
+CALLS=0x1412a3b90
+
+===== METHOD 0x1450dc490-0x1450dc4c2 SIZE=0x32 VTABLE_INDICES=[236] =====
+0x1450dc490: sub       rsp, 0x38
+0x1450dc494: mov       r8, qword ptr [rsp + 0x38] ; OBJDISP=0x38
+0x1450dc499: lea       rax, [rip + 0x510acc0] ; RIP->0x14a1e7160(.shared) WIDE='CreateDemoState'
+0x1450dc4a0: lea       r9, [rip + 0x4116149] ; RIP->0x1491f25f0(.shared) WIDE='Pure virtual not implemented (%s)'
+0x1450dc4a7: mov       qword ptr [rsp + 0x20], rax
+0x1450dc4ac: mov       edx, 0x7e
+0x1450dc4b1: lea       rcx, [rip + 0x510ad78] ; RIP->0x14a1e7230(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\APK2\\Source\\APK2\\Scene\\Battle\\APKSceneBattleStartDemo.h'
+0x1450dc4b8: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x1450dc4bd: add       rsp, 0x38
+0x1450dc4c1: ret       
+CALLS=0x1412a3b90
+
+===== METHOD 0x1450dc4d0-0x1450dc502 SIZE=0x32 VTABLE_INDICES=[237] =====
+0x1450dc4d0: sub       rsp, 0x38
+0x1450dc4d4: mov       r8, qword ptr [rsp + 0x38] ; OBJDISP=0x38
+0x1450dc4d9: lea       rax, [rip + 0x510aca0] ; RIP->0x14a1e7180(.shared) WIDE='GatherDemoLocator'
+0x1450dc4e0: lea       r9, [rip + 0x4116109] ; RIP->0x1491f25f0(.shared) WIDE='Pure virtual not implemented (%s)'
+0x1450dc4e7: mov       qword ptr [rsp + 0x20], rax
+0x1450dc4ec: mov       edx, 0x81
+0x1450dc4f1: lea       rcx, [rip + 0x510ad38] ; RIP->0x14a1e7230(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\APK2\\Source\\APK2\\Scene\\Battle\\APKSceneBattleStartDemo.h'
+0x1450dc4f8: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x1450dc4fd: add       rsp, 0x38
+0x1450dc501: ret       
+CALLS=0x1412a3b90
+
+===== METHOD 0x1450dc510-0x1450dc544 SIZE=0x34 VTABLE_INDICES=[238] =====
+0x1450dc510: sub       rsp, 0x38
+0x1450dc514: mov       r8, qword ptr [rsp + 0x38] ; OBJDISP=0x38
+0x1450dc519: lea       rax, [rip + 0x510ac88] ; RIP->0x14a1e71a8(.shared) WIDE='IsSupportVisible'
+0x1450dc520: lea       r9, [rip + 0x41160c9] ; RIP->0x1491f25f0(.shared) WIDE='Pure virtual not implemented (%s)'
+0x1450dc527: mov       qword ptr [rsp + 0x20], rax
+0x1450dc52c: mov       edx, 0x84
+0x1450dc531: lea       rcx, [rip + 0x510acf8] ; RIP->0x14a1e7230(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\APK2\\Source\\APK2\\Scene\\Battle\\APKSceneBattleStartDemo.h'
+0x1450dc538: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x1450dc53d: mov       al, 1
+0x1450dc53f: add       rsp, 0x38
+0x1450dc543: ret       
+CALLS=0x1412a3b90
+
+===== METHOD 0x1458d92b0-0x1458d92d7 SIZE=0x27 VTABLE_INDICES=[239] =====
+0x1458d92b0: mov       r11, rsp
+0x1458d92b3: push      rbp
+0x1458d92b4: lea       rbp, [r11 - 0xac8]
+0x1458d92bb: sub       rsp, 0xbc0
+0x1458d92c2: mov       rax, qword ptr [rip + 0x57a8477] ; RIP->0x14b081740(.data2)
+0x1458d92c9: xor       rax, rsp
+0x1458d92cc: mov       qword ptr [rbp + 0xa50], rax
+0x1458d92d3: mov       r9d, dword ptr [rcx + 0x64]
+CALLS=
+
+===== METHOD 0x1458da2d0-0x1458da2dd SIZE=0xd VTABLE_INDICES=[240] =====
+0x1458da2d0: push      rbx
+0x1458da2d2: sub       rsp, 0x50
+0x1458da2d6: cmp       byte ptr [rcx + 0x9c], 0
+CALLS=
+
+===== METHOD 0x1458d9cc0-0x1458d9ce6 SIZE=0x26 VTABLE_INDICES=[241] =====
+0x1458d9cc0: mov       r11, rsp
+0x1458d9cc3: push      rbp
+0x1458d9cc4: push      rbx
+0x1458d9cc5: push      rdi
+0x1458d9cc6: push      r14
+0x1458d9cc8: lea       rbp, [r11 - 0x58]
+0x1458d9ccc: sub       rsp, 0x138
+0x1458d9cd3: movaps    xmmword ptr [r11 - 0x38], xmm6
+0x1458d9cd8: mov       rax, qword ptr [rip + 0x57a7a61] ; RIP->0x14b081740(.data2)
+0x1458d9cdf: xor       rax, rsp
+0x1458d9ce2: mov       qword ptr [rbp + 0x10], rax
+CALLS=
+
+===== METHOD 0x1450cffa0-0x1450d004e SIZE=0xae VTABLE_INDICES=[245] =====
+0x1450cffa0: mov       r11, rsp
+0x1450cffa3: sub       rsp, 0x78
+0x1450cffa7: mov       rax, qword ptr [rip + 0x67a6a52] ; RIP->0x14b876a00(.data2)
+0x1450cffae: test      rax, rax
+0x1450cffb1: jne       0x1450d0049
+0x1450cffb7: lea       rax, [rip - 0x3f36b6e] ; RIP->0x141199450(.sdata)
+0x1450cffbe: mov       qword ptr [r11 + 8], rax
+0x1450cffc2: lea       r9, [rip + 0xc6c7] ; RIP->0x1450dc690(.sdata)
+0x1450cffc9: lea       rax, [rip - 0x3d20f90] ; RIP->0x1413af040(.sdata)
+0x1450cffd0: mov       qword ptr [r11 - 0x10], rax
+0x1450cffd4: lea       r8, [rip + 0x67a6a25] ; RIP->0x14b876a00(.data2)
+0x1450cffdb: lea       rax, [rip + 0x987e] ; RIP->0x1450d9860(.sdata)
+0x1450cffe2: mov       qword ptr [r11 - 0x18], rax
+0x1450cffe6: lea       rdx, [rip + 0x511713d] ; RIP->0x14a1e712a(.shared) WIDE='APKSceneBattleStartDemo'
+0x1450cffed: lea       rax, [r11 + 8]
+0x1450cfff1: mov       qword ptr [r11 - 0x20], rax
+0x1450cfff5: lea       rcx, [rip + 0x4d6f004] ; RIP->0x149e3f000(.shared) WIDE='/Script/APK2'
+0x1450cfffc: lea       rax, [rip - 0x3f338c3] ; RIP->0x14119c740(.sdata)
+0x1450d0003: mov       qword ptr [r11 - 0x28], rax
+0x1450d0007: lea       rax, [rip + 0xd1e2] ; RIP->0x1450dd1f0(.sdata)
+0x1450d000e: mov       qword ptr [r11 - 0x30], rax
+0x1450d0012: lea       rax, [rip + 0x4113a57] ; RIP->0x1491e3a70(.shared) WIDE='Engine'
+0x1450d0019: mov       qword ptr [r11 - 0x38], rax
+0x1450d001d: mov       qword ptr [r11 - 0x40], 0
+0x1450d0025: mov       dword ptr [rsp + 0x30], 0x10000000 ; OBJDISP=0x30
+0x1450d002d: mov       dword ptr [rsp + 0x28], 8
+0x1450d0035: mov       dword ptr [rsp + 0x20], 0xf8
+0x1450d003d: call      0x141433f00 ; CALL->0x141433f00 pdata=(5389893376, 5389894192)
+0x1450d0042: mov       rax, qword ptr [rip + 0x67a69b7] ; RIP->0x14b876a00(.data2)
+0x1450d0049: add       rsp, 0x78
+0x1450d004d: ret       
+CALLS=0x141433f00
+
+===== METHOD 0x1450f0a00-0x1450f0a2f SIZE=0x2f VTABLE_INDICES=[254] =====
+0x1450f0a00: sub       rsp, 0x28
+0x1450f0a04: mov       rax, qword ptr [rip + 0x6787095] ; RIP->0x14b877aa0(.data2)
+0x1450f0a0b: test      rax, rax
+0x1450f0a0e: jne       0x1450f0a2a
+0x1450f0a10: lea       rdx, [rip + 0x510dd99] ; RIP->0x14a1fe7b0(.shared)
+0x1450f0a17: lea       rcx, [rip + 0x6787082] ; RIP->0x14b877aa0(.data2)
+0x1450f0a1e: call      0x14155e850 ; CALL->0x14155e850 pdata=(5391116368, 5391116438)
+0x1450f0a23: mov       rax, qword ptr [rip + 0x6787076] ; RIP->0x14b877aa0(.data2)
+0x1450f0a2a: add       rsp, 0x28
+0x1450f0a2e: ret       
+CALLS=0x14155e850
