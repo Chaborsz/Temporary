@@ -1,6 +1,6 @@
 from pathlib import Path
 
-# Build trigger checkpoint: v8.7 challenge-aware Danbooru auth validation.
+# Build trigger checkpoint: v8.8 Danbooru username/API-key diagnostics.
 path = Path('lib/src/pages/settings/booru_edit_page.dart')
 text = path.read_text(encoding='utf-8')
 
