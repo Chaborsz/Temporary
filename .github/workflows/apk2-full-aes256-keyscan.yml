@@ -1,0 +1,78 @@
+name: APK2 Full AES256 Raw Key Scan
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apk2-full-aes256-keyscan.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  keyscan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Download verified APK2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release download apk2-mediafire-transfer-2026-10-18 --repo Chaborsz/Temporary --pattern APK2-Win64-Shipping.exe --dir .
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+
+      - name: Build scanner
+        shell: bash
+        run: |
+          cat > scan.c <<'C'
+          #define _GNU_SOURCE
+          #include <stdio.h>
+          #include <stdint.h>
+          #include <stdlib.h>
+          #include <string.h>
+          #include <fcntl.h>
+          #include <unistd.h>
+          #include <sys/mman.h>
+          #include <sys/stat.h>
+          #include <openssl/aes.h>
+          static const unsigned char ct[16]={0xc8,0x6a,0xc0,0xc8,0x41,0xad,0x93,0xf7,0xa3,0x27,0xdb,0xe1,0x87,0x50,0x27,0x35};
+          static void hx(const unsigned char*p,size_t n){for(size_t i=0;i<n;i++)printf("%02x",p[i]);}
+          int main(int argc,char**argv){
+            if(argc!=2){fprintf(stderr,"usage: %s exe\n",argv[0]);return 2;}
+            int fd=open(argv[1],O_RDONLY); if(fd<0){perror("open");return 2;}
+            struct stat st; if(fstat(fd,&st)){perror("stat");return 2;}
+            size_t n=st.st_size; unsigned char*b=mmap(NULL,n,PROT_READ,MAP_PRIVATE,fd,0); if(b==MAP_FAILED){perror("mmap");return 2;}
+            unsigned long long tested=0,hits=0;
+            AES_KEY k; unsigned char out[16];
+            for(size_t off=0;off+32<=n;off++){
+              if(AES_set_decrypt_key(b+off,256,&k)!=0) continue;
+              AES_decrypt(ct,out,&k); tested++;
+              if(out[0]=='G'&&out[1]=='V'&&out[2]=='A'&&out[3]=='S'){
+                printf("HIT off=0x%zx key=",off);hx(b+off,32);printf(" plain=");hx(out,16);printf("\n");fflush(stdout);hits++;
+              }
+              if((off & 0x3ffffff)==0){fprintf(stderr,"progress off=0x%zx tested=%llu hits=%llu\n",off,tested,hits);}
+            }
+            fprintf(stderr,"DONE size=%zu tested=%llu hits=%llu\n",n,tested,hits);
+            munmap(b,n);close(fd);return 0;
+          }
+          C
+          gcc -O3 -march=native -Wno-deprecated-declarations scan.c -lcrypto -o scan
+
+      - name: Scan every byte offset for raw AES-256 key
+        shell: bash
+        run: |
+          set -o pipefail
+          /usr/bin/time -f 'ELAPSED=%e CPU=%P MAXRSS=%MKB' ./scan APK2-Win64-Shipping.exe > aes256-hits.txt 2> aes256-scan.log
+          cat aes256-scan.log
+          cat aes256-hits.txt
+
+      - name: Upload scan result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk2-full-aes256-keyscan
+          path: |
+            aes256-hits.txt
+            aes256-scan.log
+          retention-days: 3
