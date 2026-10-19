@@ -1,0 +1,76 @@
+name: Fetch APK2 from MediaFire
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fetch-apk2-mediafire.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Resolve MediaFire direct link and download EXE
+        shell: bash
+        run: |
+          set -euo pipefail
+          PAGE='https://www.mediafire.com/file/0569degttfkex13/APK2-Win64-Shipping.exe/file'
+          curl -L --fail --retry 5 --retry-delay 2 -A 'Mozilla/5.0' "$PAGE" -o mediafire.html
+          python3 - <<'PY' > direct_url.txt
+          import html, re
+          s=open('mediafire.html','r',encoding='utf-8',errors='ignore').read()
+          pats=[
+              r'id=["\']downloadButton["\'][^>]*href=["\']([^"\']+)',
+              r'href=["\']([^"\']+)["\'][^>]*id=["\']downloadButton["\']',
+              r'href=["\'](https://download[^"\']+)["\']',
+          ]
+          for p in pats:
+              m=re.search(p,s,re.I)
+              if m:
+                  print(html.unescape(m.group(1)))
+                  break
+          else:
+              raise SystemExit('Could not resolve MediaFire direct download URL')
+          PY
+          DIRECT="$(cat direct_url.txt)"
+          echo "Resolved host: $(python3 - <<'PY'
+          from urllib.parse import urlparse
+          print(urlparse(open('direct_url.txt').read().strip()).netloc)
+          PY
+          )"
+          curl -L --fail --retry 5 --retry-delay 2 -A 'Mozilla/5.0' "$DIRECT" -o APK2-Win64-Shipping.exe
+
+      - name: Validate executable and hash
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('APK2-Win64-Shipping.exe')
+          b=p.read_bytes()[:2]
+          if b != b'MZ':
+              raise SystemExit(f'Not a valid PE/MZ file: first bytes={b!r}')
+          print('PE/MZ signature OK')
+          print('Size:', p.stat().st_size, 'bytes')
+          PY
+          sha256sum APK2-Win64-Shipping.exe | tee APK2-Win64-Shipping.exe.sha256
+
+      - name: Publish as GitHub Release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG='apk2-mediafire-transfer-2026-10-18'
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" APK2-Win64-Shipping.exe APK2-Win64-Shipping.exe.sha256 --clobber
+          else
+            gh release create "$TAG" \
+              APK2-Win64-Shipping.exe \
+              APK2-Win64-Shipping.exe.sha256 \
+              --title 'APK2-Win64-Shipping.exe transfer' \
+              --notes 'Automated transfer from the user-provided MediaFire link for save-format reverse engineering.'
+          fi
