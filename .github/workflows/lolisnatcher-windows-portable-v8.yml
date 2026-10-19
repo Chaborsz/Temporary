@@ -31,12 +31,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: lolisnatcher-windows-portable-v8-${{ github.ref }}
-  cancel-in-progress: false
+  group: lolisnatcher-windows-portable-v8-danbooru-auth-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
-    name: Windows x64 / True Portable v8 / Release
+    name: Windows x64 / True Portable v8 / Danbooru Auth / Release
     runs-on: windows-2022
     timeout-minutes: 60
     env:
@@ -94,7 +94,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ inputs.flutter_version || '3.47.3' }}
-          cache: true
+          cache: false
 
       - name: Enable Windows desktop
         shell: pwsh
@@ -181,7 +181,9 @@ jobs:
           - Existing session cookies are used when available.
           - Login + API Key uses HTTP Basic Authentication by default.
           - A 401 from Basic Auth retries once with legacy login/api_key parameters for compatible older servers.
-          - Authorization and Cookie values are redacted from application request logs.
+          - Complete credentials are not embedded in normal request URLs.
+          - Authorization, Cookie and sensitive GET parameters are suppressed from detailed HTTP logging.
+          - Auxiliary Danbooru API GETs such as uploader lookup receive the same Basic Auth headers.
 
           v7 native InAppBrowser login/captcha fixes are retained.
           "@ | Set-Content -Encoding UTF8 (Join-Path $dataDir 'PORTABLE-README.txt')
@@ -196,7 +198,7 @@ jobs:
             "PATCH_LEVEL=TRUE_PORTABLE_V8_COMPRESSED_VISUAL_CACHE_DANBOORU_AUTH"
             "WINDOWS_LOGIN_BROWSER=NATIVE_INAPPBROWSER"
             "DANBOORU_AUTH=SESSION_COOKIE,BASIC_AUTH,LEGACY_QUERY_FALLBACK"
-            "DANBOORU_SECRET_LOGGING=REDACTED"
+            "DANBOORU_SECRET_LOGGING=SUPPRESSED"
             "VISUAL_CACHE=.\Data\LoliSnatcher\cache\visual_cache.db"
             "FULLRES_VIEWER_CACHE=MEMORY_ONLY"
             "DOWNLOAD_FORMATS=ORIGINAL,JPEG,PNG"
@@ -233,7 +235,7 @@ jobs:
           $notes = @"
           Unofficial TRUE PORTABLE Windows x64 build - v8 with generic Danbooru authentication.
 
-          v8 packs thumbnail/sample cache into Data\LoliSnatcher\cache\visual_cache.db with adaptive compression, keeps full-resolution viewer images memory-only, and adds Original/JPEG/PNG download output selection on Windows. Danbooru handlers now support existing session cookies, Login + API Key through HTTP Basic Auth, and one legacy query-parameter retry after a 401. Secret auth headers/cookies are redacted from request logs. v7 native WebView2 login/captcha fixes, es-MX live sync and PR #2838 are retained.
+          v8 keeps the compressed visual cache and Original/JPEG/PNG output selection. Danbooru-compatible handlers support existing session cookies, Login + API Key through HTTP Basic Auth, and one legacy login/api_key retry after a 401. Credentials stay out of normal request URLs and sensitive authenticated GET requests skip detailed HTTP logging. v7 native WebView2 login/captcha fixes, es-MX live sync and PR #2838 are retained.
 
           Upstream commit: $env:SOURCE_SHA
           Flutter: $env:FLUTTER_VERSION
@@ -260,7 +262,7 @@ jobs:
           - Danbooru session-cookie auth: enabled
           - Danbooru Basic Auth: enabled
           - Danbooru legacy query fallback after 401: enabled
-          - Auth/cookie logging: redacted
+          - Auth/cookie/API-key request logging: suppressed
           - Native Windows InAppBrowser: enabled
           - Thumbnail/sample packed cache: enabled
           - Full-res viewer persistence: disabled (memory-only)
