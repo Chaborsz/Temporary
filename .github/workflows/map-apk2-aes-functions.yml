@@ -1,0 +1,93 @@
+name: Map APK2 AES functions
+
+on:
+  push:
+    paths:
+      - '.github/workflows/map-apk2-aes-functions.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  map:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Map AES instruction signatures to x64 functions
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' -o APK2-Win64-Shipping.exe
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+          python3 -m pip -q install pefile capstone
+          mkdir -p analysis-results/apk2-aes-functions
+          python3 - <<'PY'
+          from pathlib import Path
+          import pefile,bisect
+          from capstone import Cs,CS_ARCH_X86,CS_MODE_64
+          fn='APK2-Win64-Shipping.exe'; out=Path('analysis-results/apk2-aes-functions')
+          b=Path(fn).read_bytes(); pe=pefile.PE(fn,fast_load=False);base=pe.OPTIONAL_HEADER.ImageBase
+          secs=[]
+          for s in pe.sections:
+              secs.append({'raw':s.PointerToRawData,'sz':s.SizeOfRawData,'rva':s.VirtualAddress,'vsz':max(s.Misc_VirtualSize,s.SizeOfRawData),'ch':s.Characteristics,'name':s.Name.rstrip(b'\0').decode(errors='replace')})
+          def off2va(o):
+              for s in secs:
+                  if s['raw']<=o<s['raw']+s['sz']:return base+s['rva']+(o-s['raw']),s['name']
+          def va2off(v):
+              r=v-base
+              for s in secs:
+                  if s['rva']<=r<s['rva']+s['sz']:return s['raw']+(r-s['rva'])
+          funcs=[]
+          for e in pe.DIRECTORY_ENTRY_EXCEPTION:
+              a=base+e.struct.BeginAddress;z=base+e.struct.EndAddress
+              if a<z: funcs.append((a,z))
+          funcs=sorted(set(funcs)); starts=[a for a,z in funcs]
+          def cf(v):
+              i=bisect.bisect_right(starts,v)-1
+              return funcs[i] if i>=0 and funcs[i][0]<=v<funcs[i][1] else None
+          sigs={
+            'AESENC':bytes.fromhex('660f38dc'),
+            'AESENCLAST':bytes.fromhex('660f38dd'),
+            'AESDEC':bytes.fromhex('660f38de'),
+            'AESDECLAST':bytes.fromhex('660f38df'),
+            'AESIMC':bytes.fromhex('660f38db'),
+            'AESKEYGENASSIST':bytes.fromhex('660f3adf'),
+          }
+          hits=[]
+          for nm,sig in sigs.items():
+              p=0
+              while True:
+                  i=b.find(sig,p)
+                  if i<0:break
+                  va,sec=off2va(i);fr=cf(va) if va else None
+                  hits.append((nm,i,va,sec,fr));p=i+1
+          groups={}
+          for h in hits:
+              if h[4]:groups.setdefault(h[4],[]).append(h)
+          md=Cs(CS_ARCH_X86,CS_MODE_64)
+          with (out/'aes_map.txt').open('w') as f:
+              f.write(f'HITS={len(hits)} FUNCTIONS={len(groups)}\n')
+              for (st,en),hs in sorted(groups.items()):
+                  f.write(f'\n===== AES_FUNC 0x{st:x}-0x{en:x} size=0x{en-st:x} =====\n')
+                  f.write('SIGS='+','.join(f'{x[0]}@0x{x[2]:x}' for x in hs)+'\n')
+                  o=va2off(st)
+                  if o is None:continue
+                  for x in md.disasm(b[o:o+min(en-st,0x1200)],st):
+                      f.write(f'0x{x.address:x}: {x.mnemonic:10s} {x.op_str}\n')
+          (out/'function_starts.txt').write_text(''.join(f'0x{a:x}\n' for a,z in sorted(groups)))
+          print('AES signature hits',len(hits),'functions',len(groups))
+          PY
+      - name: Commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis-results/apk2-aes-functions
+          git commit -m 'Map APK2 AES instruction functions' || exit 0
+          git pull --rebase origin main
+          git push origin main
