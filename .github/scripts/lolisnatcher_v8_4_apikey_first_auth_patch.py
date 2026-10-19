@@ -28,8 +28,14 @@ exec(compile(identity_diagnostic_patch.read_text(encoding='utf-8'), str(identity
 gallery_freeze_hotfix = Path(__file__).with_name('lolisnatcher_v8_9_gallery_freeze_hotfix.py')
 exec(compile(gallery_freeze_hotfix.read_text(encoding='utf-8'), str(gallery_freeze_hotfix), 'exec'))
 
+# v8.10 bounds the complete Windows thumbnail/sample load+decode pipeline and
+# increases list/grid debounce so fast scrolling discards more obsolete work.
+bounded_visual_pipeline = Path(__file__).with_name('lolisnatcher_v8_10_bounded_visual_pipeline.py')
+exec(compile(bounded_visual_pipeline.read_text(encoding='utf-8'), str(bounded_visual_pipeline), 'exec'))
+
 print('V8_5_VERIFIED_LOGIN_CHAIN=PASS')
 print('V8_6_ROBUST_LOGIN_VALIDATION_CHAIN=PASS')
 print('V8_7_CHALLENGE_AUTH_CHAIN=PASS')
 print('V8_8_IDENTITY_DIAGNOSTIC_CHAIN=PASS')
 print('V8_9_GALLERY_FREEZE_HOTFIX_CHAIN=PASS')
+print('V8_10_BOUNDED_VISUAL_PIPELINE_CHAIN=PASS')
