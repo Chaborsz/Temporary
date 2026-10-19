@@ -1,0 +1,70 @@
+name: Dump APK2 save manager reflection neighborhood
+
+on:
+  push:
+    paths:
+      - '.github/workflows/dump-apk2-save-manager-neighborhood.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Dump manager-local strings and pointers
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' -o APK2-Win64-Shipping.exe
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+          mkdir -p analysis-results/apk2-save-manager-neighborhood
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+          b=Path('APK2-Win64-Shipping.exe').read_bytes(); lo=0xa1d0000; hi=0xa1e4000
+          rows=[]
+          # ASCII runs
+          i=lo
+          while i<hi:
+              if 32<=b[i]<127:
+                  j=i
+                  while j<hi and 32<=b[j]<127:j+=1
+                  if j-i>=3: rows.append((i,'A',b[i:j].decode('ascii','replace')))
+                  i=j
+              else:i+=1
+          # UTF16LE simple ASCII subset
+          for parity in (0,1):
+              i=lo+((parity-lo)&1)
+              while i+1<hi:
+                  if 32<=b[i]<127 and b[i+1]==0:
+                      j=i; s=[]
+                      while j+1<hi and 32<=b[j]<127 and b[j+1]==0:
+                          s.append(chr(b[j]));j+=2
+                      if len(s)>=3:rows.append((i,'W',''.join(s)))
+                      i=j
+                  else:i+=2
+          rows=sorted(set(rows))
+          with open('analysis-results/apk2-save-manager-neighborhood/strings.txt','w',encoding='utf-8') as f:
+              for off,t,s in rows:f.write(f'0x{off:x}\t{t}\t{s}\n')
+          # Pointer-rich table around known EncryptKey descriptor chain, one qword per line.
+          with open('analysis-results/apk2-save-manager-neighborhood/pointers.txt','w') as f:
+              for p in range(0xa1dd000,0xa1df800,8):
+                  q=struct.unpack_from('<Q',b,p)[0]
+                  if q or p in range(0xa1dde50,0xa1def00):f.write(f'0x{p:x}\t0x{q:016x}\n')
+          PY
+      - name: Commit reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis-results/apk2-save-manager-neighborhood
+          git commit -m 'Dump APK2 save manager reflection neighborhood' || exit 0
+          git pull --rebase origin main
+          git push origin main
