@@ -1,0 +1,161 @@
+name: APK2 fast targeted save callgraph
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apk2-targeted-callgraph-fast.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  trace-fast:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch verified executable
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' -o /tmp/APK2.exe
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  /tmp/APK2.exe' | sha256sum -c -
+          python3 -m pip -q install pefile capstone
+          mkdir -p /tmp/out
+
+      - name: Trace exact functions and callers efficiently
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' > /tmp/out/apk2-fast-callgraph.txt
+          import pefile,struct,bisect
+          from pathlib import Path
+          from capstone import Cs,CS_ARCH_X86,CS_MODE_64
+          from capstone.x86 import X86_OP_IMM
+
+          fn='/tmp/APK2.exe'; b=Path(fn).read_bytes(); pe=pefile.PE(fn,fast_load=False); base=pe.OPTIONAL_HEADER.ImageBase
+          seed_sites={
+           0x14582c591:'SEGA_PATH_A',0x14582c961:'SEGA_PATH_B',0x143e7ea4a:'SAVEGAMES_PATH_A',0x14582c75f:'SAVEGAMES_PATH_B',
+           0x143f86151:'SAVE_CPP_124',0x143f86e94:'SAVE_CPP_100',0x143f870b4:'SAVE_CPP_72',0x143f872d4:'SAVE_CPP_45',0x143f874e4:'SAVE_CPP_18',
+           0x14424d07d:'SAVE_MODULE_A',0x14424d2bc:'SAVE_MODULE_B'}
+          secs=[]
+          for s in pe.sections:
+            secs.append((s.VirtualAddress,max(s.Misc_VirtualSize,s.SizeOfRawData),s.PointerToRawData,s.SizeOfRawData,s.Name.rstrip(b'\0').decode('ascii','replace'),s.Characteristics))
+          def va2off(va):
+            r=va-base
+            for sr,vs,raw,rs,n,ch in secs:
+              if sr<=r<sr+rs:return raw+r-sr
+            return None
+          def secinfo(va):
+            r=va-base
+            for sr,vs,raw,rs,n,ch in secs:
+              if sr<=r<sr+vs:return n,ch
+            return None,0
+          funcs=[]
+          for e in getattr(pe,'DIRECTORY_ENTRY_EXCEPTION',[]):
+            st=base+e.struct.BeginAddress; en=base+e.struct.EndAddress
+            if st<en:funcs.append((st,en,e.struct.UnwindData))
+          funcs.sort(); starts=[f[0] for f in funcs]
+          def containing(va):
+            i=bisect.bisect_right(starts,va)-1
+            return funcs[i] if i>=0 and funcs[i][0]<=va<funcs[i][1] else None
+          md=Cs(CS_ARCH_X86,CS_MODE_64); md.detail=True
+          def insns(f):
+            st,en,_=f; off=va2off(st)
+            if off is None:return []
+            return list(md.disasm(b[off:off+(en-st)],st))
+          def direct_calls(f):
+            out=[]
+            for x in insns(f):
+              if x.mnemonic=='call' and x.operands and x.operands[0].type==X86_OP_IMM:
+                dst=x.operands[0].imm; df=containing(dst)
+                out.append((x.address,dst,df))
+            return out
+
+          roots={}
+          print('=== SEED FUNCTIONS ===')
+          for site,label in seed_sites.items():
+            f=containing(site)
+            if f:
+              roots[f[0]]=f
+              print(f'{label} site=0x{site:x} func=0x{f[0]:x}-0x{f[1]:x} size=0x{f[1]-f[0]:x}')
+            else:print(f'{label} site=0x{site:x} NO_PDATA')
+
+          print('\n=== ROOT DISASSEMBLY + DIRECT CALLS ===')
+          downstream=set()
+          for st,f in sorted(roots.items()):
+            print(f'\nFUNCTION 0x{f[0]:x}-0x{f[1]:x}')
+            for x in insns(f):
+              mark=''
+              if x.mnemonic=='call' and x.operands and x.operands[0].type==X86_OP_IMM:
+                dst=x.operands[0].imm; df=containing(dst)
+                if df:
+                  downstream.add(df[0]); mark=f' ; CALL_FUNC=0x{df[0]:x}-0x{df[1]:x}'
+              print(f'0x{x.address:x}: {x.mnemonic} {x.op_str}{mark}')
+
+          print('\n=== DOWNSTREAM DIRECT FUNCTIONS (one level) ===')
+          for st in sorted(downstream):
+            f=containing(st)
+            if not f:continue
+            print(f'FUNCTION 0x{f[0]:x}-0x{f[1]:x} size=0x{f[1]-f[0]:x}')
+            for ca,dst,df in direct_calls(f):
+              print(f' CALL 0x{ca:x} -> 0x{dst:x}' + (f' func=0x{df[0]:x}-0x{df[1]:x}' if df else ''))
+
+          # Fast E8 search: C-level bytes.find instead of Python byte loop.
+          def find_callers(targets):
+            found=[]
+            for sr,vs,raw,rs,n,ch in secs:
+              if not (ch & 0x20000000):continue
+              d=b[raw:raw+rs]; pos=0; secva=base+sr
+              while True:
+                i=d.find(b'\xE8',pos)
+                if i<0:break
+                if i+5<=len(d):
+                  rel=struct.unpack_from('<i',d,i+1)[0]; src=secva+i; dst=src+5+rel
+                  if dst in targets:
+                    cf=containing(src); found.append((src,dst,cf))
+                pos=i+1
+            return found
+
+          print('\n=== UPSTREAM CALLERS OF ROOTS ===')
+          roots_set=set(roots)
+          level1=find_callers(roots_set)
+          caller_starts=set()
+          for src,dst,cf in level1:
+            if cf:
+              caller_starts.add(cf[0]); print(f'CALL 0x{src:x} -> root=0x{dst:x} caller=0x{cf[0]:x}-0x{cf[1]:x}')
+            else:print(f'CALL 0x{src:x} -> root=0x{dst:x} caller=NO_PDATA')
+          print('LEVEL1_CALLERS',len(level1),'UNIQUE_FUNCTIONS',len(caller_starts))
+
+          print('\n=== UPSTREAM CALLERS OF LEVEL1 ===')
+          level2=find_callers(caller_starts)
+          for src,dst,cf in level2:
+            print(f'CALL 0x{src:x} -> level1=0x{dst:x} caller=' + (f'0x{cf[0]:x}-0x{cf[1]:x}' if cf else 'NO_PDATA'))
+          print('LEVEL2_CALLERS',len(level2))
+
+          print('\n=== LEVEL1 CALLER DISASSEMBLY ===')
+          for st in sorted(caller_starts):
+            f=containing(st)
+            if not f:continue
+            print(f'\nFUNCTION 0x{f[0]:x}-0x{f[1]:x}')
+            for x in insns(f):print(f'0x{x.address:x}: {x.mnemonic} {x.op_str}')
+          PY
+          wc -l -c /tmp/out/apk2-fast-callgraph.txt
+
+      - name: Publish fast result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin apk2-analysis-fast
+          git checkout -B apk2-analysis-fast origin/apk2-analysis-fast
+          mkdir -p analysis
+          cp /tmp/out/apk2-fast-callgraph.txt analysis/
+          git add analysis/apk2-fast-callgraph.txt
+          git commit -m 'Add fast APK2 save callgraph' || true
+          git push origin HEAD:apk2-analysis-fast
