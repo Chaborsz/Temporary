@@ -1,6 +1,6 @@
 from pathlib import Path
 
-# Build trigger checkpoint: v8.6 restored direct validation chain.
+# Build trigger checkpoint: v8.7 challenge-aware Danbooru auth validation.
 path = Path('lib/src/pages/settings/booru_edit_page.dart')
 text = path.read_text(encoding='utf-8')
 
