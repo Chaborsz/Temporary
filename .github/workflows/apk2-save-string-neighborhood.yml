@@ -1,0 +1,78 @@
+name: APK2 Save String Neighborhood
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apk2-save-string-neighborhood.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Download verified APK2
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release download apk2-mediafire-transfer-2026-10-18 --repo Chaborsz/Temporary --pattern APK2-Win64-Shipping.exe --dir .
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+          python3 -m pip install --quiet pefile
+
+      - name: Extract strings around save-related RVAs
+        shell: bash
+        run: |
+          cat > scan.py <<'PY'
+          import pefile,re
+          from pathlib import Path
+          fn='APK2-Win64-Shipping.exe'; data=Path(fn).read_bytes(); pe=pefile.PE(fn,fast_load=False); ib=pe.OPTIONAL_HEADER.ImageBase
+          secs=[]
+          for s in pe.sections:
+            secs.append((s.Name.rstrip(b'\0').decode(errors='replace'),s.VirtualAddress,s.PointerToRawData,s.SizeOfRawData,max(s.Misc_VirtualSize,s.SizeOfRawData)))
+          def off2rva(off):
+            for nm,rva,raw,rsz,vsz in secs:
+              if raw<=off<raw+rsz:return rva+(off-raw),nm
+            return None,None
+          wins=[
+            ('GameSaveHandlers',0xa07d3b8,0x40000),
+            ('SaveHierarchy',0xa1ba000,0x80000),
+            ('SaveGameSystem',0x9b30000,0x20000),
+            ('RootSaveDirs',0xa7e9578,0x30000),
+          ]
+          rows=[]
+          for m in re.finditer(rb'[\x20-\x7e]{4,}',data):
+            rva,sec=off2rva(m.start());
+            if rva is not None: rows.append((rva,sec,'A',m.group().decode('ascii','replace')))
+          # UTF16LE printable strings
+          pat=re.compile(rb'(?:[\x20-\x7e]\x00){4,}')
+          for m in pat.finditer(data):
+            rva,sec=off2rva(m.start());
+            if rva is not None: rows.append((rva,sec,'W',m.group().decode('utf-16le','replace')))
+          rows.sort()
+          out=[]
+          for name,center,rad in wins:
+            out.append(f'===== {name} center RVA=0x{center:x} radius=0x{rad:x} =====')
+            sel=[x for x in rows if center-rad<=x[0]<=center+rad]
+            for rva,sec,kind,s in sel:
+              out.append(f'0x{rva:09x} {sec:8} {kind} {s}')
+            out.append(f'COUNT={len(sel)}')
+          # semantic hits globally
+          out.append('===== GLOBAL SAVE/CRYPTO SEMANTIC STRINGS =====')
+          rx=re.compile(r'(save.?data|savegame|encrypt|decrypt|cipher|encode|decode|serialize|checksum|hash|key|crypt)',re.I)
+          for rva,sec,kind,s in rows:
+            if rx.search(s) and len(s)<400: out.append(f'0x{rva:09x} {sec:8} {kind} {s}')
+          Path('save-string-neighborhood.txt').write_text('\n'.join(out),encoding='utf-8')
+          print('rows',len(rows),'output',len(out))
+          PY
+          python3 scan.py
+          grep -Eai 'UAPKGameSave|APKSaveData|encrypt|decrypt|cipher|encode|decode|serialize|checksum|hash|key|SaveGameSystem|RootSave' save-string-neighborhood.txt | head -5000 || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk2-save-string-neighborhood
+          path: save-string-neighborhood.txt
+          retention-days: 3
