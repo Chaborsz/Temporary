@@ -1,0 +1,4 @@
+target=EncryptKey_descriptor@0x14a1dead0 file=0xa1dde78 slot_va=0x14a1dea78 section=.shared
+target=EncryptKey_string@0x14a1d45f8 file=0xa1dded0 slot_va=0x14a1dead0 section=.shared
+target=EncryptKey_prop_array@0x14a1dea78 file=0xa1de208 slot_va=0x14a1dee08 section=.shared
+target=UAPKSaveGameManager_string@0x14a1d45d0 file=0xb1ed2e0 slot_va=0x14b1edee0 section=.data2

@@ -1,0 +1,2472 @@
+slot_file=0xb1ed010 slot_va=0x14b1edc10 section=.data2 -> function=0x1450ccec0-0x1450cceef
+  0x1450ccec0: sub       rsp, 0x28
+  0x1450ccec4: mov       rax, qword ptr [rip + 0x67a92f5]
+  0x1450ccecb: test      rax, rax
+  0x1450ccece: jne       0x1450cceea
+  0x1450cced0: lea       rdx, [rip + 0x51041b9]
+  0x1450cced7: lea       rcx, [rip + 0x67a92e2]
+  0x1450ccede: call      0x14155e850
+  0x1450ccee3: mov       rax, qword ptr [rip + 0x67a92d6]
+  0x1450cceea: add       rsp, 0x28
+  0x1450cceee: ret       
+slot_file=0xb1ed018 slot_va=0x14b1edc18 section=.data2 -> function=0x1450cce00-0x1450cceae
+  0x1450cce00: mov       r11, rsp
+  0x1450cce03: sub       rsp, 0x78
+  0x1450cce07: mov       rax, qword ptr [rip + 0x67a93aa]
+  0x1450cce0e: test      rax, rax
+  0x1450cce11: jne       0x1450ccea9
+  0x1450cce17: lea       rax, [rip - 0x3f339ce]
+  0x1450cce1e: mov       qword ptr [r11 + 8], rax
+  0x1450cce22: lea       r9, [rip - 0x3f339d9]
+  0x1450cce29: lea       rax, [rip - 0x3d1ddf0]
+  0x1450cce30: mov       qword ptr [r11 - 0x10], rax
+  0x1450cce34: lea       r8, [rip + 0x67a937d]
+  0x1450cce3b: lea       rax, [rip - 0x16d7042]
+  0x1450cce42: mov       qword ptr [r11 - 0x18], rax
+  0x1450cce46: lea       rdx, [rip + 0x510295d]
+  0x1450cce4d: lea       rax, [r11 + 8]
+  0x1450cce51: mov       qword ptr [r11 - 0x20], rax
+  0x1450cce55: lea       rcx, [rip + 0x4d721a4]
+  0x1450cce5c: lea       rax, [rip - 0x3f30723]
+  0x1450cce63: mov       qword ptr [r11 - 0x28], rax
+  0x1450cce67: lea       rax, [rip + 0x19b2]
+  0x1450cce6e: mov       qword ptr [r11 - 0x30], rax
+  0x1450cce72: lea       rax, [rip + 0x4116bf7]
+  0x1450cce79: mov       qword ptr [r11 - 0x38], rax
+  0x1450cce7d: mov       qword ptr [r11 - 0x40], 0
+  0x1450cce85: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450cce8d: mov       dword ptr [rsp + 0x28], 8
+  0x1450cce95: mov       dword ptr [rsp + 0x20], 0x1df0
+  0x1450cce9d: call      0x141433f00
+  0x1450ccea2: mov       rax, qword ptr [rip + 0x67a930f]
+  0x1450ccea9: add       rsp, 0x78
+  0x1450ccead: ret       
+slot_file=0xb1ed040 slot_va=0x14b1edc40 section=.data2 -> function=0x1450cd830-0x1450cd85f
+  0x1450cd830: sub       rsp, 0x28
+  0x1450cd834: mov       rax, qword ptr [rip + 0x67a891d]
+  0x1450cd83b: test      rax, rax
+  0x1450cd83e: jne       0x1450cd85a
+  0x1450cd840: lea       rdx, [rip + 0x5102b49]
+  0x1450cd847: lea       rcx, [rip + 0x67a890a]
+  0x1450cd84e: call      0x14155e850
+  0x1450cd853: mov       rax, qword ptr [rip + 0x67a88fe]
+  0x1450cd85a: add       rsp, 0x28
+  0x1450cd85e: ret       
+slot_file=0xb1ed080 slot_va=0x14b1edc80 section=.data2 -> function=0x1450cd830-0x1450cd85f
+  0x1450cd830: sub       rsp, 0x28
+  0x1450cd834: mov       rax, qword ptr [rip + 0x67a891d]
+  0x1450cd83b: test      rax, rax
+  0x1450cd83e: jne       0x1450cd85a
+  0x1450cd840: lea       rdx, [rip + 0x5102b49]
+  0x1450cd847: lea       rcx, [rip + 0x67a890a]
+  0x1450cd84e: call      0x14155e850
+  0x1450cd853: mov       rax, qword ptr [rip + 0x67a88fe]
+  0x1450cd85a: add       rsp, 0x28
+  0x1450cd85e: ret       
+slot_file=0xb1ed0c0 slot_va=0x14b1edcc0 section=.data2 -> function=0x1450cd830-0x1450cd85f
+  0x1450cd830: sub       rsp, 0x28
+  0x1450cd834: mov       rax, qword ptr [rip + 0x67a891d]
+  0x1450cd83b: test      rax, rax
+  0x1450cd83e: jne       0x1450cd85a
+  0x1450cd840: lea       rdx, [rip + 0x5102b49]
+  0x1450cd847: lea       rcx, [rip + 0x67a890a]
+  0x1450cd84e: call      0x14155e850
+  0x1450cd853: mov       rax, qword ptr [rip + 0x67a88fe]
+  0x1450cd85a: add       rsp, 0x28
+  0x1450cd85e: ret       
+slot_file=0xb1ed100 slot_va=0x14b1edd00 section=.data2 -> function=0x1450cd830-0x1450cd85f
+  0x1450cd830: sub       rsp, 0x28
+  0x1450cd834: mov       rax, qword ptr [rip + 0x67a891d]
+  0x1450cd83b: test      rax, rax
+  0x1450cd83e: jne       0x1450cd85a
+  0x1450cd840: lea       rdx, [rip + 0x5102b49]
+  0x1450cd847: lea       rcx, [rip + 0x67a890a]
+  0x1450cd84e: call      0x14155e850
+  0x1450cd853: mov       rax, qword ptr [rip + 0x67a88fe]
+  0x1450cd85a: add       rsp, 0x28
+  0x1450cd85e: ret       
+slot_file=0xb1ed140 slot_va=0x14b1edd40 section=.data2 -> function=0x1450cd830-0x1450cd85f
+  0x1450cd830: sub       rsp, 0x28
+  0x1450cd834: mov       rax, qword ptr [rip + 0x67a891d]
+  0x1450cd83b: test      rax, rax
+  0x1450cd83e: jne       0x1450cd85a
+  0x1450cd840: lea       rdx, [rip + 0x5102b49]
+  0x1450cd847: lea       rcx, [rip + 0x67a890a]
+  0x1450cd84e: call      0x14155e850
+  0x1450cd853: mov       rax, qword ptr [rip + 0x67a88fe]
+  0x1450cd85a: add       rsp, 0x28
+  0x1450cd85e: ret       
+slot_file=0xb1ed180 slot_va=0x14b1edd80 section=.data2 -> function=0x1450cd830-0x1450cd85f
+  0x1450cd830: sub       rsp, 0x28
+  0x1450cd834: mov       rax, qword ptr [rip + 0x67a891d]
+  0x1450cd83b: test      rax, rax
+  0x1450cd83e: jne       0x1450cd85a
+  0x1450cd840: lea       rdx, [rip + 0x5102b49]
+  0x1450cd847: lea       rcx, [rip + 0x67a890a]
+  0x1450cd84e: call      0x14155e850
+  0x1450cd853: mov       rax, qword ptr [rip + 0x67a88fe]
+  0x1450cd85a: add       rsp, 0x28
+  0x1450cd85e: ret       
+slot_file=0xb1ed1c0 slot_va=0x14b1eddc0 section=.data2 -> function=0x1450cd830-0x1450cd85f
+  0x1450cd830: sub       rsp, 0x28
+  0x1450cd834: mov       rax, qword ptr [rip + 0x67a891d]
+  0x1450cd83b: test      rax, rax
+  0x1450cd83e: jne       0x1450cd85a
+  0x1450cd840: lea       rdx, [rip + 0x5102b49]
+  0x1450cd847: lea       rcx, [rip + 0x67a890a]
+  0x1450cd84e: call      0x14155e850
+  0x1450cd853: mov       rax, qword ptr [rip + 0x67a88fe]
+  0x1450cd85a: add       rsp, 0x28
+  0x1450cd85e: ret       
+slot_file=0xb1ed200 slot_va=0x14b1ede00 section=.data2 -> function=0x1450cd830-0x1450cd85f
+  0x1450cd830: sub       rsp, 0x28
+  0x1450cd834: mov       rax, qword ptr [rip + 0x67a891d]
+  0x1450cd83b: test      rax, rax
+  0x1450cd83e: jne       0x1450cd85a
+  0x1450cd840: lea       rdx, [rip + 0x5102b49]
+  0x1450cd847: lea       rcx, [rip + 0x67a890a]
+  0x1450cd84e: call      0x14155e850
+  0x1450cd853: mov       rax, qword ptr [rip + 0x67a88fe]
+  0x1450cd85a: add       rsp, 0x28
+  0x1450cd85e: ret       
+slot_file=0xb1ed208 slot_va=0x14b1ede08 section=.data2 -> function=0x1450ccfc0-0x1450cd06e
+  0x1450ccfc0: mov       r11, rsp
+  0x1450ccfc3: sub       rsp, 0x78
+  0x1450ccfc7: mov       rax, qword ptr [rip + 0x67a9182]
+  0x1450ccfce: test      rax, rax
+  0x1450ccfd1: jne       0x1450cd069
+  0x1450ccfd7: lea       rax, [rip - 0x3f33b8e]
+  0x1450ccfde: mov       qword ptr [r11 + 8], rax
+  0x1450ccfe2: lea       r9, [rip + 0x6c7]
+  0x1450ccfe9: lea       rax, [rip - 0x3d1dfb0]
+  0x1450ccff0: mov       qword ptr [r11 - 0x10], rax
+  0x1450ccff4: lea       r8, [rip + 0x67a9155]
+  0x1450ccffb: lea       rax, [rip - 0x2f77872]
+  0x1450cd002: mov       qword ptr [r11 - 0x18], rax
+  0x1450cd006: lea       rdx, [rip + 0x510270d]
+  0x1450cd00d: lea       rax, [r11 + 8]
+  0x1450cd011: mov       qword ptr [r11 - 0x20], rax
+  0x1450cd015: lea       rcx, [rip + 0x4d71fe4]
+  0x1450cd01c: lea       rax, [rip - 0x3f308e3]
+  0x1450cd023: mov       qword ptr [r11 - 0x28], rax
+  0x1450cd027: lea       rax, [rip - 0x2f78c4e]
+  0x1450cd02e: mov       qword ptr [r11 - 0x30], rax
+  0x1450cd032: lea       rax, [rip + 0x4116a37]
+  0x1450cd039: mov       qword ptr [r11 - 0x38], rax
+  0x1450cd03d: mov       qword ptr [r11 - 0x40], 0
+  0x1450cd045: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450cd04d: mov       dword ptr [rsp + 0x28], 8
+  0x1450cd055: mov       dword ptr [rsp + 0x20], 0x28
+  0x1450cd05d: call      0x141433f00
+  0x1450cd062: mov       rax, qword ptr [rip + 0x67a90e7]
+  0x1450cd069: add       rsp, 0x78
+  0x1450cd06d: ret       
+slot_file=0xb1ed228 slot_va=0x14b1ede28 section=.data2 -> function=0x144e60480-0x144e604af
+  0x144e60480: sub       rsp, 0x28
+  0x144e60484: mov       rax, qword ptr [rip + 0x69feddd]
+  0x144e6048b: test      rax, rax
+  0x144e6048e: jne       0x144e604aa
+  0x144e60490: lea       rdx, [rip + 0x4fe4de9]
+  0x144e60497: lea       rcx, [rip + 0x69fedca]
+  0x144e6049e: call      0x14155e250
+  0x144e604a3: mov       rax, qword ptr [rip + 0x69fedbe]
+  0x144e604aa: add       rsp, 0x28
+  0x144e604ae: ret       
+slot_file=0xb1ed258 slot_va=0x14b1ede58 section=.data2 -> function=0x144e60480-0x144e604af
+  0x144e60480: sub       rsp, 0x28
+  0x144e60484: mov       rax, qword ptr [rip + 0x69feddd]
+  0x144e6048b: test      rax, rax
+  0x144e6048e: jne       0x144e604aa
+  0x144e60490: lea       rdx, [rip + 0x4fe4de9]
+  0x144e60497: lea       rcx, [rip + 0x69fedca]
+  0x144e6049e: call      0x14155e250
+  0x144e604a3: mov       rax, qword ptr [rip + 0x69fedbe]
+  0x144e604aa: add       rsp, 0x28
+  0x144e604ae: ret       
+slot_file=0xb1ed2b0 slot_va=0x14b1edeb0 section=.data2 -> function=0x1450cea10-0x1450cea24
+  0x1450cea10: sub       rsp, 0x58
+  0x1450cea14: mov       rax, qword ptr [rip + 0x67a7fcd]
+  0x1450cea1b: test      rax, rax
+  0x1450cea1e: jne       0x1450ceb06
+slot_file=0xb1ed2d0 slot_va=0x14b1eded0 section=.data2 -> function=0x1450ceb20-0x1450ceb4f
+  0x1450ceb20: sub       rsp, 0x28
+  0x1450ceb24: mov       rax, qword ptr [rip + 0x67a7e75]
+  0x1450ceb2b: test      rax, rax
+  0x1450ceb2e: jne       0x1450ceb4a
+  0x1450ceb30: lea       rdx, [rip + 0x51102a9]
+  0x1450ceb37: lea       rcx, [rip + 0x67a7e62]
+  0x1450ceb3e: call      0x14155e850
+  0x1450ceb43: mov       rax, qword ptr [rip + 0x67a7e56]
+  0x1450ceb4a: add       rsp, 0x28
+  0x1450ceb4e: ret       
+slot_file=0xb1ed2d8 slot_va=0x14b1eded8 section=.data2 -> function=0x1450ce860-0x1450ce90e
+  0x1450ce860: mov       r11, rsp
+  0x1450ce863: sub       rsp, 0x78
+  0x1450ce867: mov       rax, qword ptr [rip + 0x67a812a]
+  0x1450ce86e: test      rax, rax
+  0x1450ce871: jne       0x1450ce909
+  0x1450ce877: lea       rax, [rip - 0x3f3542e]
+  0x1450ce87e: mov       qword ptr [r11 + 8], rax
+  0x1450ce882: lea       r9, [rip - 0x3f35439]
+  0x1450ce889: lea       rax, [rip - 0x3d1f850]
+  0x1450ce890: mov       qword ptr [r11 - 0x10], rax
+  0x1450ce894: lea       r8, [rip + 0x67a80fd]
+  0x1450ce89b: lea       rax, [rip - 0x3fc472]
+  0x1450ce8a2: mov       qword ptr [r11 - 0x18], rax
+  0x1450ce8a6: lea       rdx, [rip + 0x5105d25]
+  0x1450ce8ad: lea       rax, [r11 + 8]
+  0x1450ce8b1: mov       qword ptr [r11 - 0x20], rax
+  0x1450ce8b5: lea       rcx, [rip + 0x4d70744]
+  0x1450ce8bc: lea       rax, [rip - 0x3f32183]
+  0x1450ce8c3: mov       qword ptr [r11 - 0x28], rax
+  0x1450ce8c7: lea       rax, [rip + 0x6ff2]
+  0x1450ce8ce: mov       qword ptr [r11 - 0x30], rax
+  0x1450ce8d2: lea       rax, [rip + 0x4115197]
+  0x1450ce8d9: mov       qword ptr [r11 - 0x38], rax
+  0x1450ce8dd: mov       qword ptr [r11 - 0x40], 0
+  0x1450ce8e5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450ce8ed: mov       dword ptr [rsp + 0x28], 8
+  0x1450ce8f5: mov       dword ptr [rsp + 0x20], 0x58
+  0x1450ce8fd: call      0x141433f00
+  0x1450ce902: mov       rax, qword ptr [rip + 0x67a808f]
+  0x1450ce909: add       rsp, 0x78
+  0x1450ce90d: ret       
+slot_file=0xb1ed2f8 slot_va=0x14b1edef8 section=.data2 -> function=0x1450cec30-0x1450cec5f
+  0x1450cec30: sub       rsp, 0x28
+  0x1450cec34: mov       rax, qword ptr [rip + 0x67a7d7d]
+  0x1450cec3b: test      rax, rax
+  0x1450cec3e: jne       0x1450cec5a
+  0x1450cec40: lea       rdx, [rip + 0x510fa69]
+  0x1450cec47: lea       rcx, [rip + 0x67a7d6a]
+  0x1450cec4e: call      0x14155e850
+  0x1450cec53: mov       rax, qword ptr [rip + 0x67a7d5e]
+  0x1450cec5a: add       rsp, 0x28
+  0x1450cec5e: ret       
+slot_file=0xb1ed300 slot_va=0x14b1edf00 section=.data2 -> function=0x144e6dd60-0x144e6de0e
+  0x144e6dd60: mov       r11, rsp
+  0x144e6dd63: sub       rsp, 0x78
+  0x144e6dd67: mov       rax, qword ptr [rip + 0x6a08c42]
+  0x144e6dd6e: test      rax, rax
+  0x144e6dd71: jne       0x144e6de09
+  0x144e6dd77: lea       rax, [rip - 0x3cd492e]
+  0x144e6dd7e: mov       qword ptr [r11 + 8], rax
+  0x144e6dd82: lea       r9, [rip - 0x3cd4939]
+  0x144e6dd89: lea       rax, [rip - 0x3abed50]
+  0x144e6dd90: mov       qword ptr [r11 - 0x10], rax
+  0x144e6dd94: lea       r8, [rip + 0x6a08c15]
+  0x144e6dd9b: lea       rax, [rip - 0x18cfe2]
+  0x144e6dda2: mov       qword ptr [r11 - 0x18], rax
+  0x144e6dda6: lea       rdx, [rip + 0x5366765]
+  0x144e6ddad: lea       rax, [r11 + 8]
+  0x144e6ddb1: mov       qword ptr [r11 - 0x20], rax
+  0x144e6ddb5: lea       rcx, [rip + 0x4fd1244]
+  0x144e6ddbc: lea       rax, [rip - 0x3cd1683]
+  0x144e6ddc3: mov       qword ptr [r11 - 0x28], rax
+  0x144e6ddc7: lea       rax, [rip - 0x1894ce]
+  0x144e6ddce: mov       qword ptr [r11 - 0x30], rax
+  0x144e6ddd2: lea       rax, [rip + 0x4375c97]
+  0x144e6ddd9: mov       qword ptr [r11 - 0x38], rax
+  0x144e6dddd: mov       qword ptr [r11 - 0x40], 0
+  0x144e6dde5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x144e6dded: mov       dword ptr [rsp + 0x28], 8
+  0x144e6ddf5: mov       dword ptr [rsp + 0x20], 0x38
+  0x144e6ddfd: call      0x141433f00
+  0x144e6de02: mov       rax, qword ptr [rip + 0x6a08ba7]
+  0x144e6de09: add       rsp, 0x78
+  0x144e6de0d: ret       
+slot_file=0xb1ed320 slot_va=0x14b1edf20 section=.data2 -> function=0x1450ced10-0x1450ced3f
+  0x1450ced10: sub       rsp, 0x28
+  0x1450ced14: mov       rax, qword ptr [rip + 0x67a7c6d]
+  0x1450ced1b: test      rax, rax
+  0x1450ced1e: jne       0x1450ced3a
+  0x1450ced20: lea       rdx, [rip + 0x510fcf9]
+  0x1450ced27: lea       rcx, [rip + 0x67a7c5a]
+  0x1450ced2e: call      0x14155e850
+  0x1450ced33: mov       rax, qword ptr [rip + 0x67a7c4e]
+  0x1450ced3a: add       rsp, 0x28
+  0x1450ced3e: ret       
+slot_file=0xb1ed328 slot_va=0x14b1edf28 section=.data2 -> function=0x1450cec60-0x1450ced0e
+  0x1450cec60: mov       r11, rsp
+  0x1450cec63: sub       rsp, 0x78
+  0x1450cec67: mov       rax, qword ptr [rip + 0x67a7d12]
+  0x1450cec6e: test      rax, rax
+  0x1450cec71: jne       0x1450ced09
+  0x1450cec77: lea       rax, [rip - 0x3f3582e]
+  0x1450cec7e: mov       qword ptr [r11 + 8], rax
+  0x1450cec82: lea       r9, [rip - 0x3f35839]
+  0x1450cec89: lea       rax, [rip - 0x3d1fc50]
+  0x1450cec90: mov       qword ptr [r11 - 0x10], rax
+  0x1450cec94: lea       r8, [rip + 0x67a7ce5]
+  0x1450cec9b: lea       rax, [rip - 0x260f42]
+  0x1450ceca2: mov       qword ptr [r11 - 0x18], rax
+  0x1450ceca6: lea       rdx, [rip + 0x510587d]
+  0x1450cecad: lea       rax, [r11 + 8]
+  0x1450cecb1: mov       qword ptr [r11 - 0x20], rax
+  0x1450cecb5: lea       rcx, [rip + 0x4d70344]
+  0x1450cecbc: lea       rax, [rip - 0x3f32583]
+  0x1450cecc3: mov       qword ptr [r11 - 0x28], rax
+  0x1450cecc7: lea       rax, [rip + 0x6c42]
+  0x1450cecce: mov       qword ptr [r11 - 0x30], rax
+  0x1450cecd2: lea       rax, [rip + 0x4114d97]
+  0x1450cecd9: mov       qword ptr [r11 - 0x38], rax
+  0x1450cecdd: mov       qword ptr [r11 - 0x40], 0
+  0x1450cece5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450ceced: mov       dword ptr [rsp + 0x28], 8
+  0x1450cecf5: mov       dword ptr [rsp + 0x20], 0x48
+  0x1450cecfd: call      0x141433f00
+  0x1450ced02: mov       rax, qword ptr [rip + 0x67a7c77]
+  0x1450ced09: add       rsp, 0x78
+  0x1450ced0d: ret       
+slot_file=0xb1ed348 slot_va=0x14b1edf48 section=.data2 -> function=0x1450ceea0-0x1450ceecf
+  0x1450ceea0: sub       rsp, 0x28
+  0x1450ceea4: mov       rax, qword ptr [rip + 0x67a7ac5]
+  0x1450ceeab: test      rax, rax
+  0x1450ceeae: jne       0x1450ceeca
+  0x1450ceeb0: lea       rdx, [rip + 0x510f7a9]
+  0x1450ceeb7: lea       rcx, [rip + 0x67a7ab2]
+  0x1450ceebe: call      0x14155e850
+  0x1450ceec3: mov       rax, qword ptr [rip + 0x67a7aa6]
+  0x1450ceeca: add       rsp, 0x28
+  0x1450ceece: ret       
+slot_file=0xb1ed350 slot_va=0x14b1edf50 section=.data2 -> function=0x1450cedf0-0x1450cee9e
+  0x1450cedf0: mov       r11, rsp
+  0x1450cedf3: sub       rsp, 0x78
+  0x1450cedf7: mov       rax, qword ptr [rip + 0x67a7b6a]
+  0x1450cedfe: test      rax, rax
+  0x1450cee01: jne       0x1450cee99
+  0x1450cee07: lea       rax, [rip - 0x3f359be]
+  0x1450cee0e: mov       qword ptr [r11 + 8], rax
+  0x1450cee12: lea       r9, [rip - 0x3f359c9]
+  0x1450cee19: lea       rax, [rip - 0x3d1fde0]
+  0x1450cee20: mov       qword ptr [r11 - 0x10], rax
+  0x1450cee24: lea       r8, [rip + 0x67a7b3d]
+  0x1450cee2b: lea       rax, [rip - 0xf2]
+  0x1450cee32: mov       qword ptr [r11 - 0x18], rax
+  0x1450cee36: lea       rdx, [rip + 0x5105715]
+  0x1450cee3d: lea       rax, [r11 + 8]
+  0x1450cee41: mov       qword ptr [r11 - 0x20], rax
+  0x1450cee45: lea       rcx, [rip + 0x4d701b4]
+  0x1450cee4c: lea       rax, [rip - 0x3f32713]
+  0x1450cee53: mov       qword ptr [r11 - 0x28], rax
+  0x1450cee57: lea       rax, [rip + 0x6af2]
+  0x1450cee5e: mov       qword ptr [r11 - 0x30], rax
+  0x1450cee62: lea       rax, [rip + 0x4114c07]
+  0x1450cee69: mov       qword ptr [r11 - 0x38], rax
+  0x1450cee6d: mov       qword ptr [r11 - 0x40], 0
+  0x1450cee75: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450cee7d: mov       dword ptr [rsp + 0x28], 8
+  0x1450cee85: mov       dword ptr [rsp + 0x20], 0x38
+  0x1450cee8d: call      0x141433f00
+  0x1450cee92: mov       rax, qword ptr [rip + 0x67a7acf]
+  0x1450cee99: add       rsp, 0x78
+  0x1450cee9d: ret       
+slot_file=0xb1ed370 slot_va=0x14b1edf70 section=.data2 -> function=0x1450cf290-0x1450cf2bf
+  0x1450cf290: sub       rsp, 0x28
+  0x1450cf294: mov       rax, qword ptr [rip + 0x67a7655]
+  0x1450cf29b: test      rax, rax
+  0x1450cf29e: jne       0x1450cf2ba
+  0x1450cf2a0: lea       rdx, [rip + 0x510eae9]
+  0x1450cf2a7: lea       rcx, [rip + 0x67a7642]
+  0x1450cf2ae: call      0x14155e850
+  0x1450cf2b3: mov       rax, qword ptr [rip + 0x67a7636]
+  0x1450cf2ba: add       rsp, 0x28
+  0x1450cf2be: ret       
+slot_file=0xb1ed3b0 slot_va=0x14b1edfb0 section=.data2 -> function=0x1450cf290-0x1450cf2bf
+  0x1450cf290: sub       rsp, 0x28
+  0x1450cf294: mov       rax, qword ptr [rip + 0x67a7655]
+  0x1450cf29b: test      rax, rax
+  0x1450cf29e: jne       0x1450cf2ba
+  0x1450cf2a0: lea       rdx, [rip + 0x510eae9]
+  0x1450cf2a7: lea       rcx, [rip + 0x67a7642]
+  0x1450cf2ae: call      0x14155e850
+  0x1450cf2b3: mov       rax, qword ptr [rip + 0x67a7636]
+  0x1450cf2ba: add       rsp, 0x28
+  0x1450cf2be: ret       
+slot_file=0xb1ed3f0 slot_va=0x14b1edff0 section=.data2 -> function=0x1450cf290-0x1450cf2bf
+  0x1450cf290: sub       rsp, 0x28
+  0x1450cf294: mov       rax, qword ptr [rip + 0x67a7655]
+  0x1450cf29b: test      rax, rax
+  0x1450cf29e: jne       0x1450cf2ba
+  0x1450cf2a0: lea       rdx, [rip + 0x510eae9]
+  0x1450cf2a7: lea       rcx, [rip + 0x67a7642]
+  0x1450cf2ae: call      0x14155e850
+  0x1450cf2b3: mov       rax, qword ptr [rip + 0x67a7636]
+  0x1450cf2ba: add       rsp, 0x28
+  0x1450cf2be: ret       
+slot_file=0xb1ed3f8 slot_va=0x14b1edff8 section=.data2 -> function=0x1450ceed0-0x1450cef7e
+  0x1450ceed0: mov       r11, rsp
+  0x1450ceed3: sub       rsp, 0x78
+  0x1450ceed7: mov       rax, qword ptr [rip + 0x67a7a0a]
+  0x1450ceede: test      rax, rax
+  0x1450ceee1: jne       0x1450cef79
+  0x1450ceee7: lea       rax, [rip - 0x3f35a9e]
+  0x1450ceeee: mov       qword ptr [r11 + 8], rax
+  0x1450ceef2: lea       r9, [rip + 0x307]
+  0x1450ceef9: lea       rax, [rip - 0x3d1fec0]
+  0x1450cef00: mov       qword ptr [r11 - 0x10], rax
+  0x1450cef04: lea       r8, [rip + 0x67a79dd]
+  0x1450cef0b: lea       rax, [rip - 0x1d2]
+  0x1450cef12: mov       qword ptr [r11 - 0x18], rax
+  0x1450cef16: lea       rdx, [rip + 0x51058b5]
+  0x1450cef1d: lea       rax, [r11 + 8]
+  0x1450cef21: mov       qword ptr [r11 - 0x20], rax
+  0x1450cef25: lea       rcx, [rip + 0x4d700d4]
+  0x1450cef2c: lea       rax, [rip - 0x3f327f3]
+  0x1450cef33: mov       qword ptr [r11 - 0x28], rax
+  0x1450cef37: lea       rax, [rip + 0x6a52]
+  0x1450cef3e: mov       qword ptr [r11 - 0x30], rax
+  0x1450cef42: lea       rax, [rip + 0x4114b27]
+  0x1450cef49: mov       qword ptr [r11 - 0x38], rax
+  0x1450cef4d: mov       qword ptr [r11 - 0x40], 0
+  0x1450cef55: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450cef5d: mov       dword ptr [rsp + 0x28], 8
+  0x1450cef65: mov       dword ptr [rsp + 0x20], 0xe8
+  0x1450cef6d: call      0x141433f00
+  0x1450cef72: mov       rax, qword ptr [rip + 0x67a796f]
+  0x1450cef79: add       rsp, 0x78
+  0x1450cef7d: ret       
+slot_file=0xb1ed420 slot_va=0x14b1ee020 section=.data2 -> function=0x1450cf430-0x1450cf4de
+  0x1450cf430: mov       r11, rsp
+  0x1450cf433: sub       rsp, 0x78
+  0x1450cf437: mov       rax, qword ptr [rip + 0x67a74c2]
+  0x1450cf43e: test      rax, rax
+  0x1450cf441: jne       0x1450cf4d9
+  0x1450cf447: lea       rax, [rip - 0x3f35ffe]
+  0x1450cf44e: mov       qword ptr [r11 + 8], rax
+  0x1450cf452: lea       r9, [rip - 0x3f36009]
+  0x1450cf459: lea       rax, [rip - 0x3d20420]
+  0x1450cf460: mov       qword ptr [r11 - 0x10], rax
+  0x1450cf464: lea       r8, [rip + 0x67a7495]
+  0x1450cf46b: lea       rax, [rip - 0x682]
+  0x1450cf472: mov       qword ptr [r11 - 0x18], rax
+  0x1450cf476: lea       rdx, [rip + 0x51052e5]
+  0x1450cf47d: lea       rax, [r11 + 8]
+  0x1450cf481: mov       qword ptr [r11 - 0x20], rax
+  0x1450cf485: lea       rcx, [rip + 0x4d6fb74]
+  0x1450cf48c: lea       rax, [rip - 0x3f32d53]
+  0x1450cf493: mov       qword ptr [r11 - 0x28], rax
+  0x1450cf497: lea       rax, [rip + 0x6502]
+  0x1450cf49e: mov       qword ptr [r11 - 0x30], rax
+  0x1450cf4a2: lea       rax, [rip + 0x41145c7]
+  0x1450cf4a9: mov       qword ptr [r11 - 0x38], rax
+  0x1450cf4ad: mov       qword ptr [r11 - 0x40], 0
+  0x1450cf4b5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450cf4bd: mov       dword ptr [rsp + 0x28], 8
+  0x1450cf4c5: mov       dword ptr [rsp + 0x20], 0x48
+  0x1450cf4cd: call      0x141433f00
+  0x1450cf4d2: mov       rax, qword ptr [rip + 0x67a7427]
+  0x1450cf4d9: add       rsp, 0x78
+  0x1450cf4dd: ret       
+slot_file=0xb1ed440 slot_va=0x14b1ee040 section=.data2 -> function=0x1450cf8e0-0x1450cf90f
+  0x1450cf8e0: sub       rsp, 0x28
+  0x1450cf8e4: mov       rax, qword ptr [rip + 0x67a706d]
+  0x1450cf8eb: test      rax, rax
+  0x1450cf8ee: jne       0x1450cf90a
+  0x1450cf8f0: lea       rdx, [rip + 0x510ecb9]
+  0x1450cf8f7: lea       rcx, [rip + 0x67a705a]
+  0x1450cf8fe: call      0x14155e850
+  0x1450cf903: mov       rax, qword ptr [rip + 0x67a704e]
+  0x1450cf90a: add       rsp, 0x28
+  0x1450cf90e: ret       
+slot_file=0xb1ed448 slot_va=0x14b1ee048 section=.data2 -> function=0x1450cf830-0x1450cf8de
+  0x1450cf830: mov       r11, rsp
+  0x1450cf833: sub       rsp, 0x78
+  0x1450cf837: mov       rax, qword ptr [rip + 0x67a7112]
+  0x1450cf83e: test      rax, rax
+  0x1450cf841: jne       0x1450cf8d9
+  0x1450cf847: lea       rax, [rip - 0x3f363fe]
+  0x1450cf84e: mov       qword ptr [r11 + 8], rax
+  0x1450cf852: lea       r9, [rip - 0x3f36409]
+  0x1450cf859: lea       rax, [rip - 0x3d20820]
+  0x1450cf860: mov       qword ptr [r11 - 0x10], rax
+  0x1450cf864: lea       r8, [rip + 0x67a70e5]
+  0x1450cf86b: lea       rax, [rip - 0xb32]
+  0x1450cf872: mov       qword ptr [r11 - 0x18], rax
+  0x1450cf876: lea       rdx, [rip + 0x5104e85]
+  0x1450cf87d: lea       rax, [r11 + 8]
+  0x1450cf881: mov       qword ptr [r11 - 0x20], rax
+  0x1450cf885: lea       rcx, [rip + 0x4d6f774]
+  0x1450cf88c: lea       rax, [rip - 0x3f33153]
+  0x1450cf893: mov       qword ptr [r11 - 0x28], rax
+  0x1450cf897: lea       rax, [rip + 0x61a2]
+  0x1450cf89e: mov       qword ptr [r11 - 0x30], rax
+  0x1450cf8a2: lea       rax, [rip + 0x41141c7]
+  0x1450cf8a9: mov       qword ptr [r11 - 0x38], rax
+  0x1450cf8ad: mov       qword ptr [r11 - 0x40], 0
+  0x1450cf8b5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450cf8bd: mov       dword ptr [rsp + 0x28], 8
+  0x1450cf8c5: mov       dword ptr [rsp + 0x20], 0x50
+  0x1450cf8cd: call      0x141433f00
+  0x1450cf8d2: mov       rax, qword ptr [rip + 0x67a7077]
+  0x1450cf8d9: add       rsp, 0x78
+  0x1450cf8dd: ret       
+slot_file=0xb1ed470 slot_va=0x14b1ee070 section=.data2 -> function=0x1450cfd40-0x1450cfd6f
+  0x1450cfd40: sub       rsp, 0x28
+  0x1450cfd44: mov       rax, qword ptr [rip + 0x67a6bed]
+  0x1450cfd4b: test      rax, rax
+  0x1450cfd4e: jne       0x1450cfd6a
+  0x1450cfd50: lea       rdx, [rip + 0x510cb79]
+  0x1450cfd57: lea       rcx, [rip + 0x67a6bda]
+  0x1450cfd5e: call      0x14155e850
+  0x1450cfd63: mov       rax, qword ptr [rip + 0x67a6bce]
+  0x1450cfd6a: add       rsp, 0x28
+  0x1450cfd6e: ret       
+slot_file=0xb1ed4b0 slot_va=0x14b1ee0b0 section=.data2 -> function=0x1450cfd40-0x1450cfd6f
+  0x1450cfd40: sub       rsp, 0x28
+  0x1450cfd44: mov       rax, qword ptr [rip + 0x67a6bed]
+  0x1450cfd4b: test      rax, rax
+  0x1450cfd4e: jne       0x1450cfd6a
+  0x1450cfd50: lea       rdx, [rip + 0x510cb79]
+  0x1450cfd57: lea       rcx, [rip + 0x67a6bda]
+  0x1450cfd5e: call      0x14155e850
+  0x1450cfd63: mov       rax, qword ptr [rip + 0x67a6bce]
+  0x1450cfd6a: add       rsp, 0x28
+  0x1450cfd6e: ret       
+slot_file=0xb1ed4f0 slot_va=0x14b1ee0f0 section=.data2 -> function=0x1450cfd40-0x1450cfd6f
+  0x1450cfd40: sub       rsp, 0x28
+  0x1450cfd44: mov       rax, qword ptr [rip + 0x67a6bed]
+  0x1450cfd4b: test      rax, rax
+  0x1450cfd4e: jne       0x1450cfd6a
+  0x1450cfd50: lea       rdx, [rip + 0x510cb79]
+  0x1450cfd57: lea       rcx, [rip + 0x67a6bda]
+  0x1450cfd5e: call      0x14155e850
+  0x1450cfd63: mov       rax, qword ptr [rip + 0x67a6bce]
+  0x1450cfd6a: add       rsp, 0x28
+  0x1450cfd6e: ret       
+slot_file=0xb1ed4f8 slot_va=0x14b1ee0f8 section=.data2 -> function=0x1450cfbc0-0x1450cfc6e
+  0x1450cfbc0: mov       r11, rsp
+  0x1450cfbc3: sub       rsp, 0x78
+  0x1450cfbc7: mov       rax, qword ptr [rip + 0x67a6d62]
+  0x1450cfbce: test      rax, rax
+  0x1450cfbd1: jne       0x1450cfc69
+  0x1450cfbd7: lea       rax, [rip - 0x3f3678e]
+  0x1450cfbde: mov       qword ptr [r11 + 8], rax
+  0x1450cfbe2: lea       r9, [rip + 0xc7]
+  0x1450cfbe9: lea       rax, [rip - 0x3d20bb0]
+  0x1450cfbf0: mov       qword ptr [r11 - 0x10], rax
+  0x1450cfbf4: lea       r8, [rip + 0x67a6d35]
+  0x1450cfbfb: lea       rax, [rip - 0xf2]
+  0x1450cfc02: mov       qword ptr [r11 - 0x18], rax
+  0x1450cfc06: lea       rdx, [rip + 0x5104bf5]
+  0x1450cfc0d: lea       rax, [r11 + 8]
+  0x1450cfc11: mov       qword ptr [r11 - 0x20], rax
+  0x1450cfc15: lea       rcx, [rip + 0x4d6f3e4]
+  0x1450cfc1c: lea       rax, [rip - 0x3f334e3]
+  0x1450cfc23: mov       qword ptr [r11 - 0x28], rax
+  0x1450cfc27: lea       rax, [rip + 0x5ed2]
+  0x1450cfc2e: mov       qword ptr [r11 - 0x30], rax
+  0x1450cfc32: lea       rax, [rip + 0x4113e37]
+  0x1450cfc39: mov       qword ptr [r11 - 0x38], rax
+  0x1450cfc3d: mov       qword ptr [r11 - 0x40], 0
+  0x1450cfc45: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450cfc4d: mov       dword ptr [rsp + 0x28], 8
+  0x1450cfc55: mov       dword ptr [rsp + 0x20], 0x208
+  0x1450cfc5d: call      0x141433f00
+  0x1450cfc62: mov       rax, qword ptr [rip + 0x67a6cc7]
+  0x1450cfc69: add       rsp, 0x78
+  0x1450cfc6d: ret       
+slot_file=0xb1ed528 slot_va=0x14b1ee128 section=.data2 -> function=0x1450cf6d0-0x1450cf77e
+  0x1450cf6d0: mov       r11, rsp
+  0x1450cf6d3: sub       rsp, 0x78
+  0x1450cf6d7: mov       rax, qword ptr [rip + 0x67a718a]
+  0x1450cf6de: test      rax, rax
+  0x1450cf6e1: jne       0x1450cf779
+  0x1450cf6e7: lea       rax, [rip - 0x3f3629e]
+  0x1450cf6ee: mov       qword ptr [r11 + 8], rax
+  0x1450cf6f2: lea       r9, [rip - 0x3f362a9]
+  0x1450cf6f9: lea       rax, [rip - 0x3d206c0]
+  0x1450cf700: mov       qword ptr [r11 - 0x10], rax
+  0x1450cf704: lea       r8, [rip + 0x67a715d]
+  0x1450cf70b: lea       rax, [rip - 0x3eea02]
+  0x1450cf712: mov       qword ptr [r11 - 0x18], rax
+  0x1450cf716: lea       rdx, [rip + 0x5105135]
+  0x1450cf71d: lea       rax, [r11 + 8]
+  0x1450cf721: mov       qword ptr [r11 - 0x20], rax
+  0x1450cf725: lea       rcx, [rip + 0x4d6f8d4]
+  0x1450cf72c: lea       rax, [rip - 0x3f32ff3]
+  0x1450cf733: mov       qword ptr [r11 - 0x28], rax
+  0x1450cf737: lea       rax, [rip + 0x6402]
+  0x1450cf73e: mov       qword ptr [r11 - 0x30], rax
+  0x1450cf742: lea       rax, [rip + 0x4114327]
+  0x1450cf749: mov       qword ptr [r11 - 0x38], rax
+  0x1450cf74d: mov       qword ptr [r11 - 0x40], 0
+  0x1450cf755: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450cf75d: mov       dword ptr [rsp + 0x28], 8
+  0x1450cf765: mov       dword ptr [rsp + 0x20], 0x70
+  0x1450cf76d: call      0x141433f00
+  0x1450cf772: mov       rax, qword ptr [rip + 0x67a70ef]
+  0x1450cf779: add       rsp, 0x78
+  0x1450cf77d: ret       
+slot_file=0xb1ed550 slot_va=0x14b1ee150 section=.data2 -> function=0x1450cf780-0x1450cf82e
+  0x1450cf780: mov       r11, rsp
+  0x1450cf783: sub       rsp, 0x78
+  0x1450cf787: mov       rax, qword ptr [rip + 0x67a70c2]
+  0x1450cf78e: test      rax, rax
+  0x1450cf791: jne       0x1450cf829
+  0x1450cf797: lea       rax, [rip - 0x3f3634e]
+  0x1450cf79e: mov       qword ptr [r11 + 8], rax
+  0x1450cf7a2: lea       r9, [rip - 0x3f36359]
+  0x1450cf7a9: lea       rax, [rip - 0x3d20770]
+  0x1450cf7b0: mov       qword ptr [r11 - 0x10], rax
+  0x1450cf7b4: lea       r8, [rip + 0x67a7095]
+  0x1450cf7bb: lea       rax, [rip - 0x1a2]
+  0x1450cf7c2: mov       qword ptr [r11 - 0x18], rax
+  0x1450cf7c6: lea       rdx, [rip + 0x51050bd]
+  0x1450cf7cd: lea       rax, [r11 + 8]
+  0x1450cf7d1: mov       qword ptr [r11 - 0x20], rax
+  0x1450cf7d5: lea       rcx, [rip + 0x4d6f824]
+  0x1450cf7dc: lea       rax, [rip - 0x3f330a3]
+  0x1450cf7e3: mov       qword ptr [r11 - 0x28], rax
+  0x1450cf7e7: lea       rax, [rip + 0x63c2]
+  0x1450cf7ee: mov       qword ptr [r11 - 0x30], rax
+  0x1450cf7f2: lea       rax, [rip + 0x4114277]
+  0x1450cf7f9: mov       qword ptr [r11 - 0x38], rax
+  0x1450cf7fd: mov       qword ptr [r11 - 0x40], 0
+  0x1450cf805: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450cf80d: mov       dword ptr [rsp + 0x28], 8
+  0x1450cf815: mov       dword ptr [rsp + 0x20], 0xa0
+  0x1450cf81d: call      0x141433f00
+  0x1450cf822: mov       rax, qword ptr [rip + 0x67a7027]
+  0x1450cf829: add       rsp, 0x78
+  0x1450cf82d: ret       
+slot_file=0xb1ed570 slot_va=0x14b1ee170 section=.data2 -> function=0x1450d02e0-0x1450d030f
+  0x1450d02e0: sub       rsp, 0x28
+  0x1450d02e4: mov       rax, qword ptr [rip + 0x67a6545]
+  0x1450d02eb: test      rax, rax
+  0x1450d02ee: jne       0x1450d030a
+  0x1450d02f0: lea       rdx, [rip + 0x510bd09]
+  0x1450d02f7: lea       rcx, [rip + 0x67a6532]
+  0x1450d02fe: call      0x14155e850
+  0x1450d0303: mov       rax, qword ptr [rip + 0x67a6526]
+  0x1450d030a: add       rsp, 0x28
+  0x1450d030e: ret       
+slot_file=0xb1ed5b0 slot_va=0x14b1ee1b0 section=.data2 -> function=0x1450d02e0-0x1450d030f
+  0x1450d02e0: sub       rsp, 0x28
+  0x1450d02e4: mov       rax, qword ptr [rip + 0x67a6545]
+  0x1450d02eb: test      rax, rax
+  0x1450d02ee: jne       0x1450d030a
+  0x1450d02f0: lea       rdx, [rip + 0x510bd09]
+  0x1450d02f7: lea       rcx, [rip + 0x67a6532]
+  0x1450d02fe: call      0x14155e850
+  0x1450d0303: mov       rax, qword ptr [rip + 0x67a6526]
+  0x1450d030a: add       rsp, 0x28
+  0x1450d030e: ret       
+slot_file=0xb1ed5f0 slot_va=0x14b1ee1f0 section=.data2 -> function=0x1450d02e0-0x1450d030f
+  0x1450d02e0: sub       rsp, 0x28
+  0x1450d02e4: mov       rax, qword ptr [rip + 0x67a6545]
+  0x1450d02eb: test      rax, rax
+  0x1450d02ee: jne       0x1450d030a
+  0x1450d02f0: lea       rdx, [rip + 0x510bd09]
+  0x1450d02f7: lea       rcx, [rip + 0x67a6532]
+  0x1450d02fe: call      0x14155e850
+  0x1450d0303: mov       rax, qword ptr [rip + 0x67a6526]
+  0x1450d030a: add       rsp, 0x28
+  0x1450d030e: ret       
+slot_file=0xb1ed5f8 slot_va=0x14b1ee1f8 section=.data2 -> function=0x1450d0080-0x1450d012e
+  0x1450d0080: mov       r11, rsp
+  0x1450d0083: sub       rsp, 0x78
+  0x1450d0087: mov       rax, qword ptr [rip + 0x67a679a]
+  0x1450d008e: test      rax, rax
+  0x1450d0091: jne       0x1450d0129
+  0x1450d0097: lea       rax, [rip - 0x3f36c4e]
+  0x1450d009e: mov       qword ptr [r11 + 8], rax
+  0x1450d00a2: lea       r9, [rip + 0x1a7]
+  0x1450d00a9: lea       rax, [rip - 0x3d21070]
+  0x1450d00b0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d00b4: lea       r8, [rip + 0x67a676d]
+  0x1450d00bb: lea       rax, [rip - 0x122]
+  0x1450d00c2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d00c6: lea       rdx, [rip + 0x5104a25]
+  0x1450d00cd: lea       rax, [r11 + 8]
+  0x1450d00d1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d00d5: lea       rcx, [rip + 0x4d6ef24]
+  0x1450d00dc: lea       rax, [rip - 0x3f339a3]
+  0x1450d00e3: mov       qword ptr [r11 - 0x28], rax
+  0x1450d00e7: lea       rax, [rip + 0x5b12]
+  0x1450d00ee: mov       qword ptr [r11 - 0x30], rax
+  0x1450d00f2: lea       rax, [rip + 0x4113977]
+  0x1450d00f9: mov       qword ptr [r11 - 0x38], rax
+  0x1450d00fd: mov       qword ptr [r11 - 0x40], 0
+  0x1450d0105: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d010d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d0115: mov       dword ptr [rsp + 0x20], 0x130
+  0x1450d011d: call      0x141433f00
+  0x1450d0122: mov       rax, qword ptr [rip + 0x67a66ff]
+  0x1450d0129: add       rsp, 0x78
+  0x1450d012d: ret       
+slot_file=0xb1ed620 slot_va=0x14b1ee220 section=.data2 -> function=0x1450d03d0-0x1450d047e
+  0x1450d03d0: mov       r11, rsp
+  0x1450d03d3: sub       rsp, 0x78
+  0x1450d03d7: mov       rax, qword ptr [rip + 0x67a6432]
+  0x1450d03de: test      rax, rax
+  0x1450d03e1: jne       0x1450d0479
+  0x1450d03e7: lea       rax, [rip - 0x3f36f9e]
+  0x1450d03ee: mov       qword ptr [r11 + 8], rax
+  0x1450d03f2: lea       r9, [rip - 0x3f36fa9]
+  0x1450d03f9: lea       rax, [rip - 0x3d213c0]
+  0x1450d0400: mov       qword ptr [r11 - 0x10], rax
+  0x1450d0404: lea       r8, [rip + 0x67a6405]
+  0x1450d040b: lea       rax, [rip - 0x1622]
+  0x1450d0412: mov       qword ptr [r11 - 0x18], rax
+  0x1450d0416: lea       rdx, [rip + 0x51045e5]
+  0x1450d041d: lea       rax, [r11 + 8]
+  0x1450d0421: mov       qword ptr [r11 - 0x20], rax
+  0x1450d0425: lea       rcx, [rip + 0x4d6ebd4]
+  0x1450d042c: lea       rax, [rip - 0x3f33cf3]
+  0x1450d0433: mov       qword ptr [r11 - 0x28], rax
+  0x1450d0437: lea       rax, [rip + 0x5842]
+  0x1450d043e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d0442: lea       rax, [rip + 0x4113627]
+  0x1450d0449: mov       qword ptr [r11 - 0x38], rax
+  0x1450d044d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d0455: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d045d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d0465: mov       dword ptr [rsp + 0x20], 0x48
+  0x1450d046d: call      0x141433f00
+  0x1450d0472: mov       rax, qword ptr [rip + 0x67a6397]
+  0x1450d0479: add       rsp, 0x78
+  0x1450d047d: ret       
+slot_file=0xb1ed648 slot_va=0x14b1ee248 section=.data2 -> function=0x1450d0720-0x1450d07ce
+  0x1450d0720: mov       r11, rsp
+  0x1450d0723: sub       rsp, 0x78
+  0x1450d0727: mov       rax, qword ptr [rip + 0x67a61a2]
+  0x1450d072e: test      rax, rax
+  0x1450d0731: jne       0x1450d07c9
+  0x1450d0737: lea       rax, [rip - 0x3f372ee]
+  0x1450d073e: mov       qword ptr [r11 + 8], rax
+  0x1450d0742: lea       r9, [rip - 0x3f372f9]
+  0x1450d0749: lea       rax, [rip - 0x3d21710]
+  0x1450d0750: mov       qword ptr [r11 - 0x10], rax
+  0x1450d0754: lea       r8, [rip + 0x67a6175]
+  0x1450d075b: lea       rax, [rip - 0x1a22]
+  0x1450d0762: mov       qword ptr [r11 - 0x18], rax
+  0x1450d0766: lea       rdx, [rip + 0x51042e5]
+  0x1450d076d: lea       rax, [r11 + 8]
+  0x1450d0771: mov       qword ptr [r11 - 0x20], rax
+  0x1450d0775: lea       rcx, [rip + 0x4d6e884]
+  0x1450d077c: lea       rax, [rip - 0x3f34043]
+  0x1450d0783: mov       qword ptr [r11 - 0x28], rax
+  0x1450d0787: lea       rax, [rip + 0x5592]
+  0x1450d078e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d0792: lea       rax, [rip + 0x41132d7]
+  0x1450d0799: mov       qword ptr [r11 - 0x38], rax
+  0x1450d079d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d07a5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d07ad: mov       dword ptr [rsp + 0x28], 8
+  0x1450d07b5: mov       dword ptr [rsp + 0x20], 0x50
+  0x1450d07bd: call      0x141433f00
+  0x1450d07c2: mov       rax, qword ptr [rip + 0x67a6107]
+  0x1450d07c9: add       rsp, 0x78
+  0x1450d07cd: ret       
+slot_file=0xb1ed670 slot_va=0x14b1ee270 section=.data2 -> function=0x1450d0a40-0x1450d0a6f
+  0x1450d0a40: sub       rsp, 0x28
+  0x1450d0a44: mov       rax, qword ptr [rip + 0x67a5e55]
+  0x1450d0a4b: test      rax, rax
+  0x1450d0a4e: jne       0x1450d0a6a
+  0x1450d0a50: lea       rdx, [rip + 0x510cb89]
+  0x1450d0a57: lea       rcx, [rip + 0x67a5e42]
+  0x1450d0a5e: call      0x14155e850
+  0x1450d0a63: mov       rax, qword ptr [rip + 0x67a5e36]
+  0x1450d0a6a: add       rsp, 0x28
+  0x1450d0a6e: ret       
+slot_file=0xb1ed6b0 slot_va=0x14b1ee2b0 section=.data2 -> function=0x1450d0a40-0x1450d0a6f
+  0x1450d0a40: sub       rsp, 0x28
+  0x1450d0a44: mov       rax, qword ptr [rip + 0x67a5e55]
+  0x1450d0a4b: test      rax, rax
+  0x1450d0a4e: jne       0x1450d0a6a
+  0x1450d0a50: lea       rdx, [rip + 0x510cb89]
+  0x1450d0a57: lea       rcx, [rip + 0x67a5e42]
+  0x1450d0a5e: call      0x14155e850
+  0x1450d0a63: mov       rax, qword ptr [rip + 0x67a5e36]
+  0x1450d0a6a: add       rsp, 0x28
+  0x1450d0a6e: ret       
+slot_file=0xb1ed6b8 slot_va=0x14b1ee2b8 section=.data2 -> function=0x1450d0910-0x1450d09be
+  0x1450d0910: mov       r11, rsp
+  0x1450d0913: sub       rsp, 0x78
+  0x1450d0917: mov       rax, qword ptr [rip + 0x67a5f7a]
+  0x1450d091e: test      rax, rax
+  0x1450d0921: jne       0x1450d09b9
+  0x1450d0927: lea       rax, [rip - 0x3f374de]
+  0x1450d092e: mov       qword ptr [r11 + 8], rax
+  0x1450d0932: lea       r9, [rip + 0xa7]
+  0x1450d0939: lea       rax, [rip - 0x3d21900]
+  0x1450d0940: mov       qword ptr [r11 - 0x10], rax
+  0x1450d0944: lea       r8, [rip + 0x67a5f4d]
+  0x1450d094b: lea       rax, [rip - 0xf32]
+  0x1450d0952: mov       qword ptr [r11 - 0x18], rax
+  0x1450d0956: lea       rdx, [rip + 0x510415d]
+  0x1450d095d: lea       rax, [r11 + 8]
+  0x1450d0961: mov       qword ptr [r11 - 0x20], rax
+  0x1450d0965: lea       rcx, [rip + 0x4d6e694]
+  0x1450d096c: lea       rax, [rip - 0x3f34233]
+  0x1450d0973: mov       qword ptr [r11 - 0x28], rax
+  0x1450d0977: lea       rax, [rip + 0x5462]
+  0x1450d097e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d0982: lea       rax, [rip + 0x41130e7]
+  0x1450d0989: mov       qword ptr [r11 - 0x38], rax
+  0x1450d098d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d0995: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d099d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d09a5: mov       dword ptr [rsp + 0x20], 0x1c0
+  0x1450d09ad: call      0x141433f00
+  0x1450d09b2: mov       rax, qword ptr [rip + 0x67a5edf]
+  0x1450d09b9: add       rsp, 0x78
+  0x1450d09bd: ret       
+slot_file=0xb1ed6e8 slot_va=0x14b1ee2e8 section=.data2 -> function=0x1450d05c0-0x1450d066e
+  0x1450d05c0: mov       r11, rsp
+  0x1450d05c3: sub       rsp, 0x78
+  0x1450d05c7: mov       rax, qword ptr [rip + 0x67a62ea]
+  0x1450d05ce: test      rax, rax
+  0x1450d05d1: jne       0x1450d0669
+  0x1450d05d7: lea       rax, [rip - 0x3f3718e]
+  0x1450d05de: mov       qword ptr [r11 + 8], rax
+  0x1450d05e2: lea       r9, [rip - 0x3f37199]
+  0x1450d05e9: lea       rax, [rip - 0x3d215b0]
+  0x1450d05f0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d05f4: lea       r8, [rip + 0x67a62bd]
+  0x1450d05fb: lea       rax, [rip - 0x3ef8f2]
+  0x1450d0602: mov       qword ptr [r11 - 0x18], rax
+  0x1450d0606: lea       rdx, [rip + 0x51042d5]
+  0x1450d060d: lea       rax, [r11 + 8]
+  0x1450d0611: mov       qword ptr [r11 - 0x20], rax
+  0x1450d0615: lea       rcx, [rip + 0x4d6e9e4]
+  0x1450d061c: lea       rax, [rip - 0x3f33ee3]
+  0x1450d0623: mov       qword ptr [r11 - 0x28], rax
+  0x1450d0627: lea       rax, [rip + 0x57c2]
+  0x1450d062e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d0632: lea       rax, [rip + 0x4113437]
+  0x1450d0639: mov       qword ptr [r11 - 0x38], rax
+  0x1450d063d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d0645: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d064d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d0655: mov       dword ptr [rsp + 0x20], 0x48
+  0x1450d065d: call      0x141433f00
+  0x1450d0662: mov       rax, qword ptr [rip + 0x67a624f]
+  0x1450d0669: add       rsp, 0x78
+  0x1450d066d: ret       
+slot_file=0xb1ed710 slot_va=0x14b1ee310 section=.data2 -> function=0x1450d0670-0x1450d071e
+  0x1450d0670: mov       r11, rsp
+  0x1450d0673: sub       rsp, 0x78
+  0x1450d0677: mov       rax, qword ptr [rip + 0x67a6202]
+  0x1450d067e: test      rax, rax
+  0x1450d0681: jne       0x1450d0719
+  0x1450d0687: lea       rax, [rip - 0x3f3723e]
+  0x1450d068e: mov       qword ptr [r11 + 8], rax
+  0x1450d0692: lea       r9, [rip - 0x3f37249]
+  0x1450d0699: lea       rax, [rip - 0x3d21660]
+  0x1450d06a0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d06a4: lea       r8, [rip + 0x67a61d5]
+  0x1450d06ab: lea       rax, [rip - 0x1092]
+  0x1450d06b2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d06b6: lea       rdx, [rip + 0x5104265]
+  0x1450d06bd: lea       rax, [r11 + 8]
+  0x1450d06c1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d06c5: lea       rcx, [rip + 0x4d6e934]
+  0x1450d06cc: lea       rax, [rip - 0x3f33f93]
+  0x1450d06d3: mov       qword ptr [r11 - 0x28], rax
+  0x1450d06d7: lea       rax, [rip + 0x5752]
+  0x1450d06de: mov       qword ptr [r11 - 0x30], rax
+  0x1450d06e2: lea       rax, [rip + 0x4113387]
+  0x1450d06e9: mov       qword ptr [r11 - 0x38], rax
+  0x1450d06ed: mov       qword ptr [r11 - 0x40], 0
+  0x1450d06f5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d06fd: mov       dword ptr [rsp + 0x28], 8
+  0x1450d0705: mov       dword ptr [rsp + 0x20], 0xa0
+  0x1450d070d: call      0x141433f00
+  0x1450d0712: mov       rax, qword ptr [rip + 0x67a6167]
+  0x1450d0719: add       rsp, 0x78
+  0x1450d071d: ret       
+slot_file=0xb1ed738 slot_va=0x14b1ee338 section=.data2 -> function=0x1450d0de0-0x1450d0e8e
+  0x1450d0de0: mov       r11, rsp
+  0x1450d0de3: sub       rsp, 0x78
+  0x1450d0de7: mov       rax, qword ptr [rip + 0x67a5942]
+  0x1450d0dee: test      rax, rax
+  0x1450d0df1: jne       0x1450d0e89
+  0x1450d0df7: lea       rax, [rip - 0x3f379ae]
+  0x1450d0dfe: mov       qword ptr [r11 + 8], rax
+  0x1450d0e02: lea       r9, [rip - 0x3f379b9]
+  0x1450d0e09: lea       rax, [rip - 0x3d21dd0]
+  0x1450d0e10: mov       qword ptr [r11 - 0x10], rax
+  0x1450d0e14: lea       r8, [rip + 0x67a5915]
+  0x1450d0e1b: lea       rax, [rip - 0xe82]
+  0x1450d0e22: mov       qword ptr [r11 - 0x18], rax
+  0x1450d0e26: lea       rdx, [rip + 0x5103b35]
+  0x1450d0e2d: lea       rax, [r11 + 8]
+  0x1450d0e31: mov       qword ptr [r11 - 0x20], rax
+  0x1450d0e35: lea       rcx, [rip + 0x4d6e1c4]
+  0x1450d0e3c: lea       rax, [rip - 0x3f34703]
+  0x1450d0e43: mov       qword ptr [r11 - 0x28], rax
+  0x1450d0e47: lea       rax, [rip + 0x5032]
+  0x1450d0e4e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d0e52: lea       rax, [rip + 0x4112c17]
+  0x1450d0e59: mov       qword ptr [r11 - 0x38], rax
+  0x1450d0e5d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d0e65: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d0e6d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d0e75: mov       dword ptr [rsp + 0x20], 0x110
+  0x1450d0e7d: call      0x141433f00
+  0x1450d0e82: mov       rax, qword ptr [rip + 0x67a58a7]
+  0x1450d0e89: add       rsp, 0x78
+  0x1450d0e8d: ret       
+slot_file=0xb1ed760 slot_va=0x14b1ee360 section=.data2 -> function=0x1450d0f80-0x1450d102e
+  0x1450d0f80: mov       r11, rsp
+  0x1450d0f83: sub       rsp, 0x78
+  0x1450d0f87: mov       rax, qword ptr [rip + 0x67a57ba]
+  0x1450d0f8e: test      rax, rax
+  0x1450d0f91: jne       0x1450d1029
+  0x1450d0f97: lea       rax, [rip - 0x3f37b4e]
+  0x1450d0f9e: mov       qword ptr [r11 + 8], rax
+  0x1450d0fa2: lea       r9, [rip - 0x3f37b59]
+  0x1450d0fa9: lea       rax, [rip - 0x3d21f70]
+  0x1450d0fb0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d0fb4: lea       r8, [rip + 0x67a578d]
+  0x1450d0fbb: lea       rax, [rip - 0x263262]
+  0x1450d0fc2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d0fc6: lea       rdx, [rip + 0x51039e5]
+  0x1450d0fcd: lea       rax, [r11 + 8]
+  0x1450d0fd1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d0fd5: lea       rcx, [rip + 0x4d6e024]
+  0x1450d0fdc: lea       rax, [rip - 0x3f348a3]
+  0x1450d0fe3: mov       qword ptr [r11 - 0x28], rax
+  0x1450d0fe7: lea       rax, [rip + 0x4ee2]
+  0x1450d0fee: mov       qword ptr [r11 - 0x30], rax
+  0x1450d0ff2: lea       rax, [rip + 0x4112a77]
+  0x1450d0ff9: mov       qword ptr [r11 - 0x38], rax
+  0x1450d0ffd: mov       qword ptr [r11 - 0x40], 0
+  0x1450d1005: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d100d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d1015: mov       dword ptr [rsp + 0x20], 0xe8
+  0x1450d101d: call      0x141433f00
+  0x1450d1022: mov       rax, qword ptr [rip + 0x67a571f]
+  0x1450d1029: add       rsp, 0x78
+  0x1450d102d: ret       
+slot_file=0xb1ed788 slot_va=0x14b1ee388 section=.data2 -> function=0x1450d1180-0x1450d122e
+  0x1450d1180: mov       r11, rsp
+  0x1450d1183: sub       rsp, 0x78
+  0x1450d1187: mov       rax, qword ptr [rip + 0x67a5572]
+  0x1450d118e: test      rax, rax
+  0x1450d1191: jne       0x1450d1229
+  0x1450d1197: lea       rax, [rip - 0x3f37d4e]
+  0x1450d119e: mov       qword ptr [r11 + 8], rax
+  0x1450d11a2: lea       r9, [rip - 0x3f37d59]
+  0x1450d11a9: lea       rax, [rip - 0x3d22170]
+  0x1450d11b0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d11b4: lea       r8, [rip + 0x67a5545]
+  0x1450d11bb: lea       rax, [rip - 0x263462]
+  0x1450d11c2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d11c6: lea       rdx, [rip + 0x5103bd5]
+  0x1450d11cd: lea       rax, [r11 + 8]
+  0x1450d11d1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d11d5: lea       rcx, [rip + 0x4d6de24]
+  0x1450d11dc: lea       rax, [rip - 0x3f34aa3]
+  0x1450d11e3: mov       qword ptr [r11 - 0x28], rax
+  0x1450d11e7: lea       rax, [rip + 0x4da2]
+  0x1450d11ee: mov       qword ptr [r11 - 0x30], rax
+  0x1450d11f2: lea       rax, [rip + 0x4112877]
+  0x1450d11f9: mov       qword ptr [r11 - 0x38], rax
+  0x1450d11fd: mov       qword ptr [r11 - 0x40], 0
+  0x1450d1205: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d120d: mov       dword ptr [rsp + 0x28], 0x10
+  0x1450d1215: mov       dword ptr [rsp + 0x20], 0x130
+  0x1450d121d: call      0x141433f00
+  0x1450d1222: mov       rax, qword ptr [rip + 0x67a54d7]
+  0x1450d1229: add       rsp, 0x78
+  0x1450d122d: ret       
+slot_file=0xb1ed7b0 slot_va=0x14b1ee3b0 section=.data2 -> function=0x1450d1390-0x1450d143e
+  0x1450d1390: mov       r11, rsp
+  0x1450d1393: sub       rsp, 0x78
+  0x1450d1397: mov       rax, qword ptr [rip + 0x67a537a]
+  0x1450d139e: test      rax, rax
+  0x1450d13a1: jne       0x1450d1439
+  0x1450d13a7: lea       rax, [rip - 0x3f37f5e]
+  0x1450d13ae: mov       qword ptr [r11 + 8], rax
+  0x1450d13b2: lea       r9, [rip - 0x3f37f69]
+  0x1450d13b9: lea       rax, [rip - 0x3d22380]
+  0x1450d13c0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d13c4: lea       r8, [rip + 0x67a534d]
+  0x1450d13cb: lea       rax, [rip - 0x263672]
+  0x1450d13d2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d13d6: lea       rdx, [rip + 0x5103a0d]
+  0x1450d13dd: lea       rax, [r11 + 8]
+  0x1450d13e1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d13e5: lea       rcx, [rip + 0x4d6dc14]
+  0x1450d13ec: lea       rax, [rip - 0x3f34cb3]
+  0x1450d13f3: mov       qword ptr [r11 - 0x28], rax
+  0x1450d13f7: lea       rax, [rip + 0x4ba2]
+  0x1450d13fe: mov       qword ptr [r11 - 0x30], rax
+  0x1450d1402: lea       rax, [rip + 0x4112667]
+  0x1450d1409: mov       qword ptr [r11 - 0x38], rax
+  0x1450d140d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d1415: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d141d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d1425: mov       dword ptr [rsp + 0x20], 0xa0
+  0x1450d142d: call      0x141433f00
+  0x1450d1432: mov       rax, qword ptr [rip + 0x67a52df]
+  0x1450d1439: add       rsp, 0x78
+  0x1450d143d: ret       
+slot_file=0xb1ed7d8 slot_va=0x14b1ee3d8 section=.data2 -> function=0x1450d16d0-0x1450d177e
+  0x1450d16d0: mov       r11, rsp
+  0x1450d16d3: sub       rsp, 0x78
+  0x1450d16d7: mov       rax, qword ptr [rip + 0x67a500a]
+  0x1450d16de: test      rax, rax
+  0x1450d16e1: jne       0x1450d1779
+  0x1450d16e7: lea       rax, [rip - 0x3f3829e]
+  0x1450d16ee: mov       qword ptr [r11 + 8], rax
+  0x1450d16f2: lea       r9, [rip - 0x3f382a9]
+  0x1450d16f9: lea       rax, [rip - 0x3d226c0]
+  0x1450d1700: mov       qword ptr [r11 - 0x10], rax
+  0x1450d1704: lea       r8, [rip + 0x67a4fdd]
+  0x1450d170b: lea       rax, [rip - 0xf2]
+  0x1450d1712: mov       qword ptr [r11 - 0x18], rax
+  0x1450d1716: lea       rdx, [rip + 0x5103705]
+  0x1450d171d: lea       rax, [r11 + 8]
+  0x1450d1721: mov       qword ptr [r11 - 0x20], rax
+  0x1450d1725: lea       rcx, [rip + 0x4d6d8d4]
+  0x1450d172c: lea       rax, [rip - 0x3f34ff3]
+  0x1450d1733: mov       qword ptr [r11 - 0x28], rax
+  0x1450d1737: lea       rax, [rip + 0x48e2]
+  0x1450d173e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d1742: lea       rax, [rip + 0x4112327]
+  0x1450d1749: mov       qword ptr [r11 - 0x38], rax
+  0x1450d174d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d1755: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d175d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d1765: mov       dword ptr [rsp + 0x20], 0x50
+  0x1450d176d: call      0x141433f00
+  0x1450d1772: mov       rax, qword ptr [rip + 0x67a4f6f]
+  0x1450d1779: add       rsp, 0x78
+  0x1450d177d: ret       
+slot_file=0xb1ed800 slot_va=0x14b1ee400 section=.data2 -> function=0x1450d18c0-0x1450d18ef
+  0x1450d18c0: sub       rsp, 0x28
+  0x1450d18c4: mov       rax, qword ptr [rip + 0x67a4f2d]
+  0x1450d18cb: test      rax, rax
+  0x1450d18ce: jne       0x1450d18ea
+  0x1450d18d0: lea       rdx, [rip + 0x510a379]
+  0x1450d18d7: lea       rcx, [rip + 0x67a4f1a]
+  0x1450d18de: call      0x14155e850
+  0x1450d18e3: mov       rax, qword ptr [rip + 0x67a4f0e]
+  0x1450d18ea: add       rsp, 0x28
+  0x1450d18ee: ret       
+slot_file=0xb1ed840 slot_va=0x14b1ee440 section=.data2 -> function=0x1450d18c0-0x1450d18ef
+  0x1450d18c0: sub       rsp, 0x28
+  0x1450d18c4: mov       rax, qword ptr [rip + 0x67a4f2d]
+  0x1450d18cb: test      rax, rax
+  0x1450d18ce: jne       0x1450d18ea
+  0x1450d18d0: lea       rdx, [rip + 0x510a379]
+  0x1450d18d7: lea       rcx, [rip + 0x67a4f1a]
+  0x1450d18de: call      0x14155e850
+  0x1450d18e3: mov       rax, qword ptr [rip + 0x67a4f0e]
+  0x1450d18ea: add       rsp, 0x28
+  0x1450d18ee: ret       
+slot_file=0xb1ed848 slot_va=0x14b1ee448 section=.data2 -> function=0x1450d17b0-0x1450d185e
+  0x1450d17b0: mov       r11, rsp
+  0x1450d17b3: sub       rsp, 0x78
+  0x1450d17b7: mov       rax, qword ptr [rip + 0x67a5032]
+  0x1450d17be: test      rax, rax
+  0x1450d17c1: jne       0x1450d1859
+  0x1450d17c7: lea       rax, [rip - 0x3f3837e]
+  0x1450d17ce: mov       qword ptr [r11 + 8], rax
+  0x1450d17d2: lea       r9, [rip + 0x87]
+  0x1450d17d9: lea       rax, [rip - 0x3d227a0]
+  0x1450d17e0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d17e4: lea       r8, [rip + 0x67a5005]
+  0x1450d17eb: lea       rax, [rip - 0x263a92]
+  0x1450d17f2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d17f6: lea       rdx, [rip + 0x5103485]
+  0x1450d17fd: lea       rax, [r11 + 8]
+  0x1450d1801: mov       qword ptr [r11 - 0x20], rax
+  0x1450d1805: lea       rcx, [rip + 0x4d6d7f4]
+  0x1450d180c: lea       rax, [rip - 0x3f350d3]
+  0x1450d1813: mov       qword ptr [r11 - 0x28], rax
+  0x1450d1817: lea       rax, [rip + 0x4852]
+  0x1450d181e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d1822: lea       rax, [rip + 0x4112247]
+  0x1450d1829: mov       qword ptr [r11 - 0x38], rax
+  0x1450d182d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d1835: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d183d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d1845: mov       dword ptr [rsp + 0x20], 0x48
+  0x1450d184d: call      0x141433f00
+  0x1450d1852: mov       rax, qword ptr [rip + 0x67a4f97]
+  0x1450d1859: add       rsp, 0x78
+  0x1450d185d: ret       
+slot_file=0xb1ed868 slot_va=0x14b1ee468 section=.data2 -> function=0x1450d18f0-0x1450d191f
+  0x1450d18f0: sub       rsp, 0x28
+  0x1450d18f4: mov       rax, qword ptr [rip + 0x67a4ecd]
+  0x1450d18fb: test      rax, rax
+  0x1450d18fe: jne       0x1450d191a
+  0x1450d1900: lea       rdx, [rip + 0x5109f29]
+  0x1450d1907: lea       rcx, [rip + 0x67a4eba]
+  0x1450d190e: call      0x14155e850
+  0x1450d1913: mov       rax, qword ptr [rip + 0x67a4eae]
+  0x1450d191a: add       rsp, 0x28
+  0x1450d191e: ret       
+slot_file=0xb1ed870 slot_va=0x14b1ee470 section=.data2 -> function=0x1450d1620-0x1450d16ce
+  0x1450d1620: mov       r11, rsp
+  0x1450d1623: sub       rsp, 0x78
+  0x1450d1627: mov       rax, qword ptr [rip + 0x67a5192]
+  0x1450d162e: test      rax, rax
+  0x1450d1631: jne       0x1450d16c9
+  0x1450d1637: lea       rax, [rip - 0x3f381ee]
+  0x1450d163e: mov       qword ptr [r11 + 8], rax
+  0x1450d1642: lea       r9, [rip - 0x3f381f9]
+  0x1450d1649: lea       rax, [rip - 0x3d22610]
+  0x1450d1650: mov       qword ptr [r11 - 0x10], rax
+  0x1450d1654: lea       r8, [rip + 0x67a5165]
+  0x1450d165b: lea       rax, [rip - 0xf2]
+  0x1450d1662: mov       qword ptr [r11 - 0x18], rax
+  0x1450d1666: lea       rdx, [rip + 0x5103665]
+  0x1450d166d: lea       rax, [r11 + 8]
+  0x1450d1671: mov       qword ptr [r11 - 0x20], rax
+  0x1450d1675: lea       rcx, [rip + 0x4d6d984]
+  0x1450d167c: lea       rax, [rip - 0x3f34f43]
+  0x1450d1683: mov       qword ptr [r11 - 0x28], rax
+  0x1450d1687: lea       rax, [rip + 0x4a22]
+  0x1450d168e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d1692: lea       rax, [rip + 0x41123d7]
+  0x1450d1699: mov       qword ptr [r11 - 0x38], rax
+  0x1450d169d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d16a5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d16ad: mov       dword ptr [rsp + 0x28], 8
+  0x1450d16b5: mov       dword ptr [rsp + 0x20], 0x50
+  0x1450d16bd: call      0x141433f00
+  0x1450d16c2: mov       rax, qword ptr [rip + 0x67a50f7]
+  0x1450d16c9: add       rsp, 0x78
+  0x1450d16cd: ret       
+slot_file=0xb1ed898 slot_va=0x14b1ee498 section=.data2 -> function=0x1450d1920-0x1450d19ce
+  0x1450d1920: mov       r11, rsp
+  0x1450d1923: sub       rsp, 0x78
+  0x1450d1927: mov       rax, qword ptr [rip + 0x67a4eaa]
+  0x1450d192e: test      rax, rax
+  0x1450d1931: jne       0x1450d19c9
+  0x1450d1937: lea       rax, [rip - 0x3f384ee]
+  0x1450d193e: mov       qword ptr [r11 + 8], rax
+  0x1450d1942: lea       r9, [rip - 0x3f384f9]
+  0x1450d1949: lea       rax, [rip - 0x3d22910]
+  0x1450d1950: mov       qword ptr [r11 - 0x10], rax
+  0x1450d1954: lea       r8, [rip + 0x67a4e7d]
+  0x1450d195b: lea       rax, [rip - 0x263c02]
+  0x1450d1962: mov       qword ptr [r11 - 0x18], rax
+  0x1450d1966: lea       rdx, [rip + 0x51033a5]
+  0x1450d196d: lea       rax, [r11 + 8]
+  0x1450d1971: mov       qword ptr [r11 - 0x20], rax
+  0x1450d1975: lea       rcx, [rip + 0x4d6d684]
+  0x1450d197c: lea       rax, [rip - 0x3f35243]
+  0x1450d1983: mov       qword ptr [r11 - 0x28], rax
+  0x1450d1987: lea       rax, [rip + 0x4772]
+  0x1450d198e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d1992: lea       rax, [rip + 0x41120d7]
+  0x1450d1999: mov       qword ptr [r11 - 0x38], rax
+  0x1450d199d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d19a5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d19ad: mov       dword ptr [rsp + 0x28], 8
+  0x1450d19b5: mov       dword ptr [rsp + 0x20], 0x40
+  0x1450d19bd: call      0x141433f00
+  0x1450d19c2: mov       rax, qword ptr [rip + 0x67a4e0f]
+  0x1450d19c9: add       rsp, 0x78
+  0x1450d19cd: ret       
+slot_file=0xb1ed8c0 slot_va=0x14b1ee4c0 section=.data2 -> function=0x1450d1a00-0x1450d1aae
+  0x1450d1a00: mov       r11, rsp
+  0x1450d1a03: sub       rsp, 0x78
+  0x1450d1a07: mov       rax, qword ptr [rip + 0x67a4d82]
+  0x1450d1a0e: test      rax, rax
+  0x1450d1a11: jne       0x1450d1aa9
+  0x1450d1a17: lea       rax, [rip - 0x3f385ce]
+  0x1450d1a1e: mov       qword ptr [r11 + 8], rax
+  0x1450d1a22: lea       r9, [rip - 0x3f385d9]
+  0x1450d1a29: lea       rax, [rip - 0x3d229f0]
+  0x1450d1a30: mov       qword ptr [r11 - 0x10], rax
+  0x1450d1a34: lea       r8, [rip + 0x67a4d55]
+  0x1450d1a3b: lea       rax, [rip - 0x263ce2]
+  0x1450d1a42: mov       qword ptr [r11 - 0x18], rax
+  0x1450d1a46: lea       rdx, [rip + 0x5103305]
+  0x1450d1a4d: lea       rax, [r11 + 8]
+  0x1450d1a51: mov       qword ptr [r11 - 0x20], rax
+  0x1450d1a55: lea       rcx, [rip + 0x4d6d5a4]
+  0x1450d1a5c: lea       rax, [rip - 0x3f35323]
+  0x1450d1a63: mov       qword ptr [r11 - 0x28], rax
+  0x1450d1a67: lea       rax, [rip + 0x46e2]
+  0x1450d1a6e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d1a72: lea       rax, [rip + 0x4111ff7]
+  0x1450d1a79: mov       qword ptr [r11 - 0x38], rax
+  0x1450d1a7d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d1a85: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d1a8d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d1a95: mov       dword ptr [rsp + 0x20], 0x48
+  0x1450d1a9d: call      0x141433f00
+  0x1450d1aa2: mov       rax, qword ptr [rip + 0x67a4ce7]
+  0x1450d1aa9: add       rsp, 0x78
+  0x1450d1aad: ret       
+slot_file=0xb1ed8e8 slot_va=0x14b1ee4e8 section=.data2 -> function=0x1450d1ae0-0x1450d1b8e
+  0x1450d1ae0: mov       r11, rsp
+  0x1450d1ae3: sub       rsp, 0x78
+  0x1450d1ae7: mov       rax, qword ptr [rip + 0x67a4cba]
+  0x1450d1aee: test      rax, rax
+  0x1450d1af1: jne       0x1450d1b89
+  0x1450d1af7: lea       rax, [rip - 0x3f386ae]
+  0x1450d1afe: mov       qword ptr [r11 + 8], rax
+  0x1450d1b02: lea       r9, [rip - 0x3f386b9]
+  0x1450d1b09: lea       rax, [rip - 0x3d22ad0]
+  0x1450d1b10: mov       qword ptr [r11 - 0x10], rax
+  0x1450d1b14: lea       r8, [rip + 0x67a4c8d]
+  0x1450d1b1b: lea       rax, [rip - 0x263dc2]
+  0x1450d1b22: mov       qword ptr [r11 - 0x18], rax
+  0x1450d1b26: lea       rdx, [rip + 0x5103095]
+  0x1450d1b2d: lea       rax, [r11 + 8]
+  0x1450d1b31: mov       qword ptr [r11 - 0x20], rax
+  0x1450d1b35: lea       rcx, [rip + 0x4d6d4c4]
+  0x1450d1b3c: lea       rax, [rip - 0x3f35403]
+  0x1450d1b43: mov       qword ptr [r11 - 0x28], rax
+  0x1450d1b47: lea       rax, [rip + 0x4652]
+  0x1450d1b4e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d1b52: lea       rax, [rip + 0x4111f17]
+  0x1450d1b59: mov       qword ptr [r11 - 0x38], rax
+  0x1450d1b5d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d1b65: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d1b6d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d1b75: mov       dword ptr [rsp + 0x20], 0x48
+  0x1450d1b7d: call      0x141433f00
+  0x1450d1b82: mov       rax, qword ptr [rip + 0x67a4c1f]
+  0x1450d1b89: add       rsp, 0x78
+  0x1450d1b8d: ret       
+slot_file=0xb1ed908 slot_va=0x14b1ee508 section=.data2 -> function=0x144e60480-0x144e604af
+  0x144e60480: sub       rsp, 0x28
+  0x144e60484: mov       rax, qword ptr [rip + 0x69feddd]
+  0x144e6048b: test      rax, rax
+  0x144e6048e: jne       0x144e604aa
+  0x144e60490: lea       rdx, [rip + 0x4fe4de9]
+  0x144e60497: lea       rcx, [rip + 0x69fedca]
+  0x144e6049e: call      0x14155e250
+  0x144e604a3: mov       rax, qword ptr [rip + 0x69fedbe]
+  0x144e604aa: add       rsp, 0x28
+  0x144e604ae: ret       
+slot_file=0xb1ed958 slot_va=0x14b1ee558 section=.data2 -> function=0x1450d1da0-0x1450d1dcf
+  0x1450d1da0: sub       rsp, 0x28
+  0x1450d1da4: mov       rax, qword ptr [rip + 0x67a49d5]
+  0x1450d1dab: test      rax, rax
+  0x1450d1dae: jne       0x1450d1dca
+  0x1450d1db0: lea       rdx, [rip + 0x51076e9]
+  0x1450d1db7: lea       rcx, [rip + 0x67a49c2]
+  0x1450d1dbe: call      0x14155e850
+  0x1450d1dc3: mov       rax, qword ptr [rip + 0x67a49b6]
+  0x1450d1dca: add       rsp, 0x28
+  0x1450d1dce: ret       
+slot_file=0xb1ed960 slot_va=0x14b1ee560 section=.data2 -> function=0x1450d1bc0-0x1450d1c6e
+  0x1450d1bc0: mov       r11, rsp
+  0x1450d1bc3: sub       rsp, 0x78
+  0x1450d1bc7: mov       rax, qword ptr [rip + 0x67a4baa]
+  0x1450d1bce: test      rax, rax
+  0x1450d1bd1: jne       0x1450d1c69
+  0x1450d1bd7: lea       rax, [rip - 0x3f3878e]
+  0x1450d1bde: mov       qword ptr [r11 + 8], rax
+  0x1450d1be2: lea       r9, [rip - 0x3f38799]
+  0x1450d1be9: lea       rax, [rip - 0x3d22bb0]
+  0x1450d1bf0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d1bf4: lea       r8, [rip + 0x67a4b7d]
+  0x1450d1bfb: lea       rax, [rip - 0x263ea2]
+  0x1450d1c02: mov       qword ptr [r11 - 0x18], rax
+  0x1450d1c06: lea       rdx, [rip + 0x5102f7d]
+  0x1450d1c0d: lea       rax, [r11 + 8]
+  0x1450d1c11: mov       qword ptr [r11 - 0x20], rax
+  0x1450d1c15: lea       rcx, [rip + 0x4d6d3e4]
+  0x1450d1c1c: lea       rax, [rip - 0x3f354e3]
+  0x1450d1c23: mov       qword ptr [r11 - 0x28], rax
+  0x1450d1c27: lea       rax, [rip + 0x45c2]
+  0x1450d1c2e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d1c32: lea       rax, [rip + 0x4111e37]
+  0x1450d1c39: mov       qword ptr [r11 - 0x38], rax
+  0x1450d1c3d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d1c45: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d1c4d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d1c55: mov       dword ptr [rsp + 0x20], 0xe8
+  0x1450d1c5d: call      0x141433f00
+  0x1450d1c62: mov       rax, qword ptr [rip + 0x67a4b0f]
+  0x1450d1c69: add       rsp, 0x78
+  0x1450d1c6d: ret       
+slot_file=0xb1ed980 slot_va=0x14b1ee580 section=.data2 -> function=0x1450d1f00-0x1450d1f2f
+  0x1450d1f00: sub       rsp, 0x28
+  0x1450d1f04: mov       rax, qword ptr [rip + 0x67a479d]
+  0x1450d1f0b: test      rax, rax
+  0x1450d1f0e: jne       0x1450d1f2a
+  0x1450d1f10: lea       rdx, [rip + 0x51078f9]
+  0x1450d1f17: lea       rcx, [rip + 0x67a478a]
+  0x1450d1f1e: call      0x14155e850
+  0x1450d1f23: mov       rax, qword ptr [rip + 0x67a477e]
+  0x1450d1f2a: add       rsp, 0x28
+  0x1450d1f2e: ret       
+slot_file=0xb1ed988 slot_va=0x14b1ee588 section=.data2 -> function=0x1450ced40-0x1450cedee
+  0x1450ced40: mov       r11, rsp
+  0x1450ced43: sub       rsp, 0x78
+  0x1450ced47: mov       rax, qword ptr [rip + 0x67a7952]
+  0x1450ced4e: test      rax, rax
+  0x1450ced51: jne       0x1450cede9
+  0x1450ced57: lea       rax, [rip - 0x3f3590e]
+  0x1450ced5e: mov       qword ptr [r11 + 8], rax
+  0x1450ced62: lea       r9, [rip - 0x3f35919]
+  0x1450ced69: lea       rax, [rip - 0x3d1fd30]
+  0x1450ced70: mov       qword ptr [r11 - 0x10], rax
+  0x1450ced74: lea       r8, [rip + 0x67a7925]
+  0x1450ced7b: lea       rax, [rip - 0x261022]
+  0x1450ced82: mov       qword ptr [r11 - 0x18], rax
+  0x1450ced86: lea       rdx, [rip + 0x51062fd]
+  0x1450ced8d: lea       rax, [r11 + 8]
+  0x1450ced91: mov       qword ptr [r11 - 0x20], rax
+  0x1450ced95: lea       rcx, [rip + 0x4d70264]
+  0x1450ced9c: lea       rax, [rip - 0x3f32663]
+  0x1450ceda3: mov       qword ptr [r11 - 0x28], rax
+  0x1450ceda7: lea       rax, [rip - 0x3ea4ae]
+  0x1450cedae: mov       qword ptr [r11 - 0x30], rax
+  0x1450cedb2: lea       rax, [rip + 0x4114cb7]
+  0x1450cedb9: mov       qword ptr [r11 - 0x38], rax
+  0x1450cedbd: mov       qword ptr [r11 - 0x40], 0
+  0x1450cedc5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450cedcd: mov       dword ptr [rsp + 0x28], 8
+  0x1450cedd5: mov       dword ptr [rsp + 0x20], 0x38
+  0x1450ceddd: call      0x141433f00
+  0x1450cede2: mov       rax, qword ptr [rip + 0x67a78b7]
+  0x1450cede9: add       rsp, 0x78
+  0x1450ceded: ret       
+slot_file=0xb1ed9b0 slot_va=0x14b1ee5b0 section=.data2 -> function=0x1450d2170-0x1450d219f
+  0x1450d2170: sub       rsp, 0x28
+  0x1450d2174: mov       rax, qword ptr [rip + 0x67a4515]
+  0x1450d217b: test      rax, rax
+  0x1450d217e: jne       0x1450d219a
+  0x1450d2180: lea       rdx, [rip + 0x5106e99]
+  0x1450d2187: lea       rcx, [rip + 0x67a4502]
+  0x1450d218e: call      0x14155e850
+  0x1450d2193: mov       rax, qword ptr [rip + 0x67a44f6]
+  0x1450d219a: add       rsp, 0x28
+  0x1450d219e: ret       
+slot_file=0xb1ed9f0 slot_va=0x14b1ee5f0 section=.data2 -> function=0x1450d2170-0x1450d219f
+  0x1450d2170: sub       rsp, 0x28
+  0x1450d2174: mov       rax, qword ptr [rip + 0x67a4515]
+  0x1450d217b: test      rax, rax
+  0x1450d217e: jne       0x1450d219a
+  0x1450d2180: lea       rdx, [rip + 0x5106e99]
+  0x1450d2187: lea       rcx, [rip + 0x67a4502]
+  0x1450d218e: call      0x14155e850
+  0x1450d2193: mov       rax, qword ptr [rip + 0x67a44f6]
+  0x1450d219a: add       rsp, 0x28
+  0x1450d219e: ret       
+slot_file=0xb1eda30 slot_va=0x14b1ee630 section=.data2 -> function=0x1450d2170-0x1450d219f
+  0x1450d2170: sub       rsp, 0x28
+  0x1450d2174: mov       rax, qword ptr [rip + 0x67a4515]
+  0x1450d217b: test      rax, rax
+  0x1450d217e: jne       0x1450d219a
+  0x1450d2180: lea       rdx, [rip + 0x5106e99]
+  0x1450d2187: lea       rcx, [rip + 0x67a4502]
+  0x1450d218e: call      0x14155e850
+  0x1450d2193: mov       rax, qword ptr [rip + 0x67a44f6]
+  0x1450d219a: add       rsp, 0x28
+  0x1450d219e: ret       
+slot_file=0xb1eda38 slot_va=0x14b1ee638 section=.data2 -> function=0x1450d1f30-0x1450d1fde
+  0x1450d1f30: mov       r11, rsp
+  0x1450d1f33: sub       rsp, 0x78
+  0x1450d1f37: mov       rax, qword ptr [rip + 0x67a474a]
+  0x1450d1f3e: test      rax, rax
+  0x1450d1f41: jne       0x1450d1fd9
+  0x1450d1f47: lea       rax, [rip - 0x3f38afe]
+  0x1450d1f4e: mov       qword ptr [r11 + 8], rax
+  0x1450d1f52: lea       r9, [rip + 0x187]
+  0x1450d1f59: lea       rax, [rip - 0x3d22f20]
+  0x1450d1f60: mov       qword ptr [r11 - 0x10], rax
+  0x1450d1f64: lea       r8, [rip + 0x67a471d]
+  0x1450d1f6b: lea       rax, [rip - 0x3232]
+  0x1450d1f72: mov       qword ptr [r11 - 0x18], rax
+  0x1450d1f76: lea       rdx, [rip + 0x510314d]
+  0x1450d1f7d: lea       rax, [r11 + 8]
+  0x1450d1f81: mov       qword ptr [r11 - 0x20], rax
+  0x1450d1f85: lea       rcx, [rip + 0x4d6d074]
+  0x1450d1f8c: lea       rax, [rip - 0x3f35853]
+  0x1450d1f93: mov       qword ptr [r11 - 0x28], rax
+  0x1450d1f97: lea       rax, [rip + 0x4262]
+  0x1450d1f9e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d1fa2: lea       rax, [rip + 0x4111ac7]
+  0x1450d1fa9: mov       qword ptr [r11 - 0x38], rax
+  0x1450d1fad: mov       qword ptr [r11 - 0x40], 0
+  0x1450d1fb5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d1fbd: mov       dword ptr [rsp + 0x28], 8
+  0x1450d1fc5: mov       dword ptr [rsp + 0x20], 0x68
+  0x1450d1fcd: call      0x141433f00
+  0x1450d1fd2: mov       rax, qword ptr [rip + 0x67a46af]
+  0x1450d1fd9: add       rsp, 0x78
+  0x1450d1fdd: ret       
+slot_file=0xb1eda60 slot_va=0x14b1ee660 section=.data2 -> function=0x1450d22b0-0x1450d235e
+  0x1450d22b0: mov       r11, rsp
+  0x1450d22b3: sub       rsp, 0x78
+  0x1450d22b7: mov       rax, qword ptr [rip + 0x67a43a2]
+  0x1450d22be: test      rax, rax
+  0x1450d22c1: jne       0x1450d2359
+  0x1450d22c7: lea       rax, [rip - 0x3f38e7e]
+  0x1450d22ce: mov       qword ptr [r11 + 8], rax
+  0x1450d22d2: lea       r9, [rip - 0x3f38e89]
+  0x1450d22d9: lea       rax, [rip - 0x3d232a0]
+  0x1450d22e0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d22e4: lea       r8, [rip + 0x67a4375]
+  0x1450d22eb: lea       rax, [rip - 0x35b2]
+  0x1450d22f2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d22f6: lea       rdx, [rip + 0x5102cc5]
+  0x1450d22fd: lea       rax, [r11 + 8]
+  0x1450d2301: mov       qword ptr [r11 - 0x20], rax
+  0x1450d2305: lea       rcx, [rip + 0x4d6ccf4]
+  0x1450d230c: lea       rax, [rip - 0x3f35bd3]
+  0x1450d2313: mov       qword ptr [r11 - 0x28], rax
+  0x1450d2317: lea       rax, [rip + 0x3f82]
+  0x1450d231e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d2322: lea       rax, [rip + 0x4111747]
+  0x1450d2329: mov       qword ptr [r11 - 0x38], rax
+  0x1450d232d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d2335: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d233d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d2345: mov       dword ptr [rsp + 0x20], 0x50
+  0x1450d234d: call      0x141433f00
+  0x1450d2352: mov       rax, qword ptr [rip + 0x67a4307]
+  0x1450d2359: add       rsp, 0x78
+  0x1450d235d: ret       
+slot_file=0xb1eda80 slot_va=0x14b1ee680 section=.data2 -> function=0x1450d2550-0x1450d257f
+  0x1450d2550: sub       rsp, 0x28
+  0x1450d2554: mov       rax, qword ptr [rip + 0x67a417d]
+  0x1450d255b: test      rax, rax
+  0x1450d255e: jne       0x1450d257a
+  0x1450d2560: lea       rdx, [rip + 0x51079e9]
+  0x1450d2567: lea       rcx, [rip + 0x67a416a]
+  0x1450d256e: call      0x14155e850
+  0x1450d2573: mov       rax, qword ptr [rip + 0x67a415e]
+  0x1450d257a: add       rsp, 0x28
+  0x1450d257e: ret       
+slot_file=0xb1eda88 slot_va=0x14b1ee688 section=.data2 -> function=0x1450d24a0-0x1450d254e
+  0x1450d24a0: mov       r11, rsp
+  0x1450d24a3: sub       rsp, 0x78
+  0x1450d24a7: mov       rax, qword ptr [rip + 0x67a4222]
+  0x1450d24ae: test      rax, rax
+  0x1450d24b1: jne       0x1450d2549
+  0x1450d24b7: lea       rax, [rip - 0x3f3906e]
+  0x1450d24be: mov       qword ptr [r11 + 8], rax
+  0x1450d24c2: lea       r9, [rip - 0x3f39079]
+  0x1450d24c9: lea       rax, [rip - 0x3d23490]
+  0x1450d24d0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d24d4: lea       r8, [rip + 0x67a41f5]
+  0x1450d24db: lea       rax, [rip - 0x264782]
+  0x1450d24e2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d24e6: lea       rdx, [rip + 0x5102b05]
+  0x1450d24ed: lea       rax, [r11 + 8]
+  0x1450d24f1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d24f5: lea       rcx, [rip + 0x4d6cb04]
+  0x1450d24fc: lea       rax, [rip - 0x3f35dc3]
+  0x1450d2503: mov       qword ptr [r11 - 0x28], rax
+  0x1450d2507: lea       rax, [rip + 0x3e32]
+  0x1450d250e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d2512: lea       rax, [rip + 0x4111557]
+  0x1450d2519: mov       qword ptr [r11 - 0x38], rax
+  0x1450d251d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d2525: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d252d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d2535: mov       dword ptr [rsp + 0x20], 0xc0
+  0x1450d253d: call      0x141433f00
+  0x1450d2542: mov       rax, qword ptr [rip + 0x67a4187]
+  0x1450d2549: add       rsp, 0x78
+  0x1450d254d: ret       
+slot_file=0xb1edab0 slot_va=0x14b1ee6b0 section=.data2 -> function=0x1450d26a0-0x1450d274e
+  0x1450d26a0: mov       r11, rsp
+  0x1450d26a3: sub       rsp, 0x78
+  0x1450d26a7: mov       rax, qword ptr [rip + 0x67a400a]
+  0x1450d26ae: test      rax, rax
+  0x1450d26b1: jne       0x1450d2749
+  0x1450d26b7: lea       rax, [rip - 0x3f3926e]
+  0x1450d26be: mov       qword ptr [r11 + 8], rax
+  0x1450d26c2: lea       r9, [rip - 0x3f39279]
+  0x1450d26c9: lea       rax, [rip - 0x3d23690]
+  0x1450d26d0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d26d4: lea       r8, [rip + 0x67a3fdd]
+  0x1450d26db: lea       rax, [rip - 0x264982]
+  0x1450d26e2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d26e6: lea       rdx, [rip + 0x5102955]
+  0x1450d26ed: lea       rax, [r11 + 8]
+  0x1450d26f1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d26f5: lea       rcx, [rip + 0x4d6c904]
+  0x1450d26fc: lea       rax, [rip - 0x3f35fc3]
+  0x1450d2703: mov       qword ptr [r11 - 0x28], rax
+  0x1450d2707: lea       rax, [rip + 0x3c42]
+  0x1450d270e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d2712: lea       rax, [rip + 0x4111357]
+  0x1450d2719: mov       qword ptr [r11 - 0x38], rax
+  0x1450d271d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d2725: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d272d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d2735: mov       dword ptr [rsp + 0x20], 0xb0
+  0x1450d273d: call      0x141433f00
+  0x1450d2742: mov       rax, qword ptr [rip + 0x67a3f6f]
+  0x1450d2749: add       rsp, 0x78
+  0x1450d274d: ret       
+slot_file=0xb1edad8 slot_va=0x14b1ee6d8 section=.data2 -> function=0x1450d28a0-0x1450d294e
+  0x1450d28a0: mov       r11, rsp
+  0x1450d28a3: sub       rsp, 0x78
+  0x1450d28a7: mov       rax, qword ptr [rip + 0x67a3d22]
+  0x1450d28ae: test      rax, rax
+  0x1450d28b1: jne       0x1450d2949
+  0x1450d28b7: lea       rax, [rip - 0x3f3946e]
+  0x1450d28be: mov       qword ptr [r11 + 8], rax
+  0x1450d28c2: lea       r9, [rip - 0x3f39479]
+  0x1450d28c9: lea       rax, [rip - 0x3d23890]
+  0x1450d28d0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d28d4: lea       r8, [rip + 0x67a3cf5]
+  0x1450d28db: lea       rax, [rip - 0x264b82]
+  0x1450d28e2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d28e6: lea       rdx, [rip + 0x510261d]
+  0x1450d28ed: lea       rax, [r11 + 8]
+  0x1450d28f1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d28f5: lea       rcx, [rip + 0x4d6c704]
+  0x1450d28fc: lea       rax, [rip - 0x3f361c3]
+  0x1450d2903: mov       qword ptr [r11 - 0x28], rax
+  0x1450d2907: lea       rax, [rip + 0x3a52]
+  0x1450d290e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d2912: lea       rax, [rip + 0x4111157]
+  0x1450d2919: mov       qword ptr [r11 - 0x38], rax
+  0x1450d291d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d2925: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d292d: mov       dword ptr [rsp + 0x28], 0x10
+  0x1450d2935: mov       dword ptr [rsp + 0x20], 0x320
+  0x1450d293d: call      0x141433f00
+  0x1450d2942: mov       rax, qword ptr [rip + 0x67a3c87]
+  0x1450d2949: add       rsp, 0x78
+  0x1450d294d: ret       
+slot_file=0xb1edaf8 slot_va=0x14b1ee6f8 section=.data2 -> function=0x144e60480-0x144e604af
+  0x144e60480: sub       rsp, 0x28
+  0x144e60484: mov       rax, qword ptr [rip + 0x69feddd]
+  0x144e6048b: test      rax, rax
+  0x144e6048e: jne       0x144e604aa
+  0x144e60490: lea       rdx, [rip + 0x4fe4de9]
+  0x144e60497: lea       rcx, [rip + 0x69fedca]
+  0x144e6049e: call      0x14155e250
+  0x144e604a3: mov       rax, qword ptr [rip + 0x69fedbe]
+  0x144e604aa: add       rsp, 0x28
+  0x144e604ae: ret       
+slot_file=0xb1edb30 slot_va=0x14b1ee730 section=.data2 -> function=0x1450d2f20-0x1450d2f4f
+  0x1450d2f20: sub       rsp, 0x28
+  0x1450d2f24: mov       rax, qword ptr [rip + 0x67a368d]
+  0x1450d2f2b: test      rax, rax
+  0x1450d2f2e: jne       0x1450d2f4a
+  0x1450d2f30: lea       rdx, [rip + 0x51050a9]
+  0x1450d2f37: lea       rcx, [rip + 0x67a367a]
+  0x1450d2f3e: call      0x14155e850
+  0x1450d2f43: mov       rax, qword ptr [rip + 0x67a366e]
+  0x1450d2f4a: add       rsp, 0x28
+  0x1450d2f4e: ret       
+slot_file=0xb1edb90 slot_va=0x14b1ee790 section=.data2 -> function=0x1450d2f20-0x1450d2f4f
+  0x1450d2f20: sub       rsp, 0x28
+  0x1450d2f24: mov       rax, qword ptr [rip + 0x67a368d]
+  0x1450d2f2b: test      rax, rax
+  0x1450d2f2e: jne       0x1450d2f4a
+  0x1450d2f30: lea       rdx, [rip + 0x51050a9]
+  0x1450d2f37: lea       rcx, [rip + 0x67a367a]
+  0x1450d2f3e: call      0x14155e850
+  0x1450d2f43: mov       rax, qword ptr [rip + 0x67a366e]
+  0x1450d2f4a: add       rsp, 0x28
+  0x1450d2f4e: ret       
+slot_file=0xb1edb98 slot_va=0x14b1ee798 section=.data2 -> function=0x1450d2cf0-0x1450d2d9e
+  0x1450d2cf0: mov       r11, rsp
+  0x1450d2cf3: sub       rsp, 0x78
+  0x1450d2cf7: mov       rax, qword ptr [rip + 0x67a38b2]
+  0x1450d2cfe: test      rax, rax
+  0x1450d2d01: jne       0x1450d2d99
+  0x1450d2d07: lea       rax, [rip - 0x3f398be]
+  0x1450d2d0e: mov       qword ptr [r11 + 8], rax
+  0x1450d2d12: lea       r9, [rip + 0x1a7]
+  0x1450d2d19: lea       rax, [rip - 0x3d23ce0]
+  0x1450d2d20: mov       qword ptr [r11 - 0x10], rax
+  0x1450d2d24: lea       r8, [rip + 0x67a3885]
+  0x1450d2d2b: lea       rax, [rip - 0x3ff2]
+  0x1450d2d32: mov       qword ptr [r11 - 0x18], rax
+  0x1450d2d36: lea       rdx, [rip + 0x51021a5]
+  0x1450d2d3d: lea       rax, [r11 + 8]
+  0x1450d2d41: mov       qword ptr [r11 - 0x20], rax
+  0x1450d2d45: lea       rcx, [rip + 0x4d6c2b4]
+  0x1450d2d4c: lea       rax, [rip - 0x3f36613]
+  0x1450d2d53: mov       qword ptr [r11 - 0x28], rax
+  0x1450d2d57: lea       rax, [rip + 0x3622]
+  0x1450d2d5e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d2d62: lea       rax, [rip + 0x4110d07]
+  0x1450d2d69: mov       qword ptr [r11 - 0x38], rax
+  0x1450d2d6d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d2d75: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d2d7d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d2d85: mov       dword ptr [rsp + 0x20], 0xd0
+  0x1450d2d8d: call      0x141433f00
+  0x1450d2d92: mov       rax, qword ptr [rip + 0x67a3817]
+  0x1450d2d99: add       rsp, 0x78
+  0x1450d2d9d: ret       
+slot_file=0xb1edbc0 slot_va=0x14b1ee7c0 section=.data2 -> function=0x1450d32d0-0x1450d32ff
+  0x1450d32d0: sub       rsp, 0x28
+  0x1450d32d4: mov       rax, qword ptr [rip + 0x67a32c5]
+  0x1450d32db: test      rax, rax
+  0x1450d32de: jne       0x1450d32fa
+  0x1450d32e0: lea       rdx, [rip + 0x5104879]
+  0x1450d32e7: lea       rcx, [rip + 0x67a32b2]
+  0x1450d32ee: call      0x14155e850
+  0x1450d32f3: mov       rax, qword ptr [rip + 0x67a32a6]
+  0x1450d32fa: add       rsp, 0x28
+  0x1450d32fe: ret       
+slot_file=0xb1edc00 slot_va=0x14b1ee800 section=.data2 -> function=0x1450d32d0-0x1450d32ff
+  0x1450d32d0: sub       rsp, 0x28
+  0x1450d32d4: mov       rax, qword ptr [rip + 0x67a32c5]
+  0x1450d32db: test      rax, rax
+  0x1450d32de: jne       0x1450d32fa
+  0x1450d32e0: lea       rdx, [rip + 0x5104879]
+  0x1450d32e7: lea       rcx, [rip + 0x67a32b2]
+  0x1450d32ee: call      0x14155e850
+  0x1450d32f3: mov       rax, qword ptr [rip + 0x67a32a6]
+  0x1450d32fa: add       rsp, 0x28
+  0x1450d32fe: ret       
+slot_file=0xb1edc08 slot_va=0x14b1ee808 section=.data2 -> function=0x1450d30d0-0x1450d317e
+  0x1450d30d0: mov       r11, rsp
+  0x1450d30d3: sub       rsp, 0x78
+  0x1450d30d7: mov       rax, qword ptr [rip + 0x67a34ba]
+  0x1450d30de: test      rax, rax
+  0x1450d30e1: jne       0x1450d3179
+  0x1450d30e7: lea       rax, [rip - 0x3f39c9e]
+  0x1450d30ee: mov       qword ptr [r11 + 8], rax
+  0x1450d30f2: lea       r9, [rip + 0x177]
+  0x1450d30f9: lea       rax, [rip - 0x3d240c0]
+  0x1450d3100: mov       qword ptr [r11 - 0x10], rax
+  0x1450d3104: lea       r8, [rip + 0x67a348d]
+  0x1450d310b: lea       rax, [rip - 0xf2]
+  0x1450d3112: mov       qword ptr [r11 - 0x18], rax
+  0x1450d3116: lea       rdx, [rip + 0x51021c5]
+  0x1450d311d: lea       rax, [r11 + 8]
+  0x1450d3121: mov       qword ptr [r11 - 0x20], rax
+  0x1450d3125: lea       rcx, [rip + 0x4d6bed4]
+  0x1450d312c: lea       rax, [rip - 0x3f369f3]
+  0x1450d3133: mov       qword ptr [r11 - 0x28], rax
+  0x1450d3137: lea       rax, [rip + 0x3302]
+  0x1450d313e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d3142: lea       rax, [rip + 0x4110927]
+  0x1450d3149: mov       qword ptr [r11 - 0x38], rax
+  0x1450d314d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d3155: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d315d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d3165: mov       dword ptr [rsp + 0x20], 0xc0
+  0x1450d316d: call      0x141433f00
+  0x1450d3172: mov       rax, qword ptr [rip + 0x67a341f]
+  0x1450d3179: add       rsp, 0x78
+  0x1450d317d: ret       
+slot_file=0xb1edc30 slot_va=0x14b1ee830 section=.data2 -> function=0x1450d3570-0x1450d359f
+  0x1450d3570: sub       rsp, 0x28
+  0x1450d3574: mov       rax, qword ptr [rip + 0x67a3005]
+  0x1450d357b: test      rax, rax
+  0x1450d357e: jne       0x1450d359a
+  0x1450d3580: lea       rdx, [rip + 0x51055c9]
+  0x1450d3587: lea       rcx, [rip + 0x67a2ff2]
+  0x1450d358e: call      0x14155e850
+  0x1450d3593: mov       rax, qword ptr [rip + 0x67a2fe6]
+  0x1450d359a: add       rsp, 0x28
+  0x1450d359e: ret       
+slot_file=0xb1edc38 slot_va=0x14b1ee838 section=.data2 -> function=0x1450d3410-0x1450d34be
+  0x1450d3410: mov       r11, rsp
+  0x1450d3413: sub       rsp, 0x78
+  0x1450d3417: mov       rax, qword ptr [rip + 0x67a315a]
+  0x1450d341e: test      rax, rax
+  0x1450d3421: jne       0x1450d34b9
+  0x1450d3427: lea       rax, [rip - 0x3f39fde]
+  0x1450d342e: mov       qword ptr [r11 + 8], rax
+  0x1450d3432: lea       r9, [rip - 0x3f39fe9]
+  0x1450d3439: lea       rax, [rip - 0x3d24400]
+  0x1450d3440: mov       qword ptr [r11 - 0x10], rax
+  0x1450d3444: lea       r8, [rip + 0x67a312d]
+  0x1450d344b: lea       rax, [rip - 0x2656f2]
+  0x1450d3452: mov       qword ptr [r11 - 0x18], rax
+  0x1450d3456: lea       rdx, [rip + 0x5101dfd]
+  0x1450d345d: lea       rax, [r11 + 8]
+  0x1450d3461: mov       qword ptr [r11 - 0x20], rax
+  0x1450d3465: lea       rcx, [rip + 0x4d6bb94]
+  0x1450d346c: lea       rax, [rip - 0x3f36d33]
+  0x1450d3473: mov       qword ptr [r11 - 0x28], rax
+  0x1450d3477: lea       rax, [rip + 0x3042]
+  0x1450d347e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d3482: lea       rax, [rip + 0x41105e7]
+  0x1450d3489: mov       qword ptr [r11 - 0x38], rax
+  0x1450d348d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d3495: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d349d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d34a5: mov       dword ptr [rsp + 0x20], 0x58
+  0x1450d34ad: call      0x141433f00
+  0x1450d34b2: mov       rax, qword ptr [rip + 0x67a30bf]
+  0x1450d34b9: add       rsp, 0x78
+  0x1450d34bd: ret       
+slot_file=0xb1edc58 slot_va=0x14b1ee858 section=.data2 -> function=0x1450d36c0-0x1450d36ef
+  0x1450d36c0: sub       rsp, 0x28
+  0x1450d36c4: mov       rax, qword ptr [rip + 0x67a2f85]
+  0x1450d36cb: test      rax, rax
+  0x1450d36ce: jne       0x1450d36ea
+  0x1450d36d0: lea       rdx, [rip + 0x51050d9]
+  0x1450d36d7: lea       rcx, [rip + 0x67a2f72]
+  0x1450d36de: call      0x14155e850
+  0x1450d36e3: mov       rax, qword ptr [rip + 0x67a2f66]
+  0x1450d36ea: add       rsp, 0x28
+  0x1450d36ee: ret       
+slot_file=0xb1edc60 slot_va=0x14b1ee860 section=.data2 -> function=0x1450d34c0-0x1450d356e
+  0x1450d34c0: mov       r11, rsp
+  0x1450d34c3: sub       rsp, 0x78
+  0x1450d34c7: mov       rax, qword ptr [rip + 0x67a317a]
+  0x1450d34ce: test      rax, rax
+  0x1450d34d1: jne       0x1450d3569
+  0x1450d34d7: lea       rax, [rip - 0x3f3a08e]
+  0x1450d34de: mov       qword ptr [r11 + 8], rax
+  0x1450d34e2: lea       r9, [rip - 0x3f3a099]
+  0x1450d34e9: lea       rax, [rip - 0x3d244b0]
+  0x1450d34f0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d34f4: lea       r8, [rip + 0x67a314d]
+  0x1450d34fb: lea       rax, [rip - 0x421232]
+  0x1450d3502: mov       qword ptr [r11 - 0x18], rax
+  0x1450d3506: lea       rdx, [rip + 0x5101d9d]
+  0x1450d350d: lea       rax, [r11 + 8]
+  0x1450d3511: mov       qword ptr [r11 - 0x20], rax
+  0x1450d3515: lea       rcx, [rip + 0x4d6bae4]
+  0x1450d351c: lea       rax, [rip - 0x3f36de3]
+  0x1450d3523: mov       qword ptr [r11 - 0x28], rax
+  0x1450d3527: lea       rax, [rip + 0x3052]
+  0x1450d352e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d3532: lea       rax, [rip + 0x4110537]
+  0x1450d3539: mov       qword ptr [r11 - 0x38], rax
+  0x1450d353d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d3545: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d354d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d3555: mov       dword ptr [rsp + 0x20], 0x50
+  0x1450d355d: call      0x141433f00
+  0x1450d3562: mov       rax, qword ptr [rip + 0x67a30df]
+  0x1450d3569: add       rsp, 0x78
+  0x1450d356d: ret       
+slot_file=0xb1edc80 slot_va=0x14b1ee880 section=.data2 -> function=0x1450d3cf0-0x1450d3d1f
+  0x1450d3cf0: sub       rsp, 0x28
+  0x1450d3cf4: mov       rax, qword ptr [rip + 0x67a2925]
+  0x1450d3cfb: test      rax, rax
+  0x1450d3cfe: jne       0x1450d3d1a
+  0x1450d3d00: lea       rdx, [rip + 0x5102e49]
+  0x1450d3d07: lea       rcx, [rip + 0x67a2912]
+  0x1450d3d0e: call      0x14155e850
+  0x1450d3d13: mov       rax, qword ptr [rip + 0x67a2906]
+  0x1450d3d1a: add       rsp, 0x28
+  0x1450d3d1e: ret       
+slot_file=0xb1edcc0 slot_va=0x14b1ee8c0 section=.data2 -> function=0x1450d3cf0-0x1450d3d1f
+  0x1450d3cf0: sub       rsp, 0x28
+  0x1450d3cf4: mov       rax, qword ptr [rip + 0x67a2925]
+  0x1450d3cfb: test      rax, rax
+  0x1450d3cfe: jne       0x1450d3d1a
+  0x1450d3d00: lea       rdx, [rip + 0x5102e49]
+  0x1450d3d07: lea       rcx, [rip + 0x67a2912]
+  0x1450d3d0e: call      0x14155e850
+  0x1450d3d13: mov       rax, qword ptr [rip + 0x67a2906]
+  0x1450d3d1a: add       rsp, 0x28
+  0x1450d3d1e: ret       
+slot_file=0xb1edd00 slot_va=0x14b1ee900 section=.data2 -> function=0x1450d3cf0-0x1450d3d1f
+  0x1450d3cf0: sub       rsp, 0x28
+  0x1450d3cf4: mov       rax, qword ptr [rip + 0x67a2925]
+  0x1450d3cfb: test      rax, rax
+  0x1450d3cfe: jne       0x1450d3d1a
+  0x1450d3d00: lea       rdx, [rip + 0x5102e49]
+  0x1450d3d07: lea       rcx, [rip + 0x67a2912]
+  0x1450d3d0e: call      0x14155e850
+  0x1450d3d13: mov       rax, qword ptr [rip + 0x67a2906]
+  0x1450d3d1a: add       rsp, 0x28
+  0x1450d3d1e: ret       
+slot_file=0xb1edd40 slot_va=0x14b1ee940 section=.data2 -> function=0x1450d3cf0-0x1450d3d1f
+  0x1450d3cf0: sub       rsp, 0x28
+  0x1450d3cf4: mov       rax, qword ptr [rip + 0x67a2925]
+  0x1450d3cfb: test      rax, rax
+  0x1450d3cfe: jne       0x1450d3d1a
+  0x1450d3d00: lea       rdx, [rip + 0x5102e49]
+  0x1450d3d07: lea       rcx, [rip + 0x67a2912]
+  0x1450d3d0e: call      0x14155e850
+  0x1450d3d13: mov       rax, qword ptr [rip + 0x67a2906]
+  0x1450d3d1a: add       rsp, 0x28
+  0x1450d3d1e: ret       
+slot_file=0xb1edd80 slot_va=0x14b1ee980 section=.data2 -> function=0x1450d3cf0-0x1450d3d1f
+  0x1450d3cf0: sub       rsp, 0x28
+  0x1450d3cf4: mov       rax, qword ptr [rip + 0x67a2925]
+  0x1450d3cfb: test      rax, rax
+  0x1450d3cfe: jne       0x1450d3d1a
+  0x1450d3d00: lea       rdx, [rip + 0x5102e49]
+  0x1450d3d07: lea       rcx, [rip + 0x67a2912]
+  0x1450d3d0e: call      0x14155e850
+  0x1450d3d13: mov       rax, qword ptr [rip + 0x67a2906]
+  0x1450d3d1a: add       rsp, 0x28
+  0x1450d3d1e: ret       
+slot_file=0xb1eddc0 slot_va=0x14b1ee9c0 section=.data2 -> function=0x1450d3cf0-0x1450d3d1f
+  0x1450d3cf0: sub       rsp, 0x28
+  0x1450d3cf4: mov       rax, qword ptr [rip + 0x67a2925]
+  0x1450d3cfb: test      rax, rax
+  0x1450d3cfe: jne       0x1450d3d1a
+  0x1450d3d00: lea       rdx, [rip + 0x5102e49]
+  0x1450d3d07: lea       rcx, [rip + 0x67a2912]
+  0x1450d3d0e: call      0x14155e850
+  0x1450d3d13: mov       rax, qword ptr [rip + 0x67a2906]
+  0x1450d3d1a: add       rsp, 0x28
+  0x1450d3d1e: ret       
+slot_file=0xb1ede00 slot_va=0x14b1eea00 section=.data2 -> function=0x1450d3cf0-0x1450d3d1f
+  0x1450d3cf0: sub       rsp, 0x28
+  0x1450d3cf4: mov       rax, qword ptr [rip + 0x67a2925]
+  0x1450d3cfb: test      rax, rax
+  0x1450d3cfe: jne       0x1450d3d1a
+  0x1450d3d00: lea       rdx, [rip + 0x5102e49]
+  0x1450d3d07: lea       rcx, [rip + 0x67a2912]
+  0x1450d3d0e: call      0x14155e850
+  0x1450d3d13: mov       rax, qword ptr [rip + 0x67a2906]
+  0x1450d3d1a: add       rsp, 0x28
+  0x1450d3d1e: ret       
+slot_file=0xb1ede08 slot_va=0x14b1eea08 section=.data2 -> function=0x1450d37d0-0x1450d387e
+  0x1450d37d0: mov       r11, rsp
+  0x1450d37d3: sub       rsp, 0x78
+  0x1450d37d7: mov       rax, qword ptr [rip + 0x67a2e3a]
+  0x1450d37de: test      rax, rax
+  0x1450d37e1: jne       0x1450d3879
+  0x1450d37e7: lea       rax, [rip - 0x3f3a39e]
+  0x1450d37ee: mov       qword ptr [r11 + 8], rax
+  0x1450d37f2: lea       r9, [rip + 0x3a7]
+  0x1450d37f9: lea       rax, [rip - 0x3d247c0]
+  0x1450d3800: mov       qword ptr [r11 - 0x10], rax
+  0x1450d3804: lea       r8, [rip + 0x67a2e0d]
+  0x1450d380b: lea       rax, [rip - 0x265ab2]
+  0x1450d3812: mov       qword ptr [r11 - 0x18], rax
+  0x1450d3816: lea       rdx, [rip + 0x51019e5]
+  0x1450d381d: lea       rax, [r11 + 8]
+  0x1450d3821: mov       qword ptr [r11 - 0x20], rax
+  0x1450d3825: lea       rcx, [rip + 0x4d6b7d4]
+  0x1450d382c: lea       rax, [rip - 0x3f370f3]
+  0x1450d3833: mov       qword ptr [r11 - 0x28], rax
+  0x1450d3837: lea       rax, [rip + 0x2d82]
+  0x1450d383e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d3842: lea       rax, [rip + 0x4110227]
+  0x1450d3849: mov       qword ptr [r11 - 0x38], rax
+  0x1450d384d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d3855: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d385d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d3865: mov       dword ptr [rsp + 0x20], 0xe0
+  0x1450d386d: call      0x141433f00
+  0x1450d3872: mov       rax, qword ptr [rip + 0x67a2d9f]
+  0x1450d3879: add       rsp, 0x78
+  0x1450d387d: ret       
+slot_file=0xb1ede30 slot_va=0x14b1eea30 section=.data2 -> function=0x1450d3e40-0x1450d3eee
+  0x1450d3e40: mov       r11, rsp
+  0x1450d3e43: sub       rsp, 0x78
+  0x1450d3e47: mov       rax, qword ptr [rip + 0x67a26ba]
+  0x1450d3e4e: test      rax, rax
+  0x1450d3e51: jne       0x1450d3ee9
+  0x1450d3e57: lea       rax, [rip - 0x3f3aa0e]
+  0x1450d3e5e: mov       qword ptr [r11 + 8], rax
+  0x1450d3e62: lea       r9, [rip - 0x3f3aa19]
+  0x1450d3e69: lea       rax, [rip - 0x3d24e30]
+  0x1450d3e70: mov       qword ptr [r11 - 0x10], rax
+  0x1450d3e74: lea       r8, [rip + 0x67a268d]
+  0x1450d3e7b: lea       rax, [rip - 0x266122]
+  0x1450d3e82: mov       qword ptr [r11 - 0x18], rax
+  0x1450d3e86: lea       rdx, [rip + 0x51012c5]
+  0x1450d3e8d: lea       rax, [r11 + 8]
+  0x1450d3e91: mov       qword ptr [r11 - 0x20], rax
+  0x1450d3e95: lea       rcx, [rip + 0x4d6b164]
+  0x1450d3e9c: lea       rax, [rip - 0x3f37763]
+  0x1450d3ea3: mov       qword ptr [r11 - 0x28], rax
+  0x1450d3ea7: lea       rax, [rip + 0x2802]
+  0x1450d3eae: mov       qword ptr [r11 - 0x30], rax
+  0x1450d3eb2: lea       rax, [rip + 0x410fbb7]
+  0x1450d3eb9: mov       qword ptr [r11 - 0x38], rax
+  0x1450d3ebd: mov       qword ptr [r11 - 0x40], 0
+  0x1450d3ec5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d3ecd: mov       dword ptr [rsp + 0x28], 8
+  0x1450d3ed5: mov       dword ptr [rsp + 0x20], 0x110
+  0x1450d3edd: call      0x141433f00
+  0x1450d3ee2: mov       rax, qword ptr [rip + 0x67a261f]
+  0x1450d3ee9: add       rsp, 0x78
+  0x1450d3eed: ret       
+slot_file=0xb1ede50 slot_va=0x14b1eea50 section=.data2 -> function=0x1450d4570-0x1450d459f
+  0x1450d4570: sub       rsp, 0x28
+  0x1450d4574: mov       rax, qword ptr [rip + 0x67a1fe5]
+  0x1450d457b: test      rax, rax
+  0x1450d457e: jne       0x1450d459a
+  0x1450d4580: lea       rdx, [rip + 0x5102db9]
+  0x1450d4587: lea       rcx, [rip + 0x67a1fd2]
+  0x1450d458e: call      0x14155e850
+  0x1450d4593: mov       rax, qword ptr [rip + 0x67a1fc6]
+  0x1450d459a: add       rsp, 0x28
+  0x1450d459e: ret       
+slot_file=0xb1ede90 slot_va=0x14b1eea90 section=.data2 -> function=0x1450d4570-0x1450d459f
+  0x1450d4570: sub       rsp, 0x28
+  0x1450d4574: mov       rax, qword ptr [rip + 0x67a1fe5]
+  0x1450d457b: test      rax, rax
+  0x1450d457e: jne       0x1450d459a
+  0x1450d4580: lea       rdx, [rip + 0x5102db9]
+  0x1450d4587: lea       rcx, [rip + 0x67a1fd2]
+  0x1450d458e: call      0x14155e850
+  0x1450d4593: mov       rax, qword ptr [rip + 0x67a1fc6]
+  0x1450d459a: add       rsp, 0x28
+  0x1450d459e: ret       
+slot_file=0xb1eded0 slot_va=0x14b1eead0 section=.data2 -> function=0x1450d4570-0x1450d459f
+  0x1450d4570: sub       rsp, 0x28
+  0x1450d4574: mov       rax, qword ptr [rip + 0x67a1fe5]
+  0x1450d457b: test      rax, rax
+  0x1450d457e: jne       0x1450d459a
+  0x1450d4580: lea       rdx, [rip + 0x5102db9]
+  0x1450d4587: lea       rcx, [rip + 0x67a1fd2]
+  0x1450d458e: call      0x14155e850
+  0x1450d4593: mov       rax, qword ptr [rip + 0x67a1fc6]
+  0x1450d459a: add       rsp, 0x28
+  0x1450d459e: ret       
+slot_file=0xb1edf10 slot_va=0x14b1eeb10 section=.data2 -> function=0x1450d4570-0x1450d459f
+  0x1450d4570: sub       rsp, 0x28
+  0x1450d4574: mov       rax, qword ptr [rip + 0x67a1fe5]
+  0x1450d457b: test      rax, rax
+  0x1450d457e: jne       0x1450d459a
+  0x1450d4580: lea       rdx, [rip + 0x5102db9]
+  0x1450d4587: lea       rcx, [rip + 0x67a1fd2]
+  0x1450d458e: call      0x14155e850
+  0x1450d4593: mov       rax, qword ptr [rip + 0x67a1fc6]
+  0x1450d459a: add       rsp, 0x28
+  0x1450d459e: ret       
+slot_file=0xb1edf50 slot_va=0x14b1eeb50 section=.data2 -> function=0x1450d4570-0x1450d459f
+  0x1450d4570: sub       rsp, 0x28
+  0x1450d4574: mov       rax, qword ptr [rip + 0x67a1fe5]
+  0x1450d457b: test      rax, rax
+  0x1450d457e: jne       0x1450d459a
+  0x1450d4580: lea       rdx, [rip + 0x5102db9]
+  0x1450d4587: lea       rcx, [rip + 0x67a1fd2]
+  0x1450d458e: call      0x14155e850
+  0x1450d4593: mov       rax, qword ptr [rip + 0x67a1fc6]
+  0x1450d459a: add       rsp, 0x28
+  0x1450d459e: ret       
+slot_file=0xb1edf90 slot_va=0x14b1eeb90 section=.data2 -> function=0x1450d4570-0x1450d459f
+  0x1450d4570: sub       rsp, 0x28
+  0x1450d4574: mov       rax, qword ptr [rip + 0x67a1fe5]
+  0x1450d457b: test      rax, rax
+  0x1450d457e: jne       0x1450d459a
+  0x1450d4580: lea       rdx, [rip + 0x5102db9]
+  0x1450d4587: lea       rcx, [rip + 0x67a1fd2]
+  0x1450d458e: call      0x14155e850
+  0x1450d4593: mov       rax, qword ptr [rip + 0x67a1fc6]
+  0x1450d459a: add       rsp, 0x28
+  0x1450d459e: ret       
+slot_file=0xb1edfd0 slot_va=0x14b1eebd0 section=.data2 -> function=0x1450d4570-0x1450d459f
+  0x1450d4570: sub       rsp, 0x28
+  0x1450d4574: mov       rax, qword ptr [rip + 0x67a1fe5]
+  0x1450d457b: test      rax, rax
+  0x1450d457e: jne       0x1450d459a
+  0x1450d4580: lea       rdx, [rip + 0x5102db9]
+  0x1450d4587: lea       rcx, [rip + 0x67a1fd2]
+  0x1450d458e: call      0x14155e850
+  0x1450d4593: mov       rax, qword ptr [rip + 0x67a1fc6]
+  0x1450d459a: add       rsp, 0x28
+  0x1450d459e: ret       
+slot_file=0xb1edfd8 slot_va=0x14b1eebd8 section=.data2 -> function=0x1450d4060-0x1450d410e
+  0x1450d4060: mov       r11, rsp
+  0x1450d4063: sub       rsp, 0x78
+  0x1450d4067: mov       rax, qword ptr [rip + 0x67a24ea]
+  0x1450d406e: test      rax, rax
+  0x1450d4071: jne       0x1450d4109
+  0x1450d4077: lea       rax, [rip - 0x3f3ac2e]
+  0x1450d407e: mov       qword ptr [r11 + 8], rax
+  0x1450d4082: lea       r9, [rip + 0x397]
+  0x1450d4089: lea       rax, [rip - 0x3d25050]
+  0x1450d4090: mov       qword ptr [r11 - 0x10], rax
+  0x1450d4094: lea       r8, [rip + 0x67a24bd]
+  0x1450d409b: lea       rax, [rip - 0x266342]
+  0x1450d40a2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d40a6: lea       rdx, [rip + 0x51010e5]
+  0x1450d40ad: lea       rax, [r11 + 8]
+  0x1450d40b1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d40b5: lea       rcx, [rip + 0x4d6af44]
+  0x1450d40bc: lea       rax, [rip - 0x3f37983]
+  0x1450d40c3: mov       qword ptr [r11 - 0x28], rax
+  0x1450d40c7: lea       rax, [rip + 0x2712]
+  0x1450d40ce: mov       qword ptr [r11 - 0x30], rax
+  0x1450d40d2: lea       rax, [rip + 0x410f997]
+  0x1450d40d9: mov       qword ptr [r11 - 0x38], rax
+  0x1450d40dd: mov       qword ptr [r11 - 0x40], 0
+  0x1450d40e5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d40ed: mov       dword ptr [rsp + 0x28], 8
+  0x1450d40f5: mov       dword ptr [rsp + 0x20], 0xe0
+  0x1450d40fd: call      0x141433f00
+  0x1450d4102: mov       rax, qword ptr [rip + 0x67a244f]
+  0x1450d4109: add       rsp, 0x78
+  0x1450d410d: ret       
+slot_file=0xb1ee000 slot_va=0x14b1eec00 section=.data2 -> function=0x1450d47f0-0x1450d481f
+  0x1450d47f0: sub       rsp, 0x28
+  0x1450d47f4: mov       rax, qword ptr [rip + 0x67a1d2d]
+  0x1450d47fb: test      rax, rax
+  0x1450d47fe: jne       0x1450d481a
+  0x1450d4800: lea       rdx, [rip + 0x51029d9]
+  0x1450d4807: lea       rcx, [rip + 0x67a1d1a]
+  0x1450d480e: call      0x14155e850
+  0x1450d4813: mov       rax, qword ptr [rip + 0x67a1d0e]
+  0x1450d481a: add       rsp, 0x28
+  0x1450d481e: ret       
+slot_file=0xb1ee040 slot_va=0x14b1eec40 section=.data2 -> function=0x1450d47f0-0x1450d481f
+  0x1450d47f0: sub       rsp, 0x28
+  0x1450d47f4: mov       rax, qword ptr [rip + 0x67a1d2d]
+  0x1450d47fb: test      rax, rax
+  0x1450d47fe: jne       0x1450d481a
+  0x1450d4800: lea       rdx, [rip + 0x51029d9]
+  0x1450d4807: lea       rcx, [rip + 0x67a1d1a]
+  0x1450d480e: call      0x14155e850
+  0x1450d4813: mov       rax, qword ptr [rip + 0x67a1d0e]
+  0x1450d481a: add       rsp, 0x28
+  0x1450d481e: ret       
+slot_file=0xb1ee048 slot_va=0x14b1eec48 section=.data2 -> function=0x1450d46c0-0x1450d476e
+  0x1450d46c0: mov       r11, rsp
+  0x1450d46c3: sub       rsp, 0x78
+  0x1450d46c7: mov       rax, qword ptr [rip + 0x67a1e52]
+  0x1450d46ce: test      rax, rax
+  0x1450d46d1: jne       0x1450d4769
+  0x1450d46d7: lea       rax, [rip - 0x3f3b28e]
+  0x1450d46de: mov       qword ptr [r11 + 8], rax
+  0x1450d46e2: lea       r9, [rip + 0xa7]
+  0x1450d46e9: lea       rax, [rip - 0x3d256b0]
+  0x1450d46f0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d46f4: lea       r8, [rip + 0x67a1e25]
+  0x1450d46fb: lea       rax, [rip - 0x59c2]
+  0x1450d4702: mov       qword ptr [r11 - 0x18], rax
+  0x1450d4706: lea       rdx, [rip + 0x5100ded]
+  0x1450d470d: lea       rax, [r11 + 8]
+  0x1450d4711: mov       qword ptr [r11 - 0x20], rax
+  0x1450d4715: lea       rcx, [rip + 0x4d6a8e4]
+  0x1450d471c: lea       rax, [rip - 0x3f37fe3]
+  0x1450d4723: mov       qword ptr [r11 - 0x28], rax
+  0x1450d4727: lea       rax, [rip + 0x21a2]
+  0x1450d472e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d4732: lea       rax, [rip + 0x410f337]
+  0x1450d4739: mov       qword ptr [r11 - 0x38], rax
+  0x1450d473d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d4745: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d474d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d4755: mov       dword ptr [rsp + 0x20], 0x50
+  0x1450d475d: call      0x141433f00
+  0x1450d4762: mov       rax, qword ptr [rip + 0x67a1db7]
+  0x1450d4769: add       rsp, 0x78
+  0x1450d476d: ret       
+slot_file=0xb1ee068 slot_va=0x14b1eec68 section=.data2 -> function=0x144e60480-0x144e604af
+  0x144e60480: sub       rsp, 0x28
+  0x144e60484: mov       rax, qword ptr [rip + 0x69feddd]
+  0x144e6048b: test      rax, rax
+  0x144e6048e: jne       0x144e604aa
+  0x144e60490: lea       rdx, [rip + 0x4fe4de9]
+  0x144e60497: lea       rcx, [rip + 0x69fedca]
+  0x144e6049e: call      0x14155e250
+  0x144e604a3: mov       rax, qword ptr [rip + 0x69fedbe]
+  0x144e604aa: add       rsp, 0x28
+  0x144e604ae: ret       
+slot_file=0xb1ee0a0 slot_va=0x14b1eeca0 section=.data2 -> function=0x1450d4e60-0x1450d4e8f
+  0x1450d4e60: sub       rsp, 0x28
+  0x1450d4e64: mov       rax, qword ptr [rip + 0x67a161d]
+  0x1450d4e6b: test      rax, rax
+  0x1450d4e6e: jne       0x1450d4e8a
+  0x1450d4e70: lea       rdx, [rip + 0x5100e09]
+  0x1450d4e77: lea       rcx, [rip + 0x67a160a]
+  0x1450d4e7e: call      0x14155e850
+  0x1450d4e83: mov       rax, qword ptr [rip + 0x67a15fe]
+  0x1450d4e8a: add       rsp, 0x28
+  0x1450d4e8e: ret       
+slot_file=0xb1ee0e0 slot_va=0x14b1eece0 section=.data2 -> function=0x1450d4e60-0x1450d4e8f
+  0x1450d4e60: sub       rsp, 0x28
+  0x1450d4e64: mov       rax, qword ptr [rip + 0x67a161d]
+  0x1450d4e6b: test      rax, rax
+  0x1450d4e6e: jne       0x1450d4e8a
+  0x1450d4e70: lea       rdx, [rip + 0x5100e09]
+  0x1450d4e77: lea       rcx, [rip + 0x67a160a]
+  0x1450d4e7e: call      0x14155e850
+  0x1450d4e83: mov       rax, qword ptr [rip + 0x67a15fe]
+  0x1450d4e8a: add       rsp, 0x28
+  0x1450d4e8e: ret       
+slot_file=0xb1ee140 slot_va=0x14b1eed40 section=.data2 -> function=0x1450d4e60-0x1450d4e8f
+  0x1450d4e60: sub       rsp, 0x28
+  0x1450d4e64: mov       rax, qword ptr [rip + 0x67a161d]
+  0x1450d4e6b: test      rax, rax
+  0x1450d4e6e: jne       0x1450d4e8a
+  0x1450d4e70: lea       rdx, [rip + 0x5100e09]
+  0x1450d4e77: lea       rcx, [rip + 0x67a160a]
+  0x1450d4e7e: call      0x14155e850
+  0x1450d4e83: mov       rax, qword ptr [rip + 0x67a15fe]
+  0x1450d4e8a: add       rsp, 0x28
+  0x1450d4e8e: ret       
+slot_file=0xb1ee148 slot_va=0x14b1eed48 section=.data2 -> function=0x1450d4930-0x1450d49de
+  0x1450d4930: mov       r11, rsp
+  0x1450d4933: sub       rsp, 0x78
+  0x1450d4937: mov       rax, qword ptr [rip + 0x67a1b42]
+  0x1450d493e: test      rax, rax
+  0x1450d4941: jne       0x1450d49d9
+  0x1450d4947: lea       rax, [rip - 0x3f3b4fe]
+  0x1450d494e: mov       qword ptr [r11 + 8], rax
+  0x1450d4952: lea       r9, [rip + 0x477]
+  0x1450d4959: lea       rax, [rip - 0x3d25920]
+  0x1450d4960: mov       qword ptr [r11 - 0x10], rax
+  0x1450d4964: lea       r8, [rip + 0x67a1b15]
+  0x1450d496b: lea       rax, [rip - 0x266c12]
+  0x1450d4972: mov       qword ptr [r11 - 0x18], rax
+  0x1450d4976: lea       rdx, [rip + 0x510098d]
+  0x1450d497d: lea       rax, [r11 + 8]
+  0x1450d4981: mov       qword ptr [r11 - 0x20], rax
+  0x1450d4985: lea       rcx, [rip + 0x4d6a674]
+  0x1450d498c: lea       rax, [rip - 0x3f38253]
+  0x1450d4993: mov       qword ptr [r11 - 0x28], rax
+  0x1450d4997: lea       rax, [rip + 0x1fe2]
+  0x1450d499e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d49a2: lea       rax, [rip + 0x410f0c7]
+  0x1450d49a9: mov       qword ptr [r11 - 0x38], rax
+  0x1450d49ad: mov       qword ptr [r11 - 0x40], 0
+  0x1450d49b5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d49bd: mov       dword ptr [rsp + 0x28], 8
+  0x1450d49c5: mov       dword ptr [rsp + 0x20], 0x160
+  0x1450d49cd: call      0x141433f00
+  0x1450d49d2: mov       rax, qword ptr [rip + 0x67a1aa7]
+  0x1450d49d9: add       rsp, 0x78
+  0x1450d49dd: ret       
+slot_file=0xb1ee170 slot_va=0x14b1eed70 section=.data2 -> function=0x1450d4fe0-0x1450d508e
+  0x1450d4fe0: mov       r11, rsp
+  0x1450d4fe3: sub       rsp, 0x78
+  0x1450d4fe7: mov       rax, qword ptr [rip + 0x67a146a]
+  0x1450d4fee: test      rax, rax
+  0x1450d4ff1: jne       0x1450d5089
+  0x1450d4ff7: lea       rax, [rip - 0x3f3bbae]
+  0x1450d4ffe: mov       qword ptr [r11 + 8], rax
+  0x1450d5002: lea       r9, [rip - 0x3f3bbb9]
+  0x1450d5009: lea       rax, [rip - 0x3d25fd0]
+  0x1450d5010: mov       qword ptr [r11 - 0x10], rax
+  0x1450d5014: lea       r8, [rip + 0x67a143d]
+  0x1450d501b: lea       rax, [rip - 0x62e2]
+  0x1450d5022: mov       qword ptr [r11 - 0x18], rax
+  0x1450d5026: lea       rdx, [rip + 0x5100325]
+  0x1450d502d: lea       rax, [r11 + 8]
+  0x1450d5031: mov       qword ptr [r11 - 0x20], rax
+  0x1450d5035: lea       rcx, [rip + 0x4d69fc4]
+  0x1450d503c: lea       rax, [rip - 0x3f38903]
+  0x1450d5043: mov       qword ptr [r11 - 0x28], rax
+  0x1450d5047: lea       rax, [rip + 0x1942]
+  0x1450d504e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d5052: lea       rax, [rip + 0x410ea17]
+  0x1450d5059: mov       qword ptr [r11 - 0x38], rax
+  0x1450d505d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d5065: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d506d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d5075: mov       dword ptr [rsp + 0x20], 0x40
+  0x1450d507d: call      0x141433f00
+  0x1450d5082: mov       rax, qword ptr [rip + 0x67a13cf]
+  0x1450d5089: add       rsp, 0x78
+  0x1450d508d: ret       
+slot_file=0xb1ee198 slot_va=0x14b1eed98 section=.data2 -> function=0x1450d50c0-0x1450d516e
+  0x1450d50c0: mov       r11, rsp
+  0x1450d50c3: sub       rsp, 0x78
+  0x1450d50c7: mov       rax, qword ptr [rip + 0x67a1412]
+  0x1450d50ce: test      rax, rax
+  0x1450d50d1: jne       0x1450d5169
+  0x1450d50d7: lea       rax, [rip - 0x3f3bc8e]
+  0x1450d50de: mov       qword ptr [r11 + 8], rax
+  0x1450d50e2: lea       r9, [rip - 0x3f3bc99]
+  0x1450d50e9: lea       rax, [rip - 0x3d260b0]
+  0x1450d50f0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d50f4: lea       r8, [rip + 0x67a13e5]
+  0x1450d50fb: lea       rax, [rip - 0x2673a2]
+  0x1450d5102: mov       qword ptr [r11 - 0x18], rax
+  0x1450d5106: lea       rdx, [rip + 0x5100425]
+  0x1450d510d: lea       rax, [r11 + 8]
+  0x1450d5111: mov       qword ptr [r11 - 0x20], rax
+  0x1450d5115: lea       rcx, [rip + 0x4d69ee4]
+  0x1450d511c: lea       rax, [rip - 0x3f389e3]
+  0x1450d5123: mov       qword ptr [r11 - 0x28], rax
+  0x1450d5127: lea       rax, [rip + 0x18a2]
+  0x1450d512e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d5132: lea       rax, [rip + 0x410e937]
+  0x1450d5139: mov       qword ptr [r11 - 0x38], rax
+  0x1450d513d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d5145: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d514d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d5155: mov       dword ptr [rsp + 0x20], 0xe8
+  0x1450d515d: call      0x141433f00
+  0x1450d5162: mov       rax, qword ptr [rip + 0x67a1377]
+  0x1450d5169: add       rsp, 0x78
+  0x1450d516d: ret       
+slot_file=0xb1ee1c8 slot_va=0x14b1eedc8 section=.data2 -> function=0x1450d52e0-0x1450d538e
+  0x1450d52e0: mov       r11, rsp
+  0x1450d52e3: sub       rsp, 0x78
+  0x1450d52e7: mov       rax, qword ptr [rip + 0x67a11da]
+  0x1450d52ee: test      rax, rax
+  0x1450d52f1: jne       0x1450d5389
+  0x1450d52f7: lea       rax, [rip - 0x3f3beae]
+  0x1450d52fe: mov       qword ptr [r11 + 8], rax
+  0x1450d5302: lea       r9, [rip - 0x3f3beb9]
+  0x1450d5309: lea       rax, [rip - 0x3d262d0]
+  0x1450d5310: mov       qword ptr [r11 - 0x10], rax
+  0x1450d5314: lea       r8, [rip + 0x67a11ad]
+  0x1450d531b: lea       rax, [rip - 0x3f4612]
+  0x1450d5322: mov       qword ptr [r11 - 0x18], rax
+  0x1450d5326: lea       rdx, [rip + 0x510023d]
+  0x1450d532d: lea       rax, [r11 + 8]
+  0x1450d5331: mov       qword ptr [r11 - 0x20], rax
+  0x1450d5335: lea       rcx, [rip + 0x4d69cc4]
+  0x1450d533c: lea       rax, [rip - 0x3f38c03]
+  0x1450d5343: mov       qword ptr [r11 - 0x28], rax
+  0x1450d5347: lea       rax, [rip + 0x1692]
+  0x1450d534e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d5352: lea       rax, [rip + 0x410e717]
+  0x1450d5359: mov       qword ptr [r11 - 0x38], rax
+  0x1450d535d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d5365: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d536d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d5375: mov       dword ptr [rsp + 0x20], 0x48
+  0x1450d537d: call      0x141433f00
+  0x1450d5382: mov       rax, qword ptr [rip + 0x67a113f]
+  0x1450d5389: add       rsp, 0x78
+  0x1450d538d: ret       
+slot_file=0xb1ee1f0 slot_va=0x14b1eedf0 section=.data2 -> function=0x1450d5390-0x1450d543e
+  0x1450d5390: mov       r11, rsp
+  0x1450d5393: sub       rsp, 0x78
+  0x1450d5397: mov       rax, qword ptr [rip + 0x67a1112]
+  0x1450d539e: test      rax, rax
+  0x1450d53a1: jne       0x1450d5439
+  0x1450d53a7: lea       rax, [rip - 0x3f3bf5e]
+  0x1450d53ae: mov       qword ptr [r11 + 8], rax
+  0x1450d53b2: lea       r9, [rip - 0x3f3bf69]
+  0x1450d53b9: lea       rax, [rip - 0x3d26380]
+  0x1450d53c0: mov       qword ptr [r11 - 0x10], rax
+  0x1450d53c4: lea       r8, [rip + 0x67a10e5]
+  0x1450d53cb: lea       rax, [rip - 0x267672]
+  0x1450d53d2: mov       qword ptr [r11 - 0x18], rax
+  0x1450d53d6: lea       rdx, [rip + 0x51001cd]
+  0x1450d53dd: lea       rax, [r11 + 8]
+  0x1450d53e1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d53e5: lea       rcx, [rip + 0x4d69c14]
+  0x1450d53ec: lea       rax, [rip - 0x3f38cb3]
+  0x1450d53f3: mov       qword ptr [r11 - 0x28], rax
+  0x1450d53f7: lea       rax, [rip + 0x1622]
+  0x1450d53fe: mov       qword ptr [r11 - 0x30], rax
+  0x1450d5402: lea       rax, [rip + 0x410e667]
+  0x1450d5409: mov       qword ptr [r11 - 0x38], rax
+  0x1450d540d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d5415: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d541d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d5425: mov       dword ptr [rsp + 0x20], 0xc8
+  0x1450d542d: call      0x141433f00
+  0x1450d5432: mov       rax, qword ptr [rip + 0x67a1077]
+  0x1450d5439: add       rsp, 0x78
+  0x1450d543d: ret       
+slot_file=0xb1ee210 slot_va=0x14b1eee10 section=.data2 -> function=0x1450d6c00-0x1450d6c2f
+  0x1450d6c00: sub       rsp, 0x28
+  0x1450d6c04: mov       rax, qword ptr [rip + 0x67a029d]
+  0x1450d6c0b: test      rax, rax
+  0x1450d6c0e: jne       0x1450d6c2a
+  0x1450d6c10: lea       rdx, [rip + 0x510efd9]
+  0x1450d6c17: lea       rcx, [rip + 0x67a028a]
+  0x1450d6c1e: call      0x14155e850
+  0x1450d6c23: mov       rax, qword ptr [rip + 0x67a027e]
+  0x1450d6c2a: add       rsp, 0x28
+  0x1450d6c2e: ret       
+slot_file=0xb1ee250 slot_va=0x14b1eee50 section=.data2 -> function=0x1450d6c00-0x1450d6c2f
+  0x1450d6c00: sub       rsp, 0x28
+  0x1450d6c04: mov       rax, qword ptr [rip + 0x67a029d]
+  0x1450d6c0b: test      rax, rax
+  0x1450d6c0e: jne       0x1450d6c2a
+  0x1450d6c10: lea       rdx, [rip + 0x510efd9]
+  0x1450d6c17: lea       rcx, [rip + 0x67a028a]
+  0x1450d6c1e: call      0x14155e850
+  0x1450d6c23: mov       rax, qword ptr [rip + 0x67a027e]
+  0x1450d6c2a: add       rsp, 0x28
+  0x1450d6c2e: ret       
+slot_file=0xb1ee258 slot_va=0x14b1eee58 section=.data2 -> function=0x1450d6ad0-0x1450d6b7e
+  0x1450d6ad0: mov       r11, rsp
+  0x1450d6ad3: sub       rsp, 0x78
+  0x1450d6ad7: mov       rax, qword ptr [rip + 0x67a03c2]
+  0x1450d6ade: test      rax, rax
+  0x1450d6ae1: jne       0x1450d6b79
+  0x1450d6ae7: lea       rax, [rip - 0x3f3d69e]
+  0x1450d6aee: mov       qword ptr [r11 + 8], rax
+  0x1450d6af2: lea       r9, [rip + 0xa7]
+  0x1450d6af9: lea       rax, [rip - 0x3d27ac0]
+  0x1450d6b00: mov       qword ptr [r11 - 0x10], rax
+  0x1450d6b04: lea       r8, [rip + 0x67a0395]
+  0x1450d6b0b: lea       rax, [rip - 0x7dd2]
+  0x1450d6b12: mov       qword ptr [r11 - 0x18], rax
+  0x1450d6b16: lea       rdx, [rip + 0x510f615]
+  0x1450d6b1d: lea       rax, [r11 + 8]
+  0x1450d6b21: mov       qword ptr [r11 - 0x20], rax
+  0x1450d6b25: lea       rcx, [rip + 0x4d684d4]
+  0x1450d6b2c: lea       rax, [rip - 0x3f3a3f3]
+  0x1450d6b33: mov       qword ptr [r11 - 0x28], rax
+  0x1450d6b37: lea       rax, [rip + 0x5e42]
+  0x1450d6b3e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d6b42: lea       rax, [rip + 0x410cf27]
+  0x1450d6b49: mov       qword ptr [r11 - 0x38], rax
+  0x1450d6b4d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d6b55: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d6b5d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d6b65: mov       dword ptr [rsp + 0x20], 0xa8
+  0x1450d6b6d: call      0x141433f00
+  0x1450d6b72: mov       rax, qword ptr [rip + 0x67a0327]
+  0x1450d6b79: add       rsp, 0x78
+  0x1450d6b7d: ret       
+slot_file=0xb1ee280 slot_va=0x14b1eee80 section=.data2 -> function=0x1450d7120-0x1450d714f
+  0x1450d7120: sub       rsp, 0x28
+  0x1450d7124: mov       rax, qword ptr [rip + 0x679fd05]
+  0x1450d712b: test      rax, rax
+  0x1450d712e: jne       0x1450d714a
+  0x1450d7130: lea       rdx, [rip + 0x510d719]
+  0x1450d7137: lea       rcx, [rip + 0x679fcf2]
+  0x1450d713e: call      0x14155e850
+  0x1450d7143: mov       rax, qword ptr [rip + 0x679fce6]
+  0x1450d714a: add       rsp, 0x28
+  0x1450d714e: ret       
+slot_file=0xb1ee2c0 slot_va=0x14b1eeec0 section=.data2 -> function=0x1450d7120-0x1450d714f
+  0x1450d7120: sub       rsp, 0x28
+  0x1450d7124: mov       rax, qword ptr [rip + 0x679fd05]
+  0x1450d712b: test      rax, rax
+  0x1450d712e: jne       0x1450d714a
+  0x1450d7130: lea       rdx, [rip + 0x510d719]
+  0x1450d7137: lea       rcx, [rip + 0x679fcf2]
+  0x1450d713e: call      0x14155e850
+  0x1450d7143: mov       rax, qword ptr [rip + 0x679fce6]
+  0x1450d714a: add       rsp, 0x28
+  0x1450d714e: ret       
+slot_file=0xb1ee300 slot_va=0x14b1eef00 section=.data2 -> function=0x1450d7120-0x1450d714f
+  0x1450d7120: sub       rsp, 0x28
+  0x1450d7124: mov       rax, qword ptr [rip + 0x679fd05]
+  0x1450d712b: test      rax, rax
+  0x1450d712e: jne       0x1450d714a
+  0x1450d7130: lea       rdx, [rip + 0x510d719]
+  0x1450d7137: lea       rcx, [rip + 0x679fcf2]
+  0x1450d713e: call      0x14155e850
+  0x1450d7143: mov       rax, qword ptr [rip + 0x679fce6]
+  0x1450d714a: add       rsp, 0x28
+  0x1450d714e: ret       
+slot_file=0xb1ee340 slot_va=0x14b1eef40 section=.data2 -> function=0x1450d7120-0x1450d714f
+  0x1450d7120: sub       rsp, 0x28
+  0x1450d7124: mov       rax, qword ptr [rip + 0x679fd05]
+  0x1450d712b: test      rax, rax
+  0x1450d712e: jne       0x1450d714a
+  0x1450d7130: lea       rdx, [rip + 0x510d719]
+  0x1450d7137: lea       rcx, [rip + 0x679fcf2]
+  0x1450d713e: call      0x14155e850
+  0x1450d7143: mov       rax, qword ptr [rip + 0x679fce6]
+  0x1450d714a: add       rsp, 0x28
+  0x1450d714e: ret       
+slot_file=0xb1ee380 slot_va=0x14b1eef80 section=.data2 -> function=0x1450d6eb0-0x1450d6edf
+  0x1450d6eb0: sub       rsp, 0x28
+  0x1450d6eb4: mov       rax, qword ptr [rip + 0x679ffd5]
+  0x1450d6ebb: test      rax, rax
+  0x1450d6ebe: jne       0x1450d6eda
+  0x1450d6ec0: lea       rdx, [rip + 0x510eb59]
+  0x1450d6ec7: lea       rcx, [rip + 0x679ffc2]
+  0x1450d6ece: call      0x14155e850
+  0x1450d6ed3: mov       rax, qword ptr [rip + 0x679ffb6]
+  0x1450d6eda: add       rsp, 0x28
+  0x1450d6ede: ret       
+slot_file=0xb1ee388 slot_va=0x14b1eef88 section=.data2 -> function=0x1450d6d50-0x1450d6dfe
+  0x1450d6d50: mov       r11, rsp
+  0x1450d6d53: sub       rsp, 0x78
+  0x1450d6d57: mov       rax, qword ptr [rip + 0x67a012a]
+  0x1450d6d5e: test      rax, rax
+  0x1450d6d61: jne       0x1450d6df9
+  0x1450d6d67: lea       rax, [rip - 0x3f3d91e]
+  0x1450d6d6e: mov       qword ptr [r11 + 8], rax
+  0x1450d6d72: lea       r9, [rip - 0x3f3d929]
+  0x1450d6d79: lea       rax, [rip - 0x3d27d40]
+  0x1450d6d80: mov       qword ptr [r11 - 0x10], rax
+  0x1450d6d84: lea       r8, [rip + 0x67a00fd]
+  0x1450d6d8b: lea       rax, [rip - 0x269032]
+  0x1450d6d92: mov       qword ptr [r11 - 0x18], rax
+  0x1450d6d96: lea       rdx, [rip + 0x510f2ed]
+  0x1450d6d9d: lea       rax, [r11 + 8]
+  0x1450d6da1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d6da5: lea       rcx, [rip + 0x4d68254]
+  0x1450d6dac: lea       rax, [rip - 0x3f3a673]
+  0x1450d6db3: mov       qword ptr [r11 - 0x28], rax
+  0x1450d6db7: lea       rax, [rip + 0x5be2]
+  0x1450d6dbe: mov       qword ptr [r11 - 0x30], rax
+  0x1450d6dc2: lea       rax, [rip + 0x410cca7]
+  0x1450d6dc9: mov       qword ptr [r11 - 0x38], rax
+  0x1450d6dcd: mov       qword ptr [r11 - 0x40], 0
+  0x1450d6dd5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d6ddd: mov       dword ptr [rsp + 0x28], 8
+  0x1450d6de5: mov       dword ptr [rsp + 0x20], 0xd8
+  0x1450d6ded: call      0x141433f00
+  0x1450d6df2: mov       rax, qword ptr [rip + 0x67a008f]
+  0x1450d6df9: add       rsp, 0x78
+  0x1450d6dfd: ret       
+slot_file=0xb1ee3a8 slot_va=0x14b1eefa8 section=.data2 -> function=0x1450d7120-0x1450d714f
+  0x1450d7120: sub       rsp, 0x28
+  0x1450d7124: mov       rax, qword ptr [rip + 0x679fd05]
+  0x1450d712b: test      rax, rax
+  0x1450d712e: jne       0x1450d714a
+  0x1450d7130: lea       rdx, [rip + 0x510d719]
+  0x1450d7137: lea       rcx, [rip + 0x679fcf2]
+  0x1450d713e: call      0x14155e850
+  0x1450d7143: mov       rax, qword ptr [rip + 0x679fce6]
+  0x1450d714a: add       rsp, 0x28
+  0x1450d714e: ret       
+slot_file=0xb1ee3b0 slot_va=0x14b1eefb0 section=.data2 -> function=0x1450d6e00-0x1450d6eae
+  0x1450d6e00: mov       r11, rsp
+  0x1450d6e03: sub       rsp, 0x78
+  0x1450d6e07: mov       rax, qword ptr [rip + 0x67a001a]
+  0x1450d6e0e: test      rax, rax
+  0x1450d6e11: jne       0x1450d6ea9
+  0x1450d6e17: lea       rax, [rip - 0x22d86be]
+  0x1450d6e1e: mov       qword ptr [r11 + 8], rax
+  0x1450d6e22: lea       r9, [rip + 0x1f7]
+  0x1450d6e29: lea       rax, [rip - 0x3d27df0]
+  0x1450d6e30: mov       qword ptr [r11 - 0x10], rax
+  0x1450d6e34: lea       r8, [rip + 0x679ffed]
+  0x1450d6e3b: lea       rax, [rip - 0x424ee2]
+  0x1450d6e42: mov       qword ptr [r11 - 0x18], rax
+  0x1450d6e46: lea       rdx, [rip + 0x510f135]
+  0x1450d6e4d: lea       rax, [r11 + 8]
+  0x1450d6e51: mov       qword ptr [r11 - 0x20], rax
+  0x1450d6e55: lea       rcx, [rip + 0x4d681a4]
+  0x1450d6e5c: lea       rax, [rip - 0x3f3a723]
+  0x1450d6e63: mov       qword ptr [r11 - 0x28], rax
+  0x1450d6e67: lea       rax, [rip + 0x5b42]
+  0x1450d6e6e: mov       qword ptr [r11 - 0x30], rax
+  0x1450d6e72: lea       rax, [rip + 0x410cbf7]
+  0x1450d6e79: mov       qword ptr [r11 - 0x38], rax
+  0x1450d6e7d: mov       qword ptr [r11 - 0x40], 0
+  0x1450d6e85: mov       dword ptr [rsp + 0x30], 0x10000004
+  0x1450d6e8d: mov       dword ptr [rsp + 0x28], 8
+  0x1450d6e95: mov       dword ptr [rsp + 0x20], 0x2f0
+  0x1450d6e9d: call      0x141433f00
+  0x1450d6ea2: mov       rax, qword ptr [rip + 0x679ff7f]
+  0x1450d6ea9: add       rsp, 0x78
+  0x1450d6ead: ret       
+slot_file=0xb1ee3d8 slot_va=0x14b1eefd8 section=.data2 -> function=0x1450d7150-0x1450d71fe
+  0x1450d7150: mov       r11, rsp
+  0x1450d7153: sub       rsp, 0x78
+  0x1450d7157: mov       rax, qword ptr [rip + 0x679fd02]
+  0x1450d715e: test      rax, rax
+  0x1450d7161: jne       0x1450d71f9
+  0x1450d7167: lea       rax, [rip - 0x3f3dd1e]
+  0x1450d716e: mov       qword ptr [r11 + 8], rax
+  0x1450d7172: lea       r9, [rip - 0x3f3dd29]
+  0x1450d7179: lea       rax, [rip - 0x3d28140]
+  0x1450d7180: mov       qword ptr [r11 - 0x10], rax
+  0x1450d7184: lea       r8, [rip + 0x679fcd5]
+  0x1450d718b: lea       rax, [rip - 0x5c22]
+  0x1450d7192: mov       qword ptr [r11 - 0x18], rax
+  0x1450d7196: lea       rdx, [rip + 0x510ee25]
+  0x1450d719d: lea       rax, [r11 + 8]
+  0x1450d71a1: mov       qword ptr [r11 - 0x20], rax
+  0x1450d71a5: lea       rcx, [rip + 0x4d67e54]
+  0x1450d71ac: lea       rax, [rip - 0x3f3aa73]
+  0x1450d71b3: mov       qword ptr [r11 - 0x28], rax
+  0x1450d71b7: lea       rax, [rip + 0x5842]
+  0x1450d71be: mov       qword ptr [r11 - 0x30], rax
+  0x1450d71c2: lea       rax, [rip + 0x410c8a7]
+  0x1450d71c9: mov       qword ptr [r11 - 0x38], rax
+  0x1450d71cd: mov       qword ptr [r11 - 0x40], 0
+  0x1450d71d5: mov       dword ptr [rsp + 0x30], 0x10000000
+  0x1450d71dd: mov       dword ptr [rsp + 0x28], 8
+  0x1450d71e5: mov       dword ptr [rsp + 0x20], 0xc8
+  0x1450d71ed: call      0x141433f00
+  0x1450d71f2: mov       rax, qword ptr [rip + 0x679fc67]
+  0x1450d71f9: add       rsp, 0x78
+  0x1450d71fd: ret       
+slot_file=0xb1ee3f8 slot_va=0x14b1eeff8 section=.data2 -> function=0x1450d7360-0x1450d738f
+  0x1450d7360: sub       rsp, 0x28
+  0x1450d7364: mov       rax, qword ptr [rip + 0x679fae5]
+  0x1450d736b: test      rax, rax
+  0x1450d736e: jne       0x1450d738a
+  0x1450d7370: lea       rdx, [rip + 0x510e359]
+  0x1450d7377: lea       rcx, [rip + 0x679fad2]
+  0x1450d737e: call      0x14155e850
+  0x1450d7383: mov       rax, qword ptr [rip + 0x679fac6]
+  0x1450d738a: add       rsp, 0x28
+  0x1450d738e: ret       
