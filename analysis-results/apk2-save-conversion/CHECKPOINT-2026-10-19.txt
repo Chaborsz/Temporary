@@ -1,0 +1,72 @@
+APK2 SAVE CONVERSION — KEY RECOVERY CHECKPOINT
+Date: 2026-10-19 UTC
+
+CANONICAL PC EXE
+APK2-Win64-Shipping.exe
+size=422683584
+sha256=ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940
+
+CONFIRMED CRYPTO
+AES-256-ECB
+FAES256 encrypt VA=0x1412A18E0
+FAES256 decrypt VA=0x1412A1DC0
+UAPKSaveGameManager::EncryptKey FString offset=+0x30
+Native constructor initializes EncryptKey empty.
+The save crypto wrapper later copies the runtime FString into the AES helper.
+
+CONFIRMED PROPERTY FLAGS
+EncryptKey UHT PropertyFlags=0x0020080000010001
+Relevant flags: Edit, DisableEditOnInstance, Protected, NativeAccessSpecifierProtected.
+Config/GlobalConfig are not set. This is consistent with a class-default/CDO or cooked-asset supplied value rather than an INI-loaded native constructor value.
+
+STATIC RAW KEY SEARCH — CLOSED
+Workflow run=39181282125
+job=117834363277
+Canonical EXE verified before scan.
+Every 32-byte file window was tested as AES-256 against native-PC save first ciphertext block.
+size=422683584 tested=422683553 hits=0
+Conclusion: no raw AES-256 key exists as a contiguous 32-byte value in the canonical EXE.
+
+KNOWN-PAIR RAW KEY SEARCH — AES256 CLOSED
+Workflow run=39182036324
+job=117836645774
+Known pair:
+plain=0d000000426f6f6c50726f7065727479
+cipher=b3319b161c890fd767e933d080743ac6
+size=422683584 tested=422683553 hits=0
+Conclusion: no contiguous raw AES-256 key in the canonical EXE matches the confirmed pair.
+
+REJECTED KEY
+3bfa9cc97da10598521b342961df8f5f68c7388fa117345eeb516eaa837bb4d6
+Rejected by AES validation; does not produce the expected plaintext.
+
+RUNTIME PROBES — AVAILABLE
+Permanent read-only release: apk2-save-probe-v1
+APK2SaveProbe.exe sha256=30d5ef91d57fa1ab2c680f55b46c0ce5e9c12bfa935f8bcff55685cb12a82c44
+APK2FStringKeyProbe.exe sha256=dbadf9ab2df17b54f6722a88163974583feb116c8530bb0d6e6efe3e87bc24e7
+
+Runtime proxy v5 Actions artifact is currently valid:
+run=39182440879
+artifact id=12156941671
+artifact name=APK2-SaveCrypto-RuntimeProbe-v5
+artifact sha256=74d55cc40c9a6bf8be9bd7c4ab528fb0c861bbdfaf59c96528c6052c361536de
+expires=2026-10-26T00:48:56Z
+v5 writes APK2_AES_runtime_key.txt on a validated runtime key hit.
+
+FAILED/NOT TO REPEAT
+- Do not repeat full EXE raw AES-256 scans.
+- Do not retry rejected false key.
+- Direct invasive FAES hook/probe-v6 repository write was rejected; continue with read-only/runtime routes.
+
+CURRENT BLOCKER
+Actual AES-256 key has not yet been captured. No runtime probe output is present in the connected Library/repository.
+
+NEXT REQUIRED EVIDENCE
+Run an existing read-only/runtime probe while the PC game has loaded the native PC save, then preserve the generated key/log output.
+Preferred non-invasive order:
+1) APK2SaveProbe.exe
+2) APK2FStringKeyProbe.exe if needed
+Alternative: existing RuntimeProbe-v5 XINPUT proxy, which is diagnostic and currently available as an Actions artifact.
+
+AFTER KEY RECOVERY
+Decrypt native PC DefaultData.sav -> validate GVAS/structure -> compare with Switch save -> transplant/convert compatible payload -> re-encrypt with confirmed key -> validate hashes/structure and in-game load.
