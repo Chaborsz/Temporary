@@ -1,0 +1,80 @@
+name: Test ChatGPT Portable 0.1.32 diagnostic
+
+on:
+  push:
+    paths:
+      - 'chatgpt-portable-0.1.32/**'
+      - '.github/workflows/test-chatgpt-portable-0.1.32-diagnostic.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download exact Electron runtime
+        shell: pwsh
+        run: |
+          $v='46.0.0-nightly.20261016'
+          $u="https://github.com/electron/nightlies/releases/download/v$v/electron-v$v-win32-x64.zip"
+          Invoke-WebRequest $u -OutFile electron.zip
+          if((Get-FileHash electron.zip -Algorithm SHA256).Hash.ToLowerInvariant() -ne '1d986c61270c82d205bb658153dff2f7850bd4ad702ef335e367dc0a7359f4a8'){throw 'zip sha'}
+          Expand-Archive electron.zip runtime
+          if((Get-FileHash runtime/electron.exe -Algorithm SHA256).Hash.ToLowerInvariant() -ne '5008929104e3514ecfe5975ea6baa31b68607e898e0b0236733fa388dfc6d61b'){throw 'exe sha'}
+
+      - name: Prepare payload and runtime inputs
+        shell: pwsh
+        run: |
+          $payload='chatgpt-portable-0.1.32'
+          New-Item -ItemType Directory -Force "$payload/App" | Out-Null
+          Set-Content -LiteralPath "$payload/App/main.js" -Encoding utf8 -Value "const APP_VERSION = '0.1.32';"
+          Set-Content -LiteralPath "$payload/App/preload.js" -Encoding utf8 -Value "console.log('preload-native-chromium-drop-v10-postdispatch-diagnostic-installed');"
+          Set-Content -LiteralPath "$payload/App/package.json" -Encoding utf8 -Value '{"version":"0.1.32"}'
+          foreach($n in @('orig','p125','p131')){
+            New-Item -ItemType Directory -Force "test/$n/resources/app" | Out-Null
+            Copy-Item runtime/electron.exe "test/$n/ChatGPT Portable.exe"
+          }
+          function Put([byte[]]$b,[Int64]$o,[byte[]]$v){[Array]::Copy($v,0,$b,$o,$v.Length)}
+          $b=[IO.File]::ReadAllBytes('test/p125/ChatGPT Portable.exe')
+          Put $b 0xA38EB2F ([byte[]](0xB1,0x01));[IO.File]::WriteAllBytes('test/p125/ChatGPT Portable.exe',$b)
+          if((Get-FileHash 'test/p125/ChatGPT Portable.exe' -Algorithm SHA256).Hash.ToLowerInvariant() -ne '5ef1227723cacd884b433e34589c2b63fd70bb30753cad18c0a60344dde6aa88'){throw 'p125 sha'}
+          $b=[IO.File]::ReadAllBytes('test/p131/ChatGPT Portable.exe')
+          Put $b 0xA38EB2F ([byte[]](0xB1,0x01))
+          Put $b 0xA38EE74 ([byte[]](0xE9,0x97,0xF8,0xFF,0xFF))
+          Put $b 0xA38E710 ([byte[]](0x89,0xC6,0x83,0xFE,0x01,0x83,0xD6,0x00,0x48,0x85,0xFF,0xE9,0x59,0x07,0x00,0x00))
+          [IO.File]::WriteAllBytes('test/p131/ChatGPT Portable.exe',$b)
+          if((Get-FileHash 'test/p131/ChatGPT Portable.exe' -Algorithm SHA256).Hash.ToLowerInvariant() -ne 'ca221531d2dd8a62d632f08a8cc840144c8957da6e1c0c878c0390c75b8f0137'){throw 'p131 sha'}
+
+      - name: Parse exact PowerShell patch
+        shell: pwsh
+        run: |
+          $e=$null
+          [void][System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path 'chatgpt-portable-0.1.32/PATCH-TO-0.1.32.ps1'),[ref]$null,[ref]$e)
+          if($e.Count){$e|Format-List|Out-String|Write-Host;throw 'parser errors'}
+
+      - name: Normalize original 0.1.25 and current 0.1.31
+        shell: pwsh
+        run: |
+          foreach($n in @('orig','p125','p131')){
+            & ./chatgpt-portable-0.1.32/PATCH-TO-0.1.32.ps1 -PortablePath (Resolve-Path "test/$n")
+            $p="test/$n/ChatGPT Portable.exe"
+            $sha=(Get-FileHash $p -Algorithm SHA256).Hash.ToLowerInvariant()
+            if($sha -ne '5ef1227723cacd884b433e34589c2b63fd70bb30753cad18c0a60344dde6aa88'){throw "$n final $sha"}
+            $b=[IO.File]::ReadAllBytes($p)
+            $enter=(($b[0xA38EB2F..0xA38EB30]|%{$_.ToString('X2')}) -join ' ');if($enter -ne 'B1 01'){throw "$n enter $enter"}
+            $over=(($b[0xA38EE74..0xA38EE78]|%{$_.ToString('X2')}) -join ' ');if($over -ne '89 C6 48 85 FF'){throw "$n over $over"}
+            $state=(($b[0x6F800A8..0x6F800AC]|%{$_.ToString('X2')}) -join ' ');if($state -ne '4D 85 E4 74 15'){throw "$n state $state"}
+          }
+
+      - name: Verify idempotence
+        shell: pwsh
+        run: |
+          foreach($n in @('orig','p125','p131')){
+            & ./chatgpt-portable-0.1.32/PATCH-TO-0.1.32.ps1 -PortablePath (Resolve-Path "test/$n")
+            if((Get-FileHash "test/$n/ChatGPT Portable.exe" -Algorithm SHA256).Hash.ToLowerInvariant() -ne '5ef1227723cacd884b433e34589c2b63fd70bb30753cad18c0a60344dde6aa88'){throw "$n idempotence"}
+          }
