@@ -1,0 +1,158 @@
+name: APK2 SaveGameManager constructor trace
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apk2-manager-constructor-trace.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch executable and dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' -o /tmp/APK2.exe
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  /tmp/APK2.exe' | sha256sum -c -
+          python3 -m pip -q install pefile capstone
+          mkdir -p /tmp/out
+      - name: Resolve manager callbacks and constants
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' > /tmp/out/apk2-manager-constructor-trace.txt
+          import pefile,struct,bisect
+          from pathlib import Path
+          from capstone import Cs,CS_ARCH_X86,CS_MODE_64
+          from capstone.x86 import X86_OP_IMM,X86_OP_MEM,X86_REG_RIP
+          fn='/tmp/APK2.exe'; b=Path(fn).read_bytes(); pe=pefile.PE(fn,fast_load=False); base=pe.OPTIONAL_HEADER.ImageBase
+          secs=[]
+          for s in pe.sections:
+            secs.append((s.VirtualAddress,max(s.Misc_VirtualSize,s.SizeOfRawData),s.PointerToRawData,s.SizeOfRawData,s.Name.rstrip(b'\0').decode('ascii','replace'),s.Characteristics))
+          def va2off(va):
+            r=va-base
+            for sr,vs,raw,rs,n,ch in secs:
+              if sr<=r<sr+rs:return raw+(r-sr)
+            return None
+          def off2va(off):
+            for sr,vs,raw,rs,n,ch in secs:
+              if raw<=off<raw+rs:return base+sr+(off-raw),n,ch
+            return None,None,0
+          def secinfo(va):
+            r=va-base
+            for sr,vs,raw,rs,n,ch in secs:
+              if sr<=r<sr+vs:return n,ch
+            return None,0
+          funcs=[]
+          for e in getattr(pe,'DIRECTORY_ENTRY_EXCEPTION',[]):
+            st=base+e.struct.BeginAddress; en=base+e.struct.EndAddress
+            if st<en:funcs.append((st,en,e.struct.UnwindData))
+          funcs.sort(); starts=[f[0] for f in funcs]
+          def containing(va):
+            i=bisect.bisect_right(starts,va)-1
+            return funcs[i] if i>=0 and funcs[i][0]<=va<funcs[i][1] else None
+          md=Cs(CS_ARCH_X86,CS_MODE_64); md.detail=True
+
+          targets=[0x141199450,0x1413af040,0x141109430,0x14119c740,0x1450d58c0,0x1491e3a70,0x149e3f000,0x1450ce860,0x1450ceb20,0x1450ceb50]
+          print('=== TARGET SUMMARY ===')
+          for va in targets:
+            sn,ch=secinfo(va); f=containing(va); off=va2off(va)
+            print(f'0x{va:x} section={sn} exec={bool(ch&0x20000000)} file='+(f'0x{off:x}' if off is not None else 'NA')+' pdata='+(f'0x{f[0]:x}-0x{f[1]:x}' if f else 'NONE'))
+
+          print('\n=== TARGET DISASSEMBLY / DATA ===')
+          for va in targets:
+            sn,ch=secinfo(va); off=va2off(va)
+            if off is None:continue
+            print(f'\nTARGET 0x{va:x} section={sn}')
+            if ch & 0x20000000:
+              f=containing(va); st=f[0] if f else max(base,va-0x40); en=f[1] if f else va+0x140
+              so=va2off(st)
+              for ins in md.disasm(b[so:so+min(en-st,0x3000)],st):
+                extra=[]
+                for op in ins.operands:
+                  if op.type==X86_OP_MEM and op.mem.base==X86_REG_RIP:
+                    dst=ins.address+ins.size+op.mem.disp
+                    dsn,_=secinfo(dst); do=va2off(dst)
+                    val=''
+                    if do is not None:
+                      raw=b[do:do+64]
+                      a=''.join(chr(x) if 32<=x<127 else '.' for x in raw[:48])
+                      try:
+                        w=raw[:64].decode('utf-16le').split('\x00')[0]
+                      except:w=''
+                      val=f' ascii={a!r}' + (f' utf16={w!r}' if w and all(ord(c)>=32 for c in w) else '')
+                    extra.append(f'RIP->0x{dst:x}({dsn}){val}')
+                print(f'0x{ins.address:x}: {ins.mnemonic} {ins.op_str}' + (' ; '+' | '.join(extra) if extra else ''))
+            else:
+              raw=b[off:off+0x100]
+              print('HEX',raw.hex())
+              print('ASCII',''.join(chr(x) if 32<=x<127 else '.' for x in raw))
+              try: print('UTF16',raw.decode('utf-16le',errors='replace').split('\x00')[0])
+              except:pass
+
+          # Decode constant assembled by 0x1413dd410.
+          print('\n=== 27-WCHAR CONSTANT AT 0x14920e100 ===')
+          off=va2off(0x14920e100)
+          raw=b[off:off+0x80]
+          print('HEX54',raw[:54].hex())
+          print('UTF16_27',raw[:54].decode('utf-16le',errors='replace'))
+          print('ASCII128',''.join(chr(x) if 32<=x<127 else '.' for x in raw))
+
+          # Search direct RIP-relative references to candidate callbacks/data in executable sections.
+          print('\n=== RIP/DIRECT CALL REFERENCES TO TARGETS ===')
+          tset=set(targets)
+          hits=[]
+          for sr,vs,raw,rs,n,ch in secs:
+            if not (ch&0x20000000):continue
+            secva=base+sr; data=b[raw:raw+rs]
+            # E8 direct calls to executable targets
+            p=0
+            while True:
+              i=data.find(b'\xe8',p)
+              if i<0:break
+              if i+5<=len(data):
+                rel=struct.unpack_from('<i',data,i+1)[0]; src=secva+i; dst=src+5+rel
+                if dst in tset:hits.append((src,dst,'CALL',n))
+              p=i+1
+            # common RIP LEA/MOV forms
+            for i in range(max(0,len(data)-7)):
+              if data[i] in range(0x40,0x50) and data[i+1] in (0x8d,0x8b) and (data[i+2]&0xc7)==0x05:
+                disp=struct.unpack_from('<i',data,i+3)[0]; src=secva+i; dst=src+7+disp
+                if dst in tset:hits.append((src,dst,'RIP',n))
+          for h in sorted(set(hits)):
+            cf=containing(h[0]); print(f'{h[2]} src=0x{h[0]:x} dst=0x{h[1]:x} caller='+(f'0x{cf[0]:x}-0x{cf[1]:x}' if cf else 'NONE'))
+
+          # Candidate writes/reads with displacement +0x30 in small neighborhood of direct callers to manager class helpers.
+          print('\n=== FUNCTIONS REFERENCING SAVE MANAGER STATIC/REGISTRATION ===')
+          related=set()
+          for src,dst,kind,n in hits:
+            if dst in (0x1450ce860,0x1450ceb20,0x1491e3a70):
+              cf=containing(src)
+              if cf:related.add(cf[0])
+          for st in sorted(related):
+            f=containing(st); off=va2off(f[0]); print(f'FUNCTION 0x{f[0]:x}-0x{f[1]:x}')
+            for ins in md.disasm(b[off:off+(f[1]-f[0])],f[0]): print(f'  0x{ins.address:x}: {ins.mnemonic} {ins.op_str}')
+          PY
+          wc -l -c /tmp/out/apk2-manager-constructor-trace.txt
+      - name: Publish result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin apk2-analysis-output
+          git checkout -B apk2-analysis-output origin/apk2-analysis-output
+          mkdir -p analysis
+          cp /tmp/out/apk2-manager-constructor-trace.txt analysis/
+          git add analysis/apk2-manager-constructor-trace.txt
+          git commit -m 'Trace APK2 SaveGameManager constructor callbacks' || true
+          git push origin HEAD:apk2-analysis-output
