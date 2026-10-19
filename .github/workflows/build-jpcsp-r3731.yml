@@ -1,0 +1,113 @@
+name: Build JPCSP r3731 Windows
+
+on:
+  push:
+    branches:
+      - jpcsp-r3731-build
+    paths:
+      - .github/workflows/build-jpcsp-r3731.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact JPCSP r3731
+        uses: actions/checkout@v4
+        with:
+          repository: jpcsp/jpcsp
+          ref: 23acc4371a1869f8113a30e710c3fb86c8264ebd
+          path: jpcsp
+          fetch-depth: 1
+
+      - name: Verify source revision
+        shell: bash
+        working-directory: jpcsp
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "23acc4371a1869f8113a30e710c3fb86c8264ebd"
+          git show -s --format='commit=%H%ncommit_date=%cI%nsubject=%s' HEAD | tee ../REVISION.txt
+          grep -R -F 'PGDfile.raw.decrypted' src/jpcsp | head -10 || true
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Install Ant and 7-Zip
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y ant p7zip-full
+          java -version
+          javac -version
+          ant -version
+
+      - name: Compile exact r3731
+        shell: bash
+        working-directory: jpcsp
+        run: |
+          set -euo pipefail
+          ant -f build-auto.xml clean jar 2>&1 | tee ../ant-build.log
+          test -s bin/jpcsp.jar
+          jar tf bin/jpcsp.jar >/tmp/jpcsp-jar-list.txt
+          grep -q '^jpcsp/MainGUI.class$' /tmp/jpcsp-jar-list.txt
+          unzip -p bin/jpcsp.jar META-INF/MANIFEST.MF | tee ../MANIFEST.MF
+          unzip -p bin/jpcsp.jar META-INF/MANIFEST.MF | grep -F 'Main-Class: jpcsp.MainGUI'
+
+      - name: Package Windows x64 and x86
+        shell: bash
+        working-directory: jpcsp
+        run: |
+          set -euo pipefail
+          ant -f build-auto.xml -Dplatform.name=windows-amd64 dist-generic 2>&1 | tee ../ant-dist-amd64.log
+          ant -f build-auto.xml -Dplatform.name=windows-x86 dist-generic 2>&1 | tee ../ant-dist-x86.log
+
+          mv dist/jpcsp-windows-amd64 dist/jpcsp-r3731-windows-amd64
+          mv dist/jpcsp-windows-x86 dist/jpcsp-r3731-windows-x86
+
+          for d in dist/jpcsp-r3731-windows-amd64 dist/jpcsp-r3731-windows-x86; do
+            printf '%s\n' \
+              'JPCSP r3731 reconstructed build' \
+              'Upstream: https://github.com/jpcsp/jpcsp' \
+              'Exact commit: 23acc4371a1869f8113a30e710c3fb86c8264ebd' \
+              'Upstream commit timestamp: 2015-03-20T18:05:10Z' \
+              'Build system: upstream build-auto.xml, Apache Ant, Temurin JDK 8.' \
+              'Source code was not modified.' > "$d/BUILDINFO.txt"
+          done
+
+          (cd dist && 7z a -t7z -mx=9 jpcsp-r3731-windows-amd64.7z jpcsp-r3731-windows-amd64 >/tmp/7z-amd64.log)
+          (cd dist && 7z a -t7z -mx=9 jpcsp-r3731-windows-x86.7z jpcsp-r3731-windows-x86 >/tmp/7z-x86.log)
+          sha256sum dist/jpcsp-r3731-windows-amd64.7z dist/jpcsp-r3731-windows-x86.7z bin/jpcsp.jar | tee ../SHA256SUMS.txt
+          7z t dist/jpcsp-r3731-windows-amd64.7z
+          7z t dist/jpcsp-r3731-windows-x86.7z
+
+      - name: Preserve validation metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p output
+          cp jpcsp/dist/jpcsp-r3731-windows-amd64.7z output/
+          cp jpcsp/dist/jpcsp-r3731-windows-x86.7z output/
+          cp REVISION.txt MANIFEST.MF SHA256SUMS.txt ant-build.log ant-dist-amd64.log ant-dist-x86.log output/
+          printf '%s\n' \
+            'BUILD=PASS' \
+            'REVISION=23acc4371a1869f8113a30e710c3fb86c8264ebd' \
+            'REVISION_LABEL=r3731' \
+            'WINDOWS_AMD64_PACKAGE=PASS' \
+            'WINDOWS_X86_PACKAGE=PASS' \
+            'ARCHIVE_TEST=PASS' > output/VALIDATION.txt
+
+      - name: Upload JPCSP r3731 Windows packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: jpcsp-r3731-windows
+          path: output/
+          compression-level: 0
+          retention-days: 30
