@@ -1,0 +1,7 @@
+SaveGameManagerClass file=0xa07c670 va=0x14a07d270 sec=.shared
+SaveGameManager file=0xa07c660 va=0x14a07d260 sec=.shared
+SaveGameManager file=0xa07c670 va=0x14a07d270 sec=.shared
+OnEndLoadSaveData file=0xa07c630 va=0x14a07d230 sec=.shared
+OnEndSaveSaveData file=0xa07d5b8 va=0x14a07e1b8 sec=.shared
+SaveDataVarHandler file=0xa07d550 va=0x14a07e150 sec=.shared
+SaveDataSetting file=0xa017c18 va=0x14a018818 sec=.shared
