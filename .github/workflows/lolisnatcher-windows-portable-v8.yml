@@ -23,6 +23,7 @@ on:
       - ".github/scripts/lolisnatcher_v7_native_inappbrowser_patch.py"
       - ".github/scripts/lolisnatcher_v7_import_fix.py"
       - ".github/scripts/lolisnatcher_v8_compressed_visual_cache_patch.py"
+      - ".github/scripts/lolisnatcher_v8_cache_path_label_fix.py"
       - ".github/scripts/lolisnatcher_sync_esmx.py"
 
 permissions:
@@ -84,6 +85,7 @@ jobs:
           python ..\builder\.github\scripts\lolisnatcher_v7_native_inappbrowser_patch.py
           python ..\builder\.github\scripts\lolisnatcher_v7_import_fix.py
           python ..\builder\.github\scripts\lolisnatcher_v8_compressed_visual_cache_patch.py
+          python ..\builder\.github\scripts\lolisnatcher_v8_cache_path_label_fix.py
           'PATCH_CHAIN_V8=PASS'
 
       - name: Set up Flutter
@@ -166,7 +168,7 @@ jobs:
           LoliSnatcher TRUE PORTABLE Windows x64 - v8
 
           v8 cache/storage changes:
-          - Thumbnail/sample cache is packed in Data\cache\visual_cache.db.
+          - Thumbnail/sample cache is packed in Data\LoliSnatcher\cache\visual_cache.db.
           - Payloads use adaptive zlib compression and are kept exact when recompression would inflate them.
           - Legacy loose thumbnails/samples migrate lazily into the DB.
           - Full-resolution images shown in the viewer are memory-only and are not persisted to media cache.
@@ -185,7 +187,7 @@ jobs:
             "PORTABLE_MODE=TRUE"
             "PATCH_LEVEL=TRUE_PORTABLE_V8_COMPRESSED_VISUAL_CACHE"
             "WINDOWS_LOGIN_BROWSER=NATIVE_INAPPBROWSER"
-            "VISUAL_CACHE=.\Data\cache\visual_cache.db"
+            "VISUAL_CACHE=.\Data\LoliSnatcher\cache\visual_cache.db"
             "FULLRES_VIEWER_CACHE=MEMORY_ONLY"
             "DOWNLOAD_FORMATS=ORIGINAL,JPEG,PNG"
             "WEBVIEW_DIAGNOSTIC=.\Data\webview-diagnostic.txt"
@@ -221,7 +223,7 @@ jobs:
           $notes = @"
           Unofficial TRUE PORTABLE Windows x64 build - v8.
 
-          v8 packs thumbnail/sample cache into Data\cache\visual_cache.db with adaptive compression, keeps full-resolution viewer images memory-only, and adds Original/JPEG/PNG download output selection on Windows. v7 native WebView2 login/captcha fixes, es-MX live sync and PR #2838 are retained.
+          v8 packs thumbnail/sample cache into Data\LoliSnatcher\cache\visual_cache.db with adaptive compression, keeps full-resolution viewer images memory-only, and adds Original/JPEG/PNG download output selection on Windows. v7 native WebView2 login/captcha fixes, es-MX live sync and PR #2838 are retained.
 
           Upstream commit: $env:SOURCE_SHA
           Flutter: $env:FLUTTER_VERSION
