@@ -1,0 +1,25 @@
+name: Parse ChatGPT Portable 0.1.30 build script
+
+on:
+  push:
+    paths:
+      - 'chatgpt-portable-0.1.30/BUILD-PORTABLE.ps1'
+      - '.github/workflows/parse-chatgpt-portable-0.1.30-build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  parse:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse exact BUILD-PORTABLE.ps1
+        shell: pwsh
+        run: |
+          $path='chatgpt-portable-0.1.30/BUILD-PORTABLE.ps1'
+          $errors=$null
+          [void][System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path $path),[ref]$null,[ref]$errors)
+          if($errors.Count){$errors|Format-List|Out-String|Write-Host;throw 'Parser errors'}
+          Write-Host '[OK] BUILD-PORTABLE.ps1 parser PASS'
