@@ -1,0 +1,21 @@
+name: Unlock stale LoliSnatcher v8 run
+
+on:
+  push:
+    paths:
+      - ".github/workflows/lolisnatcher-v8-unlock.yml"
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  unlock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel stale completed-job run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run cancel 39279690522 --repo "$GITHUB_REPOSITORY" || true
+          gh run view 39279690522 --repo "$GITHUB_REPOSITORY" --json status,conclusion,url
