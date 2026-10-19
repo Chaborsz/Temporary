@@ -31,7 +31,8 @@ new_headers = '''  bool get _hasApiCredentials =>
       booru.userID?.trim().isNotEmpty == true &&
       booru.apiKey?.trim().isNotEmpty == true;
 
-  String get _basicAuthorization => 'Basic ${base64Encode(utf8.encode('${booru.userID!.trim()}:${booru.apiKey!.trim()}'))}';
+  String get _basicAuthorization =>
+      'Basic ${base64Encode(utf8.encode("${booru.userID!.trim()}:${booru.apiKey!.trim()}"))}';
 
   @override
   Map<String, String> getHeaders() {
@@ -68,7 +69,7 @@ new_fetch = '''    final Map<String, String> safeHeadersForLog = {
       if (headers.containsKey('Cookie')) 'Cookie': '<present>',
     };
     Logger.Inst().log(
-      'fetching: $uri with headers: $safeHeadersForLog auth=${_hasApiCredentials ? 'basic' : cookies.isNotEmpty ? 'session-cookie' : 'anonymous'}',
+      "fetching: $uri with headers: $safeHeadersForLog auth=${_hasApiCredentials ? 'basic' : cookies.isNotEmpty ? 'session-cookie' : 'anonymous'}",
       className,
       'Search',
       LogTypes.booruHandlerSearchURL,
@@ -160,6 +161,7 @@ checks = {
     'api key hidden from normal URL': "!_hasApiCredentials && booru.apiKey?.isNotEmpty" in handler_text,
     'generic UI instructions': '<b>Danbooru authentication</b>' in editor_text,
     'valid info log type': 'LogTypes.booruHandlerInfo' in handler_text,
+    'safe Basic auth quoting': 'utf8.encode("${booru.userID!.trim()}:${booru.apiKey!.trim()}")' in handler_text,
 }
 for label, ok in checks.items():
     if not ok:
