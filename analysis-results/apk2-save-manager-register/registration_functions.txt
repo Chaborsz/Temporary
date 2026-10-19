@@ -1,0 +1,141 @@
+
+===== FUNCTION 0x1450ce860-0x1450ce90e seed=0x1450ce860 size=0xae =====
+0x1450ce860: mov       r11, rsp
+0x1450ce863: sub       rsp, 0x78
+0x1450ce867: mov       rax, qword ptr [rip + 0x67a812a]  ; RIP->0x14b876998(.data2)
+0x1450ce86e: test      rax, rax
+0x1450ce871: jne       0x1450ce909
+0x1450ce877: lea       rax, [rip - 0x3f3542e]  ; RIP->0x141199450(.sdata)
+0x1450ce87e: mov       qword ptr [r11 + 8], rax
+0x1450ce882: lea       r9, [rip - 0x3f35439]  ; RIP->0x141199450(.sdata)
+0x1450ce889: lea       rax, [rip - 0x3d1f850]  ; RIP->0x1413af040(.sdata)
+0x1450ce890: mov       qword ptr [r11 - 0x10], rax
+0x1450ce894: lea       r8, [rip + 0x67a80fd]  ; RIP->0x14b876998(.data2)
+0x1450ce89b: lea       rax, [rip - 0x3fc472]  ; RIP->0x144cd2430(.sdata)
+0x1450ce8a2: mov       qword ptr [r11 - 0x18], rax
+0x1450ce8a6: lea       rdx, [rip + 0x5105d25]  ; RIP->0x14a1d45d2(.shared) WIDE='APKSaveGameManager'
+0x1450ce8ad: lea       rax, [r11 + 8]
+0x1450ce8b1: mov       qword ptr [r11 - 0x20], rax
+0x1450ce8b5: lea       rcx, [rip + 0x4d70744]  ; RIP->0x149e3f000(.shared) WIDE='/Script/APK2'
+0x1450ce8bc: lea       rax, [rip - 0x3f32183]  ; RIP->0x14119c740(.sdata)
+0x1450ce8c3: mov       qword ptr [r11 - 0x28], rax
+0x1450ce8c7: lea       rax, [rip + 0x6ff2]  ; RIP->0x1450d58c0(.sdata)
+0x1450ce8ce: mov       qword ptr [r11 - 0x30], rax
+0x1450ce8d2: lea       rax, [rip + 0x4115197]  ; RIP->0x1491e3a70(.shared) WIDE='Engine'
+0x1450ce8d9: mov       qword ptr [r11 - 0x38], rax
+0x1450ce8dd: mov       qword ptr [r11 - 0x40], 0
+0x1450ce8e5: mov       dword ptr [rsp + 0x30], 0x10000000
+0x1450ce8ed: mov       dword ptr [rsp + 0x28], 8
+0x1450ce8f5: mov       dword ptr [rsp + 0x20], 0x58
+0x1450ce8fd: call      0x141433f00  ; CALL->0x141433f00 func=(5389893376, 5389894192)
+0x1450ce902: mov       rax, qword ptr [rip + 0x67a808f]  ; RIP->0x14b876998(.data2)
+0x1450ce909: add       rsp, 0x78
+0x1450ce90d: ret       
+
+===== FUNCTION 0x1450cea10-0x1450cea24 seed=0x1450cea10 size=0x14 =====
+0x1450cea10: sub       rsp, 0x58
+0x1450cea14: mov       rax, qword ptr [rip + 0x67a7fcd]  ; RIP->0x14b8769e8(.data2)
+0x1450cea1b: test      rax, rax
+0x1450cea1e: jne       0x1450ceb06
+
+===== FUNCTION 0x1450ceb20-0x1450ceb4f seed=0x1450ceb20 size=0x2f =====
+0x1450ceb20: sub       rsp, 0x28
+0x1450ceb24: mov       rax, qword ptr [rip + 0x67a7e75]  ; RIP->0x14b8769a0(.data2)
+0x1450ceb2b: test      rax, rax
+0x1450ceb2e: jne       0x1450ceb4a
+0x1450ceb30: lea       rdx, [rip + 0x51102a9]  ; RIP->0x14a1dede0(.shared)
+0x1450ceb37: lea       rcx, [rip + 0x67a7e62]  ; RIP->0x14b8769a0(.data2)
+0x1450ceb3e: call      0x14155e850  ; CALL->0x14155e850 func=(5391116368, 5391116438)
+0x1450ceb43: mov       rax, qword ptr [rip + 0x67a7e56]  ; RIP->0x14b8769a0(.data2)
+0x1450ceb4a: add       rsp, 0x28
+0x1450ceb4e: ret       
+
+===== FUNCTION 0x1450cec30-0x1450cec5f seed=0x1450cec30 size=0x2f =====
+0x1450cec30: sub       rsp, 0x28
+0x1450cec34: mov       rax, qword ptr [rip + 0x67a7d7d]  ; RIP->0x14b8769b8(.data2)
+0x1450cec3b: test      rax, rax
+0x1450cec3e: jne       0x1450cec5a
+0x1450cec40: lea       rdx, [rip + 0x510fa69]  ; RIP->0x14a1de6b0(.shared)
+0x1450cec47: lea       rcx, [rip + 0x67a7d6a]  ; RIP->0x14b8769b8(.data2)
+0x1450cec4e: call      0x14155e850  ; CALL->0x14155e850 func=(5391116368, 5391116438)
+0x1450cec53: mov       rax, qword ptr [rip + 0x67a7d5e]  ; RIP->0x14b8769b8(.data2)
+0x1450cec5a: add       rsp, 0x28
+0x1450cec5e: ret       
+
+===== FUNCTION 0x1450ccfc0-0x1450cd06e seed=0x1450ccfc0 size=0xae =====
+0x1450ccfc0: mov       r11, rsp
+0x1450ccfc3: sub       rsp, 0x78
+0x1450ccfc7: mov       rax, qword ptr [rip + 0x67a9182]  ; RIP->0x14b876150(.data2)
+0x1450ccfce: test      rax, rax
+0x1450ccfd1: jne       0x1450cd069
+0x1450ccfd7: lea       rax, [rip - 0x3f33b8e]  ; RIP->0x141199450(.sdata)
+0x1450ccfde: mov       qword ptr [r11 + 8], rax
+0x1450ccfe2: lea       r9, [rip + 0x6c7]  ; RIP->0x1450cd6b0(.sdata)
+0x1450ccfe9: lea       rax, [rip - 0x3d1dfb0]  ; RIP->0x1413af040(.sdata)
+0x1450ccff0: mov       qword ptr [r11 - 0x10], rax
+0x1450ccff4: lea       r8, [rip + 0x67a9155]  ; RIP->0x14b876150(.data2)
+0x1450ccffb: lea       rax, [rip - 0x2f77872]  ; RIP->0x142155790(.sdata)
+0x1450cd002: mov       qword ptr [r11 - 0x18], rax
+0x1450cd006: lea       rdx, [rip + 0x510270d]  ; RIP->0x14a1cf71a(.shared) WIDE='APKSaveGameLibrary'
+0x1450cd00d: lea       rax, [r11 + 8]
+0x1450cd011: mov       qword ptr [r11 - 0x20], rax
+0x1450cd015: lea       rcx, [rip + 0x4d71fe4]  ; RIP->0x149e3f000(.shared) WIDE='/Script/APK2'
+0x1450cd01c: lea       rax, [rip - 0x3f308e3]  ; RIP->0x14119c740(.sdata)
+0x1450cd023: mov       qword ptr [r11 - 0x28], rax
+0x1450cd027: lea       rax, [rip - 0x2f78c4e]  ; RIP->0x1421543e0(.sdata)
+0x1450cd02e: mov       qword ptr [r11 - 0x30], rax
+0x1450cd032: lea       rax, [rip + 0x4116a37]  ; RIP->0x1491e3a70(.shared) WIDE='Engine'
+0x1450cd039: mov       qword ptr [r11 - 0x38], rax
+0x1450cd03d: mov       qword ptr [r11 - 0x40], 0
+0x1450cd045: mov       dword ptr [rsp + 0x30], 0x10000000
+0x1450cd04d: mov       dword ptr [rsp + 0x28], 8
+0x1450cd055: mov       dword ptr [rsp + 0x20], 0x28
+0x1450cd05d: call      0x141433f00  ; CALL->0x141433f00 func=(5389893376, 5389894192)
+0x1450cd062: mov       rax, qword ptr [rip + 0x67a90e7]  ; RIP->0x14b876150(.data2)
+0x1450cd069: add       rsp, 0x78
+0x1450cd06d: ret       
+
+===== FUNCTION 0x1450cce00-0x1450cceae seed=0x1450cce00 size=0xae =====
+0x1450cce00: mov       r11, rsp
+0x1450cce03: sub       rsp, 0x78
+0x1450cce07: mov       rax, qword ptr [rip + 0x67a93aa]  ; RIP->0x14b8761b8(.data2)
+0x1450cce0e: test      rax, rax
+0x1450cce11: jne       0x1450ccea9
+0x1450cce17: lea       rax, [rip - 0x3f339ce]  ; RIP->0x141199450(.sdata)
+0x1450cce1e: mov       qword ptr [r11 + 8], rax
+0x1450cce22: lea       r9, [rip - 0x3f339d9]  ; RIP->0x141199450(.sdata)
+0x1450cce29: lea       rax, [rip - 0x3d1ddf0]  ; RIP->0x1413af040(.sdata)
+0x1450cce30: mov       qword ptr [r11 - 0x10], rax
+0x1450cce34: lea       r8, [rip + 0x67a937d]  ; RIP->0x14b8761b8(.data2)
+0x1450cce3b: lea       rax, [rip - 0x16d7042]  ; RIP->0x1439f5e00(.sdata)
+0x1450cce42: mov       qword ptr [r11 - 0x18], rax
+0x1450cce46: lea       rdx, [rip + 0x510295d]  ; RIP->0x14a1cf7aa(.shared) WIDE='APKSaveGame'
+0x1450cce4d: lea       rax, [r11 + 8]
+0x1450cce51: mov       qword ptr [r11 - 0x20], rax
+0x1450cce55: lea       rcx, [rip + 0x4d721a4]  ; RIP->0x149e3f000(.shared) WIDE='/Script/APK2'
+0x1450cce5c: lea       rax, [rip - 0x3f30723]  ; RIP->0x14119c740(.sdata)
+0x1450cce63: mov       qword ptr [r11 - 0x28], rax
+0x1450cce67: lea       rax, [rip + 0x19b2]  ; RIP->0x1450ce820(.sdata)
+0x1450cce6e: mov       qword ptr [r11 - 0x30], rax
+0x1450cce72: lea       rax, [rip + 0x4116bf7]  ; RIP->0x1491e3a70(.shared) WIDE='Engine'
+0x1450cce79: mov       qword ptr [r11 - 0x38], rax
+0x1450cce7d: mov       qword ptr [r11 - 0x40], 0
+0x1450cce85: mov       dword ptr [rsp + 0x30], 0x10000000
+0x1450cce8d: mov       dword ptr [rsp + 0x28], 8
+0x1450cce95: mov       dword ptr [rsp + 0x20], 0x1df0
+0x1450cce9d: call      0x141433f00  ; CALL->0x141433f00 func=(5389893376, 5389894192)
+0x1450ccea2: mov       rax, qword ptr [rip + 0x67a930f]  ; RIP->0x14b8761b8(.data2)
+0x1450ccea9: add       rsp, 0x78
+0x1450ccead: ret       
+
+===== FUNCTION 0x1450ccec0-0x1450cceef seed=0x1450ccec0 size=0x2f =====
+0x1450ccec0: sub       rsp, 0x28
+0x1450ccec4: mov       rax, qword ptr [rip + 0x67a92f5]  ; RIP->0x14b8761c0(.data2)
+0x1450ccecb: test      rax, rax
+0x1450ccece: jne       0x1450cceea
+0x1450cced0: lea       rdx, [rip + 0x51041b9]  ; RIP->0x14a1d1090(.shared)
+0x1450cced7: lea       rcx, [rip + 0x67a92e2]  ; RIP->0x14b8761c0(.data2)
+0x1450ccede: call      0x14155e850  ; CALL->0x14155e850 func=(5391116368, 5391116438)
+0x1450ccee3: mov       rax, qword ptr [rip + 0x67a92d6]  ; RIP->0x14b8761c0(.data2)
+0x1450cceea: add       rsp, 0x28
+0x1450cceee: ret       
