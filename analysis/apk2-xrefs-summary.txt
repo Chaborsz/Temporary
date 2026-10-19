@@ -1,0 +1,66 @@
+# APK2 save xrefs — compact summary
+
+## Structural xrefs
+POINTER level=1 slot=0x14b1edee0 -> 0x14a1d45d0 UAPKSaveGameManager section=.data2
+POINTER level=1 slot=0x14b1ede10 -> 0x14a1cf718 UAPKSaveGameLibrary section=.data2
+POINTER level=1 slot=0x14b158cf8 -> 0x149b30ee8 SaveGamePipe section=.data2
+POINTER level=1 slot=0x149ff9fc8 -> 0x149ff7e60 APK_SetVersion section=.shared
+POINTER level=1 slot=0x149ffeb70 -> 0x149ff7e60 APK_SetVersion section=.shared
+POINTER level=1 slot=0x14b1bd1c0 -> 0x149ff7e60 APK_SetVersion section=.data2
+POINTER level=1 slot=0x149ff9f98 -> 0x149ff7eb8 APK_SetBroken section=.shared
+POINTER level=1 slot=0x149ffeb40 -> 0x149ff7eb8 APK_SetBroken section=.shared
+POINTER level=1 slot=0x14b1bd100 -> 0x149ff7eb8 APK_SetBroken section=.data2
+POINTER level=1 slot=0x149ff9fa8 -> 0x149ff7f10 APK_ForceLoad section=.shared
+POINTER level=1 slot=0x149ffeb50 -> 0x149ff7f10 APK_ForceLoad section=.shared
+POINTER level=1 slot=0x14b1bd140 -> 0x149ff7f10 APK_ForceLoad section=.data2
+POINTER_LEVEL 1 NEW 12 TOTAL_TARGETS 29
+POINTER_LEVEL 2 NEW 0 TOTAL_TARGETS 29
+HITS 22
+XREF src=0x143e7ea4a dst=0x149b18590 target=SaveGames path sec=.sdata
+XREF src=0x143e7ea4b dst=0x149b18590 target=SaveGames path sec=.sdata
+XREF src=0x143f86151 dst=0x149b31350 target=SaveGameSystem.cpp:124 sec=.sdata
+XREF src=0x143f86152 dst=0x149b31350 target=SaveGameSystem.cpp:124 sec=.sdata
+XREF src=0x143f86e94 dst=0x149b310b0 target=SaveGameSystem.cpp:100 sec=.sdata
+XREF src=0x143f86e95 dst=0x149b310b0 target=SaveGameSystem.cpp:100 sec=.sdata
+XREF src=0x143f870b4 dst=0x149b31170 target=SaveGameSystem.cpp:72 sec=.sdata
+XREF src=0x143f870b5 dst=0x149b31170 target=SaveGameSystem.cpp:72 sec=.sdata
+XREF src=0x143f872d4 dst=0x149b30f30 target=SaveGameSystem.cpp:45 sec=.sdata
+XREF src=0x143f872d5 dst=0x149b30f30 target=SaveGameSystem.cpp:45 sec=.sdata
+XREF src=0x143f874e4 dst=0x149b30ff0 target=SaveGameSystem.cpp:18 sec=.sdata
+XREF src=0x143f874e5 dst=0x149b30ff0 target=SaveGameSystem.cpp:18 sec=.sdata
+XREF src=0x14424d07d dst=0x149bcd740 target=SaveGameSystemModule sec=.sdata
+XREF src=0x14424d07e dst=0x149bcd740 target=SaveGameSystemModule sec=.sdata
+XREF src=0x14424d2bc dst=0x149bcd740 target=SaveGameSystemModule sec=.sdata
+XREF src=0x14424d2bd dst=0x149bcd740 target=SaveGameSystemModule sec=.sdata
+XREF src=0x14582c591 dst=0x14a4576a0 target=SEGA save path sec=.sdata
+XREF src=0x14582c592 dst=0x14a4576a0 target=SEGA save path sec=.sdata
+XREF src=0x14582c75f dst=0x149b18590 target=SaveGames path sec=.sdata
+XREF src=0x14582c760 dst=0x149b18590 target=SaveGames path sec=.sdata
+XREF src=0x14582c961 dst=0x14a4576a0 target=SEGA save path sec=.sdata
+XREF src=0x14582c962 dst=0x14a4576a0 target=SEGA save path sec=.sdata
+
+## Caller addresses
+0x143e7ea4a
+0x143e7ea4b
+0x143f86151
+0x143f86152
+0x143f86e94
+0x143f86e95
+0x143f870b4
+0x143f870b5
+0x143f872d4
+0x143f872d5
+0x143f874e4
+0x143f874e5
+0x14424d07d
+0x14424d07e
+0x14424d2bc
+0x14424d2bd
+0x14582c591
+0x14582c592
+0x14582c75f
+0x14582c760
+0x14582c961
+0x14582c962
+
+## Rizin caller-site instructions
