@@ -25,6 +25,7 @@ on:
       - ".github/scripts/lolisnatcher_v8_compressed_visual_cache_patch.py"
       - ".github/scripts/lolisnatcher_v8_cache_path_label_fix.py"
       - ".github/scripts/lolisnatcher_v10_web_session_auth.py"
+      - ".github/scripts/lolisnatcher_v10_import_fix.py"
       - ".github/scripts/lolisnatcher_sync_esmx.py"
 
 permissions:
@@ -88,6 +89,7 @@ jobs:
           python ..\builder\.github\scripts\lolisnatcher_v8_compressed_visual_cache_patch.py
           python ..\builder\.github\scripts\lolisnatcher_v8_cache_path_label_fix.py
           python ..\builder\.github\scripts\lolisnatcher_v10_web_session_auth.py
+          python ..\builder\.github\scripts\lolisnatcher_v10_import_fix.py
           'PATCH_CHAIN_V10=PASS'
 
       - name: Set up Flutter
