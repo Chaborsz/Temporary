@@ -11,5 +11,12 @@ exec(compile(verified_login_patch.read_text(encoding='utf-8'), str(verified_logi
 robust_validation_patch = Path(__file__).with_name('lolisnatcher_v8_6_danbooru_login_validation_patch.py')
 exec(compile(robust_validation_patch.read_text(encoding='utf-8'), str(robust_validation_patch), 'exec'))
 
+# v8.7 fixes validation requests that end on HTML instead of the JSON API by
+# normalizing the API root, using Basic Auth with query fallback, and applying
+# the same captcha/anti-bot interceptor used by normal searches.
+challenge_auth_patch = Path(__file__).with_name('lolisnatcher_v8_7_danbooru_challenge_auth_patch.py')
+exec(compile(challenge_auth_patch.read_text(encoding='utf-8'), str(challenge_auth_patch), 'exec'))
+
 print('V8_5_VERIFIED_LOGIN_CHAIN=PASS')
 print('V8_6_ROBUST_LOGIN_VALIDATION_CHAIN=PASS')
+print('V8_7_CHALLENGE_AUTH_CHAIN=PASS')
