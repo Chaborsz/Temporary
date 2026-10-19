@@ -267,9 +267,7 @@ print('DANBOORU_SECRET_REDACTION=PASS')
 print('DIO_SENSITIVE_GET_LOG_SUPPRESSION=PASS')
 print('V11_GENERIC_DANBOORU_AUTH=PASS')
 
-# Apply the dedicated Danbooru login dialog and remember a successful legacy
-# auth fallback for the rest of the handler session. Kept as a separate patch
-# file so the UI/hotfix can be audited independently while this canonical auth
-# script remains the workflow trigger.
+# Apply the dedicated Danbooru login dialog. That patch chains v8.4, which
+# changes runtime selection to API-key-only first and uses Login only after 401.
 login_ui_patch = Path(__file__).with_name('lolisnatcher_v8_danbooru_login_dialog_patch.py')
 exec(compile(login_ui_patch.read_text(encoding='utf-8'), str(login_ui_patch), 'exec'))
