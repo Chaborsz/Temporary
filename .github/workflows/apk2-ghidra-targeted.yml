@@ -24,9 +24,12 @@ jobs:
           echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  /tmp/APK2-Win64-Shipping.exe' | sha256sum -c -
           curl -L --fail --retry 5 'https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.1.4_build/ghidra_12.1.4_PUBLIC_20260921.zip' -o /tmp/ghidra.zip
           echo 'ddac49f903da9d5bac833e5cc79395098b9c33cfd3279be5f31bd00387d2d4db  /tmp/ghidra.zip' | sha256sum -c -
-          unzip -q /tmp/ghidra.zip -d /tmp
-          GHIDRA=$(find /tmp -maxdepth 2 -type d -name 'ghidra_12.1.4_PUBLIC*' | head -n1)
+          rm -rf /tmp/ghidra-dist
+          mkdir -p /tmp/ghidra-dist
+          unzip -q /tmp/ghidra.zip -d /tmp/ghidra-dist
+          GHIDRA=$(find /tmp/ghidra-dist -maxdepth 2 -type d -name 'ghidra_12.1.4_PUBLIC*' -print -quit)
           test -n "$GHIDRA"
+          test -x "$GHIDRA/support/analyzeHeadless"
           echo "GHIDRA=$GHIDRA" >> "$GITHUB_ENV"
           mkdir -p /tmp/ghidra-scripts /tmp/out /tmp/ghidra-proj
       - name: Write targeted decompiler script
