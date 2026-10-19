@@ -24,6 +24,7 @@ on:
       - ".github/scripts/lolisnatcher_v7_import_fix.py"
       - ".github/scripts/lolisnatcher_v8_compressed_visual_cache_patch.py"
       - ".github/scripts/lolisnatcher_v8_cache_path_label_fix.py"
+      - ".github/scripts/lolisnatcher_v11_generic_danbooru_auth.py"
       - ".github/scripts/lolisnatcher_sync_esmx.py"
 
 permissions:
@@ -68,7 +69,7 @@ jobs:
           "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
           "build=$($Matches[2])" >> $env:GITHUB_OUTPUT
 
-      - name: Apply portable patches v1-v8
+      - name: Apply portable patches v1-v8 + generic Danbooru auth
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
@@ -86,7 +87,8 @@ jobs:
           python ..\builder\.github\scripts\lolisnatcher_v7_import_fix.py
           python ..\builder\.github\scripts\lolisnatcher_v8_compressed_visual_cache_patch.py
           python ..\builder\.github\scripts\lolisnatcher_v8_cache_path_label_fix.py
-          'PATCH_CHAIN_V8=PASS'
+          python ..\builder\.github\scripts\lolisnatcher_v11_generic_danbooru_auth.py
+          'PATCH_CHAIN_V8_DANBOORU_AUTH=PASS'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -137,8 +139,8 @@ jobs:
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
-          dart format lib/main.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/services/image_writer.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
-          flutter analyze --no-fatal-infos --no-fatal-warnings lib/main.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/services/image_writer.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
+          dart format lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/services/image_writer.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
+          flutter analyze --no-fatal-infos --no-fatal-warnings lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/services/image_writer.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
 
       - name: Build Windows x64 Release
         id: build
@@ -175,6 +177,12 @@ jobs:
           - Windows download output can be selected as Original, JPEG, or PNG in Save/Cache settings.
           - Animations/videos remain in their original format; AVIF conversion falls back to original.
 
+          Generic Danbooru authentication:
+          - Existing session cookies are used when available.
+          - Login + API Key uses HTTP Basic Authentication by default.
+          - A 401 from Basic Auth retries once with legacy login/api_key parameters for compatible older servers.
+          - Authorization and Cookie values are redacted from application request logs.
+
           v7 native InAppBrowser login/captcha fixes are retained.
           "@ | Set-Content -Encoding UTF8 (Join-Path $dataDir 'PORTABLE-README.txt')
           @(
@@ -185,8 +193,10 @@ jobs:
             "TARGET=windows-x64"
             "CONFIGURATION=Release"
             "PORTABLE_MODE=TRUE"
-            "PATCH_LEVEL=TRUE_PORTABLE_V8_COMPRESSED_VISUAL_CACHE"
+            "PATCH_LEVEL=TRUE_PORTABLE_V8_COMPRESSED_VISUAL_CACHE_DANBOORU_AUTH"
             "WINDOWS_LOGIN_BROWSER=NATIVE_INAPPBROWSER"
+            "DANBOORU_AUTH=SESSION_COOKIE,BASIC_AUTH,LEGACY_QUERY_FALLBACK"
+            "DANBOORU_SECRET_LOGGING=REDACTED"
             "VISUAL_CACHE=.\Data\LoliSnatcher\cache\visual_cache.db"
             "FULLRES_VIEWER_CACHE=MEMORY_ONLY"
             "DOWNLOAD_FORMATS=ORIGINAL,JPEG,PNG"
@@ -221,9 +231,9 @@ jobs:
           $hashPath = "$zipPath.sha256"
           $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable"
           $notes = @"
-          Unofficial TRUE PORTABLE Windows x64 build - v8.
+          Unofficial TRUE PORTABLE Windows x64 build - v8 with generic Danbooru authentication.
 
-          v8 packs thumbnail/sample cache into Data\LoliSnatcher\cache\visual_cache.db with adaptive compression, keeps full-resolution viewer images memory-only, and adds Original/JPEG/PNG download output selection on Windows. v7 native WebView2 login/captcha fixes, es-MX live sync and PR #2838 are retained.
+          v8 packs thumbnail/sample cache into Data\LoliSnatcher\cache\visual_cache.db with adaptive compression, keeps full-resolution viewer images memory-only, and adds Original/JPEG/PNG download output selection on Windows. Danbooru handlers now support existing session cookies, Login + API Key through HTTP Basic Auth, and one legacy query-parameter retry after a 401. Secret auth headers/cookies are redacted from request logs. v7 native WebView2 login/captcha fixes, es-MX live sync and PR #2838 are retained.
 
           Upstream commit: $env:SOURCE_SHA
           Flutter: $env:FLUTTER_VERSION
@@ -245,8 +255,12 @@ jobs:
         shell: pwsh
         run: |
           @"
-          ## LoliSnatcher Windows x64 True Portable v8
+          ## LoliSnatcher Windows x64 True Portable v8 + generic Danbooru auth
           - Build: `${{ steps.build.outcome }}`
+          - Danbooru session-cookie auth: enabled
+          - Danbooru Basic Auth: enabled
+          - Danbooru legacy query fallback after 401: enabled
+          - Auth/cookie logging: redacted
           - Native Windows InAppBrowser: enabled
           - Thumbnail/sample packed cache: enabled
           - Full-res viewer persistence: disabled (memory-only)
@@ -255,5 +269,3 @@ jobs:
           - SHA-256: `${{ steps.package.outputs.sha256 }}`
           - Release: ${{ steps.release.outputs.release_url }}
           "@ >> $env:GITHUB_STEP_SUMMARY
-
-# Canonical line restored to v8 on 2026-10-19.
