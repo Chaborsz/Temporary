@@ -1,6 +1,6 @@
 from pathlib import Path
 
-# Build trigger checkpoint: v8.9 gallery freeze hotfix (display-first thumbnails).
+# Build trigger checkpoint: v8.10 bounded Windows visual pipeline.
 path = Path('lib/src/pages/settings/booru_edit_page.dart')
 text = path.read_text(encoding='utf-8')
 
