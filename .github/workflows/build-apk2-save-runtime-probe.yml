@@ -1,0 +1,310 @@
+name: Build APK2 Save Runtime Probe
+
+on:
+  push:
+    paths:
+      - '.github/workflows/build-apk2-save-runtime-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Create runtime probe source
+        shell: pwsh
+        run: |
+          @'
+          #define WIN32_LEAN_AND_MEAN
+          #include <windows.h>
+          #include <xinput.h>
+          #include <cstdio>
+          #include <cstdint>
+          #include <cstring>
+          #include <cstdarg>
+          #include <vector>
+          #include <string>
+          #include <algorithm>
+
+          static HMODULE g_self = nullptr;
+          static INIT_ONCE g_xinput_once = INIT_ONCE_STATIC_INIT;
+          static HMODULE g_real_xinput = nullptr;
+          typedef DWORD (WINAPI *PFN_XInputGetState)(DWORD, XINPUT_STATE*);
+          typedef DWORD (WINAPI *PFN_XInputSetState)(DWORD, XINPUT_VIBRATION*);
+          static PFN_XInputGetState g_real_get_state = nullptr;
+          static PFN_XInputSetState g_real_set_state = nullptr;
+          typedef BOOL (WINAPI *PFN_ReadFile)(HANDLE, LPVOID, DWORD, LPDWORD, LPOVERLAPPED);
+          static PFN_ReadFile g_real_read_file = nullptr;
+          static volatile LONG g_trigger_count = 0;
+          static wchar_t g_dir[MAX_PATH] = {};
+
+          static const unsigned char kPcCipherHead[16] = {
+            0xc8,0x6a,0xc0,0xc8,0x41,0xad,0x93,0xf7,0xa3,0x27,0xdb,0xe1,0x87,0x50,0x27,0x35
+          };
+          static const unsigned char kAesSbox[256] = {
+            0x63,0x7c,0x77,0x7b,0xf2,0x6b,0x6f,0xc5,0x30,0x01,0x67,0x2b,0xfe,0xd7,0xab,0x76,
+            0xca,0x82,0xc9,0x7d,0xfa,0x59,0x47,0xf0,0xad,0xd4,0xa2,0xaf,0x9c,0xa4,0x72,0xc0,
+            0xb7,0xfd,0x93,0x26,0x36,0x3f,0xf7,0xcc,0x34,0xa5,0xe5,0xf1,0x71,0xd8,0x31,0x15,
+            0x04,0xc7,0x23,0xc3,0x18,0x96,0x05,0x9a,0x07,0x12,0x80,0xe2,0xeb,0x27,0xb2,0x75,
+            0x09,0x83,0x2c,0x1a,0x1b,0x6e,0x5a,0xa0,0x52,0x3b,0xd6,0xb3,0x29,0xe3,0x2f,0x84,
+            0x53,0xd1,0x00,0xed,0x20,0xfc,0xb1,0x5b,0x6a,0xcb,0xbe,0x39,0x4a,0x4c,0x58,0xcf,
+            0xd0,0xef,0xaa,0xfb,0x43,0x4d,0x33,0x85,0x45,0xf9,0x02,0x7f,0x50,0x3c,0x9f,0xa8,
+            0x51,0xa3,0x40,0x8f,0x92,0x9d,0x38,0xf5,0xbc,0xb6,0xda,0x21,0x10,0xff,0xf3,0xd2,
+            0xcd,0x0c,0x13,0xec,0x5f,0x97,0x44,0x17,0xc4,0xa7,0x7e,0x3d,0x64,0x5d,0x19,0x73,
+            0x60,0x81,0x4f,0xdc,0x22,0x2a,0x90,0x88,0x46,0xee,0xb8,0x14,0xde,0x5e,0x0b,0xdb,
+            0xe0,0x32,0x3a,0x0a,0x49,0x06,0x24,0x5c,0xc2,0xd3,0xac,0x62,0x91,0x95,0xe4,0x79,
+            0xe7,0xc8,0x37,0x6d,0x8d,0xd5,0x4e,0xa9,0x6c,0x56,0xf4,0xea,0x65,0x7a,0xae,0x08,
+            0xba,0x78,0x25,0x2e,0x1c,0xa6,0xb4,0xc6,0xe8,0xdd,0x74,0x1f,0x4b,0xbd,0x8b,0x8a,
+            0x70,0x3e,0xb5,0x66,0x48,0x03,0xf6,0x0e,0x61,0x35,0x57,0xb9,0x86,0xc1,0x1d,0x9e,
+            0xe1,0xf8,0x98,0x11,0x69,0xd9,0x8e,0x94,0x9b,0x1e,0x87,0xe9,0xce,0x55,0x28,0xdf,
+            0x8c,0xa1,0x89,0x0d,0xbf,0xe6,0x42,0x68,0x41,0x99,0x2d,0x0f,0xb0,0x54,0xbb,0x16
+          };
+
+          static bool ReadableProtect(DWORD p) {
+            if (p & PAGE_GUARD) return false;
+            p &= 0xff;
+            return p==PAGE_READONLY || p==PAGE_READWRITE || p==PAGE_WRITECOPY ||
+                   p==PAGE_EXECUTE_READ || p==PAGE_EXECUTE_READWRITE || p==PAGE_EXECUTE_WRITECOPY;
+          }
+
+          static void InitDir() {
+            if (g_dir[0]) return;
+            wchar_t p[MAX_PATH] = {};
+            GetModuleFileNameW(g_self, p, MAX_PATH);
+            wchar_t* slash = wcsrchr(p, L'\\');
+            if (slash) *slash = 0;
+            wcsncpy_s(g_dir, p, _TRUNCATE);
+          }
+
+          static std::wstring OutPath(const wchar_t* name) {
+            InitDir();
+            std::wstring s(g_dir); s += L"\\"; s += name; return s;
+          }
+
+          static void Log(const char* fmt, ...) {
+            InitDir();
+            FILE* f=nullptr;
+            _wfopen_s(&f, OutPath(L"APK2_SaveCrypto_Runtime.log").c_str(), L"ab");
+            if (!f) return;
+            SYSTEMTIME st{}; GetLocalTime(&st);
+            std::fprintf(f, "[%02u:%02u:%02u.%03u] ", st.wHour,st.wMinute,st.wSecond,st.wMilliseconds);
+            va_list ap; va_start(ap,fmt); std::vfprintf(f,fmt,ap); va_end(ap);
+            std::fputc('\n',f); std::fclose(f);
+          }
+
+          static void Hex16(const void* p, char out[33]) {
+            static const char h[]="0123456789abcdef"; const unsigned char* b=(const unsigned char*)p;
+            for(int i=0;i<16;i++){out[i*2]=h[b[i]>>4];out[i*2+1]=h[b[i]&15];} out[32]=0;
+          }
+
+          static bool SafeCopy(void* dst, const void* src, size_t n) {
+            __try { std::memcpy(dst,src,n); return true; } __except(EXCEPTION_EXECUTE_HANDLER) { return false; }
+          }
+
+          static void DumpBytes(const wchar_t* name, const void* p, size_t n) {
+            FILE* f=nullptr; _wfopen_s(&f,OutPath(name).c_str(),L"wb"); if(!f)return;
+            __try { std::fwrite(p,1,n,f); } __except(EXCEPTION_EXECUTE_HANDLER) {}
+            std::fclose(f);
+          }
+
+          static void ScanForPattern(const unsigned char* pat, size_t plen, const char* label) {
+            SYSTEM_INFO si{}; GetSystemInfo(&si);
+            uintptr_t cur=(uintptr_t)si.lpMinimumApplicationAddress, max=(uintptr_t)si.lpMaximumApplicationAddress;
+            unsigned hits=0;
+            while(cur<max && hits<128) {
+              MEMORY_BASIC_INFORMATION mbi{};
+              if(!VirtualQuery((void*)cur,&mbi,sizeof(mbi))) break;
+              uintptr_t base=(uintptr_t)mbi.BaseAddress; size_t sz=mbi.RegionSize;
+              if(mbi.State==MEM_COMMIT && ReadableProtect(mbi.Protect) && sz>=plen) {
+                __try {
+                  const unsigned char* b=(const unsigned char*)base;
+                  const unsigned char* end=b+sz-plen+1;
+                  for(const unsigned char* q=b;q<end;) {
+                    const void* m=std::memchr(q,pat[0],(size_t)(end-q));
+                    if(!m) break; q=(const unsigned char*)m;
+                    if(std::memcmp(q,pat,plen)==0) {
+                      Log("PATTERN %s hit=%p alloc=%p region=%p+0x%zx protect=0x%lx type=0x%lx",label,q,mbi.AllocationBase,mbi.BaseAddress,sz,mbi.Protect,mbi.Type);
+                      hits++; if(hits>=128) break;
+                    }
+                    q++;
+                  }
+                } __except(EXCEPTION_EXECUTE_HANDLER) {}
+              }
+              uintptr_t next=base+sz; if(next<=cur)break; cur=next;
+            }
+            Log("PATTERN %s scan_done hits=%u",label,hits);
+          }
+
+          struct MonitorCtx { unsigned char* buf; DWORD len; HANDLE ready; LONG id; };
+
+          static DWORD WINAPI GlobalScanThread(void*) {
+            const unsigned char gvas[4]={'G','V','A','S'};
+            for(int round=0; round<20; round++) {
+              SYSTEM_INFO si{}; GetSystemInfo(&si);
+              uintptr_t cur=(uintptr_t)si.lpMinimumApplicationAddress, max=(uintptr_t)si.lpMaximumApplicationAddress;
+              while(cur<max) {
+                MEMORY_BASIC_INFORMATION mbi{}; if(!VirtualQuery((void*)cur,&mbi,sizeof(mbi)))break;
+                uintptr_t base=(uintptr_t)mbi.BaseAddress; size_t sz=mbi.RegionSize;
+                if(mbi.State==MEM_COMMIT && ReadableProtect(mbi.Protect) && sz>=16) {
+                  __try {
+                    const unsigned char* b=(const unsigned char*)base; const unsigned char* end=b+sz-4;
+                    for(const unsigned char* q=b;q<end;) {
+                      const void* m=std::memchr(q,'G',(size_t)(end-q)); if(!m)break; q=(const unsigned char*)m;
+                      if(!std::memcmp(q,gvas,4)) {
+                        char hx[33]={}; if((uintptr_t)q+16<=base+sz)Hex16(q,hx);
+                        Log("GLOBAL GVAS hit=%p alloc=%p region=%p+0x%zx first16=%s",q,mbi.AllocationBase,mbi.BaseAddress,sz,hx);
+                        size_t avail=(base+sz)-(uintptr_t)q; size_t dump=avail<0x20000?avail:0x20000;
+                        wchar_t fn[96]; swprintf_s(fn,L"APK2_GVAS_global_%p.bin",q); DumpBytes(fn,q,dump);
+                        return 0;
+                      }
+                      q++;
+                    }
+                  } __except(EXCEPTION_EXECUTE_HANDLER) {}
+                }
+                uintptr_t next=base+sz;if(next<=cur)break;cur=next;
+              }
+              Sleep(25);
+            }
+            Log("GLOBAL GVAS scan finished without hit"); return 0;
+          }
+
+          static DWORD WINAPI MonitorBufferThread(void* vp) {
+            MonitorCtx* c=(MonitorCtx*)vp; SetEvent(c->ready);
+            bool sawCipher=false; unsigned changes=0; unsigned char last[16]={}; bool haveLast=false;
+            ULONGLONG end=GetTickCount64()+15000;
+            while(GetTickCount64()<end) {
+              unsigned char h[16];
+              MEMORY_BASIC_INFORMATION mbi{};
+              if(VirtualQuery(c->buf,&mbi,sizeof(mbi)) && mbi.State==MEM_COMMIT && ReadableProtect(mbi.Protect) && SafeCopy(h,c->buf,16)) {
+                if(!haveLast || std::memcmp(h,last,16)) {
+                  if(changes<32){char hx[33];Hex16(h,hx);Log("MONITOR id=%ld buf=%p len=%lu first16=%s",c->id,c->buf,c->len,hx);} changes++; std::memcpy(last,h,16);haveLast=true;
+                }
+                if(!std::memcmp(h,kPcCipherHead,16) && !sawCipher) {
+                  sawCipher=true; Log("PC ciphertext header observed in monitored ReadFile buffer id=%ld",c->id);
+                  DumpBytes(L"APK2_PC_cipher_runtime.bin",c->buf,c->len);
+                  CreateThread(nullptr,0,GlobalScanThread,nullptr,0,nullptr);
+                }
+                if(h[0]=='G'&&h[1]=='V'&&h[2]=='A'&&h[3]=='S') {
+                  Log("SUCCESS GVAS appeared IN PLACE id=%ld buf=%p len=%lu",c->id,c->buf,c->len);
+                  DumpBytes(L"APK2_PC_decrypted_runtime.bin",c->buf,c->len);
+                  ScanForPattern(kAesSbox,sizeof(kAesSbox),"AES_SBOX");
+                  break;
+                }
+              }
+              Sleep(1);
+            }
+            Log("MONITOR end id=%ld sawCipher=%d changes=%u",c->id,sawCipher?1:0,changes);
+            CloseHandle(c->ready); delete c; return 0;
+          }
+
+          static BOOL WINAPI HookReadFile(HANDLE h, LPVOID buf, DWORD toRead, LPDWORD read, LPOVERLAPPED ov) {
+            BOOL ok=g_real_read_file(h,buf,toRead,read,ov);
+            DWORD n=(ok && read)?*read:toRead;
+            bool candidate=(toRead>=50000 && toRead<=400000);
+            unsigned char head[16]={}; bool headOk=buf && SafeCopy(head,buf,16);
+            if(headOk && !std::memcmp(head,kPcCipherHead,16)) candidate=true;
+            if(candidate && buf) {
+              LONG id=InterlockedIncrement(&g_trigger_count);
+              char hx[33]={}; if(headOk)Hex16(head,hx);
+              Log("ReadFile candidate id=%ld ok=%d handle=%p buf=%p toRead=%lu read=%lu ov=%p first16=%s",id,ok?1:0,h,buf,toRead,(ok&&read)?*read:0,ov,hx);
+              auto* c=new MonitorCtx{(unsigned char*)buf,toRead,CreateEventW(nullptr,TRUE,FALSE,nullptr),id};
+              HANDLE th=CreateThread(nullptr,0,MonitorBufferThread,c,0,nullptr);
+              if(th){WaitForSingleObject(c->ready,100);CloseHandle(th);} else {CloseHandle(c->ready);delete c;}
+            }
+            return ok;
+          }
+
+          static bool PatchReadFileIAT() {
+            HMODULE mod=GetModuleHandleW(nullptr); if(!mod)return false;
+            auto base=(unsigned char*)mod; auto dos=(IMAGE_DOS_HEADER*)base;
+            if(dos->e_magic!=IMAGE_DOS_SIGNATURE)return false;
+            auto nt=(IMAGE_NT_HEADERS64*)(base+dos->e_lfanew);
+            auto& dir=nt->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT]; if(!dir.VirtualAddress)return false;
+            auto desc=(IMAGE_IMPORT_DESCRIPTOR*)(base+dir.VirtualAddress);
+            for(;desc->Name;desc++) {
+              auto oft=desc->OriginalFirstThunk ? (IMAGE_THUNK_DATA64*)(base+desc->OriginalFirstThunk) : (IMAGE_THUNK_DATA64*)(base+desc->FirstThunk);
+              auto ft=(IMAGE_THUNK_DATA64*)(base+desc->FirstThunk);
+              for(;oft->u1.AddressOfData;oft++,ft++) {
+                if(IMAGE_SNAP_BY_ORDINAL64(oft->u1.Ordinal))continue;
+                auto ibn=(IMAGE_IMPORT_BY_NAME*)(base+oft->u1.AddressOfData);
+                if(std::strcmp((char*)ibn->Name,"ReadFile"))continue;
+                DWORD old=0; if(!VirtualProtect(&ft->u1.Function,sizeof(void*),PAGE_READWRITE,&old))return false;
+                g_real_read_file=(PFN_ReadFile)(uintptr_t)ft->u1.Function;
+                ft->u1.Function=(ULONGLONG)(uintptr_t)&HookReadFile;
+                DWORD tmp;VirtualProtect(&ft->u1.Function,sizeof(void*),old,&tmp);FlushInstructionCache(GetCurrentProcess(),&ft->u1.Function,sizeof(void*));
+                Log("IAT ReadFile patched slot=%p original=%p hook=%p",&ft->u1.Function,g_real_read_file,&HookReadFile);return true;
+              }
+            }
+            return false;
+          }
+
+          static BOOL CALLBACK InitRealXinput(PINIT_ONCE, PVOID, PVOID*) {
+            wchar_t sys[MAX_PATH]={}; GetSystemDirectoryW(sys,MAX_PATH); wcscat_s(sys,L"\\XINPUT1_3.dll");
+            g_real_xinput=LoadLibraryW(sys);
+            if(g_real_xinput){g_real_get_state=(PFN_XInputGetState)GetProcAddress(g_real_xinput,(LPCSTR)2);g_real_set_state=(PFN_XInputSetState)GetProcAddress(g_real_xinput,(LPCSTR)3);}
+            return TRUE;
+          }
+          static void EnsureXinput(){InitOnceExecuteOnce(&g_xinput_once,InitRealXinput,nullptr,nullptr);}
+
+          extern "C" DWORD WINAPI XInputGetState(DWORD i,XINPUT_STATE* s){EnsureXinput();return g_real_get_state?g_real_get_state(i,s):ERROR_DEVICE_NOT_CONNECTED;}
+          extern "C" DWORD WINAPI XInputSetState(DWORD i,XINPUT_VIBRATION* v){EnsureXinput();return g_real_set_state?g_real_set_state(i,v):ERROR_DEVICE_NOT_CONNECTED;}
+
+          static DWORD WINAPI StartupThread(void*) {
+            Sleep(50); Log("APK2 runtime probe loaded pid=%lu base=%p",GetCurrentProcessId(),GetModuleHandleW(nullptr));
+            EnsureXinput(); Log("real XINPUT1_3=%p get=%p set=%p",g_real_xinput,g_real_get_state,g_real_set_state);
+            bool h=PatchReadFileIAT(); Log("ReadFile IAT hook result=%d",h?1:0);
+            ScanForPattern(kAesSbox,sizeof(kAesSbox),"AES_SBOX_BASELINE");
+            return 0;
+          }
+
+          BOOL WINAPI DllMain(HINSTANCE h,DWORD reason,LPVOID){
+            if(reason==DLL_PROCESS_ATTACH){g_self=(HMODULE)h;DisableThreadLibraryCalls(h);HANDLE t=CreateThread(nullptr,0,StartupThread,nullptr,0,nullptr);if(t)CloseHandle(t);} return TRUE;
+          }
+          '@ | Set-Content -Encoding UTF8 probe.cpp
+
+          @'
+          LIBRARY XINPUT1_3
+          EXPORTS
+              XInputGetState @2
+              XInputSetState @3
+          '@ | Set-Content -Encoding ASCII xinput.def
+
+      - name: Compile x64 proxy DLL
+        shell: cmd
+        run: |
+          call "%ProgramFiles%\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          cl /nologo /O2 /EHsc /LD probe.cpp /link /DEF:xinput.def /OUT:XINPUT1_3.dll
+
+      - name: Verify exports and package
+        shell: pwsh
+        run: |
+          $dump = & dumpbin /exports XINPUT1_3.dll | Out-String
+          $dump | Set-Content exports.txt
+          if ($dump -notmatch 'XInputGetState' -or $dump -notmatch 'XInputSetState') { throw 'Missing XInput exports' }
+          Get-FileHash XINPUT1_3.dll -Algorithm SHA256 | Format-List | Out-File SHA256.txt
+          @'
+          APK2 Save Crypto Runtime Probe
+
+          1. Back up your existing XINPUT1_3.dll if the game folder already contains one.
+          2. Put this XINPUT1_3.dll next to APK2-Win64-Shipping.exe.
+          3. Start the game normally and let it load the native PC DefaultData.sav.
+          4. Once at the menu (or after the save loading attempt finishes), close the game.
+          5. Return these generated files if present:
+             - APK2_SaveCrypto_Runtime.log
+             - APK2_PC_decrypted_runtime.bin
+             - APK2_PC_cipher_runtime.bin
+             - APK2_GVAS_global_*.bin
+          6. Remove XINPUT1_3.dll after the diagnostic run.
+
+          This build does not modify DefaultData.sav. It proxies only the two XInput exports imported by APK2, hooks ReadFile in-process, and observes the save buffer.
+          '@ | Set-Content README_RUNTIME_PROBE.txt
+          Compress-Archive -Path XINPUT1_3.dll,README_RUNTIME_PROBE.txt,SHA256.txt,exports.txt -DestinationPath APK2-SaveCrypto-RuntimeProbe.zip -Force
+
+      - name: Upload runtime probe
+        uses: actions/upload-artifact@v4
+        with:
+          name: APK2-SaveCrypto-RuntimeProbe
+          path: APK2-SaveCrypto-RuntimeProbe.zip
+          retention-days: 7
