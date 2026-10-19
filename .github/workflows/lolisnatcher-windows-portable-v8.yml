@@ -255,3 +255,5 @@ jobs:
           - SHA-256: `${{ steps.package.outputs.sha256 }}`
           - Release: ${{ steps.release.outputs.release_url }}
           "@ >> $env:GITHUB_STEP_SUMMARY
+
+# Canonical line restored to v8 on 2026-10-19.
