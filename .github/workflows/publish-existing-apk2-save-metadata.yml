@@ -1,0 +1,39 @@
+name: Publish existing APK2 save metadata
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-existing-apk2-save-metadata.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download existing metadata artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf analysis-results/apk2-save-metadata
+          mkdir -p analysis-results/apk2-save-metadata
+          gh run download 39182129327 --repo Chaborsz/Temporary --name apk2-save-metadata --dir analysis-results/apk2-save-metadata
+          find analysis-results/apk2-save-metadata -type f -maxdepth 2 -print -exec wc -c {} \;
+      - name: Commit metadata reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis-results/apk2-save-metadata
+          git commit -m 'Publish APK2 save metadata reports' || exit 0
+          git pull --rebase origin main
+          git push origin main
