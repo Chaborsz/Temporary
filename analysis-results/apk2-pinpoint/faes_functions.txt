@@ -1,0 +1,518 @@
+
+===== AES TARGET seed=0x1412a18e0 pdata=(5388245216, 5388246455) =====
+0x1412a18e0: mov        rax, rsp
+0x1412a18e3: sub        rsp, 0xc8
+0x1412a18ea: movdqu     xmm3, xmmword ptr [rcx]
+0x1412a18ee: movdqu     xmm2, xmmword ptr [rcx + 0x10]
+0x1412a18f3: movaps     xmmword ptr [rax - 0x18], xmm6
+0x1412a18f7: movdqa     xmm1, xmm3
+0x1412a18fb: pslldq     xmm1, 4
+0x1412a1900: movdqa     xmm0, xmm1
+0x1412a1904: movaps     xmmword ptr [rax - 0x28], xmm7
+0x1412a1908: pslldq     xmm1, 4
+0x1412a190d: pxor       xmm0, xmm3
+0x1412a1911: movaps     xmmword ptr [rax - 0x38], xmm8
+0x1412a1916: movdqa     xmmword ptr [rsp + 0x10], xmm3
+0x1412a191c: movdqa     xmm3, xmm1
+0x1412a1920: pslldq     xmm1, 4
+0x1412a1925: pxor       xmm3, xmm0
+0x1412a1929: pxor       xmm3, xmm1
+0x1412a192d: movaps     xmmword ptr [rax - 0x48], xmm9
+0x1412a1932: movaps     xmmword ptr [rax - 0x58], xmm10
+0x1412a1937: aeskeygenassist xmm0, xmm2, 1
+0x1412a193d: pshufd     xmm1, xmm0, 0xff
+0x1412a1942: pxor       xmm3, xmm1
+0x1412a1946: movaps     xmmword ptr [rax - 0x68], xmm11
+0x1412a194b: movaps     xmmword ptr [rax - 0x78], xmm12
+0x1412a1950: movaps     xmmword ptr [rsp + 0x40], xmm13
+0x1412a1956: movaps     xmmword ptr [rsp + 0x30], xmm14
+0x1412a195c: movaps     xmmword ptr [rsp + 0x20], xmm15
+0x1412a1962: movdqa     xmm1, xmm2
+0x1412a1966: pslldq     xmm1, 4
+0x1412a196b: movdqa     xmm0, xmm1
+0x1412a196f: movdqa     xmmword ptr [rsp], xmm2
+0x1412a1974: pslldq     xmm1, 4
+0x1412a1979: pxor       xmm0, xmm2
+0x1412a197d: movdqa     xmm4, xmm1
+0x1412a1981: pslldq     xmm1, 4
+0x1412a1986: pxor       xmm4, xmm0
+0x1412a198a: pxor       xmm4, xmm1
+0x1412a198e: aeskeygenassist xmm0, xmm3, 0
+0x1412a1994: pshufd     xmm1, xmm0, 0xaa
+0x1412a1999: pxor       xmm4, xmm1
+0x1412a199d: movdqa     xmm1, xmm3
+0x1412a19a1: pslldq     xmm1, 4
+0x1412a19a6: movdqa     xmm0, xmm1
+0x1412a19aa: pslldq     xmm1, 4
+0x1412a19af: movdqa     xmm5, xmm1
+0x1412a19b3: pxor       xmm0, xmm3
+0x1412a19b7: pslldq     xmm1, 4
+0x1412a19bc: pxor       xmm5, xmm0
+0x1412a19c0: pxor       xmm5, xmm1
+0x1412a19c4: aeskeygenassist xmm0, xmm4, 2
+0x1412a19ca: pshufd     xmm1, xmm0, 0xff
+0x1412a19cf: pxor       xmm5, xmm1
+0x1412a19d3: movdqa     xmm1, xmm4
+0x1412a19d7: pslldq     xmm1, 4
+0x1412a19dc: movdqa     xmm0, xmm1
+0x1412a19e0: pslldq     xmm1, 4
+0x1412a19e5: movdqa     xmm6, xmm1
+0x1412a19e9: pxor       xmm0, xmm4
+0x1412a19ed: pslldq     xmm1, 4
+0x1412a19f2: pxor       xmm6, xmm0
+0x1412a19f6: pxor       xmm6, xmm1
+0x1412a19fa: aeskeygenassist xmm0, xmm5, 0
+0x1412a1a00: pshufd     xmm1, xmm0, 0xaa
+0x1412a1a05: pxor       xmm6, xmm1
+0x1412a1a09: movdqa     xmm1, xmm5
+0x1412a1a0d: pslldq     xmm1, 4
+0x1412a1a12: movdqa     xmm0, xmm1
+0x1412a1a16: pslldq     xmm1, 4
+0x1412a1a1b: movdqa     xmm7, xmm1
+0x1412a1a1f: pxor       xmm0, xmm5
+0x1412a1a23: pxor       xmm7, xmm0
+0x1412a1a27: pslldq     xmm1, 4
+0x1412a1a2c: pxor       xmm7, xmm1
+0x1412a1a30: aeskeygenassist xmm0, xmm6, 4
+0x1412a1a36: pshufd     xmm1, xmm0, 0xff
+0x1412a1a3b: pxor       xmm7, xmm1
+0x1412a1a3f: movdqa     xmm1, xmm6
+0x1412a1a43: pslldq     xmm1, 4
+0x1412a1a48: movdqa     xmm0, xmm1
+0x1412a1a4c: pslldq     xmm1, 4
+0x1412a1a51: movdqa     xmm8, xmm1
+0x1412a1a56: pxor       xmm0, xmm6
+0x1412a1a5a: pxor       xmm8, xmm0
+0x1412a1a5f: pslldq     xmm1, 4
+0x1412a1a64: pxor       xmm8, xmm1
+0x1412a1a69: aeskeygenassist xmm0, xmm7, 0
+0x1412a1a6f: pshufd     xmm1, xmm0, 0xaa
+0x1412a1a74: pxor       xmm8, xmm1
+0x1412a1a79: movdqa     xmm1, xmm7
+0x1412a1a7d: pslldq     xmm1, 4
+0x1412a1a82: movdqa     xmm0, xmm1
+0x1412a1a86: pslldq     xmm1, 4
+0x1412a1a8b: movdqa     xmm9, xmm1
+0x1412a1a90: pxor       xmm0, xmm7
+0x1412a1a94: pslldq     xmm1, 4
+0x1412a1a99: pxor       xmm9, xmm0
+0x1412a1a9e: pxor       xmm9, xmm1
+0x1412a1aa3: aeskeygenassist xmm0, xmm8, 8
+0x1412a1aaa: pshufd     xmm1, xmm0, 0xff
+0x1412a1aaf: pxor       xmm9, xmm1
+0x1412a1ab4: movdqa     xmm1, xmm8
+0x1412a1ab9: pslldq     xmm1, 4
+0x1412a1abe: movdqa     xmm0, xmm1
+0x1412a1ac2: pslldq     xmm1, 4
+0x1412a1ac7: movdqa     xmm10, xmm1
+0x1412a1acc: pxor       xmm0, xmm8
+0x1412a1ad1: pslldq     xmm1, 4
+0x1412a1ad6: pxor       xmm10, xmm0
+0x1412a1adb: pxor       xmm10, xmm1
+0x1412a1ae0: aeskeygenassist xmm0, xmm9, 0
+0x1412a1ae7: pshufd     xmm1, xmm0, 0xaa
+0x1412a1aec: pxor       xmm10, xmm1
+0x1412a1af1: movdqa     xmm1, xmm9
+0x1412a1af6: pslldq     xmm1, 4
+0x1412a1afb: movdqa     xmm0, xmm1
+0x1412a1aff: pslldq     xmm1, 4
+0x1412a1b04: movdqa     xmm11, xmm1
+0x1412a1b09: pxor       xmm0, xmm9
+0x1412a1b0e: pslldq     xmm1, 4
+0x1412a1b13: pxor       xmm11, xmm0
+0x1412a1b18: pxor       xmm11, xmm1
+0x1412a1b1d: aeskeygenassist xmm0, xmm10, 0x10
+0x1412a1b24: pshufd     xmm1, xmm0, 0xff
+0x1412a1b29: pxor       xmm11, xmm1
+0x1412a1b2e: movdqa     xmm1, xmm10
+0x1412a1b33: pslldq     xmm1, 4
+0x1412a1b38: movdqa     xmm0, xmm1
+0x1412a1b3c: pslldq     xmm1, 4
+0x1412a1b41: movdqa     xmm12, xmm1
+0x1412a1b46: pxor       xmm0, xmm10
+0x1412a1b4b: pslldq     xmm1, 4
+0x1412a1b50: pxor       xmm12, xmm0
+0x1412a1b55: pxor       xmm12, xmm1
+0x1412a1b5a: aeskeygenassist xmm0, xmm11, 0
+0x1412a1b61: pshufd     xmm1, xmm0, 0xaa
+0x1412a1b66: pxor       xmm12, xmm1
+0x1412a1b6b: movdqa     xmm1, xmm11
+0x1412a1b70: pslldq     xmm1, 4
+0x1412a1b75: movdqa     xmm0, xmm1
+0x1412a1b79: pslldq     xmm1, 4
+0x1412a1b7e: movdqa     xmm13, xmm1
+0x1412a1b83: pxor       xmm0, xmm11
+0x1412a1b88: pslldq     xmm1, 4
+0x1412a1b8d: pxor       xmm13, xmm0
+0x1412a1b92: pxor       xmm13, xmm1
+0x1412a1b97: aeskeygenassist xmm0, xmm12, 0x20
+0x1412a1b9e: pshufd     xmm1, xmm0, 0xff
+0x1412a1ba3: pxor       xmm13, xmm1
+0x1412a1ba8: movdqa     xmm1, xmm12
+0x1412a1bad: pslldq     xmm1, 4
+0x1412a1bb2: movdqa     xmm0, xmm1
+0x1412a1bb6: pslldq     xmm1, 4
+0x1412a1bbb: movdqa     xmm14, xmm1
+0x1412a1bc0: pxor       xmm0, xmm12
+0x1412a1bc5: pxor       xmm14, xmm0
+0x1412a1bca: pslldq     xmm1, 4
+0x1412a1bcf: pxor       xmm14, xmm1
+0x1412a1bd4: aeskeygenassist xmm0, xmm13, 0
+0x1412a1bdb: pshufd     xmm1, xmm0, 0xaa
+0x1412a1be0: pxor       xmm14, xmm1
+0x1412a1be5: movdqa     xmm1, xmm13
+0x1412a1bea: pslldq     xmm1, 4
+0x1412a1bef: movdqa     xmm0, xmm1
+0x1412a1bf3: pxor       xmm0, xmm13
+0x1412a1bf8: pslldq     xmm1, 4
+0x1412a1bfd: movdqa     xmm15, xmm1
+0x1412a1c02: pslldq     xmm1, 4
+0x1412a1c07: pxor       xmm15, xmm0
+0x1412a1c0c: pxor       xmm15, xmm1
+0x1412a1c11: aeskeygenassist xmm0, xmm14, 0x40
+0x1412a1c18: pshufd     xmm1, xmm0, 0xff
+0x1412a1c1d: pxor       xmm15, xmm1
+0x1412a1c22: cmp        r8, 0x20
+0x1412a1c26: jb         0x1412a1d15
+0x1412a1c2c: mov        rcx, r8
+0x1412a1c2f: shr        rcx, 5
+0x1412a1c33: imul       rax, rcx, -0x20
+0x1412a1c37: add        r8, rax
+0x1412a1c3a: nop        word ptr [rax + rax]
+0x1412a1c40: movdqu     xmm0, xmmword ptr [rdx + 0x10]
+0x1412a1c45: movdqa     xmm1, xmmword ptr [rsp + 0x10]
+0x1412a1c4b: movdqa     xmm2, xmm1
+0x1412a1c4f: pxor       xmm2, xmm0
+0x1412a1c53: aesenc     xmm2, xmmword ptr [rsp]
+0x1412a1c59: movdqu     xmm0, xmmword ptr [rdx]
+0x1412a1c5d: aesenc     xmm2, xmm3
+0x1412a1c62: pxor       xmm1, xmm0
+0x1412a1c66: aesenc     xmm1, xmmword ptr [rsp]
+0x1412a1c6c: aesenc     xmm1, xmm3
+0x1412a1c71: aesenc     xmm1, xmm4
+0x1412a1c76: aesenc     xmm2, xmm4
+0x1412a1c7b: aesenc     xmm1, xmm5
+0x1412a1c80: aesenc     xmm2, xmm5
+0x1412a1c85: aesenc     xmm1, xmm6
+0x1412a1c8a: aesenc     xmm2, xmm6
+0x1412a1c8f: aesenc     xmm1, xmm7
+0x1412a1c94: aesenc     xmm2, xmm7
+0x1412a1c99: aesenc     xmm1, xmm8
+0x1412a1c9f: aesenc     xmm2, xmm8
+0x1412a1ca5: aesenc     xmm1, xmm9
+0x1412a1cab: aesenc     xmm2, xmm9
+0x1412a1cb1: aesenc     xmm1, xmm10
+0x1412a1cb7: aesenc     xmm2, xmm10
+0x1412a1cbd: aesenc     xmm1, xmm11
+0x1412a1cc3: aesenc     xmm2, xmm11
+0x1412a1cc9: aesenc     xmm1, xmm12
+0x1412a1ccf: aesenc     xmm2, xmm12
+0x1412a1cd5: aesenc     xmm1, xmm13
+0x1412a1cdb: aesenc     xmm2, xmm13
+0x1412a1ce1: aesenc     xmm1, xmm14
+0x1412a1ce7: aesenc     xmm2, xmm14
+0x1412a1ced: aesenclast xmm1, xmm15
+0x1412a1cf3: aesenclast xmm2, xmm15
+0x1412a1cf9: movdqu     xmmword ptr [rdx], xmm1
+0x1412a1cfd: movdqu     xmmword ptr [rdx + 0x10], xmm2
+0x1412a1d02: add        rdx, 0x20
+0x1412a1d06: sub        rcx, 1
+0x1412a1d0a: jne        0x1412a1c40
+0x1412a1d10: movdqa     xmm2, xmmword ptr [rsp]
+0x1412a1d15: test       r8, r8
+0x1412a1d18: je         0x1412a1d76
+0x1412a1d1a: movdqu     xmm0, xmmword ptr [rdx]
+0x1412a1d1e: pxor       xmm0, xmmword ptr [rsp + 0x10]
+0x1412a1d24: aesenc     xmm0, xmm2
+0x1412a1d29: aesenc     xmm0, xmm3
+0x1412a1d2e: aesenc     xmm0, xmm4
+0x1412a1d33: aesenc     xmm0, xmm5
+0x1412a1d38: aesenc     xmm0, xmm6
+0x1412a1d3d: aesenc     xmm0, xmm7
+0x1412a1d42: aesenc     xmm0, xmm8
+0x1412a1d48: aesenc     xmm0, xmm9
+0x1412a1d4e: aesenc     xmm0, xmm10
+0x1412a1d54: aesenc     xmm0, xmm11
+0x1412a1d5a: aesenc     xmm0, xmm12
+0x1412a1d60: aesenc     xmm0, xmm13
+0x1412a1d66: aesenc     xmm0, xmm14
+0x1412a1d6c: aesenclast xmm0, xmm15
+0x1412a1d72: movdqu     xmmword ptr [rdx], xmm0
+0x1412a1d76: movaps     xmm13, xmmword ptr [rsp + 0x40]
+0x1412a1d7c: lea        r11, [rsp + 0xc8]
+0x1412a1d84: movaps     xmm6, xmmword ptr [r11 - 0x18]
+0x1412a1d89: movaps     xmm7, xmmword ptr [r11 - 0x28]
+0x1412a1d8e: movaps     xmm8, xmmword ptr [r11 - 0x38]
+0x1412a1d93: movaps     xmm9, xmmword ptr [r11 - 0x48]
+0x1412a1d98: movaps     xmm10, xmmword ptr [r11 - 0x58]
+0x1412a1d9d: movaps     xmm11, xmmword ptr [r11 - 0x68]
+0x1412a1da2: movaps     xmm12, xmmword ptr [r11 - 0x78]
+0x1412a1da7: movaps     xmm14, xmmword ptr [rsp + 0x30]
+0x1412a1dad: movaps     xmm15, xmmword ptr [rsp + 0x20]
+0x1412a1db3: mov        rsp, r11
+0x1412a1db6: ret        
+
+===== AES TARGET seed=0x1412a1dc0 pdata=(5388246464, 5388247723) =====
+0x1412a1dc0: mov        rax, rsp
+0x1412a1dc3: sub        rsp, 0xc8
+0x1412a1dca: movdqu     xmm2, xmmword ptr [rcx + 0x10]
+0x1412a1dcf: movdqu     xmm4, xmmword ptr [rcx]
+0x1412a1dd3: movaps     xmmword ptr [rax - 0x18], xmm6
+0x1412a1dd7: movaps     xmmword ptr [rax - 0x28], xmm7
+0x1412a1ddb: movdqa     xmm1, xmm4
+0x1412a1ddf: pslldq     xmm1, 4
+0x1412a1de4: movdqa     xmm0, xmm1
+0x1412a1de8: movaps     xmmword ptr [rax - 0x38], xmm8
+0x1412a1ded: pslldq     xmm1, 4
+0x1412a1df2: pxor       xmm0, xmm4
+0x1412a1df6: movdqa     xmm3, xmm1
+0x1412a1dfa: movaps     xmmword ptr [rax - 0x48], xmm9
+0x1412a1dff: pxor       xmm3, xmm0
+0x1412a1e03: pslldq     xmm1, 4
+0x1412a1e08: pxor       xmm3, xmm1
+0x1412a1e0c: movaps     xmmword ptr [rax - 0x58], xmm10
+0x1412a1e11: aeskeygenassist xmm0, xmm2, 1
+0x1412a1e17: pshufd     xmm1, xmm0, 0xff
+0x1412a1e1c: pxor       xmm3, xmm1
+0x1412a1e20: movaps     xmmword ptr [rax - 0x68], xmm11
+0x1412a1e25: movdqa     xmm1, xmm2
+0x1412a1e29: movaps     xmmword ptr [rax - 0x78], xmm12
+0x1412a1e2e: movaps     xmmword ptr [rsp + 0x40], xmm13
+0x1412a1e34: movaps     xmmword ptr [rsp + 0x30], xmm14
+0x1412a1e3a: movaps     xmmword ptr [rsp + 0x20], xmm15
+0x1412a1e40: pslldq     xmm1, 4
+0x1412a1e45: movdqa     xmm0, xmm1
+0x1412a1e49: pslldq     xmm1, 4
+0x1412a1e4e: pxor       xmm0, xmm2
+0x1412a1e52: aesimc     xmm5, xmm2
+0x1412a1e57: movdqa     xmm2, xmm1
+0x1412a1e5b: pslldq     xmm1, 4
+0x1412a1e60: pxor       xmm2, xmm0
+0x1412a1e64: pxor       xmm2, xmm1
+0x1412a1e68: aeskeygenassist xmm0, xmm3, 0
+0x1412a1e6e: pshufd     xmm1, xmm0, 0xaa
+0x1412a1e73: pxor       xmm2, xmm1
+0x1412a1e77: movdqa     xmm1, xmm3
+0x1412a1e7b: pslldq     xmm1, 4
+0x1412a1e80: movdqa     xmm0, xmm1
+0x1412a1e84: pslldq     xmm1, 4
+0x1412a1e89: pxor       xmm0, xmm3
+0x1412a1e8d: aesimc     xmm6, xmm3
+0x1412a1e92: movdqa     xmm3, xmm1
+0x1412a1e96: pslldq     xmm1, 4
+0x1412a1e9b: pxor       xmm3, xmm0
+0x1412a1e9f: pxor       xmm3, xmm1
+0x1412a1ea3: aeskeygenassist xmm0, xmm2, 2
+0x1412a1ea9: pshufd     xmm1, xmm0, 0xff
+0x1412a1eae: pxor       xmm3, xmm1
+0x1412a1eb2: movdqa     xmm1, xmm2
+0x1412a1eb6: pslldq     xmm1, 4
+0x1412a1ebb: movdqa     xmm0, xmm1
+0x1412a1ebf: pslldq     xmm1, 4
+0x1412a1ec4: pxor       xmm0, xmm2
+0x1412a1ec8: aesimc     xmm7, xmm2
+0x1412a1ecd: movdqa     xmm2, xmm1
+0x1412a1ed1: pslldq     xmm1, 4
+0x1412a1ed6: pxor       xmm2, xmm0
+0x1412a1eda: pxor       xmm2, xmm1
+0x1412a1ede: aeskeygenassist xmm0, xmm3, 0
+0x1412a1ee4: pshufd     xmm1, xmm0, 0xaa
+0x1412a1ee9: pxor       xmm2, xmm1
+0x1412a1eed: movdqa     xmm1, xmm3
+0x1412a1ef1: pslldq     xmm1, 4
+0x1412a1ef6: movdqa     xmm0, xmm1
+0x1412a1efa: pslldq     xmm1, 4
+0x1412a1eff: pxor       xmm0, xmm3
+0x1412a1f03: aesimc     xmm8, xmm3
+0x1412a1f09: movdqa     xmm3, xmm1
+0x1412a1f0d: pslldq     xmm1, 4
+0x1412a1f12: pxor       xmm3, xmm0
+0x1412a1f16: pxor       xmm3, xmm1
+0x1412a1f1a: aeskeygenassist xmm0, xmm2, 4
+0x1412a1f20: pshufd     xmm1, xmm0, 0xff
+0x1412a1f25: pxor       xmm3, xmm1
+0x1412a1f29: movdqa     xmm1, xmm2
+0x1412a1f2d: pslldq     xmm1, 4
+0x1412a1f32: movdqa     xmm0, xmm1
+0x1412a1f36: aesimc     xmm9, xmm2
+0x1412a1f3c: aesimc     xmm10, xmm3
+0x1412a1f42: pslldq     xmm1, 4
+0x1412a1f47: pxor       xmm0, xmm2
+0x1412a1f4b: movdqa     xmm2, xmm1
+0x1412a1f4f: pslldq     xmm1, 4
+0x1412a1f54: pxor       xmm2, xmm0
+0x1412a1f58: pxor       xmm2, xmm1
+0x1412a1f5c: aeskeygenassist xmm0, xmm3, 0
+0x1412a1f62: pshufd     xmm1, xmm0, 0xaa
+0x1412a1f67: pxor       xmm2, xmm1
+0x1412a1f6b: movdqa     xmm1, xmm3
+0x1412a1f6f: pslldq     xmm1, 4
+0x1412a1f74: movdqa     xmm0, xmm1
+0x1412a1f78: pslldq     xmm1, 4
+0x1412a1f7d: pxor       xmm0, xmm3
+0x1412a1f81: movdqa     xmm3, xmm1
+0x1412a1f85: pxor       xmm3, xmm0
+0x1412a1f89: pslldq     xmm1, 4
+0x1412a1f8e: pxor       xmm3, xmm1
+0x1412a1f92: aeskeygenassist xmm0, xmm2, 8
+0x1412a1f98: pshufd     xmm1, xmm0, 0xff
+0x1412a1f9d: pxor       xmm3, xmm1
+0x1412a1fa1: movdqa     xmm1, xmm2
+0x1412a1fa5: pslldq     xmm1, 4
+0x1412a1faa: movdqa     xmm0, xmm1
+0x1412a1fae: pslldq     xmm1, 4
+0x1412a1fb3: pxor       xmm0, xmm2
+0x1412a1fb7: aesimc     xmm11, xmm2
+0x1412a1fbd: movdqa     xmm2, xmm1
+0x1412a1fc1: pslldq     xmm1, 4
+0x1412a1fc6: pxor       xmm2, xmm0
+0x1412a1fca: pxor       xmm2, xmm1
+0x1412a1fce: aeskeygenassist xmm0, xmm3, 0
+0x1412a1fd4: pshufd     xmm1, xmm0, 0xaa
+0x1412a1fd9: pxor       xmm2, xmm1
+0x1412a1fdd: movdqa     xmm1, xmm3
+0x1412a1fe1: pslldq     xmm1, 4
+0x1412a1fe6: movdqa     xmm0, xmm1
+0x1412a1fea: pslldq     xmm1, 4
+0x1412a1fef: pxor       xmm0, xmm3
+0x1412a1ff3: aesimc     xmm12, xmm3
+0x1412a1ff9: movdqa     xmm3, xmm1
+0x1412a1ffd: pslldq     xmm1, 4
+0x1412a2002: pxor       xmm3, xmm0
+0x1412a2006: pxor       xmm3, xmm1
+0x1412a200a: aeskeygenassist xmm0, xmm2, 0x10
+0x1412a2010: pshufd     xmm1, xmm0, 0xff
+0x1412a2015: pxor       xmm3, xmm1
+0x1412a2019: movdqa     xmm1, xmm2
+0x1412a201d: pslldq     xmm1, 4
+0x1412a2022: movdqa     xmm0, xmm1
+0x1412a2026: pslldq     xmm1, 4
+0x1412a202b: pxor       xmm0, xmm2
+0x1412a202f: aesimc     xmm13, xmm2
+0x1412a2035: movdqa     xmm2, xmm1
+0x1412a2039: pslldq     xmm1, 4
+0x1412a203e: pxor       xmm2, xmm0
+0x1412a2042: pxor       xmm2, xmm1
+0x1412a2046: aeskeygenassist xmm0, xmm3, 0
+0x1412a204c: pshufd     xmm1, xmm0, 0xaa
+0x1412a2051: pxor       xmm2, xmm1
+0x1412a2055: movdqa     xmm1, xmm3
+0x1412a2059: pslldq     xmm1, 4
+0x1412a205e: movdqa     xmm0, xmm1
+0x1412a2062: pslldq     xmm1, 4
+0x1412a2067: pxor       xmm0, xmm3
+0x1412a206b: aesimc     xmm14, xmm3
+0x1412a2071: movdqa     xmm3, xmm1
+0x1412a2075: pslldq     xmm1, 4
+0x1412a207a: pxor       xmm3, xmm0
+0x1412a207e: pxor       xmm3, xmm1
+0x1412a2082: aeskeygenassist xmm0, xmm2, 0x20
+0x1412a2088: pshufd     xmm1, xmm0, 0xff
+0x1412a208d: pxor       xmm3, xmm1
+0x1412a2091: movdqa     xmm1, xmm2
+0x1412a2095: aesimc     xmm0, xmm3
+0x1412a209a: pslldq     xmm1, 4
+0x1412a209f: movdqa     xmmword ptr [rsp + 0x10], xmm0
+0x1412a20a5: movdqa     xmm0, xmm1
+0x1412a20a9: pxor       xmm0, xmm2
+0x1412a20ad: pslldq     xmm1, 4
+0x1412a20b2: aesimc     xmm15, xmm2
+0x1412a20b8: movdqa     xmm2, xmm1
+0x1412a20bc: pslldq     xmm1, 4
+0x1412a20c1: pxor       xmm2, xmm0
+0x1412a20c5: pxor       xmm2, xmm1
+0x1412a20c9: aeskeygenassist xmm0, xmm3, 0
+0x1412a20cf: pshufd     xmm1, xmm0, 0xaa
+0x1412a20d4: pxor       xmm2, xmm1
+0x1412a20d8: movdqa     xmm1, xmm3
+0x1412a20dc: pslldq     xmm1, 4
+0x1412a20e1: aesimc     xmm0, xmm2
+0x1412a20e6: movdqa     xmmword ptr [rsp], xmm0
+0x1412a20eb: movdqa     xmm0, xmm1
+0x1412a20ef: pslldq     xmm1, 4
+0x1412a20f4: pxor       xmm0, xmm3
+0x1412a20f8: movdqa     xmm3, xmm1
+0x1412a20fc: pslldq     xmm1, 4
+0x1412a2101: pxor       xmm3, xmm0
+0x1412a2105: pxor       xmm3, xmm1
+0x1412a2109: aeskeygenassist xmm0, xmm2, 0x40
+0x1412a210f: movdqa     xmm2, xmmword ptr [rsp + 0x10]
+0x1412a2115: pshufd     xmm1, xmm0, 0xff
+0x1412a211a: pxor       xmm3, xmm1
+0x1412a211e: cmp        r8, 0x20
+0x1412a2122: jb         0x1412a220a
+0x1412a2128: mov        rcx, r8
+0x1412a212b: shr        rcx, 5
+0x1412a212f: imul       rax, rcx, -0x20
+0x1412a2133: add        r8, rax
+0x1412a2136: nop        word ptr [rax + rax]
+0x1412a2140: movdqu     xmm0, xmmword ptr [rdx + 0x10]
+0x1412a2145: movdqa     xmm1, xmm3
+0x1412a2149: pxor       xmm1, xmm0
+0x1412a214d: aesdec     xmm1, xmmword ptr [rsp]
+0x1412a2153: movdqu     xmm0, xmmword ptr [rdx]
+0x1412a2157: aesdec     xmm1, xmm2
+0x1412a215c: pxor       xmm0, xmm3
+0x1412a2160: aesdec     xmm0, xmmword ptr [rsp]
+0x1412a2166: aesdec     xmm0, xmm2
+0x1412a216b: aesdec     xmm0, xmm15
+0x1412a2171: aesdec     xmm1, xmm15
+0x1412a2177: aesdec     xmm0, xmm14
+0x1412a217d: aesdec     xmm1, xmm14
+0x1412a2183: aesdec     xmm0, xmm13
+0x1412a2189: aesdec     xmm1, xmm13
+0x1412a218f: aesdec     xmm0, xmm12
+0x1412a2195: aesdec     xmm1, xmm12
+0x1412a219b: aesdec     xmm0, xmm11
+0x1412a21a1: aesdec     xmm1, xmm11
+0x1412a21a7: aesdec     xmm0, xmm10
+0x1412a21ad: aesdec     xmm1, xmm10
+0x1412a21b3: aesdec     xmm0, xmm9
+0x1412a21b9: aesdec     xmm1, xmm9
+0x1412a21bf: aesdec     xmm0, xmm8
+0x1412a21c5: aesdec     xmm1, xmm8
+0x1412a21cb: aesdec     xmm0, xmm7
+0x1412a21d0: aesdec     xmm1, xmm7
+0x1412a21d5: aesdec     xmm0, xmm6
+0x1412a21da: aesdec     xmm1, xmm6
+0x1412a21df: aesdec     xmm0, xmm5
+0x1412a21e4: aesdec     xmm1, xmm5
+0x1412a21e9: aesdeclast xmm0, xmm4
+0x1412a21ee: aesdeclast xmm1, xmm4
+0x1412a21f3: movdqu     xmmword ptr [rdx], xmm0
+0x1412a21f7: movdqu     xmmword ptr [rdx + 0x10], xmm1
+0x1412a21fc: add        rdx, 0x20
+0x1412a2200: sub        rcx, 1
+0x1412a2204: jne        0x1412a2140
+0x1412a220a: test       r8, r8
+0x1412a220d: je         0x1412a226a
+0x1412a220f: movdqu     xmm0, xmmword ptr [rdx]
+0x1412a2213: pxor       xmm0, xmm3
+0x1412a2217: aesdec     xmm0, xmmword ptr [rsp]
+0x1412a221d: aesdec     xmm0, xmm2
+0x1412a2222: aesdec     xmm0, xmm15
+0x1412a2228: aesdec     xmm0, xmm14
+0x1412a222e: aesdec     xmm0, xmm13
+0x1412a2234: aesdec     xmm0, xmm12
+0x1412a223a: aesdec     xmm0, xmm11
+0x1412a2240: aesdec     xmm0, xmm10
+0x1412a2246: aesdec     xmm0, xmm9
+0x1412a224c: aesdec     xmm0, xmm8
+0x1412a2252: aesdec     xmm0, xmm7
+0x1412a2257: aesdec     xmm0, xmm6
+0x1412a225c: aesdec     xmm0, xmm5
+0x1412a2261: aesdeclast xmm0, xmm4
+0x1412a2266: movdqu     xmmword ptr [rdx], xmm0
+0x1412a226a: movaps     xmm13, xmmword ptr [rsp + 0x40]
+0x1412a2270: lea        r11, [rsp + 0xc8]
+0x1412a2278: movaps     xmm6, xmmword ptr [r11 - 0x18]
+0x1412a227d: movaps     xmm7, xmmword ptr [r11 - 0x28]
+0x1412a2282: movaps     xmm8, xmmword ptr [r11 - 0x38]
+0x1412a2287: movaps     xmm9, xmmword ptr [r11 - 0x48]
+0x1412a228c: movaps     xmm10, xmmword ptr [r11 - 0x58]
+0x1412a2291: movaps     xmm11, xmmword ptr [r11 - 0x68]
+0x1412a2296: movaps     xmm12, xmmword ptr [r11 - 0x78]
+0x1412a229b: movaps     xmm14, xmmword ptr [rsp + 0x30]
+0x1412a22a1: movaps     xmm15, xmmword ptr [rsp + 0x20]
+0x1412a22a7: mov        rsp, r11
+0x1412a22aa: ret        
