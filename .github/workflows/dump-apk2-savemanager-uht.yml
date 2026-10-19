@@ -1,0 +1,82 @@
+name: Dump APK2 SaveGameManager UHT metadata
+
+on:
+  push:
+    paths:
+      - '.github/workflows/dump-apk2-savemanager-uht.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch executable
+        run: |
+          curl -fL --retry 5 'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' -o APK2-Win64-Shipping.exe
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+          python3 -m pip install --quiet pefile
+      - name: Decode neighborhood and pointer arrays
+        shell: bash
+        run: |
+          mkdir reports
+          cat > dump.py <<'PY'
+          import pefile,re,struct
+          from pathlib import Path
+          data=Path('APK2-Win64-Shipping.exe').read_bytes(); pe=pefile.PE('APK2-Win64-Shipping.exe'); base=pe.OPTIONAL_HEADER.ImageBase
+          def off2va(off):
+              for s in pe.sections:
+                  if s.PointerToRawData<=off<s.PointerToRawData+s.SizeOfRawData:
+                      return base+s.VirtualAddress+(off-s.PointerToRawData)
+          def va2off(va):
+              try:return pe.get_offset_from_rva(va-base)
+              except:return None
+          # Broad file window around SaveGameManager generated metadata.
+          lo=0xa1c0000; hi=0xa1f5000
+          out=[]; strings=[]
+          for m in re.finditer(rb'[ -~]{3,160}\x00',data[lo:hi]):
+              off=lo+m.start(); s=m.group()[:-1].decode('ascii','replace'); va=off2va(off)
+              strings.append((off,va,s))
+          out.append('===== ASCII STRINGS IN UHT WINDOW =====')
+          for off,va,s in strings:
+              if any(k in s.lower() for k in ['save','load','encrypt','decrypt','broken','version','busy','data','default','storage','manager']):
+                  out.append(f'off=0x{off:x} va={"0x%x"%va if va else "NA"} {s!r}')
+          # All strings within +/-0x8000 of EncryptKey file offset, even if names don't contain keywords.
+          out.append('\n===== ALL STRINGS AROUND EncryptKey +/-0x8000 =====')
+          center=0xa1d39f8
+          for off,va,s in strings:
+              if abs(off-center)<=0x8000:out.append(f'off=0x{off:x} va={"0x%x"%va if va else "NA"} {s!r}')
+          # For each nearby string VA, list qword references from the same metadata region.
+          out.append('\n===== QWORD REFERENCES TO NEARBY STRINGS =====')
+          nearby=[x for x in strings if abs(x[0]-center)<=0x8000 and x[1]]
+          for off,va,s in nearby:
+              pat=struct.pack('<Q',va); p=lo; refs=[]
+              while True:
+                  p=data.find(pat,p,hi)
+                  if p<0:break
+                  refs.append(p);p+=1
+              if refs:
+                  out.append(f'{s!r} VA=0x{va:x} refs='+','.join(f'0x{r:x}/VA0x{off2va(r):x}' for r in refs if off2va(r)))
+          # Dump qwords around known class metadata block.
+          out.append('\n===== QWORDS 0x14a1de800..0x14a1df400 =====')
+          for va in range(0x14a1de800,0x14a1df400,8):
+              off=va2off(va)
+              if off is None or off+8>len(data):continue
+              q=struct.unpack_from('<Q',data,off)[0]
+              tag=''
+              qo=va2off(q) if base<=q<base+0x100000000 else None
+              if qo is not None:
+                  raw=data[qo:qo+100].split(b'\0',1)[0]
+                  if raw and all(32<=c<127 for c in raw):tag=' -> '+repr(raw.decode('ascii','replace'))
+              out.append(f'0x{va:x}: 0x{q:016x}{tag}')
+          Path('reports/savemanager_uht.txt').write_text('\n'.join(out))
+          print('\n'.join(out[:5000]))
+          PY
+          python3 dump.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk2-savemanager-uht
+          path: reports/savemanager_uht.txt
+          retention-days: 7
