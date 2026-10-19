@@ -1,0 +1,36 @@
+PDATA=(5461166624, 5461166745)
+0x14582ca20: mov       qword ptr [rsp + 8], rbx ; FIELD=0x8
+0x14582ca25: push      rdi
+0x14582ca26: sub       rsp, 0x20
+0x14582ca2a: mov       qword ptr [rcx], rdx
+0x14582ca2d: mov       rdi, rcx
+0x14582ca30: mov       dword ptr [rcx + 8], r8d ; FIELD=0x8
+0x14582ca34: mov       rdx, r9
+0x14582ca37: add       rcx, 0x10
+0x14582ca3b: call      0x1411c7310 ; CALL->0x1411c7310
+0x14582ca40: mov       rbx, qword ptr [rsp + 0x50]
+0x14582ca45: lea       rcx, [rdi + 0x20] ; FIELD=0x20
+0x14582ca49: mov       rdx, rbx
+0x14582ca4c: call      0x1411c0630 ; CALL->0x1411c0630
+0x14582ca51: cmp       dword ptr [rbx + 8], 0 ; FIELD=0x8
+0x14582ca55: je        0x14582ca7e
+0x14582ca57: mov       rcx, qword ptr [rbx]
+0x14582ca5a: test      rcx, rcx
+0x14582ca5d: je        0x14582ca7e
+0x14582ca5f: mov       rax, qword ptr [rcx]
+0x14582ca62: xor       edx, edx
+0x14582ca64: call      qword ptr [rax]
+0x14582ca66: mov       r9d, 0x10
+0x14582ca6c: xor       r8d, r8d
+0x14582ca6f: mov       rcx, rbx
+0x14582ca72: call      0x1411c0d50 ; CALL->0x1411c0d50
+0x14582ca77: mov       dword ptr [rbx + 8], 0 ; FIELD=0x8
+0x14582ca7e: mov       rcx, qword ptr [rbx]
+0x14582ca81: test      rcx, rcx
+0x14582ca84: je        0x14582ca8b
+0x14582ca86: call      0x141201300 ; CALL->0x141201300
+0x14582ca8b: mov       rbx, qword ptr [rsp + 0x30] ; FIELD=0x30
+0x14582ca90: mov       rax, rdi
+0x14582ca93: add       rsp, 0x20
+0x14582ca97: pop       rdi
+0x14582ca98: ret       
