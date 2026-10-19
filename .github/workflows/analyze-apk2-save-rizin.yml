@@ -27,77 +27,97 @@ jobs:
           echo '9102249a9f0b6319c5334a2e5cf8d9cc3f2035e1d3def027c41f6a90f647e8cf  rizin.tar.xz' | sha256sum -c -
           mkdir rizin && tar -xJf rizin.tar.xz -C rizin
           RIZIN="$(find rizin -type f -name rizin -perm -111 | head -n1)"
-          RZBIN="$(find rizin -type f -name rz-bin -perm -111 | head -n1)"
-          test -n "$RIZIN" && test -n "$RZBIN"
+          test -n "$RIZIN"
           echo "RIZIN=$RIZIN" >> "$GITHUB_ENV"
-          echo "RZBIN=$RZBIN" >> "$GITHUB_ENV"
           "$RIZIN" -v
-          sha256sum APK2-Win64-Shipping.exe
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
 
-      - name: Basic PE and import reconnaissance
+      - name: Basic PE and imports
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p report
           {
-            echo '=== FILE ==='
             file APK2-Win64-Shipping.exe
-            sha256sum APK2-Win64-Shipping.exe
             stat -c 'size=%s' APK2-Win64-Shipping.exe
-            echo
-            echo '=== RIZIN INFO ==='
-            "$RIZIN" -q -c 'iI;q' APK2-Win64-Shipping.exe
-            echo
-            echo '=== CRYPTO-RELATED IMPORTS ==='
-            "$RIZIN" -q -c 'ii~BCrypt;ii~Crypt;ii~bcrypt;ii~crypt;q' APK2-Win64-Shipping.exe || true
-          } | tee report/01_basic.txt
+            "$RIZIN" -q -e bin.strings=false -c 'iI;ii~BCrypt;ii~Crypt;q' APK2-Win64-Shipping.exe || true
+          } > report/01_basic.txt 2>&1
+          sed -n '1,240p' report/01_basic.txt
 
-      - name: Search strings and possible static keys
+      - name: Map exact target strings to PE virtual addresses
         shell: bash
         run: |
           set -euo pipefail
-          {
-            echo '=== ASCII SAVE/CRYPTO STRINGS ==='
-            strings -a -n 5 APK2-Win64-Shipping.exe | grep -Ei 'DefaultData|\.sav|SaveGame|save data|AES|encrypt|decrypt|cipher|crypto|padding|Rijndael' | sort -u | head -n 400 || true
-            echo
-            echo '=== UTF16-LE SAVE/CRYPTO STRINGS ==='
-            strings -el -n 5 APK2-Win64-Shipping.exe | grep -Ei 'DefaultData|\.sav|SaveGame|save data|AES|encrypt|decrypt|cipher|crypto|padding|Rijndael' | sort -u | head -n 400 || true
-            echo
-            echo '=== 64-HEX ASCII CANDIDATES (possible 256-bit keys) ==='
-            strings -a -n 32 APK2-Win64-Shipping.exe | grep -Eo '[0-9A-Fa-f]{64}' | sort -u | head -n 300 || true
-            echo
-            echo '=== 32-BYTE PRINTABLE CANDIDATES NEAR AES/KEY WORDING ==='
-            strings -a -n 24 APK2-Win64-Shipping.exe | grep -Ei 'aes|key|encrypt|decrypt' | head -n 400 || true
-          } | tee report/02_strings.txt
+          python3 -m pip -q install pefile
+          python3 - <<'PY' | tee report/02_targets.txt
+          from pathlib import Path
+          import pefile
 
-      - name: Rizin string addresses
-        shell: bash
-        run: |
-          set -euo pipefail
-          "$RZBIN" -zzj APK2-Win64-Shipping.exe > report/strings.json
-          python3 - <<'PY' | tee report/03_target_strings.txt
-          import json,re
-          d=json.load(open('report/strings.json','r',encoding='utf-8'))
-          if isinstance(d,dict):
-              arr=d.get('strings') or d.get('entries') or []
-          else:
-              arr=d
-          pat=re.compile(r'DefaultData|\.sav|SaveGame|save data|AES|encrypt|decrypt|cipher|crypto|padding|Rijndael',re.I)
+          fn='APK2-Win64-Shipping.exe'
+          b=Path(fn).read_bytes()
+          pe=pefile.PE(fn, fast_load=True)
+          base=pe.OPTIONAL_HEADER.ImageBase
+
+          targets=[
+            ('DefaultData','utf16'),
+            ('UAPKSaveGameManager','utf16'),
+            ('UAPKSaveGameLibrary','utf16'),
+            ('sUAPKSaveGame','utf16'),
+            ('SaveGameManager Is Busy No Save','utf16'),
+            ('SaveGamePipe','utf16'),
+            ('SaveGameSystemModule','utf16'),
+            ('%sSEGA/%s/%s/%s/%s.sav','utf16'),
+            ('%sSaveGames/%s.sav','utf16'),
+            (r'D:\APK2\APK2\master\v201\trunk\Engine\Source\Runtime\Engine\Private\SaveGameSystem.cpp(18)','utf16'),
+            (r'D:\APK2\APK2\master\v201\trunk\Engine\Source\Runtime\Engine\Private\SaveGameSystem.cpp(45)','utf16'),
+            (r'D:\APK2\APK2\master\v201\trunk\Engine\Source\Runtime\Engine\Private\SaveGameSystem.cpp(72)','utf16'),
+            (r'D:\APK2\APK2\master\v201\trunk\Engine\Source\Runtime\Engine\Private\SaveGameSystem.cpp(100)','utf16'),
+            (r'D:\APK2\APK2\master\v201\trunk\Engine\Source\Runtime\Engine\Private\SaveGameSystem.cpp(124)','utf16'),
+            ('APKSaveGame_SetVersion','ascii'),
+            ('APKSaveGame_SetBroken','ascii'),
+            ('APKSaveGame_SetDifferentVersionDataForceLoad','ascii'),
+            ('3bfa9cc97da10598521b342961df8f5f68c7388fa117345eeb516eaa837bb4d6','ascii'),
+          ]
+
+          secs=[]
+          for s in pe.sections:
+              name=s.Name.rstrip(b'\0').decode('ascii','replace')
+              secs.append((s.PointerToRawData, s.SizeOfRawData, s.VirtualAddress, name))
+
+          def off_to_va(off):
+              for raw,sz,rva,name in secs:
+                  if raw <= off < raw+sz:
+                      rr=rva+(off-raw)
+                      return base+rr, rr, name
+              return None,None,None
+
           rows=[]
-          for s in arr:
-              txt=str(s.get('string',s.get('name','')))
-              if pat.search(txt):
-                  rows.append((int(s.get('vaddr',0)),int(s.get('paddr',0)),txt))
-          for va,pa,txt in sorted(rows):
-              print(f'vaddr=0x{va:x} paddr=0x{pa:x} {txt}')
-          print('COUNT',len(rows))
+          for text,enc in targets:
+              needle=text.encode('utf-16le') if enc=='utf16' else text.encode('ascii')
+              start=0; n=0
+              while True:
+                  off=b.find(needle,start)
+                  if off<0: break
+                  va,rva,sec=off_to_va(off)
+                  if va is not None:
+                      rows.append((text,enc,off,va,rva,sec))
+                      print(f'TARGET|{text}|{enc}|file=0x{off:x}|rva=0x{rva:x}|va=0x{va:x}|section={sec}')
+                  else:
+                      print(f'UNMAPPED|{text}|{enc}|file=0x{off:x}')
+                  n+=1; start=off+1
+              if n==0: print(f'NOTFOUND|{text}|{enc}')
+
+          with open('report/targets.tsv','w',encoding='utf-8') as f:
+              for text,enc,off,va,rva,sec in rows:
+                  f.write(f'{va:#x}\t{rva:#x}\t{off:#x}\t{sec}\t{enc}\t{text}\n')
+          print('MAPPED',len(rows))
           PY
 
-      - name: Detect AES tables and AES-NI instructions
+      - name: Detect AES signatures independently of OpenSSL strings
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY' | tee report/04_aes_signatures.txt
+          python3 - <<'PY' | tee report/03_aes_signatures.txt
           from pathlib import Path
           b=Path('APK2-Win64-Shipping.exe').read_bytes()
           pats={
@@ -110,73 +130,94 @@ jobs:
             'AESKEYGENASSIST': bytes.fromhex('660f3adf'),
           }
           for name,p in pats.items():
-              offs=[]; i=0
+              offs=[]; pos=0
               while True:
-                  i=b.find(p,i)
-                  if i<0: break
-                  offs.append(i); i+=1
-              print(name,'count=',len(offs),'offsets=',','.join(hex(x) for x in offs[:80]))
+                  pos=b.find(p,pos)
+                  if pos<0: break
+                  offs.append(pos); pos+=1
+              print(name, 'count='+str(len(offs)), 'first='+','.join(hex(x) for x in offs[:100]))
           PY
-          {
-            echo '=== RIZIN AES-NI virtual-address searches ==='
-            "$RIZIN" -q -c '/x 660f38dc;/x 660f38dd;/x 660f38de;/x 660f38df;/x 660f3adf;q' APK2-Win64-Shipping.exe || true
-          } | tee -a report/04_aes_signatures.txt
 
-      - name: Directed xref pass for save strings
+      - name: Directed Rizin reference analysis
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json,re
-          d=json.load(open('report/strings.json','r',encoding='utf-8'))
-          arr=d.get('strings') if isinstance(d,dict) else d
-          arr=arr or []
-          pat=re.compile(r'DefaultData|\.sav|SaveGame|save data',re.I)
-          addrs=[]
-          for s in arr:
-              txt=str(s.get('string',s.get('name','')))
-              if pat.search(txt):
-                  v=int(s.get('vaddr',0))
-                  if v: addrs.append((v,txt))
-          with open('report/xref_cmds.rz','w') as f:
+          rows=[]
+          for line in open('report/targets.tsv',encoding='utf-8'):
+              va,rva,off,sec,enc,text=line.rstrip('\n').split('\t',5)
+              # prioritize exact APK/save targets; cap duplicates
+              rows.append((va,text))
+          with open('report/xrefs.rz','w',encoding='utf-8') as f:
               f.write('e scr.color=false\n')
+              f.write('e bin.strings=false\n')
               f.write('aa\n')
               f.write('aar\n')
-              for v,txt in addrs[:120]:
-                  f.write(f'?e ==== STRING 0x{v:x} ====\n')
-                  f.write(f'axt @ 0x{v:x}\n')
+              for va,text in rows[:80]:
+                  clean=text.replace('"','')[:100]
+                  f.write(f'?e ====TARGET {va} {clean}====\n')
+                  f.write(f'axt @ {va}\n')
               f.write('q\n')
-          print('target addresses',len(addrs))
           PY
-          timeout 35m "$RIZIN" -q -i report/xref_cmds.rz APK2-Win64-Shipping.exe > report/05_xrefs.txt 2>&1 || true
-          echo '=== XREF REPORT HEAD ==='
-          sed -n '1,800p' report/05_xrefs.txt
+          timeout 35m "$RIZIN" -q -e bin.strings=false -i report/xrefs.rz APK2-Win64-Shipping.exe > report/04_xrefs.txt 2>&1 || true
+          sed -n '1,1200p' report/04_xrefs.txt
 
-      - name: Summarize candidate code addresses
+      - name: Extract candidate caller addresses and disassemble
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY' | tee report/06_summary.txt
+          python3 - <<'PY'
           import re
-          t=open('report/05_xrefs.txt','r',errors='ignore').read()
-          # Rizin xrefs generally render source addresses as 0x...
-          addrs=[]
-          for line in t.splitlines():
-              if '0x' not in line: continue
-              if 'STRING 0x' in line: continue
-              m=re.search(r'0x[0-9a-fA-F]+',line)
-              if m: addrs.append(m.group(0).lower())
-          seen=[]
-          for a in addrs:
-              if a not in seen: seen.append(a)
-          print('unique candidate xref addresses:',len(seen))
-          for a in seen[:200]: print(a)
+          t=open('report/04_xrefs.txt','r',errors='ignore').read().splitlines()
+          vals=[]
+          for line in t:
+              if line.startswith('====TARGET'): continue
+              # source xref tends to be the first VA in axt line
+              for s in re.findall(r'0x14[0-9a-fA-F]{7,}',line):
+                  v=int(s,16)
+                  if 0x140000000 <= v < 0x180000000 and v not in vals:
+                      vals.append(v)
+                      break
+          with open('report/callers.txt','w') as f:
+              for v in vals[:160]: f.write(f'0x{v:x}\n')
+          with open('report/disasm.rz','w') as f:
+              f.write('e scr.color=false\ne bin.strings=false\n')
+              for v in vals[:120]:
+                  start=max(0x140000000,v-0x80)
+                  f.write(f'?e ====CALLER 0x{v:x}====\n')
+                  f.write(f'pd 100 @ 0x{start:x}\n')
+              f.write('q\n')
+          print('CALLERS',len(vals))
+          for v in vals[:160]: print(hex(v))
           PY
-          echo '=== DONE ==='
+          "$RIZIN" -q -e bin.strings=false -i report/disasm.rz APK2-Win64-Shipping.exe > report/05_disasm.txt 2>&1 || true
+          sed -n '1,1600p' report/05_disasm.txt
+
+      - name: Search candidate key bytes and nearby raw context
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' | tee report/06_key_candidate_context.txt
+          from pathlib import Path
+          import binascii
+          b=Path('APK2-Win64-Shipping.exe').read_bytes()
+          cand=b'3bfa9cc97da10598521b342961df8f5f68c7388fa117345eeb516eaa837bb4d6'
+          pos=0
+          while True:
+              i=b.find(cand,pos)
+              if i<0: break
+              lo=max(0,i-256); hi=min(len(b),i+len(cand)+256)
+              chunk=b[lo:hi]
+              print('candidate_ascii_file_offset',hex(i))
+              print('context_hex',chunk.hex())
+              print('context_ascii',''.join(chr(x) if 32<=x<127 else '.' for x in chunk))
+              pos=i+1
+          PY
 
       - name: Upload reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: apk2-save-rizin-report
+          name: apk2-save-rizin-report-v2
           path: report/
           retention-days: 7
