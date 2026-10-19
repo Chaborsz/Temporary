@@ -22,7 +22,14 @@ exec(compile(challenge_auth_patch.read_text(encoding='utf-8'), str(challenge_aut
 identity_diagnostic_patch = Path(__file__).with_name('lolisnatcher_v8_8_danbooru_identity_diagnostic_patch.py')
 exec(compile(identity_diagnostic_patch.read_text(encoding='utf-8'), str(identity_diagnostic_patch), 'exec'))
 
+# v8.9 removes WebP encode/SQLite persistence from the visible thumbnail load
+# path, serializes conversion to one worker, deduplicates background writes and
+# makes LRU timestamp maintenance non-blocking.
+gallery_freeze_hotfix = Path(__file__).with_name('lolisnatcher_v8_9_gallery_freeze_hotfix.py')
+exec(compile(gallery_freeze_hotfix.read_text(encoding='utf-8'), str(gallery_freeze_hotfix), 'exec'))
+
 print('V8_5_VERIFIED_LOGIN_CHAIN=PASS')
 print('V8_6_ROBUST_LOGIN_VALIDATION_CHAIN=PASS')
 print('V8_7_CHALLENGE_AUTH_CHAIN=PASS')
 print('V8_8_IDENTITY_DIAGNOSTIC_CHAIN=PASS')
+print('V8_9_GALLERY_FREEZE_HOTFIX_CHAIN=PASS')
