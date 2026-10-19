@@ -12,7 +12,6 @@ def replace_once(path, old, new, label):
 
 
 handler = Path('lib/src/boorus/danbooru_handler.dart')
-text = handler.read_text(encoding='utf-8')
 
 replace_once(
     handler,
@@ -103,7 +102,7 @@ new_fetch = '''    final Map<String, String> safeHeadersForLog = {
         'Danbooru Basic auth returned 401; retrying once with legacy login/api_key parameters',
         className,
         'Search',
-        LogTypes.info,
+        LogTypes.booruHandlerInfo,
       );
       return DioNetwork.get(
         uri.toString(),
@@ -160,6 +159,7 @@ checks = {
     'legacy fallback login': "'login': booru.userID!.trim()" in handler_text,
     'api key hidden from normal URL': "!_hasApiCredentials && booru.apiKey?.isNotEmpty" in handler_text,
     'generic UI instructions': '<b>Danbooru authentication</b>' in editor_text,
+    'valid info log type': 'LogTypes.booruHandlerInfo' in handler_text,
 }
 for label, ok in checks.items():
     if not ok:
