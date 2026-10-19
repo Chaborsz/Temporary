@@ -1,0 +1,75 @@
+name: APK2 Save Candidate Disassembly
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apk2-save-disasm-candidates.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  disasm:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Download EXE and Rizin
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh release download apk2-mediafire-transfer-2026-10-18 --repo Chaborsz/Temporary --pattern APK2-Win64-Shipping.exe --dir .
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+          gh release download v0.9.1 --repo rizinorg/rizin --pattern rizin-v0.9.1-static-x86_64.tar.xz --dir .
+          mkdir rz && tar -xJf rizin-v0.9.1-static-x86_64.tar.xz -C rz
+
+      - name: Disassemble candidate functions
+        shell: bash
+        run: |
+          set -euo pipefail
+          RZ=rz/bin/rizin
+          cat > /tmp/cmds <<'EOF'
+          aa
+          ?e ===== CANDIDATE 0x1421deea0 =====
+          af @ 0x1421deea0
+          afi @ 0x1421deea0
+          pdr @ 0x1421deea0
+          axt @ 0x1421deea0
+          ?e ===== CANDIDATE 0x143f131a0 =====
+          af @ 0x143f131a0
+          afi @ 0x143f131a0
+          pdr @ 0x143f131a0
+          axt @ 0x143f131a0
+          ?e ===== NEIGHBOR 0x143f12700 =====
+          af @ 0x143f12700
+          afi @ 0x143f12700
+          pdr @ 0x143f12700
+          ?e ===== NEIGHBOR 0x143f12380 =====
+          af @ 0x143f12380
+          afi @ 0x143f12380
+          pdr @ 0x143f12380
+          ?e ===== NEIGHBOR 0x143f17ac0 =====
+          af @ 0x143f17ac0
+          afi @ 0x143f17ac0
+          pdr @ 0x143f17ac0
+          ?e ===== NEIGHBOR 0x143f179c0 =====
+          af @ 0x143f179c0
+          afi @ 0x143f179c0
+          pdr @ 0x143f179c0
+          ?e ===== NEIGHBOR 0x1434c90f0 =====
+          af @ 0x1434c90f0
+          afi @ 0x1434c90f0
+          pdr @ 0x1434c90f0
+          q
+          EOF
+          "$RZ" -2 -q -e scr.color=false -c "$(tr '\n' ';' < /tmp/cmds)" APK2-Win64-Shipping.exe > candidate-disasm.txt 2>&1 || true
+          wc -l candidate-disasm.txt
+          sed -n '1,3000p' candidate-disasm.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk2-save-candidate-disasm
+          path: candidate-disasm.txt
+          retention-days: 3
