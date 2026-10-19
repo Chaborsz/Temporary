@@ -1,0 +1,39 @@
+name: Publish existing APK2 xref artifact
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-existing-apk2-xref-artifact.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download existing xref artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf analysis-results/apk2-save-existing
+          mkdir -p analysis-results/apk2-save-existing
+          gh run download 39182043471 \
+            --repo Chaborsz/Temporary \
+            --name apk2-static-save-xrefs \
+            --dir analysis-results/apk2-save-existing
+          find analysis-results/apk2-save-existing -maxdepth 2 -type f -print -exec wc -c {} \;
+      - name: Commit extracted reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis-results/apk2-save-existing
+          git commit -m 'Publish existing APK2 save xref reports' || exit 0
+          git push
