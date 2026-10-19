@@ -1,0 +1,1141 @@
+
+===== FUNCTION 0x143e7ea20-0x143e7ea67 size=0x47 seeds=0x143e7ea4a,0x143e7ea4b =====
+VALID_INSN_SEEDS=0x143e7ea4a
+INVALID_SHIFTED_SEEDS=0x143e7ea4b
+0x143e7ea20: mov       qword ptr [rsp + 8], rbx
+0x143e7ea25: push      rdi
+0x143e7ea26: sub       rsp, 0x20
+0x143e7ea2a: mov       rdi, r8
+0x143e7ea2d: mov       rbx, rdx
+0x143e7ea30: call      0x1412fced0
+0x143e7ea35: cmp       dword ptr [rax + 8], 0
+0x143e7ea39: je        0x143e7ea40
+0x143e7ea3b: mov       r8, qword ptr [rax]
+0x143e7ea3e: jmp       0x143e7ea47
+0x143e7ea40: lea       r8, [rip + 0x533e5dd]
+0x143e7ea47: mov       r9, rdi
+0x143e7ea4a: lea       rdx, [rip + 0x5c99b3f] <== SEEDED_XREF SaveGames path <== VERIFIED_RIP_REF SaveGames path@0x149b18590
+0x143e7ea51: mov       rcx, rbx
+0x143e7ea54: call      0x1411baa60
+0x143e7ea59: mov       rax, rbx
+0x143e7ea5c: mov       rbx, qword ptr [rsp + 0x30]
+0x143e7ea61: add       rsp, 0x20
+0x143e7ea65: pop       rdi
+0x143e7ea66: ret       
+CALL_TARGETS=0x1411baa60,0x1412fced0
+VERIFIED_TARGET_REFS=0x143e7ea4a->SaveGames path@0x149b18590
+
+===== FUNCTION 0x143f86090-0x143f86235 size=0x1a5 seeds=0x143f86151,0x143f86152 =====
+VALID_INSN_SEEDS=0x143f86151
+INVALID_SHIFTED_SEEDS=0x143f86152
+0x143f86090: mov       qword ptr [rsp + 8], rbx
+0x143f86095: mov       qword ptr [rsp + 0x18], rsi
+0x143f8609a: push      rdi
+0x143f8609b: push      r14
+0x143f8609d: push      r15
+0x143f8609f: sub       rsp, 0x20
+0x143f860a3: mov       r14, r9
+0x143f860a6: mov       r15, rdx
+0x143f860a9: call      0x14126b880
+0x143f860ae: xor       esi, esi
+0x143f860b0: mov       rdi, rax
+0x143f860b3: mov       rbx, qword ptr [rax + 8]
+0x143f860b7: test      rbx, rbx
+0x143f860ba: jne       0x143f86135
+0x143f860bc: mov       rbx, qword ptr [rax]
+0x143f860bf: test      rbx, rbx
+0x143f860c2: je        0x143f860cd
+0x143f860c4: mov       qword ptr [rax + 8], rbx
+0x143f860c8: mov       qword ptr [rax], rsi
+0x143f860cb: jmp       0x143f8611a
+0x143f860cd: lea       rcx, [rip + 0x76c976c]
+0x143f860d4: call      0x1411b3e50
+0x143f860d9: mov       qword ptr [rdi + 8], rax
+0x143f860dd: mov       rbx, rax
+0x143f860e0: test      rax, rax
+0x143f860e3: jne       0x143f8611a
+0x143f860e5: xor       edx, edx
+0x143f860e7: mov       ecx, 0x10000
+0x143f860ec: call      0x1412011c0
+0x143f860f1: mov       qword ptr [rdi + 8], rax
+0x143f860f5: mov       edx, 0xff
+0x143f860fa: nop       word ptr [rax + rax]
+0x143f86100: lea       rcx, [rax + 0x100]
+0x143f86107: mov       qword ptr [rax], rcx
+0x143f8610a: mov       rax, rcx
+0x143f8610d: sub       rdx, 1
+0x143f86111: jne       0x143f86100
+0x143f86113: mov       qword ptr [rcx], rsi
+0x143f86116: mov       rbx, qword ptr [rdi + 8]
+0x143f8611a: mov       dword ptr [rdi + 0x10], 0x100
+0x143f86121: mov       rax, qword ptr [rbx]
+0x143f86124: dec       dword ptr [rdi + 0x10]
+0x143f86127: mov       qword ptr [rdi + 8], rax
+0x143f8612b: test      rbx, rbx
+0x143f8612e: jne       0x143f8613f
+0x143f86130: jmp       0x143f861fc
+0x143f86135: mov       rax, qword ptr [rbx]
+0x143f86138: dec       dword ptr [rdi + 0x10]
+0x143f8613b: mov       qword ptr [rdi + 8], rax
+0x143f8613f: mov       dword ptr [rbx + 8], 2
+0x143f86146: lea       rax, [rip + 0x5238fe3]
+0x143f8614d: mov       qword ptr [rbx + 0x38], rax
+0x143f86151: lea       rdx, [rip + 0x5bab1f8] <== SEEDED_XREF SaveGameSystem.cpp:124 <== VERIFIED_RIP_REF SaveGameSystem.cpp:124@0x149b31350
+0x143f86158: mov       qword ptr [rbx + 0x40], rsi
+0x143f8615c: movabs    rax, 0xe800000000000020
+0x143f86166: mov       qword ptr [rbx + 0x48], rax
+0x143f8616a: xor       r9d, r9d
+0x143f8616d: lea       rax, [rip + 0x5bb5c34]
+0x143f86174: mov       dword ptr [rbx + 0x50], 1
+0x143f8617b: mov       qword ptr [rbx + 0x58], rsi
+0x143f8617f: mov       r8b, 1
+0x143f86182: mov       qword ptr [rbx + 0x60], rsi
+0x143f86186: mov       rcx, rbx
+0x143f86189: mov       dword ptr [rbx + 0x70], 0xffffffff
+0x143f86190: mov       qword ptr [rbx], rax
+0x143f86193: mov       qword ptr [rbx + 0x68], rsi
+0x143f86197: call      0x141273770
+0x143f8619c: mov       rax, qword ptr [r14]
+0x143f8619f: mov       qword ptr [rbx + 0x80], rax
+0x143f861a6: mov       eax, dword ptr [r14 + 8]
+0x143f861aa: mov       dword ptr [rbx + 0x88], eax
+0x143f861b0: mov       rax, qword ptr [r14 + 0x10]
+0x143f861b4: mov       qword ptr [rbx + 0x90], rax
+0x143f861bb: mov       rax, qword ptr [r14 + 0x20]
+0x143f861bf: mov       qword ptr [rbx + 0xa0], rax
+0x143f861c6: mov       qword ptr [r14 + 0x20], rsi
+0x143f861ca: movups    xmm0, xmmword ptr [r14 + 0x30]
+0x143f861cf: movups    xmmword ptr [rbx + 0xb0], xmm0
+0x143f861d6: movups    xmm1, xmmword ptr [r14 + 0x40]
+0x143f861db: movups    xmmword ptr [rbx + 0xc0], xmm1
+0x143f861e2: cmp       qword ptr [rbx + 0x90], rsi
+0x143f861e9: je        0x143f861ef
+0x143f861eb: mov       qword ptr [r14 + 0x10], rsi
+0x143f861ef: lea       rax, [rip + 0x5bb5bc2]
+0x143f861f6: mov       rsi, rbx
+0x143f861f9: mov       qword ptr [rbx], rax
+0x143f861fc: lock inc  dword ptr [rsi + 0x50]
+0x143f86200: lea       rax, [rip + 0x71d2ae9]
+0x143f86207: mov       qword ptr [rsi + 0x68], rax
+0x143f8620b: mov       rcx, qword ptr [rsi + 0x48]
+0x143f8620f: mov       rcx, qword ptr [rsi + 0x48]
+0x143f86213: mov       rcx, rsi
+0x143f86216: call      0x141272ec0
+0x143f8621b: mov       rbx, qword ptr [rsp + 0x40]
+0x143f86220: mov       rax, r15
+0x143f86223: mov       qword ptr [r15], rsi
+0x143f86226: mov       rsi, qword ptr [rsp + 0x50]
+0x143f8622b: add       rsp, 0x20
+0x143f8622f: pop       r15
+0x143f86231: pop       r14
+0x143f86233: pop       rdi
+0x143f86234: ret       
+CALL_TARGETS=0x1411b3e50,0x1412011c0,0x14126b880,0x141272ec0,0x141273770
+VERIFIED_TARGET_REFS=0x143f86151->SaveGameSystem.cpp:124@0x149b31350
+
+===== FUNCTION 0x143f86dd0-0x143f86f87 size=0x1b7 seeds=0x143f86e94,0x143f86e95 =====
+VALID_INSN_SEEDS=0x143f86e94
+INVALID_SHIFTED_SEEDS=0x143f86e95
+0x143f86dd0: mov       qword ptr [rsp + 8], rbx
+0x143f86dd5: mov       qword ptr [rsp + 0x10], rbp
+0x143f86dda: mov       qword ptr [rsp + 0x18], rsi
+0x143f86ddf: push      rdi
+0x143f86de0: sub       rsp, 0x20
+0x143f86de4: mov       rsi, rdx
+0x143f86de7: call      0x14126b880
+0x143f86dec: xor       ebp, ebp
+0x143f86dee: mov       rdi, rax
+0x143f86df1: mov       rbx, qword ptr [rax + 8]
+0x143f86df5: test      rbx, rbx
+0x143f86df8: jne       0x143f86e78
+0x143f86dfa: mov       rbx, qword ptr [rax]
+0x143f86dfd: test      rbx, rbx
+0x143f86e00: je        0x143f86e0b
+0x143f86e02: mov       qword ptr [rax + 8], rbx
+0x143f86e06: mov       qword ptr [rax], rbp
+0x143f86e09: jmp       0x143f86e5a
+0x143f86e0b: lea       rcx, [rip + 0x76c8a2e]
+0x143f86e12: call      0x1411b3e50
+0x143f86e17: mov       qword ptr [rdi + 8], rax
+0x143f86e1b: mov       rbx, rax
+0x143f86e1e: test      rax, rax
+0x143f86e21: jne       0x143f86e5a
+0x143f86e23: xor       edx, edx
+0x143f86e25: mov       ecx, 0x10000
+0x143f86e2a: call      0x1412011c0
+0x143f86e2f: mov       qword ptr [rdi + 8], rax
+0x143f86e33: mov       edx, 0xff
+0x143f86e38: nop       dword ptr [rax + rax]
+0x143f86e40: lea       rcx, [rax + 0x100]
+0x143f86e47: mov       qword ptr [rax], rcx
+0x143f86e4a: mov       rax, rcx
+0x143f86e4d: sub       rdx, 1
+0x143f86e51: jne       0x143f86e40
+0x143f86e53: mov       qword ptr [rcx], rbp
+0x143f86e56: mov       rbx, qword ptr [rdi + 8]
+0x143f86e5a: mov       dword ptr [rdi + 0x10], 0x100
+0x143f86e61: mov       rcx, qword ptr [rbx]
+0x143f86e64: dec       dword ptr [rdi + 0x10]
+0x143f86e67: mov       qword ptr [rdi + 8], rcx
+0x143f86e6b: test      rbx, rbx
+0x143f86e6e: jne       0x143f86e82
+0x143f86e70: mov       rax, rbp
+0x143f86e73: jmp       0x143f86f72
+0x143f86e78: mov       rax, qword ptr [rbx]
+0x143f86e7b: dec       dword ptr [rdi + 0x10]
+0x143f86e7e: mov       qword ptr [rdi + 8], rax
+0x143f86e82: mov       dword ptr [rbx + 8], 2
+0x143f86e89: lea       rax, [rip + 0x52382a0]
+0x143f86e90: mov       qword ptr [rbx + 0x38], rax
+0x143f86e94: lea       rdx, [rip + 0x5baa215] <== SEEDED_XREF SaveGameSystem.cpp:100 <== VERIFIED_RIP_REF SaveGameSystem.cpp:100@0x149b310b0
+0x143f86e9b: mov       qword ptr [rbx + 0x40], rbp
+0x143f86e9f: movabs    rax, 0xe800000000000020
+0x143f86ea9: mov       qword ptr [rbx + 0x48], rax
+0x143f86ead: xor       r9d, r9d
+0x143f86eb0: lea       rax, [rip + 0x5bb4f31]
+0x143f86eb7: mov       dword ptr [rbx + 0x50], 1
+0x143f86ebe: mov       qword ptr [rbx + 0x58], rbp
+0x143f86ec2: mov       r8b, 1
+0x143f86ec5: mov       qword ptr [rbx + 0x60], rbp
+0x143f86ec9: mov       rcx, rbx
+0x143f86ecc: mov       dword ptr [rbx + 0x70], 0xffffffff
+0x143f86ed3: mov       qword ptr [rbx], rax
+0x143f86ed6: mov       qword ptr [rbx + 0x68], rbp
+0x143f86eda: call      0x141273770
+0x143f86edf: mov       rax, qword ptr [rsi]
+0x143f86ee2: mov       qword ptr [rbx + 0x80], rax
+0x143f86ee9: movzx     eax, byte ptr [rsi + 8]
+0x143f86eed: mov       qword ptr [rbx + 0x90], rbp
+0x143f86ef4: mov       byte ptr [rbx + 0x88], al
+0x143f86efa: mov       rax, qword ptr [rsi + 0x10]
+0x143f86efe: mov       qword ptr [rbx + 0x90], rax
+0x143f86f05: mov       qword ptr [rsi + 0x10], rbp
+0x143f86f09: mov       eax, dword ptr [rsi + 0x18]
+0x143f86f0c: mov       dword ptr [rbx + 0x98], eax
+0x143f86f12: mov       eax, dword ptr [rsi + 0x1c]
+0x143f86f15: mov       dword ptr [rbx + 0x9c], eax
+0x143f86f1b: mov       qword ptr [rsi + 0x18], rbp
+0x143f86f1f: mov       eax, dword ptr [rsi + 0x20]
+0x143f86f22: mov       dword ptr [rbx + 0xa0], eax
+0x143f86f28: mov       rax, qword ptr [rsi + 0x30]
+0x143f86f2c: mov       qword ptr [rbx + 0xb0], rax
+0x143f86f33: mov       rax, qword ptr [rsi + 0x40]
+0x143f86f37: mov       qword ptr [rbx + 0xc0], rax
+0x143f86f3e: mov       qword ptr [rsi + 0x40], rbp
+0x143f86f42: movups    xmm0, xmmword ptr [rsi + 0x50]
+0x143f86f46: movups    xmmword ptr [rbx + 0xd0], xmm0
+0x143f86f4d: movups    xmm1, xmmword ptr [rsi + 0x60]
+0x143f86f51: movups    xmmword ptr [rbx + 0xe0], xmm1
+0x143f86f58: cmp       qword ptr [rbx + 0xb0], rbp
+0x143f86f5f: je        0x143f86f65
+0x143f86f61: mov       qword ptr [rsi + 0x30], rbp
+0x143f86f65: lea       rax, [rip + 0x5bb4e5c]
+0x143f86f6c: mov       qword ptr [rbx], rax
+0x143f86f6f: mov       rax, rbx
+0x143f86f72: mov       rbx, qword ptr [rsp + 0x30]
+0x143f86f77: mov       rbp, qword ptr [rsp + 0x38]
+0x143f86f7c: mov       rsi, qword ptr [rsp + 0x40]
+0x143f86f81: add       rsp, 0x20
+0x143f86f85: pop       rdi
+0x143f86f86: ret       
+CALL_TARGETS=0x1411b3e50,0x1412011c0,0x14126b880,0x141273770
+VERIFIED_TARGET_REFS=0x143f86e94->SaveGameSystem.cpp:100@0x149b310b0
+
+===== FUNCTION 0x143f86ff0-0x143f871a7 size=0x1b7 seeds=0x143f870b4,0x143f870b5 =====
+VALID_INSN_SEEDS=0x143f870b4
+INVALID_SHIFTED_SEEDS=0x143f870b5
+0x143f86ff0: mov       qword ptr [rsp + 8], rbx
+0x143f86ff5: mov       qword ptr [rsp + 0x10], rbp
+0x143f86ffa: mov       qword ptr [rsp + 0x18], rsi
+0x143f86fff: push      rdi
+0x143f87000: sub       rsp, 0x20
+0x143f87004: mov       rsi, rdx
+0x143f87007: call      0x14126b880
+0x143f8700c: xor       ebp, ebp
+0x143f8700e: mov       rdi, rax
+0x143f87011: mov       rbx, qword ptr [rax + 8]
+0x143f87015: test      rbx, rbx
+0x143f87018: jne       0x143f87098
+0x143f8701a: mov       rbx, qword ptr [rax]
+0x143f8701d: test      rbx, rbx
+0x143f87020: je        0x143f8702b
+0x143f87022: mov       qword ptr [rax + 8], rbx
+0x143f87026: mov       qword ptr [rax], rbp
+0x143f87029: jmp       0x143f8707a
+0x143f8702b: lea       rcx, [rip + 0x76c880e]
+0x143f87032: call      0x1411b3e50
+0x143f87037: mov       qword ptr [rdi + 8], rax
+0x143f8703b: mov       rbx, rax
+0x143f8703e: test      rax, rax
+0x143f87041: jne       0x143f8707a
+0x143f87043: xor       edx, edx
+0x143f87045: mov       ecx, 0x10000
+0x143f8704a: call      0x1412011c0
+0x143f8704f: mov       qword ptr [rdi + 8], rax
+0x143f87053: mov       edx, 0xff
+0x143f87058: nop       dword ptr [rax + rax]
+0x143f87060: lea       rcx, [rax + 0x100]
+0x143f87067: mov       qword ptr [rax], rcx
+0x143f8706a: mov       rax, rcx
+0x143f8706d: sub       rdx, 1
+0x143f87071: jne       0x143f87060
+0x143f87073: mov       qword ptr [rcx], rbp
+0x143f87076: mov       rbx, qword ptr [rdi + 8]
+0x143f8707a: mov       dword ptr [rdi + 0x10], 0x100
+0x143f87081: mov       rcx, qword ptr [rbx]
+0x143f87084: dec       dword ptr [rdi + 0x10]
+0x143f87087: mov       qword ptr [rdi + 8], rcx
+0x143f8708b: test      rbx, rbx
+0x143f8708e: jne       0x143f870a2
+0x143f87090: mov       rax, rbp
+0x143f87093: jmp       0x143f87192
+0x143f87098: mov       rax, qword ptr [rbx]
+0x143f8709b: dec       dword ptr [rdi + 0x10]
+0x143f8709e: mov       qword ptr [rdi + 8], rax
+0x143f870a2: mov       dword ptr [rbx + 8], 2
+0x143f870a9: lea       rax, [rip + 0x5238080]
+0x143f870b0: mov       qword ptr [rbx + 0x38], rax
+0x143f870b4: lea       rdx, [rip + 0x5baa0b5] <== SEEDED_XREF SaveGameSystem.cpp:72 <== VERIFIED_RIP_REF SaveGameSystem.cpp:72@0x149b31170
+0x143f870bb: mov       qword ptr [rbx + 0x40], rbp
+0x143f870bf: movabs    rax, 0xe800000000000020
+0x143f870c9: mov       qword ptr [rbx + 0x48], rax
+0x143f870cd: xor       r9d, r9d
+0x143f870d0: lea       rax, [rip + 0x5bb4d21]
+0x143f870d7: mov       dword ptr [rbx + 0x50], 1
+0x143f870de: mov       qword ptr [rbx + 0x58], rbp
+0x143f870e2: mov       r8b, 1
+0x143f870e5: mov       qword ptr [rbx + 0x60], rbp
+0x143f870e9: mov       rcx, rbx
+0x143f870ec: mov       dword ptr [rbx + 0x70], 0xffffffff
+0x143f870f3: mov       qword ptr [rbx], rax
+0x143f870f6: mov       qword ptr [rbx + 0x68], rbp
+0x143f870fa: call      0x141273770
+0x143f870ff: mov       rax, qword ptr [rsi]
+0x143f87102: mov       qword ptr [rbx + 0x80], rax
+0x143f87109: movzx     eax, byte ptr [rsi + 8]
+0x143f8710d: mov       qword ptr [rbx + 0x90], rbp
+0x143f87114: mov       byte ptr [rbx + 0x88], al
+0x143f8711a: mov       rax, qword ptr [rsi + 0x10]
+0x143f8711e: mov       qword ptr [rbx + 0x90], rax
+0x143f87125: mov       qword ptr [rsi + 0x10], rbp
+0x143f87129: mov       eax, dword ptr [rsi + 0x18]
+0x143f8712c: mov       dword ptr [rbx + 0x98], eax
+0x143f87132: mov       eax, dword ptr [rsi + 0x1c]
+0x143f87135: mov       dword ptr [rbx + 0x9c], eax
+0x143f8713b: mov       qword ptr [rsi + 0x18], rbp
+0x143f8713f: mov       eax, dword ptr [rsi + 0x20]
+0x143f87142: mov       dword ptr [rbx + 0xa0], eax
+0x143f87148: mov       rax, qword ptr [rsi + 0x30]
+0x143f8714c: mov       qword ptr [rbx + 0xb0], rax
+0x143f87153: mov       rax, qword ptr [rsi + 0x40]
+0x143f87157: mov       qword ptr [rbx + 0xc0], rax
+0x143f8715e: mov       qword ptr [rsi + 0x40], rbp
+0x143f87162: movups    xmm0, xmmword ptr [rsi + 0x50]
+0x143f87166: movups    xmmword ptr [rbx + 0xd0], xmm0
+0x143f8716d: movups    xmm1, xmmword ptr [rsi + 0x60]
+0x143f87171: movups    xmmword ptr [rbx + 0xe0], xmm1
+0x143f87178: cmp       qword ptr [rbx + 0xb0], rbp
+0x143f8717f: je        0x143f87185
+0x143f87181: mov       qword ptr [rsi + 0x30], rbp
+0x143f87185: lea       rax, [rip + 0x5bb4c4c]
+0x143f8718c: mov       qword ptr [rbx], rax
+0x143f8718f: mov       rax, rbx
+0x143f87192: mov       rbx, qword ptr [rsp + 0x30]
+0x143f87197: mov       rbp, qword ptr [rsp + 0x38]
+0x143f8719c: mov       rsi, qword ptr [rsp + 0x40]
+0x143f871a1: add       rsp, 0x20
+0x143f871a5: pop       rdi
+0x143f871a6: ret       
+CALL_TARGETS=0x1411b3e50,0x1412011c0,0x14126b880,0x141273770
+VERIFIED_TARGET_REFS=0x143f870b4->SaveGameSystem.cpp:72@0x149b31170
+
+===== FUNCTION 0x143f87210-0x143f873e6 size=0x1d6 seeds=0x143f872d4,0x143f872d5 =====
+VALID_INSN_SEEDS=0x143f872d4
+INVALID_SHIFTED_SEEDS=0x143f872d5
+0x143f87210: mov       qword ptr [rsp + 8], rbx
+0x143f87215: mov       qword ptr [rsp + 0x10], rbp
+0x143f8721a: mov       qword ptr [rsp + 0x18], rsi
+0x143f8721f: push      rdi
+0x143f87220: sub       rsp, 0x20
+0x143f87224: mov       rsi, rdx
+0x143f87227: call      0x14126b880
+0x143f8722c: xor       ebp, ebp
+0x143f8722e: mov       rdi, rax
+0x143f87231: mov       rbx, qword ptr [rax + 8]
+0x143f87235: test      rbx, rbx
+0x143f87238: jne       0x143f872b8
+0x143f8723a: mov       rbx, qword ptr [rax]
+0x143f8723d: test      rbx, rbx
+0x143f87240: je        0x143f8724b
+0x143f87242: mov       qword ptr [rax + 8], rbx
+0x143f87246: mov       qword ptr [rax], rbp
+0x143f87249: jmp       0x143f8729a
+0x143f8724b: lea       rcx, [rip + 0x76c85ee]
+0x143f87252: call      0x1411b3e50
+0x143f87257: mov       qword ptr [rdi + 8], rax
+0x143f8725b: mov       rbx, rax
+0x143f8725e: test      rax, rax
+0x143f87261: jne       0x143f8729a
+0x143f87263: xor       edx, edx
+0x143f87265: mov       ecx, 0x10000
+0x143f8726a: call      0x1412011c0
+0x143f8726f: mov       qword ptr [rdi + 8], rax
+0x143f87273: mov       edx, 0xff
+0x143f87278: nop       dword ptr [rax + rax]
+0x143f87280: lea       rcx, [rax + 0x100]
+0x143f87287: mov       qword ptr [rax], rcx
+0x143f8728a: mov       rax, rcx
+0x143f8728d: sub       rdx, 1
+0x143f87291: jne       0x143f87280
+0x143f87293: mov       qword ptr [rcx], rbp
+0x143f87296: mov       rbx, qword ptr [rdi + 8]
+0x143f8729a: mov       dword ptr [rdi + 0x10], 0x100
+0x143f872a1: mov       rcx, qword ptr [rbx]
+0x143f872a4: dec       dword ptr [rdi + 0x10]
+0x143f872a7: mov       qword ptr [rdi + 8], rcx
+0x143f872ab: test      rbx, rbx
+0x143f872ae: jne       0x143f872c2
+0x143f872b0: mov       rax, rbp
+0x143f872b3: jmp       0x143f873d1
+0x143f872b8: mov       rax, qword ptr [rbx]
+0x143f872bb: dec       dword ptr [rdi + 0x10]
+0x143f872be: mov       qword ptr [rdi + 8], rax
+0x143f872c2: mov       dword ptr [rbx + 8], 2
+0x143f872c9: lea       rax, [rip + 0x5237e60]
+0x143f872d0: mov       qword ptr [rbx + 0x38], rax
+0x143f872d4: lea       rdx, [rip + 0x5ba9c55] <== SEEDED_XREF SaveGameSystem.cpp:45 <== VERIFIED_RIP_REF SaveGameSystem.cpp:45@0x149b30f30
+0x143f872db: mov       qword ptr [rbx + 0x40], rbp
+0x143f872df: movabs    rax, 0xe800000000000020
+0x143f872e9: mov       qword ptr [rbx + 0x48], rax
+0x143f872ed: xor       r9d, r9d
+0x143f872f0: lea       rax, [rip + 0x5bb4b11]
+0x143f872f7: mov       dword ptr [rbx + 0x50], 1
+0x143f872fe: mov       qword ptr [rbx + 0x58], rbp
+0x143f87302: mov       r8b, 1
+0x143f87305: mov       qword ptr [rbx + 0x60], rbp
+0x143f87309: mov       rcx, rbx
+0x143f8730c: mov       dword ptr [rbx + 0x70], 0xffffffff
+0x143f87313: mov       qword ptr [rbx], rax
+0x143f87316: mov       qword ptr [rbx + 0x68], rbp
+0x143f8731a: call      0x141273770
+0x143f8731f: mov       rax, qword ptr [rsi]
+0x143f87322: mov       qword ptr [rbx + 0x80], rax
+0x143f87329: movzx     eax, byte ptr [rsi + 8]
+0x143f8732d: mov       qword ptr [rbx + 0x90], rbp
+0x143f87334: mov       byte ptr [rbx + 0x88], al
+0x143f8733a: mov       rax, qword ptr [rsi + 0x10]
+0x143f8733e: mov       qword ptr [rbx + 0x90], rax
+0x143f87345: mov       qword ptr [rsi + 0x10], rbp
+0x143f87349: mov       eax, dword ptr [rsi + 0x18]
+0x143f8734c: mov       dword ptr [rbx + 0x98], eax
+0x143f87352: mov       eax, dword ptr [rsi + 0x1c]
+0x143f87355: mov       dword ptr [rbx + 0x9c], eax
+0x143f8735b: mov       qword ptr [rsi + 0x18], rbp
+0x143f8735f: mov       eax, dword ptr [rsi + 0x20]
+0x143f87362: mov       dword ptr [rbx + 0xa0], eax
+0x143f87368: mov       rax, qword ptr [rsi + 0x28]
+0x143f8736c: mov       qword ptr [rbx + 0xa8], rax
+0x143f87373: mov       rax, qword ptr [rsi + 0x30]
+0x143f87377: mov       qword ptr [rbx + 0xb0], rax
+0x143f8737e: test      rax, rax
+0x143f87381: je        0x143f87387
+0x143f87383: lock inc  dword ptr [rax + 8]
+0x143f87387: mov       rax, qword ptr [rsi + 0x40]
+0x143f8738b: mov       qword ptr [rbx + 0xc0], rax
+0x143f87392: mov       rax, qword ptr [rsi + 0x50]
+0x143f87396: mov       qword ptr [rbx + 0xd0], rax
+0x143f8739d: mov       qword ptr [rsi + 0x50], rbp
+0x143f873a1: movups    xmm0, xmmword ptr [rsi + 0x60]
+0x143f873a5: movups    xmmword ptr [rbx + 0xe0], xmm0
+0x143f873ac: movups    xmm1, xmmword ptr [rsi + 0x70]
+0x143f873b0: movups    xmmword ptr [rbx + 0xf0], xmm1
+0x143f873b7: cmp       qword ptr [rbx + 0xc0], rbp
+0x143f873be: je        0x143f873c4
+0x143f873c0: mov       qword ptr [rsi + 0x40], rbp
+0x143f873c4: lea       rax, [rip + 0x5bb4a4d]
+0x143f873cb: mov       qword ptr [rbx], rax
+0x143f873ce: mov       rax, rbx
+0x143f873d1: mov       rbx, qword ptr [rsp + 0x30]
+0x143f873d6: mov       rbp, qword ptr [rsp + 0x38]
+0x143f873db: mov       rsi, qword ptr [rsp + 0x40]
+0x143f873e0: add       rsp, 0x20
+0x143f873e4: pop       rdi
+0x143f873e5: ret       
+CALL_TARGETS=0x1411b3e50,0x1412011c0,0x14126b880,0x141273770
+VERIFIED_TARGET_REFS=0x143f872d4->SaveGameSystem.cpp:45@0x149b30f30
+
+===== FUNCTION 0x143f87420-0x143f875cd size=0x1ad seeds=0x143f874e4,0x143f874e5 =====
+VALID_INSN_SEEDS=0x143f874e4
+INVALID_SHIFTED_SEEDS=0x143f874e5
+0x143f87420: mov       qword ptr [rsp + 8], rbx
+0x143f87425: mov       qword ptr [rsp + 0x10], rbp
+0x143f8742a: mov       qword ptr [rsp + 0x18], rsi
+0x143f8742f: push      rdi
+0x143f87430: sub       rsp, 0x20
+0x143f87434: mov       rsi, rdx
+0x143f87437: call      0x14126b880
+0x143f8743c: xor       ebp, ebp
+0x143f8743e: mov       rdi, rax
+0x143f87441: mov       rbx, qword ptr [rax + 8]
+0x143f87445: test      rbx, rbx
+0x143f87448: jne       0x143f874c8
+0x143f8744a: mov       rbx, qword ptr [rax]
+0x143f8744d: test      rbx, rbx
+0x143f87450: je        0x143f8745b
+0x143f87452: mov       qword ptr [rax + 8], rbx
+0x143f87456: mov       qword ptr [rax], rbp
+0x143f87459: jmp       0x143f874aa
+0x143f8745b: lea       rcx, [rip + 0x76c83de]
+0x143f87462: call      0x1411b3e50
+0x143f87467: mov       qword ptr [rdi + 8], rax
+0x143f8746b: mov       rbx, rax
+0x143f8746e: test      rax, rax
+0x143f87471: jne       0x143f874aa
+0x143f87473: xor       edx, edx
+0x143f87475: mov       ecx, 0x10000
+0x143f8747a: call      0x1412011c0
+0x143f8747f: mov       qword ptr [rdi + 8], rax
+0x143f87483: mov       edx, 0xff
+0x143f87488: nop       dword ptr [rax + rax]
+0x143f87490: lea       rcx, [rax + 0x100]
+0x143f87497: mov       qword ptr [rax], rcx
+0x143f8749a: mov       rax, rcx
+0x143f8749d: sub       rdx, 1
+0x143f874a1: jne       0x143f87490
+0x143f874a3: mov       qword ptr [rcx], rbp
+0x143f874a6: mov       rbx, qword ptr [rdi + 8]
+0x143f874aa: mov       dword ptr [rdi + 0x10], 0x100
+0x143f874b1: mov       rcx, qword ptr [rbx]
+0x143f874b4: dec       dword ptr [rdi + 0x10]
+0x143f874b7: mov       qword ptr [rdi + 8], rcx
+0x143f874bb: test      rbx, rbx
+0x143f874be: jne       0x143f874d2
+0x143f874c0: mov       rax, rbp
+0x143f874c3: jmp       0x143f875b8
+0x143f874c8: mov       rax, qword ptr [rbx]
+0x143f874cb: dec       dword ptr [rdi + 0x10]
+0x143f874ce: mov       qword ptr [rdi + 8], rax
+0x143f874d2: mov       dword ptr [rbx + 8], 2
+0x143f874d9: lea       rax, [rip + 0x5237c50]
+0x143f874e0: mov       qword ptr [rbx + 0x38], rax
+0x143f874e4: lea       rdx, [rip + 0x5ba9b05] <== SEEDED_XREF SaveGameSystem.cpp:18 <== VERIFIED_RIP_REF SaveGameSystem.cpp:18@0x149b30ff0
+0x143f874eb: mov       qword ptr [rbx + 0x40], rbp
+0x143f874ef: movabs    rax, 0xe800000000000020
+0x143f874f9: mov       qword ptr [rbx + 0x48], rax
+0x143f874fd: xor       r9d, r9d
+0x143f87500: lea       rax, [rip + 0x5bb4931]
+0x143f87507: mov       dword ptr [rbx + 0x50], 1
+0x143f8750e: mov       qword ptr [rbx + 0x58], rbp
+0x143f87512: mov       r8b, 1
+0x143f87515: mov       qword ptr [rbx + 0x60], rbp
+0x143f87519: mov       rcx, rbx
+0x143f8751c: mov       dword ptr [rbx + 0x70], 0xffffffff
+0x143f87523: mov       qword ptr [rbx], rax
+0x143f87526: mov       qword ptr [rbx + 0x68], rbp
+0x143f8752a: call      0x141273770
+0x143f8752f: mov       rax, qword ptr [rsi]
+0x143f87532: mov       qword ptr [rbx + 0x88], rbp
+0x143f87539: mov       qword ptr [rbx + 0x80], rax
+0x143f87540: mov       rax, qword ptr [rsi + 8]
+0x143f87544: mov       qword ptr [rbx + 0x88], rax
+0x143f8754b: mov       qword ptr [rsi + 8], rbp
+0x143f8754f: mov       eax, dword ptr [rsi + 0x10]
+0x143f87552: mov       dword ptr [rbx + 0x90], eax
+0x143f87558: mov       eax, dword ptr [rsi + 0x14]
+0x143f8755b: mov       dword ptr [rbx + 0x94], eax
+0x143f87561: mov       qword ptr [rsi + 0x10], rbp
+0x143f87565: mov       eax, dword ptr [rsi + 0x18]
+0x143f87568: mov       dword ptr [rbx + 0x98], eax
+0x143f8756e: mov       rax, qword ptr [rsi + 0x20]
+0x143f87572: mov       qword ptr [rbx + 0xa0], rax
+0x143f87579: mov       rax, qword ptr [rsi + 0x30]
+0x143f8757d: mov       qword ptr [rbx + 0xb0], rax
+0x143f87584: mov       qword ptr [rsi + 0x30], rbp
+0x143f87588: movups    xmm0, xmmword ptr [rsi + 0x40]
+0x143f8758c: movups    xmmword ptr [rbx + 0xc0], xmm0
+0x143f87593: movups    xmm1, xmmword ptr [rsi + 0x50]
+0x143f87597: movups    xmmword ptr [rbx + 0xd0], xmm1
+0x143f8759e: cmp       qword ptr [rbx + 0xa0], rbp
+0x143f875a5: je        0x143f875ab
+0x143f875a7: mov       qword ptr [rsi + 0x20], rbp
+0x143f875ab: lea       rax, [rip + 0x5bb4876]
+0x143f875b2: mov       qword ptr [rbx], rax
+0x143f875b5: mov       rax, rbx
+0x143f875b8: mov       rbx, qword ptr [rsp + 0x30]
+0x143f875bd: mov       rbp, qword ptr [rsp + 0x38]
+0x143f875c2: mov       rsi, qword ptr [rsp + 0x40]
+0x143f875c7: add       rsp, 0x20
+0x143f875cb: pop       rdi
+0x143f875cc: ret       
+CALL_TARGETS=0x1411b3e50,0x1412011c0,0x14126b880,0x141273770
+VERIFIED_TARGET_REFS=0x143f874e4->SaveGameSystem.cpp:18@0x149b30ff0
+
+===== FUNCTION 0x14424cf5b-0x14424d1a5 size=0x24a seeds=0x14424d07d,0x14424d07e =====
+VALID_INSN_SEEDS=0x14424d07d
+INVALID_SHIFTED_SEEDS=0x14424d07e
+0x14424cf5b: mov       qword ptr [rsp + 0x70], rbx
+0x14424cf60: test      ecx, ecx
+0x14424cf62: mov       rbx, qword ptr [rip + 0x7567a5f]
+0x14424cf69: lea       rcx, [rip + 0x6e498a0]
+0x14424cf70: mov       qword ptr [rsp + 0x88], rdi
+0x14424cf78: mov       qword ptr [rsp + 0x50], r13
+0x14424cf7d: mov       r13d, esi
+0x14424cf80: mov       qword ptr [rsp + 0x48], r14
+0x14424cf85: lea       r14, [rip + 0x4f70098]
+0x14424cf8c: mov       rdx, r14
+0x14424cf8f: mov       qword ptr [rsp + 0x40], r15
+0x14424cf94: cmovne    rdx, qword ptr [rip + 0x7401a84]
+0x14424cf9c: mov       r15d, esi
+0x14424cf9f: mov       qword ptr [rbp - 0x30], rsi
+0x14424cfa3: mov       dword ptr [rbp - 0x24], esi
+0x14424cfa6: call      0x141309b70
+0x14424cfab: lea       rdx, [rip + 0x7401a6e]
+0x14424cfb2: mov       rcx, rbx
+0x14424cfb5: call      0x1412b5280
+0x14424cfba: mov       rdi, rax
+0x14424cfbd: test      rax, rax
+0x14424cfc0: je        0x14424d17b
+0x14424cfc6: lea       edx, [rsi + 0x11]
+0x14424cfc9: mov       qword ptr [rbp - 0x40], rsi
+0x14424cfcd: lea       rcx, [rbp - 0x40]
+0x14424cfd1: mov       qword ptr [rbp - 0x38], rsi
+0x14424cfd5: call      0x1411c6fe0
+0x14424cfda: mov       edx, dword ptr [rbp - 0x38]
+0x14424cfdd: mov       ecx, dword ptr [rbp - 0x34]
+0x14424cfe0: sub       ecx, edx
+0x14424cfe2: lea       r8d, [rdx + 0x11]
+0x14424cfe6: mov       dword ptr [rbp - 0x38], r8d
+0x14424cfea: cmp       ecx, 0x11
+0x14424cfed: jae       0x14424cffc
+0x14424cfef: lea       rcx, [rbp - 0x40]
+0x14424cff3: call      0x1411c17f0
+0x14424cff8: mov       r8d, dword ptr [rbp - 0x38]
+0x14424cffc: mov       rbx, qword ptr [rbp - 0x40]
+0x14424d000: movups    xmm0, xmmword ptr [rip + 0x4fad4e9]
+0x14424d007: movups    xmmword ptr [rbx], xmm0
+0x14424d00a: movups    xmm1, xmmword ptr [rip + 0x4fad4ef]
+0x14424d011: movups    xmmword ptr [rbx + 0x10], xmm1
+0x14424d015: movzx     eax, word ptr [rip + 0x4fad4f4]
+0x14424d01c: mov       word ptr [rbx + 0x20], ax
+0x14424d020: test      r8d, r8d
+0x14424d023: je        0x14424d02e
+0x14424d025: mov       rdx, rbx
+0x14424d028: lea       ecx, [r8 - 1]
+0x14424d02c: jmp       0x14424d033
+0x14424d02e: mov       rdx, r14
+0x14424d031: mov       ecx, esi
+0x14424d033: call      0x1411c6150
+0x14424d038: lea       r8, [rbp - 0x40]
+0x14424d03c: mov       edx, eax
+0x14424d03e: mov       rcx, rdi
+0x14424d041: call      0x1411e5b70
+0x14424d046: cmp       eax, -1
+0x14424d049: je        0x14424d059
+0x14424d04b: cdqe      
+0x14424d04d: imul      rcx, rax, 0xb8
+0x14424d054: add       rcx, qword ptr [rdi]
+0x14424d057: jmp       0x14424d05c
+0x14424d059: mov       rcx, rsi
+0x14424d05c: test      rcx, rcx
+0x14424d05f: lea       rdi, [rcx + 0x10]
+0x14424d063: cmove     rdi, rsi
+0x14424d067: test      rbx, rbx
+0x14424d06a: je        0x14424d074
+0x14424d06c: mov       rcx, rbx
+0x14424d06f: call      0x141201300
+0x14424d074: test      rdi, rdi
+0x14424d077: je        0x14424d17b
+0x14424d07d: lea       r9, [rip + 0x59806bc] <== SEEDED_XREF SaveGameSystemModule <== VERIFIED_RIP_REF SaveGameSystemModule@0x149bcd740
+0x14424d084: mov       edx, esi
+0x14424d086: mov       qword ptr [rbp - 0x40], r9
+0x14424d08a: mov       rcx, r9
+0x14424d08d: mov       r8d, 0x53
+0x14424d093: movzx     eax, r8w
+0x14424d097: add       rcx, 2
+0x14424d09b: or        edx, eax
+0x14424d09d: movzx     eax, word ptr [rcx]
+0x14424d0a0: movzx     r8d, ax
+0x14424d0a4: test      ax, ax
+0x14424d0a7: jne       0x14424d093
+0x14424d0a9: test      edx, 0xffffff80
+0x14424d0af: setne     byte ptr [rbp - 0x34]
+0x14424d0b3: sub       rcx, r9
+0x14424d0b6: sar       rcx, 1
+0x14424d0b9: mov       dword ptr [rbp - 0x38], ecx
+0x14424d0bc: movaps    xmm0, xmmword ptr [rbp - 0x40]
+0x14424d0c0: movdqa    xmmword ptr [rbp - 0x40], xmm0
+0x14424d0c5: test      ecx, ecx
+0x14424d0c7: jne       0x14424d0d3
+0x14424d0c9: mov       eax, esi
+0x14424d0cb: mov       dword ptr [rbp + 0x1c], esi
+0x14424d0ce: mov       dword ptr [rbp + 0x18], eax
+0x14424d0d1: jmp       0x14424d101
+0x14424d0d3: lea       rdx, [rbp - 0x38]
+0x14424d0d7: mov       rcx, r9
+0x14424d0da: call      0x14135fb10
+0x14424d0df: movaps    xmm0, xmmword ptr [rbp - 0x40]
+0x14424d0e3: lea       rdx, [rbp - 0x40]
+0x14424d0e7: mov       r9d, eax
+0x14424d0ea: movdqa    xmmword ptr [rbp - 0x40], xmm0
+0x14424d0ef: mov       r8d, 1
+0x14424d0f5: lea       rcx, [rbp + 0x18]
+0x14424d0f9: call      0x1413453b0
+0x14424d0fe: mov       eax, dword ptr [rbp + 0x18]
+0x14424d101: movzx     r9d, ax
+0x14424d105: mov       ecx, eax
+0x14424d107: mov       rax, qword ptr [rbp + 0x18]
+0x14424d10b: mov       r10d, r9d
+0x14424d10e: shr       ecx, 0x10
+0x14424d111: mov       rdx, rax
+0x14424d114: shr       r10d, 4
+0x14424d118: shr       rdx, 0x20
+0x14424d11c: lea       r8d, [r9 + rcx*8]
+0x14424d120: shl       r8d, 0x10
+0x14424d124: add       r8d, ecx
+0x14424d127: mov       ecx, dword ptr [rdi + 8]
+0x14424d12a: add       r8d, edx
+0x14424d12d: add       r10d, r8d
+0x14424d130: add       r10d, r9d
+0x14424d133: cmp       ecx, dword ptr [rdi + 0x34]
+0x14424d136: je        0x14424d17b
+0x14424d138: mov       rcx, qword ptr [rdi + 0x40]
+0x14424d13c: lea       r8, [rdi + 0x38]
+0x14424d140: mov       edx, dword ptr [rdi + 0x48]
+0x14424d143: test      rcx, rcx
+0x14424d146: cmovne    r8, rcx
+0x14424d14a: dec       edx
+0x14424d14c: mov       ecx, r10d
+0x14424d14f: and       rdx, rcx
+0x14424d152: mov       ecx, dword ptr [r8 + rdx*4]
+0x14424d156: cmp       ecx, -1
+0x14424d159: je        0x14424d17b
+0x14424d15b: mov       r8, qword ptr [rdi]
+0x14424d15e: nop       
+0x14424d160: movsxd    rcx, ecx
+0x14424d163: imul      rcx, rcx, 0x38
+0x14424d167: add       rcx, r8
+0x14424d16a: cmp       qword ptr [rcx], rax
+0x14424d16d: je        0x14424d1fc
+0x14424d173: mov       ecx, dword ptr [rcx + 0x30]
+0x14424d176: cmp       ecx, -1
+0x14424d179: jne       0x14424d160
+0x14424d17b: mov       rax, qword ptr [rip + 0x75fef4e]
+0x14424d182: mov       r15, qword ptr [rsp + 0x40]
+0x14424d187: mov       r14, qword ptr [rsp + 0x48]
+0x14424d18c: mov       rdi, qword ptr [rsp + 0x88]
+0x14424d194: mov       rbx, qword ptr [rsp + 0x70]
+0x14424d199: mov       byte ptr [rip + 0x75fef38], 1
+0x14424d1a0: test      r13, r13
+0x14424d1a3: je        0x14424d1b4
+CALL_TARGETS=0x1411c17f0,0x1411c6150,0x1411c6fe0,0x1411e5b70,0x141201300,0x1412b5280,0x141309b70,0x1413453b0,0x14135fb10
+VERIFIED_TARGET_REFS=0x14424d07d->SaveGameSystemModule@0x149bcd740
+
+===== FUNCTION 0x14424d217-0x14424d2ee size=0xd7 seeds=0x14424d2bc,0x14424d2bd =====
+VALID_INSN_SEEDS=0x14424d2bc
+INVALID_SHIFTED_SEEDS=0x14424d2bd
+0x14424d217: mov       qword ptr [rsp + 0x58], r12
+0x14424d21c: test      eax, eax
+0x14424d21e: je        0x14424d226
+0x14424d220: dec       eax
+0x14424d222: test      eax, eax
+0x14424d224: jg        0x14424d229
+0x14424d226: mov       rcx, rdx
+0x14424d229: lea       rax, [rbp - 0x30]
+0x14424d22d: cmp       rax, rcx
+0x14424d230: je        0x14424d26a
+0x14424d232: movsxd    r15, dword ptr [rcx + 8]
+0x14424d236: mov       rbx, qword ptr [rcx]
+0x14424d239: mov       dword ptr [rbp - 0x28], r15d
+0x14424d23d: test      r15d, r15d
+0x14424d240: je        0x14424d26a
+0x14424d242: xor       r8d, r8d
+0x14424d245: lea       rcx, [rbp - 0x30]
+0x14424d249: mov       edx, r15d
+0x14424d24c: call      0x1411c3340
+0x14424d251: mov       r13, qword ptr [rbp - 0x30]
+0x14424d255: mov       r8, r15
+0x14424d258: add       r8, r8
+0x14424d25b: mov       rdx, rbx
+0x14424d25e: mov       rcx, r13
+0x14424d261: call      0x147bd0738
+0x14424d266: mov       r15d, dword ptr [rbp - 0x28]
+0x14424d26a: call      0x1412cbcb0
+0x14424d26f: cmp       dword ptr [rip + 0x74017b2], 0
+0x14424d276: mov       r12, r14
+0x14424d279: mov       rcx, rax
+0x14424d27c: mov       rsi, rax
+0x14424d27f: cmovne    r12, qword ptr [rip + 0x7401799]
+0x14424d287: call      qword ptr [rip + 0x3b3581b]
+0x14424d28d: inc       dword ptr [rsi + 0x3c]
+0x14424d290: xor       r14b, r14b
+0x14424d293: mov       eax, dword ptr [rsi + 0x30]
+0x14424d296: sub       eax, 1
+0x14424d299: movsxd    rdi, eax
+0x14424d29c: js        0x14424d2e1
+0x14424d29e: mov       rbx, rdi
+0x14424d2a1: shl       rbx, 4
+0x14424d2a5: mov       rax, qword ptr [rsi + 0x28]
+0x14424d2a9: cmp       dword ptr [rbx + rax + 8], 0
+0x14424d2ae: je        0x14424d2d4
+0x14424d2b0: mov       rcx, qword ptr [rbx + rax]
+0x14424d2b4: test      rcx, rcx
+0x14424d2b7: je        0x14424d2d4
+0x14424d2b9: mov       rax, qword ptr [rcx]
+0x14424d2bc: lea       r9, [rip + 0x598047d] <== SEEDED_XREF SaveGameSystemModule <== VERIFIED_RIP_REF SaveGameSystemModule@0x149bcd740
+0x14424d2c3: lea       r8, [rip + 0x4fad226]
+0x14424d2ca: mov       rdx, r12
+0x14424d2cd: call      qword ptr [rax + 0x60]
+0x14424d2d0: test      al, al
+0x14424d2d2: jne       0x14424d2d7
+0x14424d2d4: mov       r14b, 1
+0x14424d2d7: sub       rbx, 0x10
+0x14424d2db: sub       rdi, 1
+0x14424d2df: jns       0x14424d2a5
+0x14424d2e1: dec       dword ptr [rsi + 0x3c]
+0x14424d2e4: mov       r12, qword ptr [rsp + 0x58]
+0x14424d2e9: test      r14b, r14b
+0x14424d2ec: je        0x14424d2f8
+CALL_TARGETS=0x1411c3340,0x1412cbcb0,0x147bd0738
+VERIFIED_TARGET_REFS=0x14424d2bc->SaveGameSystemModule@0x149bcd740
+
+===== FUNCTION 0x14582c424-0x14582c5c1 size=0x19d seeds=0x14582c591,0x14582c592 =====
+VALID_INSN_SEEDS=0x14582c591
+INVALID_SHIFTED_SEEDS=0x14582c592
+0x14582c424: mov       qword ptr [rsp + 0xb8], r12
+0x14582c42c: lea       rcx, [rbp - 0x28]
+0x14582c430: mov       edx, 0x39
+0x14582c435: mov       qword ptr [rsp + 0x60], r13
+0x14582c43a: mov       qword ptr [rbp - 0x28], rdi
+0x14582c43e: mov       qword ptr [rbp - 0x20], rdi
+0x14582c442: call      0x1411c6fe0
+0x14582c447: mov       edx, dword ptr [rbp - 0x20]
+0x14582c44a: mov       eax, dword ptr [rbp - 0x1c]
+0x14582c44d: sub       eax, edx
+0x14582c44f: lea       r12d, [rdx + 0x39]
+0x14582c453: mov       dword ptr [rbp - 0x20], r12d
+0x14582c457: cmp       eax, 0x39
+0x14582c45a: jae       0x14582c469
+0x14582c45c: lea       rcx, [rbp - 0x28]
+0x14582c460: call      0x1411c17f0
+0x14582c465: mov       r12d, dword ptr [rbp - 0x20]
+0x14582c469: mov       rbx, qword ptr [rbp - 0x28]
+0x14582c46d: lea       rcx, [rbp - 0x28]
+0x14582c471: movaps    xmm0, xmmword ptr [rip + 0x4c2ac08]
+0x14582c478: mov       edx, 6
+0x14582c47d: mov       qword ptr [rbp - 0x28], rdi
+0x14582c481: mov       qword ptr [rbp - 0x20], rdi
+0x14582c485: movups    xmmword ptr [rbx], xmm0
+0x14582c488: movaps    xmm1, xmmword ptr [rip + 0x4c2ac01]
+0x14582c48f: movups    xmmword ptr [rbx + 0x10], xmm1
+0x14582c493: movaps    xmm0, xmmword ptr [rip + 0x4c2ac06]
+0x14582c49a: movups    xmmword ptr [rbx + 0x20], xmm0
+0x14582c49e: movaps    xmm1, xmmword ptr [rip + 0x4c2ac0b]
+0x14582c4a5: movups    xmmword ptr [rbx + 0x30], xmm1
+0x14582c4a9: movaps    xmm0, xmmword ptr [rip + 0x4c2ac10]
+0x14582c4b0: movups    xmmword ptr [rbx + 0x40], xmm0
+0x14582c4b4: movaps    xmm1, xmmword ptr [rip + 0x4c2ac15]
+0x14582c4bb: movups    xmmword ptr [rbx + 0x50], xmm1
+0x14582c4bf: movaps    xmm0, xmmword ptr [rip + 0x4c2ac1a]
+0x14582c4c6: movups    xmmword ptr [rbx + 0x60], xmm0
+0x14582c4ca: movzx     eax, word ptr [rip + 0x4c2ac1f]
+0x14582c4d1: mov       word ptr [rbx + 0x70], ax
+0x14582c4d5: call      0x1411c6fe0
+0x14582c4da: mov       edx, dword ptr [rbp - 0x20]
+0x14582c4dd: mov       eax, dword ptr [rbp - 0x1c]
+0x14582c4e0: sub       eax, edx
+0x14582c4e2: lea       r13d, [rdx + 6]
+0x14582c4e6: mov       dword ptr [rbp - 0x20], r13d
+0x14582c4ea: cmp       eax, 6
+0x14582c4ed: jae       0x14582c4fc
+0x14582c4ef: lea       rcx, [rbp - 0x28]
+0x14582c4f3: call      0x1411c17f0
+0x14582c4f8: mov       r13d, dword ptr [rbp - 0x20]
+0x14582c4fc: movsd     xmm0, qword ptr [rip + 0x3a25334]
+0x14582c504: lea       rcx, [rip + 0x585a545]
+0x14582c50b: mov       rsi, qword ptr [rbp - 0x28]
+0x14582c50f: movsd     qword ptr [rsi], xmm0
+0x14582c513: mov       eax, dword ptr [rip + 0x3a25327]
+0x14582c519: mov       dword ptr [rsi + 8], eax
+0x14582c51c: call      qword ptr [rip + 0x5a8f04e]
+0x14582c522: cmp       qword ptr [rax], rdi
+0x14582c525: je        0x14582c544
+0x14582c527: lea       rcx, [rip + 0x585a522]
+0x14582c52e: call      qword ptr [rip + 0x5a8f03c]
+0x14582c534: lea       rdx, [rbp + 0x48]
+0x14582c538: mov       rcx, qword ptr [rax]
+0x14582c53b: mov       rax, qword ptr [rcx]
+0x14582c53e: call      qword ptr [rax + 0x10]
+0x14582c541: mov       rdi, qword ptr [rax]
+0x14582c544: mov       r8, rdi
+0x14582c547: lea       rdx, [rip + 0x399405a]
+0x14582c54e: lea       rcx, [rbp - 0x18]
+0x14582c552: call      0x1411baa60
+0x14582c557: cmp       dword ptr [rbp - 0x10], 0
+0x14582c55b: lea       r8, [rip + 0x3990ac2]
+0x14582c562: mov       rdx, qword ptr [rbp + 0x40]
+0x14582c566: mov       rcx, r8
+0x14582c569: cmovne    rcx, qword ptr [rbp - 0x18]
+0x14582c56e: mov       rax, r8
+0x14582c571: mov       rdi, qword ptr [rbp + 0x38]
+0x14582c575: test      r13d, r13d
+0x14582c578: mov       qword ptr [rsp + 0x30], rdx
+0x14582c57d: mov       r9, r8
+0x14582c580: cmovne    rax, rsi
+0x14582c584: mov       qword ptr [rsp + 0x28], rcx
+0x14582c589: test      r12d, r12d
+0x14582c58c: mov       qword ptr [rsp + 0x20], rax
+0x14582c591: lea       rdx, [rip + 0x4c2b108] <== SEEDED_XREF SEGA save path <== VERIFIED_RIP_REF SEGA save path@0x14a4576a0
+0x14582c598: mov       rcx, rdi
+0x14582c59b: cmovne    r9, rbx
+0x14582c59f: test      r15d, r15d
+0x14582c5a2: cmovne    r8, r14
+0x14582c5a6: call      0x1411baa60
+0x14582c5ab: mov       rcx, qword ptr [rbp - 0x18]
+0x14582c5af: mov       r13, qword ptr [rsp + 0x60]
+0x14582c5b4: mov       r12, qword ptr [rsp + 0xb8]
+0x14582c5bc: test      rcx, rcx
+0x14582c5bf: je        0x14582c5c6
+CALL_TARGETS=0x1411baa60,0x1411c17f0,0x1411c6fe0
+VERIFIED_TARGET_REFS=0x14582c591->SEGA save path@0x14a4576a0
+
+===== FUNCTION 0x14582c610-0x14582c825 size=0x215 seeds=0x14582c75f,0x14582c760 =====
+VALID_INSN_SEEDS=0x14582c75f
+INVALID_SHIFTED_SEEDS=0x14582c760
+0x14582c610: push      rbp
+0x14582c612: push      rbx
+0x14582c613: push      rsi
+0x14582c614: push      rdi
+0x14582c615: push      r12
+0x14582c617: push      r14
+0x14582c619: push      r15
+0x14582c61b: lea       rbp, [rsp - 0x27]
+0x14582c620: sub       rsp, 0xb0
+0x14582c627: mov       rax, qword ptr [rip + 0x5855112]
+0x14582c62e: xor       rax, rsp
+0x14582c631: mov       qword ptr [rbp + 0x1f], rax
+0x14582c635: mov       qword ptr [rbp - 0x29], rdx
+0x14582c639: mov       r14, rdx
+0x14582c63c: mov       r15, rcx
+0x14582c63f: test      r8b, r8b
+0x14582c642: jne       0x14582c78b
+0x14582c648: call      0x1413654a0
+0x14582c64d: xor       edi, edi
+0x14582c64f: mov       qword ptr [rbp - 0x11], rax
+0x14582c653: mov       rsi, rax
+0x14582c656: test      rax, rax
+0x14582c659: je        0x14582c66d
+0x14582c65b: mov       rbx, 0xffffffffffffffff
+0x14582c662: inc       rbx
+0x14582c665: cmp       word ptr [rax + rbx*2], di
+0x14582c669: jne       0x14582c662
+0x14582c66b: jmp       0x14582c66f
+0x14582c66d: mov       ebx, edi
+0x14582c66f: lea       rax, [rip + 0x4c2b022]
+0x14582c676: mov       dword ptr [rbp - 9], ebx
+0x14582c679: mov       qword ptr [rbp - 1], rax
+0x14582c67d: lea       edx, [rbx + 0xb]
+0x14582c680: mov       dword ptr [rbp + 7], 3
+0x14582c687: lea       rax, [rip + 0x39b8e8a]
+0x14582c68e: mov       qword ptr [rbp + 0xf], rax
+0x14582c692: mov       dword ptr [rbp + 0x17], 5
+0x14582c699: mov       qword ptr [rbp - 0x39], rdi
+0x14582c69d: mov       qword ptr [rbp - 0x31], rdi
+0x14582c6a1: test      edx, edx
+0x14582c6a3: jle       0x14582c6bb
+0x14582c6a5: add       edx, 1
+0x14582c6a8: js        0x14582c9fd
+0x14582c6ae: test      edx, edx
+0x14582c6b0: jle       0x14582c6bb
+0x14582c6b2: lea       rcx, [rbp - 0x39]
+0x14582c6b6: call      0x1411c6fe0
+0x14582c6bb: mov       r8d, ebx
+0x14582c6be: lea       rcx, [rbp - 0x39]
+0x14582c6c2: mov       rdx, rsi
+0x14582c6c5: call      0x1411b76b0
+0x14582c6ca: lea       rbx, [rbp - 1]
+0x14582c6ce: mov       edi, 2
+0x14582c6d3: nop       dword ptr [rax]
+0x14582c6d7: nop       word ptr [rax + rax]
+0x14582c6e0: mov       r8d, dword ptr [rbx + 8]
+0x14582c6e4: lea       rcx, [rbp - 0x39]
+0x14582c6e8: mov       rdx, qword ptr [rbx]
+0x14582c6eb: call      0x1411b8f90
+0x14582c6f0: lea       rbx, [rbx + 0x10]
+0x14582c6f4: sub       rdi, 1
+0x14582c6f8: jne       0x14582c6e0
+0x14582c6fa: mov       ecx, dword ptr [rbp - 0x31]
+0x14582c6fd: mov       eax, ecx
+0x14582c6ff: neg       eax
+0x14582c701: mov       dword ptr [rbp - 0x41], ecx
+0x14582c704: mov       rax, qword ptr [rbp - 0x39]
+0x14582c708: sbb       r8d, r8d
+0x14582c70b: mov       qword ptr [rbp - 0x49], rax
+0x14582c70f: mov       eax, dword ptr [rbp - 0x2d]
+0x14582c712: add       r8d, 2
+0x14582c716: mov       dword ptr [rbp - 0x3d], eax
+0x14582c719: lea       edx, [rcx + r8]
+0x14582c71d: cmp       edx, ecx
+0x14582c71f: jb        0x14582ca05
+0x14582c725: test      edx, edx
+0x14582c727: js        0x14582ca0e
+0x14582c72d: cmp       edx, eax
+0x14582c72f: jle       0x14582c73a
+0x14582c731: lea       rcx, [rbp - 0x49]
+0x14582c735: call      0x1411c6fe0
+0x14582c73a: mov       r8d, 1
+0x14582c740: lea       rdx, [rip + 0x3995059]
+0x14582c747: lea       rcx, [rbp - 0x49]
+0x14582c74b: call      0x1411b76b0
+0x14582c750: cmp       dword ptr [rbp - 0x41], 0
+0x14582c754: lea       r8, [rip + 0x39908c9]
+0x14582c75b: mov       rbx, qword ptr [rbp - 0x49]
+0x14582c75f: lea       rdx, [rip + 0x42ebe2a] <== SEEDED_XREF SaveGames path <== VERIFIED_RIP_REF SaveGames path@0x149b18590
+0x14582c766: cmovne    r8, rbx
+0x14582c76a: mov       r9, r14
+0x14582c76d: mov       rcx, r15
+0x14582c770: call      0x1411baa60
+0x14582c775: test      rbx, rbx
+0x14582c778: je        0x14582c9d4
+0x14582c77e: mov       rcx, rbx
+0x14582c781: call      0x141201300
+0x14582c786: jmp       0x14582c9d4
+0x14582c78b: cmp       r8b, 1
+0x14582c78f: jne       0x14582c9cb
+0x14582c795: call      0x14582c0e0
+0x14582c79a: xor       edi, edi
+0x14582c79c: mov       rsi, rax
+0x14582c79f: mov       qword ptr [rbp - 0x49], rdi
+0x14582c7a3: mov       eax, edi
+0x14582c7a5: mov       dword ptr [rbp - 0x3d], eax
+0x14582c7a8: mov       r14d, edi
+0x14582c7ab: mov       dword ptr [rbp - 0x41], edi
+0x14582c7ae: mov       r12d, edi
+0x14582c7b1: test      rsi, rsi
+0x14582c7b4: je        0x14582c820
+0x14582c7b6: cmp       word ptr [rsi], ax
+0x14582c7b9: je        0x14582c820
+0x14582c7bb: mov       rbx, 0xffffffffffffffff
+0x14582c7c2: inc       rbx
+0x14582c7c5: cmp       word ptr [rsi + rbx*2], ax
+0x14582c7c9: jne       0x14582c7c2
+0x14582c7cb: add       ebx, 1
+0x14582c7ce: js        0x14582c9f5
+0x14582c7d4: test      ebx, ebx
+0x14582c7d6: jle       0x14582c7ee
+0x14582c7d8: mov       edx, ebx
+0x14582c7da: lea       rcx, [rbp - 0x49]
+0x14582c7de: call      0x1411c6fe0
+0x14582c7e3: mov       eax, dword ptr [rbp - 0x3d]
+0x14582c7e6: mov       r12d, dword ptr [rbp - 0x41]
+0x14582c7ea: mov       r14, qword ptr [rbp - 0x49]
+0x14582c7ee: mov       edx, r12d
+0x14582c7f1: add       r12d, ebx
+0x14582c7f4: sub       eax, edx
+0x14582c7f6: mov       dword ptr [rbp - 0x41], r12d
+0x14582c7fa: cmp       ebx, eax
+0x14582c7fc: jbe       0x14582c80f
+0x14582c7fe: lea       rcx, [rbp - 0x49]
+0x14582c802: call      0x1411c17f0
+0x14582c807: mov       r12d, dword ptr [rbp - 0x41]
+0x14582c80b: mov       r14, qword ptr [rbp - 0x49]
+0x14582c80f: movsxd    r8, ebx
+0x14582c812: mov       rdx, rsi
+0x14582c815: add       r8, r8
+0x14582c818: mov       rcx, r14
+0x14582c81b: call      0x147bd0738
+0x14582c820: mov       edx, 0x32
+CALL_TARGETS=0x1411b76b0,0x1411b8f90,0x1411baa60,0x1411c17f0,0x1411c6fe0,0x141201300,0x1413654a0,0x14582c0e0,0x147bd0738
+VERIFIED_TARGET_REFS=0x14582c75f->SaveGames path@0x149b18590
+
+===== FUNCTION 0x14582c825-0x14582c99d size=0x178 seeds=0x14582c961,0x14582c962 =====
+VALID_INSN_SEEDS=0x14582c961
+INVALID_SHIFTED_SEEDS=0x14582c962
+0x14582c825: mov       qword ptr [rsp + 0x100], r13
+0x14582c82d: lea       rcx, [rbp - 0x49]
+0x14582c831: mov       qword ptr [rbp - 0x49], rdi
+0x14582c835: mov       qword ptr [rbp - 0x41], rdi
+0x14582c839: call      0x1411c6fe0
+0x14582c83e: mov       edx, dword ptr [rbp - 0x41]
+0x14582c841: mov       eax, dword ptr [rbp - 0x3d]
+0x14582c844: sub       eax, edx
+0x14582c846: lea       r13d, [rdx + 0x32]
+0x14582c84a: mov       dword ptr [rbp - 0x41], r13d
+0x14582c84e: cmp       eax, 0x32
+0x14582c851: jae       0x14582c860
+0x14582c853: lea       rcx, [rbp - 0x49]
+0x14582c857: call      0x1411c17f0
+0x14582c85c: mov       r13d, dword ptr [rbp - 0x41]
+0x14582c860: movaps    xmm0, xmmword ptr [rip + 0x4c2ae99]
+0x14582c867: lea       rcx, [rbp - 0x39]
+0x14582c86b: mov       rbx, qword ptr [rbp - 0x49]
+0x14582c86f: mov       edx, 6
+0x14582c874: mov       qword ptr [rbp - 0x39], rdi
+0x14582c878: mov       qword ptr [rbp - 0x31], rdi
+0x14582c87c: movups    xmmword ptr [rbx], xmm0
+0x14582c87f: movaps    xmm1, xmmword ptr [rip + 0x4c2ae8a]
+0x14582c886: movups    xmmword ptr [rbx + 0x10], xmm1
+0x14582c88a: movaps    xmm0, xmmword ptr [rip + 0x4c2ae8f]
+0x14582c891: movups    xmmword ptr [rbx + 0x20], xmm0
+0x14582c895: movaps    xmm1, xmmword ptr [rip + 0x4c2ae94]
+0x14582c89c: movups    xmmword ptr [rbx + 0x30], xmm1
+0x14582c8a0: movaps    xmm0, xmmword ptr [rip + 0x4c2ae99]
+0x14582c8a7: movups    xmmword ptr [rbx + 0x40], xmm0
+0x14582c8ab: movaps    xmm1, xmmword ptr [rip + 0x4c2ae9e]
+0x14582c8b2: movups    xmmword ptr [rbx + 0x50], xmm1
+0x14582c8b6: mov       eax, dword ptr [rip + 0x4c2aea4]
+0x14582c8bc: mov       dword ptr [rbx + 0x60], eax
+0x14582c8bf: call      0x1411c6fe0
+0x14582c8c4: mov       edx, dword ptr [rbp - 0x31]
+0x14582c8c7: lea       eax, [rdx + 6]
+0x14582c8ca: mov       dword ptr [rbp - 0x31], eax
+0x14582c8cd: mov       eax, dword ptr [rbp - 0x2d]
+0x14582c8d0: sub       eax, edx
+0x14582c8d2: cmp       eax, 6
+0x14582c8d5: jae       0x14582c8e0
+0x14582c8d7: lea       rcx, [rbp - 0x39]
+0x14582c8db: call      0x1411c17f0
+0x14582c8e0: movsd     xmm0, qword ptr [rip + 0x3a24f50]
+0x14582c8e8: lea       rcx, [rip + 0x585a161]
+0x14582c8ef: mov       rsi, qword ptr [rbp - 0x39]
+0x14582c8f3: movsd     qword ptr [rsi], xmm0
+0x14582c8f7: mov       eax, dword ptr [rip + 0x3a24f43]
+0x14582c8fd: mov       dword ptr [rsi + 8], eax
+0x14582c900: call      qword ptr [rip + 0x5a8ec6a]
+0x14582c906: cmp       qword ptr [rax], rdi
+0x14582c909: je        0x14582c928
+0x14582c90b: lea       rcx, [rip + 0x585a13e]
+0x14582c912: call      qword ptr [rip + 0x5a8ec58]
+0x14582c918: lea       rdx, [rbp - 0x49]
+0x14582c91c: mov       rcx, qword ptr [rax]
+0x14582c91f: mov       rax, qword ptr [rcx]
+0x14582c922: call      qword ptr [rax + 0x10]
+0x14582c925: mov       rdi, qword ptr [rax]
+0x14582c928: mov       r8, rdi
+0x14582c92b: lea       rdx, [rip + 0x3993c76]
+0x14582c932: lea       rcx, [rbp - 0x21]
+0x14582c936: call      0x1411baa60
+0x14582c93b: cmp       dword ptr [rbp - 0x19], 0
+0x14582c93f: lea       r8, [rip + 0x39906de]
+0x14582c946: mov       rdx, qword ptr [rbp - 0x29]
+0x14582c94a: mov       rcx, r8
+0x14582c94d: cmovne    rcx, qword ptr [rbp - 0x21]
+0x14582c952: mov       rax, r8
+0x14582c955: cmp       dword ptr [rbp - 0x31], 0
+0x14582c959: mov       r9, r8
+0x14582c95c: mov       qword ptr [rsp + 0x30], rdx
+0x14582c961: lea       rdx, [rip + 0x4c2ad38] <== SEEDED_XREF SEGA save path <== VERIFIED_RIP_REF SEGA save path@0x14a4576a0
+0x14582c968: cmovne    rax, rsi
+0x14582c96c: mov       qword ptr [rsp + 0x28], rcx
+0x14582c971: test      r13d, r13d
+0x14582c974: mov       qword ptr [rsp + 0x20], rax
+0x14582c979: mov       rcx, r15
+0x14582c97c: cmovne    r9, rbx
+0x14582c980: test      r12d, r12d
+0x14582c983: cmovne    r8, r14
+0x14582c987: call      0x1411baa60
+0x14582c98c: mov       rcx, qword ptr [rbp - 0x21]
+0x14582c990: mov       r13, qword ptr [rsp + 0x100]
+0x14582c998: test      rcx, rcx
+0x14582c99b: je        0x14582c9a2
+CALL_TARGETS=0x1411baa60,0x1411c17f0,0x1411c6fe0
+VERIFIED_TARGET_REFS=0x14582c961->SEGA save path@0x14a4576a0

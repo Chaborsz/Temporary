@@ -1,0 +1,272 @@
+[
+  {
+    "start": "0x143e7ea20",
+    "end": "0x143e7ea67",
+    "size": 71,
+    "valid_seeds": [
+      "0x143e7ea4a"
+    ],
+    "invalid_seeds": [
+      "0x143e7ea4b"
+    ],
+    "refs": [
+      {
+        "insn": "0x143e7ea4a",
+        "dst": "0x149b18590",
+        "name": "SaveGames path"
+      }
+    ],
+    "calls": [
+      "0x1411baa60",
+      "0x1412fced0"
+    ]
+  },
+  {
+    "start": "0x143f86090",
+    "end": "0x143f86235",
+    "size": 421,
+    "valid_seeds": [
+      "0x143f86151"
+    ],
+    "invalid_seeds": [
+      "0x143f86152"
+    ],
+    "refs": [
+      {
+        "insn": "0x143f86151",
+        "dst": "0x149b31350",
+        "name": "SaveGameSystem.cpp:124"
+      }
+    ],
+    "calls": [
+      "0x1411b3e50",
+      "0x1412011c0",
+      "0x14126b880",
+      "0x141272ec0",
+      "0x141273770"
+    ]
+  },
+  {
+    "start": "0x143f86dd0",
+    "end": "0x143f86f87",
+    "size": 439,
+    "valid_seeds": [
+      "0x143f86e94"
+    ],
+    "invalid_seeds": [
+      "0x143f86e95"
+    ],
+    "refs": [
+      {
+        "insn": "0x143f86e94",
+        "dst": "0x149b310b0",
+        "name": "SaveGameSystem.cpp:100"
+      }
+    ],
+    "calls": [
+      "0x1411b3e50",
+      "0x1412011c0",
+      "0x14126b880",
+      "0x141273770"
+    ]
+  },
+  {
+    "start": "0x143f86ff0",
+    "end": "0x143f871a7",
+    "size": 439,
+    "valid_seeds": [
+      "0x143f870b4"
+    ],
+    "invalid_seeds": [
+      "0x143f870b5"
+    ],
+    "refs": [
+      {
+        "insn": "0x143f870b4",
+        "dst": "0x149b31170",
+        "name": "SaveGameSystem.cpp:72"
+      }
+    ],
+    "calls": [
+      "0x1411b3e50",
+      "0x1412011c0",
+      "0x14126b880",
+      "0x141273770"
+    ]
+  },
+  {
+    "start": "0x143f87210",
+    "end": "0x143f873e6",
+    "size": 470,
+    "valid_seeds": [
+      "0x143f872d4"
+    ],
+    "invalid_seeds": [
+      "0x143f872d5"
+    ],
+    "refs": [
+      {
+        "insn": "0x143f872d4",
+        "dst": "0x149b30f30",
+        "name": "SaveGameSystem.cpp:45"
+      }
+    ],
+    "calls": [
+      "0x1411b3e50",
+      "0x1412011c0",
+      "0x14126b880",
+      "0x141273770"
+    ]
+  },
+  {
+    "start": "0x143f87420",
+    "end": "0x143f875cd",
+    "size": 429,
+    "valid_seeds": [
+      "0x143f874e4"
+    ],
+    "invalid_seeds": [
+      "0x143f874e5"
+    ],
+    "refs": [
+      {
+        "insn": "0x143f874e4",
+        "dst": "0x149b30ff0",
+        "name": "SaveGameSystem.cpp:18"
+      }
+    ],
+    "calls": [
+      "0x1411b3e50",
+      "0x1412011c0",
+      "0x14126b880",
+      "0x141273770"
+    ]
+  },
+  {
+    "start": "0x14424cf5b",
+    "end": "0x14424d1a5",
+    "size": 586,
+    "valid_seeds": [
+      "0x14424d07d"
+    ],
+    "invalid_seeds": [
+      "0x14424d07e"
+    ],
+    "refs": [
+      {
+        "insn": "0x14424d07d",
+        "dst": "0x149bcd740",
+        "name": "SaveGameSystemModule"
+      }
+    ],
+    "calls": [
+      "0x1411c17f0",
+      "0x1411c6150",
+      "0x1411c6fe0",
+      "0x1411e5b70",
+      "0x141201300",
+      "0x1412b5280",
+      "0x141309b70",
+      "0x1413453b0",
+      "0x14135fb10"
+    ]
+  },
+  {
+    "start": "0x14424d217",
+    "end": "0x14424d2ee",
+    "size": 215,
+    "valid_seeds": [
+      "0x14424d2bc"
+    ],
+    "invalid_seeds": [
+      "0x14424d2bd"
+    ],
+    "refs": [
+      {
+        "insn": "0x14424d2bc",
+        "dst": "0x149bcd740",
+        "name": "SaveGameSystemModule"
+      }
+    ],
+    "calls": [
+      "0x1411c3340",
+      "0x1412cbcb0",
+      "0x147bd0738"
+    ]
+  },
+  {
+    "start": "0x14582c424",
+    "end": "0x14582c5c1",
+    "size": 413,
+    "valid_seeds": [
+      "0x14582c591"
+    ],
+    "invalid_seeds": [
+      "0x14582c592"
+    ],
+    "refs": [
+      {
+        "insn": "0x14582c591",
+        "dst": "0x14a4576a0",
+        "name": "SEGA save path"
+      }
+    ],
+    "calls": [
+      "0x1411baa60",
+      "0x1411c17f0",
+      "0x1411c6fe0"
+    ]
+  },
+  {
+    "start": "0x14582c610",
+    "end": "0x14582c825",
+    "size": 533,
+    "valid_seeds": [
+      "0x14582c75f"
+    ],
+    "invalid_seeds": [
+      "0x14582c760"
+    ],
+    "refs": [
+      {
+        "insn": "0x14582c75f",
+        "dst": "0x149b18590",
+        "name": "SaveGames path"
+      }
+    ],
+    "calls": [
+      "0x1411b76b0",
+      "0x1411b8f90",
+      "0x1411baa60",
+      "0x1411c17f0",
+      "0x1411c6fe0",
+      "0x141201300",
+      "0x1413654a0",
+      "0x14582c0e0",
+      "0x147bd0738"
+    ]
+  },
+  {
+    "start": "0x14582c825",
+    "end": "0x14582c99d",
+    "size": 376,
+    "valid_seeds": [
+      "0x14582c961"
+    ],
+    "invalid_seeds": [
+      "0x14582c962"
+    ],
+    "refs": [
+      {
+        "insn": "0x14582c961",
+        "dst": "0x14a4576a0",
+        "name": "SEGA save path"
+      }
+    ],
+    "calls": [
+      "0x1411baa60",
+      "0x1411c17f0",
+      "0x1411c6fe0"
+    ]
+  }
+]
