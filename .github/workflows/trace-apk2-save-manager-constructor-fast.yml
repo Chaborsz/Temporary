@@ -1,0 +1,130 @@
+name: Trace APK2 save manager constructor fast
+
+on:
+  push:
+    paths:
+      - '.github/workflows/trace-apk2-save-manager-constructor-fast.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Trace constructor efficiently
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' -o APK2-Win64-Shipping.exe
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+          python3 -m pip -q install pefile capstone
+          mkdir -p analysis-results/apk2-save-manager-constructor-fast
+          python3 - <<'PY'
+          from pathlib import Path
+          import pefile,bisect,struct
+          from capstone import Cs,CS_ARCH_X86,CS_MODE_64
+          from capstone.x86 import X86_OP_IMM,X86_OP_MEM,X86_REG_RIP
+          fn='APK2-Win64-Shipping.exe'; out=Path('analysis-results/apk2-save-manager-constructor-fast')
+          b=Path(fn).read_bytes(); pe=pefile.PE(fn,fast_load=False); base=pe.OPTIONAL_HEADER.ImageBase
+          secs=[]
+          for s in pe.sections:
+              secs.append({'raw':s.PointerToRawData,'sz':s.SizeOfRawData,'rva':s.VirtualAddress,
+                           'vsz':max(s.Misc_VirtualSize,s.SizeOfRawData),'ch':s.Characteristics,
+                           'name':s.Name.rstrip(b'\0').decode(errors='replace')})
+          def va2off(va):
+              r=va-base
+              for s in secs:
+                  if s['rva']<=r<s['rva']+s['sz']:return s['raw']+(r-s['rva'])
+          def secva(va):
+              r=va-base
+              for s in secs:
+                  if s['rva']<=r<s['rva']+s['vsz']:return s['name']
+          def cstr(va,lim=160):
+              off=va2off(va)
+              if off is None:return None
+              raw=b[off:off+lim].split(b'\0',1)[0]
+              return raw.decode('ascii','replace') if len(raw)>1 and all(32<=x<127 for x in raw) else None
+          def wstr(va,lim=100):
+              off=va2off(va)
+              if off is None:return None
+              z=[]
+              for i in range(lim):
+                  if off+2*i+1>=len(b):break
+                  x,y=b[off+2*i],b[off+2*i+1]
+                  if x==0 and y==0:break
+                  if y or not 32<=x<127:return None
+                  z.append(chr(x))
+              return ''.join(z) if len(z)>1 else None
+          funcs=[]
+          for e in pe.DIRECTORY_ENTRY_EXCEPTION:
+              st=base+e.struct.BeginAddress;en=base+e.struct.EndAddress
+              if st<en:funcs.append((st,en))
+          funcs=sorted(set(funcs));starts=[x[0] for x in funcs]
+          def cf(va):
+              i=bisect.bisect_right(starts,va)-1
+              return funcs[i] if i>=0 and funcs[i][0]<=va<funcs[i][1] else None
+          md=Cs(CS_ARCH_X86,CS_MODE_64);md.detail=True
+          root=0x1450d58c0
+          queue=[(root,0)];seen=set()
+          with (out/'constructor_tree.txt').open('w',encoding='utf-8') as f:
+              while queue:
+                  seed,d=queue.pop(0)
+                  if seed in seen:continue
+                  seen.add(seed);fr=cf(seed)
+                  if not fr:
+                      f.write(f'NO_PDATA seed=0x{seed:x}\n');continue
+                  st,en=fr;off=va2off(st)
+                  if off is None:continue
+                  insns=list(md.disasm(b[off:off+(en-st)],st));calls=[]
+                  f.write(f'\n===== DEPTH={d} FUNC=0x{st:x}-0x{en:x} SEED=0x{seed:x} SIZE=0x{en-st:x} =====\n')
+                  for ins in insns:
+                      anns=[]
+                      if ins.mnemonic=='call' and ins.operands and ins.operands[0].type==X86_OP_IMM:
+                          dst=ins.operands[0].imm;calls.append(dst);anns.append(f'CALL->0x{dst:x} pdata={cf(dst)}')
+                      for op in ins.operands:
+                          if op.type==X86_OP_MEM and op.mem.base==X86_REG_RIP:
+                              dst=ins.address+ins.size+op.mem.disp;s=secva(dst);a=cstr(dst);w=wstr(dst)
+                              x=f'RIP->0x{dst:x}({s})'
+                              if a:x+=f' ASCII={a!r}'
+                              if w:x+=f' WIDE={w!r}'
+                              anns.append(x)
+                          if op.type==X86_OP_MEM and op.mem.disp in (0x30,0x38,0x40,0x48,0x50):
+                              anns.append(f'OBJDISP=0x{op.mem.disp:x}')
+                      f.write(f'0x{ins.address:x}: {ins.mnemonic:9s} {ins.op_str}' + ((' ; '+' | '.join(anns)) if anns else '')+'\n')
+                  f.write('CALLS='+','.join(hex(x) for x in sorted(set(calls)))+'\n')
+                  if d<3:
+                      for dst in calls:
+                          fr2=cf(dst)
+                          if fr2 and 0 < fr2[1]-fr2[0] <= 0x5000 and dst not in seen:
+                              queue.append((dst,d+1))
+
+          # efficient direct call refs to root
+          refs=[]
+          for s in secs:
+              if not (s['ch'] & 0x20000000):continue
+              blob=b[s['raw']:s['raw']+s['sz']];pos=0;secbase=base+s['rva']
+              while True:
+                  i=blob.find(b'\xe8',pos)
+                  if i<0:break
+                  if i+5<=len(blob):
+                      rel=struct.unpack_from('<i',blob,i+1)[0];src=secbase+i
+                      if src+5+rel==root:refs.append(src)
+                  pos=i+1
+          (out/'callers_of_internalconstructor.txt').write_text(''.join(f'0x{x:x}\n' for x in refs))
+          PY
+      - name: Commit reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis-results/apk2-save-manager-constructor-fast
+          git commit -m 'Trace APK2 save manager constructor fast' || exit 0
+          git pull --rebase origin main
+          git push origin main
