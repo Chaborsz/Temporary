@@ -61,6 +61,7 @@ jobs:
       - name: Publish as GitHub Release asset
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: Chaborsz/Temporary
         shell: bash
         run: |
           set -euo pipefail
