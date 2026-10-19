@@ -1,0 +1,34 @@
+name: Build APK2 Save Probe
+
+on:
+  push:
+    paths:
+      - 'apk2-save-probe/APK2SaveProbe.cpp'
+      - '.github/workflows/build-apk2-save-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ilammy/msvc-dev-cmd@v1
+      - name: Compile x64 Release
+        shell: cmd
+        run: |
+          mkdir dist
+          cl /nologo /O2 /EHsc /std:c++17 /DUNICODE /D_UNICODE apk2-save-probe\APK2SaveProbe.cpp /Fe:dist\APK2SaveProbe.exe bcrypt.lib
+      - name: Hash
+        shell: powershell
+        run: |
+          Get-FileHash dist\APK2SaveProbe.exe -Algorithm SHA256 | Format-List | Out-File dist\SHA256.txt -Encoding ascii
+          Get-Item dist\APK2SaveProbe.exe | Format-List Name,Length | Out-File -Append dist\SHA256.txt -Encoding ascii
+          Get-Content dist\SHA256.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: APK2SaveProbe-windows-x64
+          path: dist/
+          retention-days: 14
