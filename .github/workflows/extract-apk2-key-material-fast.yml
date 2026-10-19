@@ -1,0 +1,49 @@
+name: Extract APK2 key material fast
+
+on:
+  push:
+    paths:
+      - '.github/workflows/extract-apk2-key-material-fast.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download executable
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download apk2-mediafire-transfer-2026-10-18 --repo Chaborsz/Temporary --pattern 'APK2-Win64-Shipping.exe' --dir .
+      - name: Install PE parser
+        run: python3 -m pip install --quiet pefile
+      - name: Extract sections and strings
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p key-material-fast
+          python3 - <<'PY'
+          import pefile,hashlib
+          from pathlib import Path
+          p=pefile.PE('APK2-Win64-Shipping.exe')
+          rows=[]
+          for s in p.sections:
+              n=s.Name.rstrip(b'\0').decode(errors='replace')
+              if n in {'.rdata','.data2','.srdata'}:
+                  b=s.get_data(); f='key-material-fast/'+n.strip('.')+'.bin'; Path(f).write_bytes(b)
+                  rows.append(f'{n}\traw_off=0x{s.PointerToRawData:x}\trva=0x{s.VirtualAddress:x}\tsize={len(b)}\tsha256={hashlib.sha256(b).hexdigest()}')
+          Path('key-material-fast/manifest.txt').write_text('\n'.join(rows)+'\n')
+          print('\n'.join(rows))
+          PY
+          strings -a -t x -n 32 APK2-Win64-Shipping.exe > key-material-fast/ascii_strings_32.txt
+          strings -a -e l -t x -n 32 APK2-Win64-Shipping.exe > key-material-fast/utf16_strings_32.txt || true
+          du -h key-material-fast/*
+      - name: Upload material
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk2-key-material-fast
+          path: key-material-fast/
+          compression-level: 6
+          retention-days: 7
