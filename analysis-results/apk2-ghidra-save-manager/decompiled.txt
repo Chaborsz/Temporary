@@ -1,4 +1,28 @@
 
+===== TARGET 0x1450d58c0 =====
+FUNCTION=FUN_1450d58c0 ENTRY=1450d58c0 BODY=[[1450d58c0, 1450d58c0]]
+
+void FUN_1450d58c0(undefined8 *param_1)
+
+{
+  undefined8 *puVar1;
+  
+  puVar1 = (undefined8 *)*param_1;
+  if (puVar1 != (undefined8 *)0x0) {
+    FUN_144d03fc0(puVar1,param_1);
+    *(undefined4 *)((longlong)puVar1 + 0x4c) = 3;
+    *puVar1 = &UNK_14a1deb08;
+    puVar1[6] = 0;
+    puVar1[7] = 0;
+    puVar1[8] = 0;
+    *(undefined1 *)(puVar1 + 9) = 0;
+    *(undefined2 *)(puVar1 + 10) = 0x505;
+  }
+  return;
+}
+
+
+
 ===== TARGET 0x1450ce860 =====
 FUNCTION=FUN_1450ce860 ENTRY=1450ce860 BODY=[[1450ce860, 1450ce860]]
 
