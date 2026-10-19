@@ -1,0 +1,126 @@
+name: Trace APK2 save crypto callers
+
+on:
+  push:
+    paths:
+      - '.github/workflows/trace-apk2-save-crypto-callers.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch verified executable and trace save crypto callers
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' -o APK2-Win64-Shipping.exe
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+          python3 -m pip -q install pefile capstone
+          mkdir -p analysis-results/apk2-save-crypto-callers
+          python3 - <<'PY'
+          from pathlib import Path
+          import pefile,struct,bisect
+          from capstone import Cs,CS_ARCH_X86,CS_MODE_64
+          from capstone.x86 import X86_OP_IMM,X86_OP_MEM,X86_REG_RIP
+
+          fn='APK2-Win64-Shipping.exe';out=Path('analysis-results/apk2-save-crypto-callers')
+          b=Path(fn).read_bytes();pe=pefile.PE(fn,fast_load=False);base=pe.OPTIONAL_HEADER.ImageBase
+          secs=[]
+          for s in pe.sections:
+              secs.append({'raw':s.PointerToRawData,'sz':s.SizeOfRawData,'rva':s.VirtualAddress,'vsz':max(s.Misc_VirtualSize,s.SizeOfRawData),'ch':s.Characteristics,'name':s.Name.rstrip(b'\0').decode(errors='replace')})
+          def va2off(v):
+              r=v-base
+              for s in secs:
+                  if s['rva']<=r<s['rva']+s['sz']:return s['raw']+(r-s['rva'])
+          def secva(v):
+              r=v-base
+              for s in secs:
+                  if s['rva']<=r<s['rva']+s['vsz']:return s['name']
+          def cstr(v,lim=220):
+              o=va2off(v)
+              if o is None:return None
+              x=b[o:o+lim].split(b'\0',1)[0]
+              if len(x)>1 and all(32<=c<127 for c in x):
+                  try:return x.decode()
+                  except:return None
+          def wstr(v,lim=120):
+              o=va2off(v)
+              if o is None:return None
+              z=[]
+              for i in range(lim):
+                  if o+2*i+1>=len(b):break
+                  a,c=b[o+2*i],b[o+2*i+1]
+                  if a==0 and c==0:break
+                  if c or not 32<=a<127:return None
+                  z.append(chr(a))
+              return ''.join(z) if len(z)>1 else None
+          funcs=[]
+          for e in pe.DIRECTORY_ENTRY_EXCEPTION:
+              a=base+e.struct.BeginAddress;z=base+e.struct.EndAddress
+              if a<z:funcs.append((a,z))
+          funcs=sorted(set(funcs));starts=[a for a,z in funcs]
+          def cf(v):
+              i=bisect.bisect_right(starts,v)-1
+              return funcs[i] if i>=0 and funcs[i][0]<=v<funcs[i][1] else None
+          targets={0x14582caa0:'APK_SAVE_ENCRYPT',0x14582ce60:'APK_SAVE_DECRYPT'}
+          hits=[]
+          for s in secs:
+              if not(s['ch']&0x20000000):continue
+              blob=b[s['raw']:s['raw']+s['sz']];sv=base+s['rva'];p=0
+              while True:
+                  i=blob.find(b'\xe8',p)
+                  if i<0:break
+                  if i+5<=len(blob):
+                      rel=struct.unpack_from('<i',blob,i+1)[0];src=sv+i;dst=src+5+rel
+                      if dst in targets:hits.append((src,dst,targets[dst],cf(src)))
+                  p=i+1
+          md=Cs(CS_ARCH_X86,CS_MODE_64);md.detail=True
+          groups={}
+          for h in hits:
+              if h[3]:groups.setdefault(h[3],[]).append(h)
+          with (out/'callers.txt').open('w',encoding='utf-8') as f:
+              f.write(f'CALLS={len(hits)} CALLER_FUNCS={len(groups)}\n')
+              for (st,en),hs in sorted(groups.items()):
+                  o=va2off(st)
+                  if o is None or en-st>0x20000:continue
+                  ins=list(md.disasm(b[o:o+(en-st)],st));imap={x.address:x for x in ins};valid=[]
+                  for src,dst,nm,fr in hs:
+                      x=imap.get(src)
+                      if x and x.mnemonic=='call' and x.operands and x.operands[0].type==X86_OP_IMM and x.operands[0].imm==dst:valid.append((src,dst,nm))
+                  if not valid:continue
+                  f.write(f'\n===== CALLER 0x{st:x}-0x{en:x} size=0x{en-st:x} HITS={[(hex(a),nm) for a,d,nm in valid]} =====\n')
+                  vm={x[0]:x for x in valid};hitadd=[x[0] for x in valid]
+                  for x in ins:
+                      near=any(abs(x.address-h)<0x300 for h in hitadd)
+                      if not near:continue
+                      ann=[]
+                      if x.address in vm:ann.append('SAVE_CRYPTO='+vm[x.address][2])
+                      if x.mnemonic=='call' and x.operands and x.operands[0].type==X86_OP_IMM:ann.append(f'CALL->0x{x.operands[0].imm:x} pdata={cf(x.operands[0].imm)}')
+                      for op in x.operands:
+                          if op.type==X86_OP_MEM and op.mem.base==X86_REG_RIP:
+                              d=x.address+x.size+op.mem.disp;a=cstr(d);w=wstr(d)
+                              if a:ann.append('ASCII='+repr(a))
+                              if w:ann.append('WIDE='+repr(w))
+                          if op.type==X86_OP_MEM and op.mem.disp in (0x30,0x38,0x480,0x488):ann.append(f'DISP=0x{op.mem.disp:x}')
+                      f.write(f'0x{x.address:x}: {x.mnemonic:9s} {x.op_str}'+((' ; '+' | '.join(ann)) if ann else '')+'\n')
+          (out/'caller_starts.txt').write_text(''.join(f'0x{fr[0]:x}\n' for fr in sorted(groups)))
+          print('hits',len(hits),'caller functions',len(groups))
+          PY
+      - name: Commit trace
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis-results/apk2-save-crypto-callers
+          git commit -m 'Trace APK2 save crypto callers' || exit 0
+          git pull --rebase origin main
+          git push origin main
