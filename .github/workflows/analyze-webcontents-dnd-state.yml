@@ -1,0 +1,102 @@
+name: Analyze WebContentsViewAura drag state
+
+on:
+  push:
+    paths:
+      - '.github/workflows/analyze-webcontents-dnd-state.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Prepare
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/runtime work/symbols out
+          python3 -m pip install --user pefile capstone
+
+      - name: Download exact Electron runtime and symbols
+        shell: bash
+        run: |
+          set -euxo pipefail
+          VER='46.0.0-nightly.20261016'
+          BASE="https://github.com/electron/nightlies/releases/download/v${VER}"
+          curl -fL --retry 5 --retry-delay 2 "$BASE/electron-v${VER}-win32-x64.zip" -o work/electron.zip
+          curl -fL --retry 5 --retry-delay 2 "$BASE/electron-v${VER}-win32-x64-symbols.zip" -o work/symbols.zip
+          echo '1d986c61270c82d205bb658153dff2f7850bd4ad702ef335e367dc0a7359f4a8  work/electron.zip' | sha256sum -c -
+          echo 'e28fd477f2b7457541058432d0a175c5e9d976f2aa4eceb9a0d7a96fcfabe595  work/symbols.zip' | sha256sum -c -
+          unzip -q work/electron.zip -d work/runtime
+          unzip -q work/symbols.zip -d work/symbols
+          cp work/runtime/electron.exe out/electron.exe
+
+      - name: Resolve and disassemble drag state functions
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python3 - <<'PY'
+          import os, json, hashlib, re, sys
+          import pefile
+          from capstone import Cs, CS_ARCH_X86, CS_MODE_64
+
+          sym=None
+          for dp,_,fs in os.walk('work/symbols'):
+              for fn in fs:
+                  if fn == 'electron.exe.sym':
+                      sym=os.path.join(dp,fn); break
+              if sym: break
+          if not sym:
+              raise SystemExit('electron.exe.sym not found')
+          lines=open(sym,'r',encoding='utf-8',errors='ignore').read().splitlines()
+          needles={
+            'OnDragEntered':'content::WebContentsViewAura::OnDragEntered(ui::DropTargetEvent const &)',
+            'DragEnteredCallback':'content::WebContentsViewAura::DragEnteredCallback(',
+            'OnDragUpdated':'content::WebContentsViewAura::OnDragUpdated(ui::DropTargetEvent const &)',
+            'UpdateDragOperation':'content::WebContentsViewAura::UpdateDragOperation(',
+            'DragUpdatedCallback':'content::WebContentsViewAura::DragUpdatedCallback(',
+            'GetDropCallback':'content::WebContentsViewAura::GetDropCallback(ui::DropTargetEvent const &)',
+            'OnDragExited':'content::WebContentsViewAura::OnDragExited()',
+          }
+          pe=pefile.PE('out/electron.exe', fast_load=False)
+          image_base=pe.OPTIONAL_HEADER.ImageBase
+          md=Cs(CS_ARCH_X86, CS_MODE_64)
+          allmeta={}
+          for key,needle in needles.items():
+              matches=[ln for ln in lines if ln.startswith('FUNC ') and needle in ln]
+              print('\nNEEDLE',key,needle,'matches',len(matches))
+              for m in matches[:10]: print(' ',m)
+              if not matches: continue
+              line=matches[0]
+              parts=line.split(' ',4)
+              rva=int(parts[1],16); size=int(parts[2],16); name=parts[4]
+              off=pe.get_offset_from_rva(rva)
+              with open('out/electron.exe','rb') as f:
+                  f.seek(off); code=f.read(size)
+              meta={'symbol':name,'rva':rva,'size':size,'file_offset':off,'image_base':image_base,'sha256':hashlib.sha256(code).hexdigest(),'hex':code.hex()}
+              allmeta[key]=meta
+              with open(f'out/{key}.json','w') as f: json.dump(meta,f,indent=2)
+              with open(f'out/{key}.bin','wb') as f: f.write(code)
+              with open(f'out/{key}.disasm.txt','w',encoding='utf-8') as o:
+                  o.write(f'name={name}\nrva=0x{rva:x}\nsize=0x{size:x}\nfile_offset=0x{off:x}\nimage_base=0x{image_base:x}\n\n')
+                  for ins in md.disasm(code,image_base+rva):
+                      o.write(f'{ins.address:016x}: {ins.bytes.hex():<32} {ins.mnemonic:<8} {ins.op_str}\n')
+          with open('out/all.json','w') as f: json.dump(allmeta,f,indent=2)
+          if 'DragEnteredCallback' not in allmeta or 'OnDragEntered' not in allmeta:
+              raise SystemExit('required symbols missing')
+          PY
+          for f in out/*.disasm.txt; do echo ==== "$f"; cat "$f"; done
+
+      - name: Upload analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: webcontents-dnd-state-analysis
+          path: |
+            out/*.txt
+            out/*.json
+            out/*.bin
+          if-no-files-found: error
