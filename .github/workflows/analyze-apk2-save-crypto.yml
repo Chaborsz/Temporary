@@ -1,0 +1,154 @@
+name: Analyze APK2 save crypto
+
+on:
+  push:
+    paths:
+      - '.github/workflows/analyze-apk2-save-crypto.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download APK2 executable release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release download apk2-mediafire-transfer-2026-10-18 \
+            --repo Chaborsz/Temporary \
+            --pattern 'APK2-Win64-Shipping.exe' \
+            --dir .
+          sha256sum APK2-Win64-Shipping.exe
+
+      - name: Install analysis libraries
+        run: python3 -m pip install --quiet pefile capstone
+
+      - name: Targeted PE and crypto analysis
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > analyze.py <<'PY'
+          import pefile, re, json, hashlib, struct
+          from pathlib import Path
+          from capstone import Cs, CS_ARCH_X86, CS_MODE_64
+          from capstone.x86 import X86_OP_MEM, X86_REG_RIP
+
+          fn='APK2-Win64-Shipping.exe'
+          data=Path(fn).read_bytes()
+          pe=pefile.PE(fn, fast_load=False)
+          ib=pe.OPTIONAL_HEADER.ImageBase
+
+          def foff_to_rva(off):
+              for s in pe.sections:
+                  a=s.PointerToRawData; b=a+s.SizeOfRawData
+                  if a <= off < b: return s.VirtualAddress + (off-a)
+              return None
+
+          def rva_to_foff(rva):
+              for s in pe.sections:
+                  a=s.VirtualAddress; b=a+max(s.Misc_VirtualSize,s.SizeOfRawData)
+                  if a <= rva < b: return s.PointerToRawData + (rva-a)
+              return None
+
+          lines=[]
+          lines.append(f'SHA256 {hashlib.sha256(data).hexdigest()}')
+          lines.append(f'SIZE {len(data)}')
+          lines.append(f'IMAGEBASE 0x{ib:x}')
+          lines.append('SECTIONS')
+          for s in pe.sections:
+              nm=s.Name.rstrip(b'\\0').decode(errors='replace')
+              lines.append(f'  {nm:8} RVA=0x{s.VirtualAddress:x} VSZ=0x{s.Misc_VirtualSize:x} RAW=0x{s.PointerToRawData:x} RSZ=0x{s.SizeOfRawData:x} CH=0x{s.Characteristics:x}')
+
+          lines.append('IMPORTS_CRYPTO_FILE')
+          try:
+              for e in pe.DIRECTORY_ENTRY_IMPORT:
+                  dll=e.dll.decode(errors='replace')
+                  hits=[]
+                  for imp in e.imports:
+                      n=(imp.name or b'').decode(errors='replace')
+                      if any(k in n.lower() for k in ['crypt','bcrypt','aes','file','read','write']): hits.append(n)
+                  if hits: lines.append('  '+dll+': '+', '.join(hits[:80]))
+          except Exception as ex: lines.append('  ERR '+repr(ex))
+
+          # Extract ASCII and UTF-16LE strings with offsets, keeping relevant candidates.
+          relevant=[]
+          pats=['defaultdata','savegame','saved','save data','encrypt','decrypt','aes','crypto','cipher','padding','pkcs','gvas','apk2','steam']
+          for m in re.finditer(rb'[ -~]{5,}', data):
+              s=m.group().decode('ascii','ignore')
+              if any(p in s.lower() for p in pats): relevant.append((m.start(),'A',s[:300]))
+          for m in re.finditer(rb'(?:[ -~]\\x00){5,}', data):
+              try: s=m.group().decode('utf-16le')
+              except: continue
+              if any(p in s.lower() for p in pats): relevant.append((m.start(),'W',s[:300]))
+          lines.append('RELEVANT_STRINGS')
+          for off,typ,s in relevant[:4000]:
+              r=foff_to_rva(off)
+              lines.append(f'  OFF=0x{off:x} RVA={"0x%x"%r if r is not None else "NA"} {typ} {s!r}')
+
+          # Exact AES S-box / inverse S-box constants.
+          sbox=bytes.fromhex('637c777bf26b6fc53001672bfed7ab76ca82c97dfa5947f0ad4a2af9cfa472c0b7fd9326363ff7cc34a5e5f171d83115304c723c31896059a071280eeb27b27509832c1a1b6e5aa0523bd6b329e32f8453d100ed20fcb15b6acbbe394a4c58cfd0efaafb434d338545f9027f503c9fa851a3408f929d38f5bcb6da2110fff3d2cd0c13ec5f974417c4a77e3d645d197360814fdc222a908846eeb814de5e0bdbe0323a0a4906245cc2d3ac629195e479e7c8376d8dd54ea96c56f4ea657aae08ba78252e1ca6b4c6e8dd741f4bbd8b8a703eb5664803f60e613557b986c11d9ee1f8981169d98e949b1e87e9ce5528df8ca1890dbfe6426841992d0fb054bb16')
+          inv=bytes.fromhex('52096ad53036a538bf40a39e81f3d7fb7ce339829b2fff87348e4344c4dee9cb547b942a6c223d4eee4c950b42fac34e082ea16628d924b2765ba2496d8bd12572f8f66486689816d4a45ccc5d65b6926c704850fded9bda5e154657a78d9d8490d8ab008cbcd30af7e4f58c05b8b34506d02c1e8fca3f0f02c1afbd0301138a6b3a9111414f67dcea97f2cfcef0b4e67396ac742e7ad3585e2f9f7dc146efe47e498cb1cfaca34aebbbfc913253d49c6667a0a4f06f0ae614f0d77d6013fa8f019bd4a70a7e3b5e8fb70e357b86648ce1f6b95217b9e7c3e528969b83a2c1c7fb5c4e3bb35a95ff2f394c92f810e8')
+          lines.append('AES_TABLE_SCAN')
+          for nm,const in [('SBOX',sbox),('INV_SBOX',inv)]:
+              pos=[]; st=0
+              while True:
+                  i=data.find(const,st)
+                  if i<0: break
+                  pos.append(i); st=i+1
+              lines.append(f'  {nm}: '+(', '.join(f'0x{x:x}' for x in pos) if pos else 'none'))
+
+          # Disassemble executable sections. Capture AES-NI and RIP-relative xrefs to relevant strings.
+          md=Cs(CS_ARCH_X86,CS_MODE_64); md.detail=True
+          str_targets={ib+r:(off,typ,s) for off,typ,s in relevant if (r:=foff_to_rva(off)) is not None}
+          xrefs=[]; aesins=[]; calls=[]
+          exec_secs=[s for s in pe.sections if s.Characteristics & 0x20000000]
+          for sec in exec_secs:
+              code=sec.get_data(); base=ib+sec.VirtualAddress
+              for ins in md.disasm(code,base):
+                  mn=ins.mnemonic.lower()
+                  if mn.startswith('aes') or mn in ('pclmulqdq',):
+                      aesins.append((ins.address,ins.mnemonic,ins.op_str))
+                  for op in ins.operands:
+                      if op.type==X86_OP_MEM and op.mem.base==X86_REG_RIP:
+                          tgt=ins.address+ins.size+op.mem.disp
+                          if tgt in str_targets:
+                              xrefs.append((ins.address,ins.mnemonic,ins.op_str,tgt,str_targets[tgt]))
+          lines.append(f'AESNI_COUNT {len(aesins)}')
+          for x in aesins[:1000]: lines.append('  0x%x: %s %s'%x)
+          lines.append(f'STRING_XREF_COUNT {len(xrefs)}')
+          for a,mn,op,tgt,meta in xrefs[:3000]:
+              off,typ,s=meta
+              lines.append(f'  0x{a:x}: {mn} {op} -> 0x{tgt:x} {typ} {s!r}')
+
+          # Targeted disassembly windows around each unique xref address.
+          lines.append('XREF_WINDOWS')
+          seen=set()
+          for a,_,_,_,meta in xrefs:
+              if a in seen: continue
+              seen.add(a)
+              rva=a-ib; fo=rva_to_foff(max(0,rva-0x100))
+              if fo is None: continue
+              blob=data[fo:fo+0x300]
+              start=a-0x100
+              lines.append(f'--- around 0x{a:x} target={meta[2]!r} ---')
+              for ins in md.disasm(blob,start):
+                  mark='>>' if abs(ins.address-a)<=8 else '  '
+                  lines.append(f'{mark} 0x{ins.address:x}: {ins.mnemonic:10} {ins.op_str}')
+
+          Path('apk2-save-crypto-report.txt').write_text('\\n'.join(lines),encoding='utf-8',errors='replace')
+          print('report lines',len(lines),'strings',len(relevant),'xrefs',len(xrefs),'aesni',len(aesins))
+          PY
+          python3 analyze.py
+          wc -l apk2-save-crypto-report.txt
+          grep -Ei 'DefaultData|Encrypt|Decrypt|AESNI_COUNT|SBOX|SaveGame|GVAS' apk2-save-crypto-report.txt | head -n 300 || true
+
+      - name: Upload analysis report
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk2-save-crypto-report
+          path: apk2-save-crypto-report.txt
+          retention-days: 7
