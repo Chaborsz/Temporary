@@ -1,0 +1,348 @@
+openjdk version "25.0.4.1" 2026-08-18 LTS
+OpenJDK Runtime Environment Temurin-25.0.4.1+1 (build 25.0.4.1+1-LTS)
+OpenJDK 64-Bit Server VM Temurin-25.0.4.1+1 (build 25.0.4.1+1-LTS, mixed mode)
+INFO  Using log config file: jar:file:/home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Framework/Generic/lib/Generic.jar!/generic.log4j.xml (LoggingInitialization)  
+INFO  Using log file: /home/runner/.config/ghidra/ghidra_12.1.4_PUBLIC/application.log (LoggingInitialization)  
+INFO  Loading user preferences: /home/runner/.config/ghidra/ghidra_12.1.4_PUBLIC/preferences (Preferences)  
+INFO  Searching for classes... (ClassSearcher)  
+INFO  Class search complete (661 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (DefaultSSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: NativePRNGNonBlocking (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (DefaultTrustManagerFactory)  
+INFO  Starting cache cleanup: /var/tmp/runner-ghidra/fscache2 (FileCacheMaintenanceDaemon)  
+INFO  Finished cache cleanup, estimated storage used: 0 (FileCacheMaintenanceDaemon)  
+INFO  Headless startup complete (4002 ms) (AnalyzeHeadless)  
+INFO  Class searcher loaded 59 extension points (20 false positives) (ClassSearcher)  
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::staticFieldOffset has been called by org.apache.felix.framework.util.SecureAction (file:/home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/Base/lib/org.apache.felix.framework-7.0.5.jar)
+WARNING: Please consider reporting this to the maintainers of class org.apache.felix.framework.util.SecureAction
+WARNING: sun.misc.Unsafe::staticFieldOffset will be removed in a future release
+INFO  HEADLESS Script Paths:
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Debug/Debugger/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/Base/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/SystemEmulation/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Processors/JVM/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Processors/PIC/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Processors/DATA/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Debug/Debugger-rmi-trace/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/Decompiler/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/SwiftDemangler/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/VersionTracking/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Processors/8051/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/FunctionID/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/FileFormats/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/PDB/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/GnuDemangler/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/BytePatterns/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Processors/Atmel/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/MicrosoftCodeAnalyzer/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/PyGhidra/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/BSim/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/WildcardAssembler/ghidra_scripts
+    /home/runner/work/Temporary/Temporary/ghidra_12.1.4_PUBLIC/Ghidra/Features/DecompilerDependent/ghidra_scripts (HeadlessAnalyzer)  
+INFO  HEADLESS: execution starts (HeadlessAnalyzer)  
+INFO  Creating temporary project: /home/runner/work/Temporary/Temporary/ghidra_project/APK2_Save_Targeted (HeadlessAnalyzer)  
+INFO  Creating project: /home/runner/work/Temporary/Temporary/ghidra_project/APK2_Save_Targeted (DefaultProject)  
+INFO  REPORT: Processing input files:  (HeadlessAnalyzer)  
+INFO       project: /home/runner/work/Temporary/Temporary/ghidra_project/APK2_Save_Targeted (HeadlessAnalyzer)  
+INFO  IMPORTING: file:///home/runner/work/Temporary/Temporary/APK2-Win64-Shipping.exe (HeadlessAnalyzer)  
+INFO  Using Loader: Portable Executable (PE) (ProgramLoader)  
+INFO  Using Language/Compiler: x86:LE:64:default:windows (ProgramLoader)  
+INFO  Using Library Search Path: [., /bin, /lib, /lib64, /lib/x86_64-linux-gnu, /lib/aarch64-linux-gnu, /usr/bin, /usr/lib, /usr/X11R6/bin, /usr/X11R6/lib, /usr/java/packages/lib, /usr/lib64] (ProgramLoader)  
+INFO  TLS callbacks at 159545000 (TLSDirectory)  
+INFO  Additional info:
+Loading file:///home/runner/work/Temporary/Temporary/APK2-Win64-Shipping.exe?MD5=18834b2892c904cfc9b735bc8c272930...
+------------------------------------------------
+
+Searching 8 paths for library ADVAPI32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CORE-SYNCH-L1-2-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-CONIO-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-CONVERT-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-ENVIRONMENT-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-FILESYSTEM-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-HEAP-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-LOCALE-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-MATH-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-MULTIBYTE-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-STDIO-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-STRING-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-TIME-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library API-MS-WIN-CRT-UTILITY-L1-1-0.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library BCRYPT.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library CFGMGR32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library CRYPT32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library D3D11.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library D3D12.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library D3D9.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library DBGHELP.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library DSOUND.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library DWMAPI.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library DXGI.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library GDI32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library GFSDK_AFTERMATH_LIB.X64.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library HID.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library IMM32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library IPHLPAPI.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library KERNEL32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library KERNELBASE.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library LIBVORBISFILE_64.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library MFPLAT.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library MFREADWRITE.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library MSVCP140.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library NTDLL.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library OLE32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library OLEAUT32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library OPENGL32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library PROPSYS.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library SETUPAPI.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library SHELL32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library SHLWAPI.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library STEAM_API64.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library UIAUTOMATIONCORE.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library USER32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library UXTHEME.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library VCRUNTIME140.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library VCRUNTIME140_1.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library WINHTTP.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library WININET.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library WINMM.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library WS2_32.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library XAUDIO2_9REDIST.DLL...
+Library not found.
+------------------------------------------------
+
+Searching 8 paths for library XINPUT1_3.DLL...
+Library not found.
+------------------------------------------------
+
+Linking the External Programs of 'APK2-Win64-Shipping.exe' to imported libraries...
+  [XINPUT1_3.DLL] -> not found in project
+  [DXGI.DLL] -> not found in project
+  [SHLWAPI.DLL] -> not found in project
+  [DSOUND.DLL] -> not found in project
+  [WS2_32.DLL] -> not found in project
+  [WINMM.DLL] -> not found in project
+  [KERNEL32.DLL] -> not found in project
+  [USER32.DLL] -> not found in project
+  [GDI32.DLL] -> not found in project
+  [ADVAPI32.DLL] -> not found in project
+  [SHELL32.DLL] -> not found in project
+  [OLE32.DLL] -> not found in project
+  [OLEAUT32.DLL] -> not found in project
+  [IPHLPAPI.DLL] -> not found in project
+  [SETUPAPI.DLL] -> not found in project
+  [API-MS-WIN-CORE-SYNCH-L1-2-0.DLL] -> not found in project
+  [DWMAPI.DLL] -> not found in project
+  [IMM32.DLL] -> not found in project
+  [UIAUTOMATIONCORE.DLL] -> not found in project
+  [CRYPT32.DLL] -> not found in project
+  [WINHTTP.DLL] -> not found in project
+  [CFGMGR32.DLL] -> not found in project
+  [OPENGL32.DLL] -> not found in project
+  [PROPSYS.DLL] -> not found in project
+  [HID.DLL] -> not found in project
+  [MSVCP140.DLL] -> not found in project
+  [BCRYPT.DLL] -> not found in project
+  [UXTHEME.DLL] -> not found in project
+  [VCRUNTIME140.DLL] -> not found in project
+  [VCRUNTIME140_1.DLL] -> not found in project
+  [API-MS-WIN-CRT-HEAP-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-CONVERT-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-STRING-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-UTILITY-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-STDIO-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-MATH-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-RUNTIME-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-CONIO-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-ENVIRONMENT-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-FILESYSTEM-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-TIME-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-LOCALE-L1-1-0.DLL] -> not found in project
+  [API-MS-WIN-CRT-MULTIBYTE-L1-1-0.DLL] -> not found in project
+  [KERNELBASE.DLL] -> not found in project
+  [NTDLL.DLL] -> not found in project
+  [WININET.DLL] -> not found in project
+  [LIBVORBISFILE_64.DLL] -> not found in project
+  [D3D9.DLL] -> not found in project
+  [D3D11.DLL] -> not found in project
+  [GFSDK_AFTERMATH_LIB.X64.DLL] -> not found in project
+  [D3D12.DLL] -> not found in project
+  [XAUDIO2_9REDIST.DLL] -> not found in project
+  [STEAM_API64.DLL] -> not found in project
+  [DBGHELP.DLL] -> not found in project
+  [MFPLAT.DLL] -> not found in project
+  [MFREADWRITE.DLL] -> not found in project
+------------------------------------------------
+
+ (ProgramLoader)  
+INFO  IMPORTING: Loaded 0 additional files (HeadlessAnalyzer)  
+INFO  REPORT: Execute script: APK2TargetDecompile.java  (HeadlessAnalyzer)  
+INFO  SCRIPT: /home/runner/work/Temporary/Temporary/ghidra_scripts/APK2TargetDecompile.java (HeadlessAnalyzer)  
+INFO  /APK2-Win64-Shipping.exe: file created (runner) (LocalFileSystem)  
+INFO  REPORT: Save succeeded for: /APK2-Win64-Shipping.exe (APK2_Save_Targeted:/APK2-Win64-Shipping.exe) (HeadlessAnalyzer)  
+INFO  REPORT: Import succeeded (HeadlessAnalyzer)  

@@ -1,0 +1,175 @@
+
+===== TARGET 0x1450ce860 =====
+FUNCTION=FUN_1450ce860 ENTRY=1450ce860 BODY=[[1450ce860, 1450ce860]]
+
+longlong FUN_1450ce860(void)
+
+{
+  code *apcStackX_8 [4];
+  
+  if (lRam000000014b876998 == 0) {
+    apcStackX_8[0] = _guard_check_icall;
+    FUN_141433f00(&UNK_149e3f000,&UNK_14a1d45d2,0x14b876998,_guard_check_icall,0x58,8,0x10000000,0,
+                  &UNK_1491e3a70,FUN_1450d58c0,&UNK_14119c740,apcStackX_8,FUN_144cd2430,
+                  FUN_1413af040);
+  }
+  return lRam000000014b876998;
+}
+
+
+
+===== TARGET 0x1450cea10 =====
+FUNCTION=FUN_1450cea10 ENTRY=1450cea10 BODY=[[1450cea10, 1450cea10]]
+
+longlong FUN_1450cea10(void)
+
+{
+  longlong lVar1;
+  longlong lVar2;
+  longlong lVar3;
+  undefined *puVar4;
+  undefined8 uStackX_8;
+  undefined *puStack_18;
+  int iStack_10;
+  
+  lVar3 = lRam000000014b8769e8;
+  if (lRam000000014b8769e8 == 0) {
+    lVar1 = FUN_144e60480();
+    lVar3 = lRam000000014b8769e0;
+    if (lRam000000014b8769e0 == 0) {
+      FUN_14155dac0(0x14b8769e0,0x14b1ede58);
+      lVar3 = lRam000000014b8769e0;
+    }
+    while( true ) {
+      lVar2 = lVar1;
+      if ((*(longlong *)(lVar1 + 0x20) != 0) && (lVar2 = 0, (*(uint *)(lVar1 + 8) >> 0x1c & 1) != 0)
+         ) {
+        lVar2 = FUN_141565a90(lVar1);
+      }
+      if (lVar2 != 0) break;
+      lVar1 = *(longlong *)(lVar1 + 0x20);
+    }
+    uStackX_8 = *(undefined8 *)(lVar2 + 0x18);
+    FUN_141345f40(&uStackX_8,&puStack_18);
+    puVar4 = &UNK_1491bd024;
+    if (iStack_10 != 0) {
+      puVar4 = puStack_18;
+    }
+    FUN_141418f30(puVar4,&UNK_14a1d4648,3,2,0);
+    if (puStack_18 != (undefined *)0x0) {
+      FUN_141201300(puStack_18);
+    }
+  }
+  lRam000000014b8769e8 = lVar3;
+  return lVar3;
+}
+
+
+
+===== TARGET 0x1450ceb20 =====
+FUNCTION=FUN_1450ceb20 ENTRY=1450ceb20 BODY=[[1450ceb20, 1450ceb20]]
+
+longlong FUN_1450ceb20(void)
+
+{
+  if (lRam000000014b8769a0 == 0) {
+    FUN_14155e850(0x14b8769a0,&UNK_14a1dede0);
+  }
+  return lRam000000014b8769a0;
+}
+
+
+
+===== TARGET 0x1450cec30 =====
+FUNCTION=FUN_1450cec30 ENTRY=1450cec30 BODY=[[1450cec30, 1450cec30]]
+
+longlong FUN_1450cec30(void)
+
+{
+  if (lRam000000014b8769b8 == 0) {
+    FUN_14155e850(0x14b8769b8,&UNK_14a1de6b0);
+  }
+  return lRam000000014b8769b8;
+}
+
+
+
+===== TARGET 0x1450ccfc0 =====
+FUNCTION=FUN_1450ccfc0 ENTRY=1450ccfc0 BODY=[[1450ccfc0, 1450ccfc0]]
+
+longlong FUN_1450ccfc0(void)
+
+{
+  code *apcStackX_8 [4];
+  
+  if (lRam000000014b876150 == 0) {
+    apcStackX_8[0] = _guard_check_icall;
+    FUN_141433f00(&UNK_149e3f000,&UNK_14a1cf71a,0x14b876150,&UNK_1450cd6b0,0x28,8,0x10000000,0,
+                  &UNK_1491e3a70,FUN_1421543e0,&UNK_14119c740,apcStackX_8,FUN_142155790,
+                  FUN_1413af040);
+  }
+  return lRam000000014b876150;
+}
+
+
+
+===== TARGET 0x1450cce00 =====
+FUNCTION=FUN_1450cce00 ENTRY=1450cce00 BODY=[[1450cce00, 1450cce00]]
+
+longlong FUN_1450cce00(void)
+
+{
+  code *apcStackX_8 [4];
+  
+  if (lRam000000014b8761b8 == 0) {
+    apcStackX_8[0] = _guard_check_icall;
+    FUN_141433f00(&UNK_149e3f000,&UNK_14a1cf7aa,0x14b8761b8,_guard_check_icall,0x1df0,8,0x10000000,0
+                  ,&UNK_1491e3a70,FUN_1450ce820,&UNK_14119c740,apcStackX_8,FUN_1439f5e00,
+                  FUN_1413af040);
+  }
+  return lRam000000014b8761b8;
+}
+
+
+
+===== TARGET 0x1450ccec0 =====
+FUNCTION=FUN_1450ccec0 ENTRY=1450ccec0 BODY=[[1450ccec0, 1450ccec0]]
+
+longlong FUN_1450ccec0(void)
+
+{
+  if (lRam000000014b8761c0 == 0) {
+    FUN_14155e850(0x14b8761c0,&UNK_14a1d1090);
+  }
+  return lRam000000014b8761c0;
+}
+
+
+
+===== TARGET 0x1450cd830 =====
+FUNCTION=FUN_1450cd830 ENTRY=1450cd830 BODY=[[1450cd830, 1450cd830]]
+
+longlong FUN_1450cd830(void)
+
+{
+  if (lRam000000014b876158 == 0) {
+    FUN_14155e850(0x14b876158,&UNK_14a1d0390);
+  }
+  return lRam000000014b876158;
+}
+
+
+
+===== TARGET 0x144e60480 =====
+FUNCTION=FUN_144e60480 ENTRY=144e60480 BODY=[[144e60480, 144e60480]]
+
+longlong FUN_144e60480(void)
+
+{
+  if (lRam000000014b85f268 == 0) {
+    FUN_14155e250(0x14b85f268,&UNK_149e45280);
+  }
+  return lRam000000014b85f268;
+}
+
+
