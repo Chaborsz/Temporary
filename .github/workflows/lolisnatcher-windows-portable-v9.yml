@@ -1,0 +1,259 @@
+name: LoliSnatcher Windows x64 True Portable v9
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: "LoliSnatcher_Droid branch, tag, or commit"
+        required: true
+        default: "master"
+        type: string
+      flutter_version:
+        description: "Flutter SDK version"
+        required: true
+        default: "3.47.3"
+        type: string
+  push:
+    paths:
+      - ".github/workflows/lolisnatcher-windows-portable-v9.yml"
+      - ".github/scripts/lolisnatcher_true_portable_patch.py"
+      - ".github/scripts/lolisnatcher_v4_patch.py"
+      - ".github/scripts/lolisnatcher_v5_login_cloudflare_patch.py"
+      - ".github/scripts/lolisnatcher_v6_nginx_antiddos_patch.py"
+      - ".github/scripts/lolisnatcher_v7_native_inappbrowser_patch.py"
+      - ".github/scripts/lolisnatcher_v7_import_fix.py"
+      - ".github/scripts/lolisnatcher_v8_compressed_visual_cache_patch.py"
+      - ".github/scripts/lolisnatcher_v8_cache_path_label_fix.py"
+      - ".github/scripts/lolisnatcher_v9_persistent_login_cookie_bridge.py"
+      - ".github/scripts/lolisnatcher_sync_esmx.py"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lolisnatcher-windows-portable-v9-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Windows x64 / True Portable v9 / Release
+    runs-on: windows-2022
+    timeout-minutes: 60
+    env:
+      CL: /D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
+
+    steps:
+      - name: Checkout builder scripts
+        uses: actions/checkout@v5
+        with:
+          path: builder
+          fetch-depth: 1
+
+      - name: Checkout LoliSnatcher source
+        uses: actions/checkout@v5
+        with:
+          repository: NO-ob/LoliSnatcher_Droid
+          ref: ${{ inputs.source_ref || 'master' }}
+          path: LoliSnatcher_Droid
+          fetch-depth: 1
+
+      - name: Read source metadata
+        id: meta
+        shell: pwsh
+        working-directory: LoliSnatcher_Droid
+        run: |
+          $sourceSha = (git rev-parse HEAD).Trim()
+          $versionLine = (Get-Content pubspec.yaml | Select-String '^version:\s*' | Select-Object -First 1).Line
+          if ($versionLine -notmatch '^version:\s*([^\s+]+)\+(\d+)') { throw "Could not parse version: $versionLine" }
+          "source_sha=$sourceSha" >> $env:GITHUB_OUTPUT
+          "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
+          "build=$($Matches[2])" >> $env:GITHUB_OUTPUT
+
+      - name: Apply portable patches v1-v9
+        shell: pwsh
+        working-directory: LoliSnatcher_Droid
+        run: |
+          python ..\builder\.github\scripts\lolisnatcher_true_portable_patch.py
+          python ..\builder\.github\scripts\lolisnatcher_v4_patch.py
+          python ..\builder\.github\scripts\lolisnatcher_v5_login_cloudflare_patch.py
+          $path = 'lib\src\widgets\webview\webview_page.dart'
+          $text = Get-Content $path -Raw
+          $old = '          await webViewController.dispose();'
+          $new = '          webViewController.dispose();'
+          if (-not $text.Contains($old)) { throw 'Expected v5 WebView dispose call was not found' }
+          Set-Content -Path $path -Value ($text.Replace($old, $new)) -Encoding UTF8 -NoNewline
+          python ..\builder\.github\scripts\lolisnatcher_v6_nginx_antiddos_patch.py
+          python ..\builder\.github\scripts\lolisnatcher_v7_native_inappbrowser_patch.py
+          python ..\builder\.github\scripts\lolisnatcher_v7_import_fix.py
+          python ..\builder\.github\scripts\lolisnatcher_v8_compressed_visual_cache_patch.py
+          python ..\builder\.github\scripts\lolisnatcher_v8_cache_path_label_fix.py
+          python ..\builder\.github\scripts\lolisnatcher_v9_persistent_login_cookie_bridge.py
+          'PATCH_CHAIN_V9=PASS'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ inputs.flutter_version || '3.47.3' }}
+          cache: true
+
+      - name: Enable Windows desktop
+        shell: pwsh
+        run: |
+          flutter config --enable-windows-desktop
+          flutter --version
+          dart --version
+
+      - name: Install dependencies
+        shell: pwsh
+        working-directory: LoliSnatcher_Droid
+        run: flutter pub get
+
+      - name: Verify PR2838 plugin resolution
+        shell: bash
+        working-directory: LoliSnatcher_Droid
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          expected='832d6517b50b3b8094d2658800aa84ee5b9294bf'
+          lock=Path('pubspec.lock').read_text(encoding='utf-8')
+          if expected not in lock:
+              raise SystemExit('PR2838 commit missing from pubspec.lock')
+          print('PR2838=PASS')
+          PY
+
+      - name: Sync current es-MX from POEditor
+        shell: pwsh
+        working-directory: LoliSnatcher_Droid
+        run: python ..\builder\.github\scripts\lolisnatcher_sync_esmx.py
+
+      - name: Regenerate Slang localization
+        shell: pwsh
+        working-directory: LoliSnatcher_Droid
+        run: |
+          dart run slang
+          $generated = Get-Content lib\gen\strings_es_MX.g.dart -Raw
+          if (-not $generated.Contains('class Translations$settings$es_MX')) { throw 'Generated es-MX missing' }
+          'ES_MX_GENERATED=PASS'
+
+      - name: Analyze patched Dart source
+        shell: pwsh
+        working-directory: LoliSnatcher_Droid
+        run: |
+          dart format lib/main.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/pages/settings/network_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/services/image_writer.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
+          flutter analyze --no-fatal-infos --no-fatal-warnings lib/main.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/pages/settings/network_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/services/image_writer.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
+
+      - name: Build Windows x64 Release
+        id: build
+        shell: pwsh
+        working-directory: LoliSnatcher_Droid
+        run: |
+          flutter build windows --release
+          $exe = 'build\windows\x64\runner\Release\lolisnatcher.exe'
+          if (-not (Test-Path $exe)) { throw "Expected executable not found: $exe" }
+
+      - name: Package True Portable v9 build
+        id: package
+        shell: pwsh
+        working-directory: LoliSnatcher_Droid
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+          BUILD_NUMBER: ${{ steps.meta.outputs.build }}
+          SOURCE_SHA: ${{ steps.meta.outputs.source_sha }}
+          FLUTTER_VERSION: ${{ inputs.flutter_version || '3.47.3' }}
+        run: |
+          $releaseDir = Resolve-Path 'build\windows\x64\runner\Release'
+          $outDir = Join-Path $PWD 'dist'
+          New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+          $dataDir = Join-Path $releaseDir 'Data'
+          New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
+          @"
+          LoliSnatcher TRUE PORTABLE Windows x64 - v9
+
+          v9 login persistence changes:
+          - HTTP requests now read persistent cookies from the portable Data\WebView2 profile on Windows.
+          - Persistent WebView2 cookies and in-memory cookies are merged by name/domain/path.
+          - Cookie Cleaner now uses host keys consistently on Windows.
+          - Cookie bridge diagnostics are written to Data\webview-diagnostic.txt.
+
+          v8 compressed visual cache and download-format changes are retained.
+          "@ | Set-Content -Encoding UTF8 (Join-Path $dataDir 'PORTABLE-README.txt')
+          @(
+            "PROJECT=LoliSnatcher_Droid"
+            "SOURCE_SHA=$env:SOURCE_SHA"
+            "VERSION=$env:VERSION+$env:BUILD_NUMBER"
+            "FLUTTER_VERSION=$env:FLUTTER_VERSION"
+            "TARGET=windows-x64"
+            "CONFIGURATION=Release"
+            "PORTABLE_MODE=TRUE"
+            "PATCH_LEVEL=TRUE_PORTABLE_V9_PERSISTENT_LOGIN_COOKIE_BRIDGE"
+            "WINDOWS_LOGIN_BROWSER=NATIVE_INAPPBROWSER"
+            "WINDOWS_LOGIN_COOKIE_SOURCE=PERSISTENT_WEBVIEW2_PLUS_MEMORY"
+            "VISUAL_CACHE=.\Data\LoliSnatcher\cache\visual_cache.db"
+            "FULLRES_VIEWER_CACHE=MEMORY_ONLY"
+            "DOWNLOAD_FORMATS=ORIGINAL,JPEG,PNG"
+            "WEBVIEW_DIAGNOSTIC=.\Data\webview-diagnostic.txt"
+            "ENABLED_LOCALE=es_MX"
+            "INAPPWEBVIEW_WINDOWS_FIX=FULL_PR2838_832d6517b50b3b8094d2658800aa84ee5b9294bf"
+            "WORKFLOW_RUN=${{ github.run_id }}"
+          ) | Set-Content -Encoding UTF8 (Join-Path $releaseDir 'BUILD-INFO.txt')
+          $zipName = "LoliSnatcher-$env:VERSION+$env:BUILD_NUMBER-Windows-x64-TruePortable.zip"
+          $zipPath = Join-Path $outDir $zipName
+          Compress-Archive -Path (Join-Path $releaseDir '*') -DestinationPath $zipPath -CompressionLevel Optimal -Force
+          $hash = (Get-FileHash -Algorithm SHA256 $zipPath).Hash.ToLowerInvariant()
+          "$hash  $zipName" | Set-Content -Encoding ASCII (Join-Path $outDir "$zipName.sha256")
+          "zip_name=$zipName" >> $env:GITHUB_OUTPUT
+          "sha256=$hash" >> $env:GITHUB_OUTPUT
+          "SHA256=$hash"
+
+      - name: Publish updated True Portable prerelease
+        id: release
+        shell: pwsh
+        working-directory: LoliSnatcher_Droid
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.meta.outputs.version }}
+          BUILD_NUMBER: ${{ steps.meta.outputs.build }}
+          SOURCE_SHA: ${{ steps.meta.outputs.source_sha }}
+          FLUTTER_VERSION: ${{ inputs.flutter_version || '3.47.3' }}
+          ZIP_NAME: ${{ steps.package.outputs.zip_name }}
+        run: |
+          $tag = "lolisnatcher-windows-trueportable-$env:VERSION-$env:BUILD_NUMBER"
+          $zipPath = Join-Path $PWD "dist\$env:ZIP_NAME"
+          $hashPath = "$zipPath.sha256"
+          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable"
+          $notes = @"
+          Unofficial TRUE PORTABLE Windows x64 build - v9.
+
+          v9 makes Windows web-login cookies reusable after closing/reopening the app by bridging the persistent portable WebView2 cookie store into normal HTTP requests. Cookie Cleaner host-key handling is also fixed. v8 compressed visual cache/download-format changes and v7 native WebView2 fixes are retained.
+
+          Upstream commit: $env:SOURCE_SHA
+          Flutter: $env:FLUTTER_VERSION
+          "@
+          & gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag $zipPath $hashPath --clobber --repo $env:GITHUB_REPOSITORY
+            if ($LASTEXITCODE -ne 0) { throw 'Failed to upload release assets' }
+            gh release edit $tag --repo $env:GITHUB_REPOSITORY --title $title --notes $notes --prerelease
+          } else {
+            gh release create $tag $zipPath $hashPath --repo $env:GITHUB_REPOSITORY --title $title --notes $notes --prerelease
+          }
+          if ($LASTEXITCODE -ne 0) { throw "Failed to publish release $tag" }
+          $releaseUrl = (gh release view $tag --repo $env:GITHUB_REPOSITORY --json url --jq .url).Trim()
+          "release_url=$releaseUrl" >> $env:GITHUB_OUTPUT
+
+      - name: Build summary
+        if: always()
+        shell: pwsh
+        run: |
+          @"
+          ## LoliSnatcher Windows x64 True Portable v9
+          - Build: `${{ steps.build.outcome }}`
+          - Persistent Windows login-cookie bridge: enabled
+          - Cookie Cleaner host keys: fixed
+          - Native Windows InAppBrowser: enabled
+          - Thumbnail/sample packed cache: enabled
+          - Full-res viewer persistence: memory-only
+          - Download formats: Original / JPEG / PNG
+          - SHA-256: `${{ steps.package.outputs.sha256 }}`
+          - Release: ${{ steps.release.outputs.release_url }}
+          "@ >> $env:GITHUB_STEP_SUMMARY
