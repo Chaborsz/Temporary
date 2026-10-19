@@ -1,0 +1,77 @@
+name: Export APK2 analysis summaries
+
+on:
+  push:
+    paths:
+      - '.github/workflows/export-apk2-analysis-branch.yml'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download completed analysis artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/xrefs /tmp/meta
+          mkdir -p /tmp/xrefs /tmp/meta /tmp/out
+          gh run download 39182043471 --repo Chaborsz/Temporary -n apk2-static-save-xrefs -D /tmp/xrefs
+          gh run download 39182129327 --repo Chaborsz/Temporary -n apk2-save-metadata -D /tmp/meta
+
+      - name: Build concise summaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo '# APK2 save xrefs — compact summary'
+            echo
+            echo '## Structural xrefs'
+            grep -E '^(POINTER|POINTER_LEVEL|HITS|XREF)' /tmp/xrefs/static_xrefs.txt || true
+            echo
+            echo '## Caller addresses'
+            cat /tmp/xrefs/callers.txt || true
+            echo
+            echo '## Rizin caller-site instructions'
+            grep -E '(^|[[:space:]])(call|lea|mov|movzx|movsxd|cmp|test|and|or|xor|shl|shr|add|sub|imul|idiv|jmp|je|jne|jz|jnz)[[:space:]]' /tmp/xrefs/rizin_sites.txt | head -n 5000 || true
+          } > /tmp/out/apk2-xrefs-summary.txt
+          {
+            echo '# APK2 save metadata — compact summary'
+            echo
+            echo '## Focused string matches'
+            cat /tmp/meta/focused_strings.txt 2>/dev/null | grep -Ei 'APKSaveGame|APK.*Save|SaveGameManager|DefaultData|SaveData|EncryptData|DecryptData|FAES|AESKey|EncryptionKey|Save.*Key|Key.*Save|SaveGameSystem|Serialize|Cipher|Crypt|Hash|Backup|Broken|Version|SEGA|Steam' | head -n 5000 || true
+            echo
+            echo '## Metadata cluster matches'
+            cat /tmp/meta/save_metadata.txt 2>/dev/null | grep -Ei 'save|data|encrypt|decrypt|crypt|aes|serial|default|slot|load|backup|broken|version|steam|sega|user|profile|key|hash|check|game' | head -n 5000 || true
+          } > /tmp/out/apk2-save-metadata-summary.txt
+          wc -l -c /tmp/out/*
+
+      - name: Publish only to apk2-analysis-output
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin apk2-analysis-output
+          git checkout -B apk2-analysis-output origin/apk2-analysis-output
+          mkdir -p analysis
+          cp /tmp/out/apk2-xrefs-summary.txt analysis/
+          cp /tmp/out/apk2-save-metadata-summary.txt analysis/
+          git add analysis/apk2-xrefs-summary.txt analysis/apk2-save-metadata-summary.txt
+          if git diff --cached --quiet; then
+            echo 'No summary changes'
+          else
+            git commit -m 'Export APK2 save analysis summaries'
+            git push origin HEAD:apk2-analysis-output
+          fi
