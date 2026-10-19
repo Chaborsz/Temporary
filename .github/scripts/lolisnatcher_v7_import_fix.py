@@ -1,6 +1,6 @@
 from pathlib import Path
 
-# Build trigger checkpoint: v8.8 Danbooru username/API-key diagnostics.
+# Build trigger checkpoint: v8.9 gallery freeze hotfix (display-first thumbnails).
 path = Path('lib/src/pages/settings/booru_edit_page.dart')
 text = path.read_text(encoding='utf-8')
 
