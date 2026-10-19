@@ -1,0 +1,107 @@
+name: Trace APK2 DefaultData and EncryptKey code
+
+on:
+  push:
+    paths:
+      - '.github/workflows/trace-apk2-defaultdata-encryptkey-code.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Fetch executable and analysis libs
+        run: |
+          curl -fL --retry 5 'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' -o APK2-Win64-Shipping.exe
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+          python3 -m pip install --quiet pefile capstone
+      - name: Trace references and +0x30 accesses
+        shell: bash
+        run: |
+          mkdir reports
+          cat > trace.py <<'PY'
+          import pefile,struct,re
+          from pathlib import Path
+          from capstone import Cs,CS_ARCH_X86,CS_MODE_64
+          from capstone.x86 import X86_OP_MEM,X86_REG_RIP,X86_OP_IMM
+          pe=pefile.PE('APK2-Win64-Shipping.exe'); data=Path('APK2-Win64-Shipping.exe').read_bytes(); base=pe.OPTIONAL_HEADER.ImageBase
+          md=Cs(CS_ARCH_X86,CS_MODE_64);md.detail=True
+          def off2va(off):
+              for s in pe.sections:
+                  if s.PointerToRawData<=off<s.PointerToRawData+s.SizeOfRawData:return base+s.VirtualAddress+(off-s.PointerToRawData)
+          def va2off(va):
+              try:return pe.get_offset_from_rva(va-base)
+              except:return None
+          def execsec(s):return bool(s.Characteristics&0x20000000)
+          # exact ASCII/UTF16 DefaultData and save-related strings
+          names=['DefaultData','EncryptKey','SaveGameManager Is Busy No Save','APKSaveGame_SetBroken','APKSaveGame_SetLatestVersionFlg','APKSaveGame_SetDifferentVersionDataForceLoad']
+          targets=[];out=[]
+          for name in names:
+              for enc,pat in [('A',name.encode()),('W',name.encode('utf-16le'))]:
+                  p=0
+                  while True:
+                      p=data.find(pat,p)
+                      if p<0:break
+                      va=off2va(p);p+=1
+                      if va:targets.append((name,enc,va));out.append(f'STRING {name!r} {enc} VA=0x{va:x}')
+          tmap={va:(n,e) for n,e,va in targets}
+          # raw VA/RVA pointer chains (2 levels)
+          frontier=[(va,n,0) for n,e,va in targets]; seen=set()
+          ptr_targets=dict(tmap)
+          for depth in range(2):
+              nxt=[]
+              for va,n,d in frontier:
+                  for typ,pat in [('VA64',struct.pack('<Q',va)),('RVA32',struct.pack('<I',(va-base)&0xffffffff))]:
+                      p=0;c=0
+                      while True:
+                          p=data.find(pat,p)
+                          if p<0 or c>=100:break
+                          q=off2va(p);p+=1;c+=1
+                          if q and q not in ptr_targets:
+                              ptr_targets[q]=(n,f'{typ}_PTR{depth+1}');nxt.append((q,n,depth+1));out.append(f'PTR {typ} depth={depth+1} 0x{q:x} -> 0x{va:x} ({n})')
+              frontier=nxt
+          # Disassemble all executable sections; find RIP refs to target/pointer VAs and +0x30 memory accesses in APK code cluster.
+          xrefs=[];plus30=[]
+          for s in pe.sections:
+              if not execsec(s):continue
+              code=s.get_data();start=base+s.VirtualAddress
+              for ins in md.disasm(code,start):
+                  for op in ins.operands:
+                      if op.type==X86_OP_MEM:
+                          if op.mem.base==X86_REG_RIP:
+                              tgt=ins.address+ins.size+op.mem.disp
+                              if tgt in ptr_targets:xrefs.append((ins.address,ins.mnemonic,ins.op_str,tgt,ptr_targets[tgt]))
+                          if op.mem.disp==0x30 and 0x145000000<=ins.address<0x145200000:
+                              plus30.append((ins.address,ins.mnemonic,ins.op_str))
+          out.append(f'\nXREFS={len(xrefs)}')
+          for x in xrefs:out.append('XREF 0x%x: %s %s -> 0x%x %r'%x)
+          out.append(f'\nPLUS30_CLUSTER={len(plus30)}')
+          for x in plus30:out.append('PLUS30 0x%x: %s %s'%x)
+          # For each hit, disassemble backwards/forwards file window, identify probable function start heuristically.
+          seeds=sorted(set([x[0] for x in xrefs]+[x[0] for x in plus30]))
+          out.append('\n===== WINDOWS =====')
+          for a in seeds[:500]:
+              off=va2off(a)
+              if off is None:continue
+              st=max(0,off-0x180); sva=off2va(st)
+              if sva is None:continue
+              out.append(f'\n--- around 0x{a:x} ---')
+              n=0
+              for ins in md.disasm(data[st:off+0x500],sva):
+                  mark='>>' if abs(ins.address-a)<=8 else '  '
+                  out.append(f'{mark} 0x{ins.address:016x} {ins.mnemonic:9} {ins.op_str}')
+                  n+=1
+                  if n>220:break
+          Path('reports/defaultdata_encryptkey_trace.txt').write_text('\n'.join(out))
+          print('\n'.join(out[:6000]))
+          PY
+          python3 trace.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk2-defaultdata-encryptkey-trace
+          path: reports/defaultdata_encryptkey_trace.txt
+          retention-days: 7
