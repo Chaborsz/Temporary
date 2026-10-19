@@ -1,0 +1,165 @@
+CANDIDATES=4 FUNCTIONS=2
+
+===== FUNC 0x144fd8575-0x144fd8795 size=0x220 REFS=[(5452432770, 5537032032, 'Owner_VTable0', 'RIP'), (5452432780, 5537033152, 'Owner_VTable1', 'RIP')] =====
+0x144fd8575: mov       qword ptr [rsp + 0x30], rdi
+0x144fd857a: mov       rcx, rbx
+0x144fd857d: call      0x144cfd730 ; CALL->0x144cfd730 pdata=(5449439024, 5449439422)
+0x144fd8582: lea       rax, [rip + 0x50ae1d7] ; OWNER_REF=Owner_VTable0
+0x144fd8589: mov       qword ptr [rbx], rax
+0x144fd858c: lea       rax, [rip + 0x50ae62d] ; OWNER_REF=Owner_VTable1
+0x144fd8593: mov       qword ptr [rbx + 0x28], rax
+0x144fd8597: call      0x1450204e0 ; CALL->0x1450204e0 pdata=(5452727520, 5452727694)
+0x144fd859c: mov       qword ptr [rbx + 0x408], rax
+0x144fd85a3: xor       edi, edi
+0x144fd85a5: mov       dword ptr [rbx + 0x418], 1
+0x144fd85af: mov       qword ptr [rbx + 0x420], rdi
+0x144fd85b6: mov       qword ptr [rbx + 0x430], rdi
+0x144fd85bd: mov       qword ptr [rbx + 0x438], rdi
+0x144fd85c4: mov       qword ptr [rbx + 0x440], rdi
+0x144fd85cb: mov       qword ptr [rbx + 0x448], rdi
+0x144fd85d2: mov       qword ptr [rbx + 0x450], rdi
+0x144fd85d9: mov       qword ptr [rbx + 0x458], rdi
+0x144fd85e0: call      0x145049a40 ; CALL->0x145049a40 pdata=(5452896832, 5452897006)
+0x144fd85e5: mov       qword ptr [rbx + 0x460], rax
+0x144fd85ec: mov       qword ptr [rbx + 0x468], rdi
+0x144fd85f3: mov       qword ptr [rbx + 0x470], rdi
+0x144fd85fa: mov       qword ptr [rbx + 0x478], rdi
+0x144fd8601: call      0x1450ce860 ; CALL->0x1450ce860 pdata=(5453441120, 5453441294)
+0x144fd8606: mov       qword ptr [rbx + 0x480], rax
+0x144fd860d: lea       rcx, [rbx + 0x5d0]
+0x144fd8614: mov       qword ptr [rbx + 0x488], rdi
+0x144fd861b: mov       qword ptr [rbx + 0x490], rdi
+0x144fd8622: mov       qword ptr [rbx + 0x498], rdi
+0x144fd8629: mov       qword ptr [rbx + 0x4d0], rdi
+0x144fd8630: mov       qword ptr [rbx + 0x4e0], rdi
+0x144fd8637: mov       byte ptr [rbx + 0x4f8], dil
+0x144fd863e: mov       qword ptr [rbx + 0x500], rdi
+0x144fd8645: mov       qword ptr [rbx + 0x508], rdi
+0x144fd864c: mov       qword ptr [rbx + 0x520], rdi
+0x144fd8653: mov       qword ptr [rbx + 0x530], rdi
+0x144fd865a: mov       qword ptr [rbx + 0x538], rdi
+0x144fd8661: mov       qword ptr [rbx + 0x540], rdi
+0x144fd8668: mov       qword ptr [rbx + 0x548], rdi
+0x144fd866f: mov       qword ptr [rbx + 0x568], rdi
+0x144fd8676: mov       qword ptr [rbx + 0x570], rdi
+0x144fd867d: mov       qword ptr [rbx + 0x588], rdi
+0x144fd8684: mov       dword ptr [rbx + 0x590], edi
+0x144fd868a: mov       dword ptr [rbx + 0x594], 0x80
+0x144fd8694: mov       dword ptr [rbx + 0x598], 0xffffffff
+0x144fd869e: mov       dword ptr [rbx + 0x59c], edi
+0x144fd86a4: mov       qword ptr [rbx + 0x5a8], rdi
+0x144fd86ab: mov       dword ptr [rbx + 0x5b0], edi
+0x144fd86b1: call      0x144d5e680 ; CALL->0x144d5e680 pdata=(5449836160, 5449836261)
+0x144fd86b6: mov       qword ptr [rbx + 0x11d8], rdi
+0x144fd86bd: mov       qword ptr [rbx + 0x11e0], rdi
+0x144fd86c4: mov       qword ptr [rbx + 0x11e8], rdi
+0x144fd86cb: mov       qword ptr [rbx + 0x11f0], rdi
+0x144fd86d2: call      0x145119750 ; CALL->0x145119750 pdata=(5453748048, 5453748222)
+0x144fd86d7: mov       qword ptr [rbx + 0x11f8], rax
+0x144fd86de: mov       qword ptr [rbx + 0x1200], rdi
+0x144fd86e5: mov       qword ptr [rbx + 0x1208], rdi
+0x144fd86ec: mov       qword ptr [rbx + 0x1210], rdi
+0x144fd86f3: mov       qword ptr [rbx + 0x1218], rdi
+0x144fd86fa: mov       qword ptr [rbx + 0x1220], rdi
+0x144fd8701: mov       qword ptr [rbx + 0x1228], rdi
+0x144fd8708: mov       qword ptr [rbx + 0x1230], rdi
+0x144fd870f: mov       byte ptr [rbx + 0x1238], dil
+0x144fd8716: mov       dword ptr [rbx + 0x123a], edi
+0x144fd871c: mov       word ptr [rbx + 0x123e], 0x100
+0x144fd8725: mov       qword ptr [rbx + 0x1240], rdi
+0x144fd872c: mov       qword ptr [rbx + 0x1248], rdi
+0x144fd8733: mov       byte ptr [rbx + 0x1258], dil
+0x144fd873a: mov       dword ptr [rbx + 0x1268], 0x1000100
+0x144fd8744: mov       qword ptr [rbx + 0x1270], rdi
+0x144fd874b: mov       qword ptr [rbx + 0x1278], rdi
+0x144fd8752: mov       qword ptr [rbx + 0x1280], rdi
+0x144fd8759: mov       byte ptr [rbx + 0x1288], dil
+0x144fd8760: mov       dword ptr [rbx + 0x128c], edi
+0x144fd8766: mov       byte ptr [rbx + 0x1290], dil
+0x144fd876d: mov       qword ptr [rbx + 0x1298], rdi
+0x144fd8774: mov       qword ptr [rbx + 0x12a0], rdi
+0x144fd877b: mov       qword ptr [rbx + 0x12a8], rdi
+0x144fd8782: mov       qword ptr [rbx + 0x12b0], rdi
+0x144fd8789: mov       qword ptr [rbx + 0x12b8], rdi
+0x144fd8790: mov       rdi, qword ptr [rsp + 0x30]
+
+===== FUNC 0x144fd8c30-0x144fd8d7d size=0x14d REFS=[(5452434500, 5537032032, 'Owner_VTable0', 'RIP'), (5452434515, 5537033152, 'Owner_VTable1', 'RIP')] =====
+0x144fd8c30: mov       qword ptr [rsp + 8], rbx
+0x144fd8c35: mov       qword ptr [rsp + 0x10], rbp
+0x144fd8c3a: mov       qword ptr [rsp + 0x18], rsi
+0x144fd8c3f: push      rdi
+0x144fd8c40: sub       rsp, 0x20
+0x144fd8c44: lea       rax, [rip + 0x50adb15] ; OWNER_REF=Owner_VTable0
+0x144fd8c4b: mov       rbx, rcx
+0x144fd8c4e: mov       qword ptr [rcx], rax
+0x144fd8c51: mov       ebp, edx
+0x144fd8c53: lea       rax, [rip + 0x50adf66] ; OWNER_REF=Owner_VTable1
+0x144fd8c5a: mov       qword ptr [rcx + 0x28], rax
+0x144fd8c5e: mov       rcx, qword ptr [rcx + 0x11e8]
+0x144fd8c65: test      rcx, rcx
+0x144fd8c68: je        0x144fd8c6f
+0x144fd8c6a: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x144fd8c6f: mov       rcx, qword ptr [rbx + 0x11d8]
+0x144fd8c76: test      rcx, rcx
+0x144fd8c79: je        0x144fd8c80
+0x144fd8c7b: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x144fd8c80: lea       rax, [rip + 0x4e46859]
+0x144fd8c87: mov       edi, 0x7f
+0x144fd8c8c: mov       qword ptr [rbx + 0x5d0], rax
+0x144fd8c93: lea       rsi, [rbx + 0x11c8]
+0x144fd8c9a: nop       word ptr [rax + rax]
+0x144fd8ca0: mov       rcx, qword ptr [rsi - 0x18]
+0x144fd8ca4: lea       rsi, [rsi - 0x18]
+0x144fd8ca8: dec       rdi
+0x144fd8cab: test      rcx, rcx
+0x144fd8cae: je        0x144fd8cb5
+0x144fd8cb0: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x144fd8cb5: test      rdi, rdi
+0x144fd8cb8: jne       0x144fd8ca0
+0x144fd8cba: mov       dword ptr [rbx + 0x5b0], edi
+0x144fd8cc0: mov       rcx, qword ptr [rbx + 0x5a8]
+0x144fd8cc7: test      rcx, rcx
+0x144fd8cca: je        0x144fd8cd1
+0x144fd8ccc: call      0x141201300 ; CALL->0x141201300 pdata=(5387588352, 5387588471)
+0x144fd8cd1: lea       rcx, [rbx + 0x568]
+0x144fd8cd8: call      0x1411c12a0 ; CALL->0x1411c12a0 pdata=(5387326112, 5387326227)
+0x144fd8cdd: mov       rcx, rbx
+0x144fd8ce0: call      0x144cfd8c0 ; CALL->0x144cfd8c0 pdata=(5449439424, 5449439571)
+0x144fd8ce5: test      bpl, 1
+0x144fd8ce9: je        0x144fd8d3d
+0x144fd8ceb: test      bpl, 4
+0x144fd8cef: jne       0x144fd8d30
+0x144fd8cf1: mov       r8, qword ptr [rip + 0x67dbce0]
+0x144fd8cf8: test      r8, r8
+0x144fd8cfb: jne       0x144fd8d22
+0x144fd8cfd: mov       rax, qword ptr gs:[0x58]
+0x144fd8d06: mov       edx, 0xdc
+0x144fd8d0b: mov       rcx, qword ptr [rax]
+0x144fd8d0e: mov       eax, dword ptr [rdx + rcx]
+0x144fd8d11: cmp       dword ptr [rip + 0x68cff89], eax
+0x144fd8d17: jg        0x144fd8d55
+0x144fd8d19: jmp       0x144fd8d22
+0x144fd8d1b: mov       r8, qword ptr [rip + 0x67dbcb6]
+0x144fd8d22: mov       rax, qword ptr [r8]
+0x144fd8d25: mov       rdx, rbx
+0x144fd8d28: mov       rcx, r8
+0x144fd8d2b: call      qword ptr [rax + 0x48]
+0x144fd8d2e: jmp       0x144fd8d3d
+0x144fd8d30: mov       edx, 0x12c0
+0x144fd8d35: mov       rcx, rbx
+0x144fd8d38: call      0x141199450 ; CALL->0x141199450 pdata=None
+0x144fd8d3d: mov       rbp, qword ptr [rsp + 0x38]
+0x144fd8d42: mov       rax, rbx
+0x144fd8d45: mov       rbx, qword ptr [rsp + 0x30]
+0x144fd8d4a: mov       rsi, qword ptr [rsp + 0x40]
+0x144fd8d4f: add       rsp, 0x20
+0x144fd8d53: pop       rdi
+0x144fd8d54: ret       
+0x144fd8d55: lea       rcx, [rip + 0x68cff44]
+0x144fd8d5c: call      0x147bce000 ; CALL->0x147bce000 pdata=(5498527744, 5498527847)
+0x144fd8d61: cmp       dword ptr [rip + 0x68cff38], -1
+0x144fd8d68: jne       0x144fd8d1b
+0x144fd8d6a: call      0x141200cb0 ; CALL->0x141200cb0 pdata=(5387586736, 5387587710)
+0x144fd8d6f: lea       rcx, [rip + 0x68cff2a]
+0x144fd8d76: call      0x147bcdfa0 ; CALL->0x147bcdfa0 pdata=(5498527648, 5498527744)
+0x144fd8d7b: jmp       0x144fd8d1b
