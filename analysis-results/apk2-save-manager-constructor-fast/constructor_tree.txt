@@ -1,0 +1,354 @@
+
+===== DEPTH=0 FUNC=0x1450d58c0-0x1450d5907 SEED=0x1450d58c0 SIZE=0x47 =====
+0x1450d58c0: push      rbx
+0x1450d58c2: sub       rsp, 0x20
+0x1450d58c6: mov       rbx, qword ptr [rcx]
+0x1450d58c9: test      rbx, rbx
+0x1450d58cc: je        0x1450d5901
+0x1450d58ce: mov       rdx, rcx
+0x1450d58d1: mov       rcx, rbx
+0x1450d58d4: call      0x144d03fc0 ; CALL->0x144d03fc0 pdata=(5449465792, 5449465923)
+0x1450d58d9: lea       rax, [rip + 0x5109228] ; RIP->0x14a1deb08(.shared)
+0x1450d58e0: mov       dword ptr [rbx + 0x4c], 3
+0x1450d58e7: mov       qword ptr [rbx], rax
+0x1450d58ea: xor       eax, eax
+0x1450d58ec: mov       qword ptr [rbx + 0x30], rax ; OBJDISP=0x30
+0x1450d58f0: mov       qword ptr [rbx + 0x38], rax ; OBJDISP=0x38
+0x1450d58f4: mov       qword ptr [rbx + 0x40], rax ; OBJDISP=0x40
+0x1450d58f8: mov       byte ptr [rbx + 0x48], al ; OBJDISP=0x48
+0x1450d58fb: mov       word ptr [rbx + 0x50], 0x505 ; OBJDISP=0x50
+0x1450d5901: add       rsp, 0x20
+0x1450d5905: pop       rbx
+0x1450d5906: ret       
+CALLS=0x144d03fc0
+
+===== DEPTH=1 FUNC=0x144d03fc0-0x144d04043 SEED=0x144d03fc0 SIZE=0x83 =====
+0x144d03fc0: mov       qword ptr [rsp + 8], rbx
+0x144d03fc5: push      rdi
+0x144d03fc6: sub       rsp, 0x20
+0x144d03fca: mov       rbx, rcx
+0x144d03fcd: call      0x141559820 ; CALL->0x141559820 pdata=(5391095840, 5391095967)
+0x144d03fd2: lea       rax, [rip + 0x50d4d7f] ; RIP->0x149dd8d58(.shared)
+0x144d03fd9: mov       qword ptr [rbx + 0x28], 0
+0x144d03fe1: mov       qword ptr [rbx], rax
+0x144d03fe4: call      0x142def210 ; CALL->0x142def210 pdata=(5416874512, 5416874685)
+0x144d03fe9: mov       rdi, rax
+0x144d03fec: call      0x1413dde10 ; CALL->0x1413dde10 pdata=(5389540880, 5389541053)
+0x144d03ff1: mov       rdx, qword ptr [rbx + 0x20]
+0x144d03ff5: test      rdx, rdx
+0x144d03ff8: je        0x144d0402d
+0x144d03ffa: mov       rax, qword ptr [rdx + 0x10]
+0x144d03ffe: lea       r8, [rdi + 0x30] ; OBJDISP=0x30
+0x144d04002: movsxd    rcx, dword ptr [r8 + 8]
+0x144d04006: cmp       ecx, dword ptr [rax + 0x38] ; OBJDISP=0x38
+0x144d04009: jg        0x144d04015
+0x144d0400b: mov       rax, qword ptr [rax + 0x30] ; OBJDISP=0x30
+0x144d0400f: cmp       qword ptr [rax + rcx*8], r8
+0x144d04013: je        0x144d0401b
+0x144d04015: mov       rdx, qword ptr [rdx + 0x20]
+0x144d04019: jmp       0x144d03ff5
+0x144d0401b: mov       qword ptr [rbx + 0x28], rdx
+0x144d0401f: mov       rax, rbx
+0x144d04022: mov       rbx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x144d04027: add       rsp, 0x20
+0x144d0402b: pop       rdi
+0x144d0402c: ret       
+0x144d0402d: mov       qword ptr [rbx + 0x28], 0
+0x144d04035: mov       rax, rbx
+0x144d04038: mov       rbx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x144d0403d: add       rsp, 0x20
+0x144d04041: pop       rdi
+0x144d04042: ret       
+CALLS=0x1413dde10,0x141559820,0x142def210
+
+===== DEPTH=2 FUNC=0x141559820-0x14155989f SEED=0x141559820 SIZE=0x7f =====
+0x141559820: mov       qword ptr [rsp + 8], rbx
+0x141559825: push      rdi
+0x141559826: sub       rsp, 0x20
+0x14155982a: cmp       byte ptr [rip + 0xa25b1f8], 0 ; RIP->0x14b7b4a29(.data2)
+0x141559831: lea       rax, [rip + 0x7cd7c20] ; RIP->0x149231458(.shared)
+0x141559838: mov       qword ptr [rcx], rax
+0x14155983b: mov       rdi, rdx
+0x14155983e: mov       rbx, rcx
+0x141559841: je        0x141559860
+0x141559843: mov       r8, qword ptr [rsp + 0x28]
+0x141559848: lea       r9, [rip + 0x7cd86f1] ; RIP->0x149231f40(.shared) WIDE='We are currently retrieving VTable ptr. Please use FVTableHelper constructor instead.'
+0x14155984f: mov       edx, 0x94
+0x141559854: lea       rcx, [rip + 0x7cd8685] ; RIP->0x149231ee0(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\Engine\\Source\\Runtime\\CoreUObject\\Private\\UObject\\Obj.cpp'
+0x14155985b: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x141559860: mov       rax, qword ptr [rdi]
+0x141559863: test      rax, rax
+0x141559866: je        0x14155988a
+0x141559868: cmp       rax, rbx
+0x14155986b: je        0x14155988a
+0x14155986d: mov       r8, qword ptr [rsp + 0x28]
+0x141559872: lea       r9, [rip + 0x7cec2b7] ; RIP->0x149245b30(.shared) WIDE="UObject(const FObjectInitializer&) constructor called but it's not the object that's currently being"
+0x141559879: mov       edx, 0xe05
+0x14155987e: lea       rcx, [rip + 0x7ceb87b] ; RIP->0x149245100(.shared) ASCII='D:\\APK2\\APK2\\master\\v201\\trunk\\Engine\\Source\\Runtime\\CoreUObject\\Private\\UObject\\UObjectGlobals.cpp'
+0x141559885: call      0x1412a3b90 ; CALL->0x1412a3b90 pdata=(5388254096, 5388254183)
+0x14155988a: mov       qword ptr [rdi], rbx
+0x14155988d: mov       rax, rbx
+0x141559890: mov       rbx, qword ptr [rsp + 0x30] ; OBJDISP=0x30
+0x141559895: mov       byte ptr [rdi + 0x12], 0
+0x141559899: add       rsp, 0x20
+0x14155989d: pop       rdi
+0x14155989e: ret       
+CALLS=0x1412a3b90
+
+===== DEPTH=2 FUNC=0x142def210-0x142def2bd SEED=0x142def210 SIZE=0xad =====
+0x142def210: mov       r11, rsp
+0x142def213: sub       rsp, 0x78
+0x142def217: mov       rax, qword ptr [rip + 0x8a406a2] ; RIP->0x14b82f8c0(.data2)
+0x142def21e: test      rax, rax
+0x142def221: jne       0x142def2b8
+0x142def227: lea       rax, [rip + 0xf532] ; RIP->0x142dfe760(.sdata)
+0x142def22e: mov       qword ptr [r11 + 8], rax
+0x142def232: lea       r9, [rip + 0x7be827] ; RIP->0x1435ada60(.sdata)
+0x142def239: lea       rax, [rip - 0x1a40200] ; RIP->0x1413af040(.sdata)
+0x142def240: mov       qword ptr [r11 - 0x10], rax
+0x142def244: lea       r8, [rip + 0x8a40675] ; RIP->0x14b82f8c0(.data2)
+0x142def24b: mov       qword ptr [r11 - 0x18], rax
+0x142def24f: lea       rdx, [rip + 0x6afdc74] ; RIP->0x1498ececa(.shared) WIDE='Actor'
+0x142def256: lea       rax, [r11 + 8]
+0x142def25a: mov       qword ptr [r11 - 0x20], rax
+0x142def25e: lea       rcx, [rip + 0x645597b] ; RIP->0x149244be0(.shared) WIDE='/Script/Engine'
+0x142def265: lea       rax, [rip - 0x1c52b2c] ; RIP->0x14119c740(.sdata)
+0x142def26c: mov       qword ptr [r11 - 0x28], rax
+0x142def270: lea       rax, [rip + 0x7cac89] ; RIP->0x1435b9f00(.sdata)
+0x142def277: mov       qword ptr [r11 - 0x30], rax
+0x142def27b: lea       rax, [rip + 0x63f47ee] ; RIP->0x1491e3a70(.shared) WIDE='Engine'
+0x142def282: mov       qword ptr [r11 - 0x38], rax
+0x142def286: movabs    rax, 0x1000000000
+0x142def290: mov       qword ptr [r11 - 0x40], rax
+0x142def294: mov       dword ptr [rsp + 0x30], 0x10000004 ; OBJDISP=0x30
+0x142def29c: mov       dword ptr [rsp + 0x28], 8
+0x142def2a4: mov       dword ptr [rsp + 0x20], 0x2b0
+0x142def2ac: call      0x141433f00 ; CALL->0x141433f00 pdata=(5389893376, 5389894192)
+0x142def2b1: mov       rax, qword ptr [rip + 0x8a40608] ; RIP->0x14b82f8c0(.data2)
+0x142def2b8: add       rsp, 0x78
+0x142def2bc: ret       
+CALLS=0x141433f00
+
+===== DEPTH=2 FUNC=0x1413dde10-0x1413ddebd SEED=0x1413dde10 SIZE=0xad =====
+0x1413dde10: mov       r11, rsp
+0x1413dde13: sub       rsp, 0x78
+0x1413dde17: mov       rax, qword ptr [rip + 0xa3e2202] ; RIP->0x14b7c0020(.data2)
+0x1413dde1e: test      rax, rax
+0x1413dde21: jne       0x1413ddeb8
+0x1413dde27: lea       rax, [rip - 0x2449de] ; RIP->0x141199450(.sdata)
+0x1413dde2e: mov       qword ptr [r11 + 8], rax
+0x1413dde32: lea       r9, [rip - 0x2449e9] ; RIP->0x141199450(.sdata)
+0x1413dde39: lea       rax, [rip - 0x2ee00] ; RIP->0x1413af040(.sdata)
+0x1413dde40: mov       qword ptr [r11 - 0x10], rax
+0x1413dde44: lea       r8, [rip + 0xa3e21d5] ; RIP->0x14b7c0020(.data2)
+0x1413dde4b: mov       qword ptr [r11 - 0x18], rax
+0x1413dde4f: lea       rdx, [rip + 0x7e55534] ; RIP->0x14923338a(.shared) WIDE='Package'
+0x1413dde56: lea       rax, [r11 + 8]
+0x1413dde5a: mov       qword ptr [r11 - 0x20], rax
+0x1413dde5e: lea       rcx, [rip + 0x7e07b0b] ; RIP->0x1491e5970(.shared) WIDE='/Script/CoreUObject'
+0x1413dde65: lea       rax, [rip + 0xf5ab4] ; RIP->0x1414d3920(.sdata)
+0x1413dde6c: mov       qword ptr [r11 - 0x28], rax
+0x1413dde70: lea       rax, [rip + 0xf5a49] ; RIP->0x1414d38c0(.sdata)
+0x1413dde77: mov       qword ptr [r11 - 0x30], rax
+0x1413dde7b: lea       rax, [rip + 0x7e05bee] ; RIP->0x1491e3a70(.shared) WIDE='Engine'
+0x1413dde82: mov       qword ptr [r11 - 0x38], rax
+0x1413dde86: movabs    rax, 0x400000000
+0x1413dde90: mov       qword ptr [r11 - 0x40], rax
+0x1413dde94: mov       dword ptr [rsp + 0x30], 0x10000000 ; OBJDISP=0x30
+0x1413dde9c: mov       dword ptr [rsp + 0x28], 8
+0x1413ddea4: mov       dword ptr [rsp + 0x20], 0x90
+0x1413ddeac: call      0x141433f00 ; CALL->0x141433f00 pdata=(5389893376, 5389894192)
+0x1413ddeb1: mov       rax, qword ptr [rip + 0xa3e2168] ; RIP->0x14b7c0020(.data2)
+0x1413ddeb8: add       rsp, 0x78
+0x1413ddebc: ret       
+CALLS=0x141433f00
+
+===== DEPTH=3 FUNC=0x1412a3b90-0x1412a3be7 SEED=0x1412a3b90 SIZE=0x57 =====
+0x1412a3b90: mov       qword ptr [rsp + 0x20], r9
+0x1412a3b95: push      rbx
+0x1412a3b96: sub       rsp, 0x40
+0x1412a3b9a: mov       rbx, r8
+0x1412a3b9d: lea       rax, [rsp + 0x70]
+0x1412a3ba2: mov       qword ptr [rsp + 0x38], rax ; OBJDISP=0x38
+0x1412a3ba7: mov       r8, rcx
+0x1412a3baa: mov       qword ptr [rsp + 0x30], r9 ; OBJDISP=0x30
+0x1412a3baf: mov       r9d, edx
+0x1412a3bb2: mov       qword ptr [rsp + 0x28], rbx
+0x1412a3bb7: call      0x1412a3970 ; CALL->0x1412a3970 pdata=(5388253552, 5388254093)
+0x1412a3bbc: mov       rcx, qword ptr [rip + 0xa510e25] ; RIP->0x14b7b49e8(.data2)
+0x1412a3bc3: lea       r8, [rip + 0xa508d76] ; RIP->0x14b7ac940(.data2)
+0x1412a3bca: lea       rdx, [rip + 0x7f1e43b] ; RIP->0x1491c200c(.shared) WIDE='%s'
+0x1412a3bd1: mov       byte ptr [rip + 0xa510d80], 1 ; RIP->0x14b7b4958(.data2)
+0x1412a3bd8: mov       qword ptr [rcx + 0x10], rbx
+0x1412a3bdc: call      0x1412efe10 ; CALL->0x1412efe10 pdata=(5388566032, 5388566365)
+0x1412a3be1: add       rsp, 0x40
+0x1412a3be5: pop       rbx
+0x1412a3be6: ret       
+CALLS=0x1412a3970,0x1412efe10
+
+===== DEPTH=3 FUNC=0x141433f00-0x141434230 SEED=0x141433f00 SIZE=0x330 =====
+0x141433f00: mov       qword ptr [rsp + 0x10], rbx
+0x141433f05: mov       qword ptr [rsp + 0x18], rbp
+0x141433f0a: push      rsi
+0x141433f0b: push      rdi
+0x141433f0c: push      r12
+0x141433f0e: push      r14
+0x141433f10: push      r15
+0x141433f12: sub       rsp, 0x50
+0x141433f16: mov       rbp, r9
+0x141433f19: mov       rdi, r8
+0x141433f1c: mov       r14, rdx
+0x141433f1f: mov       r9b, 1
+0x141433f22: mov       edx, 0x200
+0x141433f27: mov       r8d, 8
+0x141433f2d: mov       r15, rcx
+0x141433f30: call      0x141543920 ; CALL->0x141543920 pdata=(5391005984, 5391006214)
+0x141433f35: mov       r8d, 1
+0x141433f3b: mov       qword ptr [rdi], rax
+0x141433f3e: mov       rdx, r14
+0x141433f41: lea       rcx, [rsp + 0x80]
+0x141433f49: mov       rbx, rax
+0x141433f4c: call      0x141345630 ; CALL->0x141345630 pdata=(5388916272, 5388916449)
+0x141433f51: mov       r9d, dword ptr [rsp + 0xa8]
+0x141433f59: mov       rcx, rbx
+0x141433f5c: mov       r8d, dword ptr [rsp + 0xa0]
+0x141433f64: mov       dword ptr [rsp + 0x20], 0xc7
+0x141433f6c: call      0x141427fa0 ; CALL->0x141427fa0 pdata=(5389844384, 5389844619)
+0x141433f71: mov       rcx, qword ptr [rsp + 0xc8]
+0x141433f79: lea       rax, [rip + 0x7de2510] ; RIP->0x149216490(.shared)
+0x141433f80: mov       qword ptr [rbx], rax
+0x141433f83: xor       r12d, r12d
+0x141433f86: mov       rax, qword ptr [rsp + 0xd0]
+0x141433f8e: mov       qword ptr [rbx + 0xb8], rax
+0x141433f95: mov       rax, qword ptr [rsp + 0xd8]
+0x141433f9d: mov       qword ptr [rbx + 0xb0], rcx
+0x141433fa4: mov       rcx, qword ptr [rax]
+0x141433fa7: mov       eax, dword ptr [rsp + 0xb0]
+0x141433fae: mov       qword ptr [rbx + 0xc0], rcx
+0x141433fb5: bts       eax, 7
+0x141433fb9: mov       dword ptr [rbx + 0xd4], eax
+0x141433fbf: lea       rcx, [rbx + 0x178]
+0x141433fc6: mov       rax, qword ptr [rsp + 0xb8]
+0x141433fce: mov       qword ptr [rbx + 0xd8], rax
+0x141433fd5: mov       qword ptr [rbx + 0xc8], r12
+0x141433fdc: mov       word ptr [rbx + 0xd0], r12w
+0x141433fe4: mov       qword ptr [rbx + 0xe0], r12
+0x141433feb: mov       qword ptr [rbx + 0xe8], r12
+0x141433ff2: mov       qword ptr [rbx + 0xf0], r12
+0x141433ff9: mov       qword ptr [rbx + 0xf8], r12
+0x141434000: mov       qword ptr [rbx + 0x100], r12
+0x141434007: mov       qword ptr [rbx + 0x108], r12
+0x14143400e: mov       qword ptr [rbx + 0x110], r12
+0x141434015: mov       qword ptr [rbx + 0x118], r12
+0x14143401c: mov       qword ptr [rbx + 0x120], r12
+0x141434023: mov       qword ptr [rbx + 0x128], r12
+0x14143402a: mov       qword ptr [rbx + 0x130], r12
+0x141434031: mov       qword ptr [rbx + 0x148], r12
+0x141434038: mov       dword ptr [rbx + 0x150], r12d
+0x14143403f: mov       dword ptr [rbx + 0x154], 0x80
+0x141434049: mov       dword ptr [rbx + 0x158], 0xffffffff
+0x141434053: mov       dword ptr [rbx + 0x15c], r12d
+0x14143405a: mov       qword ptr [rbx + 0x168], r12
+0x141434061: mov       dword ptr [rbx + 0x170], r12d
+0x141434068: call      qword ptr [rip + 0x694e9aa] ; RIP->0x147d82a18(.shared)
+0x14143406e: lea       rcx, [rbx + 0x1d0]
+0x141434075: mov       qword ptr [rbx + 0x180], r12
+0x14143407c: mov       qword ptr [rbx + 0x188], r12
+0x141434083: mov       qword ptr [rbx + 0x1a0], r12
+0x14143408a: mov       dword ptr [rbx + 0x1a8], r12d
+0x141434091: mov       dword ptr [rbx + 0x1ac], 0x80
+0x14143409b: mov       dword ptr [rbx + 0x1b0], 0xffffffff
+0x1414340a5: mov       dword ptr [rbx + 0x1b4], r12d
+0x1414340ac: mov       qword ptr [rbx + 0x1c0], r12
+0x1414340b3: mov       dword ptr [rbx + 0x1c8], r12d
+0x1414340ba: call      qword ptr [rip + 0x694e958] ; RIP->0x147d82a18(.shared)
+0x1414340c0: mov       rax, qword ptr [rsp + 0xc0]
+0x1414340c8: mov       qword ptr [rbx + 0xe8], rax
+0x1414340cf: mov       qword ptr [rbx + 0x1d8], r12
+0x1414340d6: mov       qword ptr [rbx + 0x1e0], r12
+0x1414340dd: mov       qword ptr [rbx + 0x1e8], r12
+0x1414340e4: mov       qword ptr [rbx + 0x1f0], r12
+0x1414340eb: mov       qword ptr [rbx + 0x1f8], r12
+0x1414340f2: mov       qword ptr [rdi], rbx
+0x1414340f5: call      qword ptr [rsp + 0xe8]
+0x1414340fc: mov       rbx, qword ptr [rdi]
+0x1414340ff: mov       rsi, rax
+0x141434102: call      qword ptr [rsp + 0xe0]
+0x141434109: mov       rcx, qword ptr [rbx]
+0x14143410c: mov       r8, qword ptr [rcx + 0x328]
+0x141434113: lea       rcx, [rip - 0x2f6a] ; RIP->0x1414311b0(.sdata)
+0x14143411a: cmp       rax, rbx
+0x14143411d: je        0x141434124
+0x14143411f: mov       rdx, rax
+0x141434122: jmp       0x141434126
+0x141434124: xor       edx, edx
+0x141434126: cmp       r8, rcx
+0x141434129: mov       rcx, rbx
+0x14143412c: jne       0x141434135
+0x14143412e: call      0x1414311b0 ; CALL->0x1414311b0 pdata=(5389881776, 5389881875)
+0x141434133: jmp       0x141434138
+0x141434135: call      r8
+0x141434138: mov       qword ptr [rbx + 0xe0], rsi
+0x14143413f: mov       rcx, rbx
+0x141434142: mov       rax, qword ptr [rbx]
+0x141434145: mov       rdx, qword ptr [rax + 8]
+0x141434149: lea       rax, [rip - 0x73c10] ; RIP->0x1413c0540(.sdata)
+0x141434150: cmp       rdx, rax
+0x141434153: jne       0x14143415c
+0x141434155: call      0x1413c0540 ; CALL->0x1413c0540 pdata=None
+0x14143415a: jmp       0x14143415e
+0x14143415c: call      rdx
+0x14143415e: call      0x14154bbc0 ; CALL->0x14154bbc0 pdata=(5391039424, 5391039593)
+0x141434163: mov       rcx, qword ptr [rip + 0xa38086e] ; RIP->0x14b7b49d8(.data2)
+0x14143416a: mov       rsi, rax
+0x14143416d: test      rcx, rcx
+0x141434170: jne       0x141434192
+0x141434172: call      0x141201080 ; CALL->0x141201080 pdata=(5387587712, 5387587789)
+0x141434177: mov       rcx, qword ptr [rip + 0xa38085a] ; RIP->0x14b7b49d8(.data2)
+0x14143417e: mov       rdx, qword ptr [rcx]
+0x141434181: mov       r9, qword ptr [rdx + 0x28]
+0x141434185: mov       edx, 0x10
+0x14143418a: mov       r8d, edx
+0x14143418d: call      r9
+0x141434190: jmp       0x1414341a0
+0x141434192: mov       rax, qword ptr [rcx]
+0x141434195: mov       edx, 0x10
+0x14143419a: mov       r8d, edx
+0x14143419d: call      qword ptr [rax + 0x28]
+0x1414341a0: mov       rdi, rax
+0x1414341a3: test      rax, rax
+0x1414341a6: je        0x1414341b1
+0x1414341a8: mov       qword ptr [rax], rbx
+0x1414341ab: mov       qword ptr [rax + 8], r12
+0x1414341af: jmp       0x1414341b4
+0x1414341b1: mov       rdi, r12
+0x1414341b4: lea       rax, [rsp + 0xc8]
+0x1414341bc: mov       qword ptr [rsp + 0x30], r14 ; OBJDISP=0x30
+0x1414341c1: mov       qword ptr [rsp + 0x40], rax ; OBJDISP=0x40
+0x1414341c6: lea       r8, [rsp + 0x40] ; OBJDISP=0x40
+0x1414341cb: lea       rax, [rsp + 0x30] ; OBJDISP=0x30
+0x1414341d0: mov       qword ptr [rsp + 0x38], r15 ; OBJDISP=0x38
+0x1414341d5: lea       rdx, [rsp + 0xb0]
+0x1414341dd: mov       qword ptr [rsp + 0x48], rax ; OBJDISP=0x48
+0x1414341e2: mov       rcx, rsi
+0x1414341e5: mov       qword ptr [rsp + 0xc8], rbx
+0x1414341ed: call      0x1414bf3a0 ; CALL->0x1414bf3a0 pdata=(5390463904, 5390464283)
+0x1414341f2: mov       rax, qword ptr [rip + 0xa38c277] ; RIP->0x14b7c0470(.data2)
+0x1414341f9: test      rax, rax
+0x1414341fc: je        0x141434204
+0x1414341fe: mov       qword ptr [rax + 8], rdi
+0x141434202: jmp       0x14143420b
+0x141434204: mov       qword ptr [rip + 0xa38c25d], rdi ; RIP->0x14b7c0468(.data2)
+0x14143420b: mov       qword ptr [rip + 0xa38c25e], rdi ; RIP->0x14b7c0470(.data2)
+0x141434212: mov       rax, rbp
+0x141434215: lea       r11, [rsp + 0x50] ; OBJDISP=0x50
+0x14143421a: mov       rbx, qword ptr [r11 + 0x38] ; OBJDISP=0x38
+0x14143421e: mov       rbp, qword ptr [r11 + 0x40] ; OBJDISP=0x40
+0x141434222: mov       rsp, r11
+0x141434225: pop       r15
+0x141434227: pop       r14
+0x141434229: pop       r12
+0x14143422b: pop       rdi
+0x14143422c: pop       rsi
+0x14143422d: jmp       rax
+CALLS=0x141201080,0x141345630,0x1413c0540,0x141427fa0,0x1414311b0,0x1414bf3a0,0x141543920,0x14154bbc0
