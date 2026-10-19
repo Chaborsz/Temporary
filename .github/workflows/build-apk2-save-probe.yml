@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'apk2-save-probe/APK2SaveProbe.cpp'
+      - 'apk2-save-probe/APK2FStringKeyProbe.cpp'
       - '.github/workflows/build-apk2-save-probe.yml'
   workflow_dispatch:
 
@@ -21,11 +22,14 @@ jobs:
         run: |
           mkdir dist
           cl /nologo /O2 /EHsc /std:c++17 /DUNICODE /D_UNICODE apk2-save-probe\APK2SaveProbe.cpp /Fe:dist\APK2SaveProbe.exe bcrypt.lib
+          cl /nologo /O2 /EHsc /std:c++17 /DUNICODE /D_UNICODE apk2-save-probe\APK2FStringKeyProbe.cpp /Fe:dist\APK2FStringKeyProbe.exe bcrypt.lib crypt32.lib
       - name: Hash
         shell: powershell
         run: |
-          Get-FileHash dist\APK2SaveProbe.exe -Algorithm SHA256 | Format-List | Out-File dist\SHA256.txt -Encoding ascii
-          Get-Item dist\APK2SaveProbe.exe | Format-List Name,Length | Out-File -Append dist\SHA256.txt -Encoding ascii
+          Get-ChildItem dist\*.exe | ForEach-Object {
+            Get-FileHash $_.FullName -Algorithm SHA256 | Format-List
+            $_ | Format-List Name,Length
+          } | Out-File dist\SHA256.txt -Encoding ascii
           Get-Content dist\SHA256.txt
       - uses: actions/upload-artifact@v4
         with:
