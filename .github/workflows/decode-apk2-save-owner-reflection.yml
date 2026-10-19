@@ -1,0 +1,121 @@
+name: Decode APK2 save owner reflection
+
+on:
+  push:
+    paths:
+      - '.github/workflows/decode-apk2-save-owner-reflection.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch EXE and decode reflection chains
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' -o APK2-Win64-Shipping.exe
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+          python3 -m pip -q install pefile
+          mkdir -p analysis-results/apk2-save-owner-reflection
+          python3 - <<'PY'
+          from pathlib import Path
+          import pefile,struct
+          fn='APK2-Win64-Shipping.exe';out=Path('analysis-results/apk2-save-owner-reflection')
+          b=Path(fn).read_bytes(); pe=pefile.PE(fn,fast_load=False);base=pe.OPTIONAL_HEADER.ImageBase
+          secs=[]
+          for s in pe.sections:
+            secs.append({'raw':s.PointerToRawData,'sz':s.SizeOfRawData,'rva':s.VirtualAddress,'vsz':max(s.Misc_VirtualSize,s.SizeOfRawData),'name':s.Name.rstrip(b'\0').decode(errors='replace')})
+          def off2va(o):
+            for s in secs:
+              if s['raw']<=o<s['raw']+s['sz']:return base+s['rva']+(o-s['raw']),s['name']
+            return None,None
+          def va2off(v):
+            r=v-base
+            for s in secs:
+              if s['rva']<=r<s['rva']+s['sz']:return s['raw']+(r-s['rva'])
+          def secva(v):
+            r=v-base
+            for s in secs:
+              if s['rva']<=r<s['rva']+s['vsz']:return s['name']
+          def astr(v,lim=180):
+            o=va2off(v)
+            if o is None:return None
+            x=b[o:o+lim].split(b'\0',1)[0]
+            return x.decode('ascii','replace') if len(x)>1 and all(32<=c<127 for c in x) else None
+          def wstr(v,lim=120):
+            o=va2off(v)
+            if o is None:return None
+            z=[]
+            for i in range(lim):
+              if o+2*i+1>=len(b):break
+              a,c=b[o+2*i],b[o+2*i+1]
+              if a==0 and c==0:break
+              if c or not 32<=a<127:return None
+              z.append(chr(a))
+            return ''.join(z) if len(z)>1 else None
+          names=['SaveGameManagerClass','SaveGameManager','OnEndLoadSaveData','OnEndSaveSaveData','SaveDataVarHandler','SaveDataSetting']
+          locs=[]
+          for nm in names:
+            nd=nm.encode('ascii');p=0
+            while True:
+              i=b.find(nd,p)
+              if i<0:break
+              va,sec=off2va(i);locs.append((nm,i,va,sec));p=i+1
+          with (out/'name_locations.txt').open('w') as f:
+            for nm,o,v,s in locs:f.write(f'{nm} file=0x{o:x} va={hex(v) if v else None} sec={s}\n')
+          # recursively follow qword inbound ptrs 4 levels
+          targets={v:nm for nm,o,v,s in locs if v}
+          rows=[]
+          for level in range(1,5):
+            new={}
+            for tv,nm in list(targets.items()):
+              nd=struct.pack('<Q',tv);p=0
+              while True:
+                i=b.find(nd,p)
+                if i<0:break
+                sv,sec=off2va(i);rows.append((level,sv,tv,nm,i,sec))
+                if sv and sv not in targets and sv not in new:new[sv]=f'ptr{level}->{nm}'
+                p=i+1
+            targets.update(new)
+            if not new:break
+          with (out/'pointer_chains.txt').open('w',encoding='utf-8') as f:
+            for level,sv,tv,nm,o,sec in sorted(set(rows),key=lambda x:(x[0],x[4])):
+              f.write(f'level={level} slot={hex(sv) if sv else None} ->0x{tv:x} {nm} file=0x{o:x} sec={sec}\n')
+          # dump rich qword contexts around level1+2 ptr slots; descriptor tails reveal property offsets
+          interesting=sorted({sv for level,sv,tv,nm,o,sec in rows if sv and level<=2})
+          with (out/'contexts.txt').open('w',encoding='utf-8') as f:
+            for sv in interesting:
+              o=va2off(sv)
+              if o is None:continue
+              f.write(f'\n===== slot 0x{sv:x} file=0x{o:x} =====\n')
+              lo=max(0,o-0x80);hi=min(len(b),o+0x100)
+              for p in range(lo-(lo%8),hi,8):
+                q=struct.unpack_from('<Q',b,p)[0];pv,ps=off2va(p);anns=[]
+                qs=secva(q)
+                if qs:anns.append(f'PTR->{qs}:0x{q:x}')
+                a=astr(q);w=wstr(q)
+                if a:anns.append('ASCII='+repr(a))
+                if w:anns.append('WIDE='+repr(w))
+                lo32=q&0xffffffff;lo16=q&0xffff;hi16=(q>>16)&0xffff
+                if 0x20<=hi16<=0x800:anns.append(f'HI16_OFFSET_CAND=0x{hi16:x}')
+                if 0x20<=lo16<=0x800:anns.append(f'LO16_CAND=0x{lo16:x}')
+                f.write(f'va={hex(pv) if pv else None} q=0x{q:016x} '+' | '.join(anns)+'\n')
+          PY
+      - name: Commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis-results/apk2-save-owner-reflection
+          git commit -m 'Decode APK2 save owner reflection' || exit 0
+          git pull --rebase origin main
+          git push origin main
