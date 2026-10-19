@@ -14,45 +14,75 @@ def replace_once(path, old, new, label):
 handler = 'lib/src/boorus/danbooru_handler.dart'
 editor = 'lib/src/pages/settings/booru_edit_page.dart'
 
-# Danbooru itself requires the pair login + api_key for API authentication.
-# A lone api_key is not an authenticated session: public endpoints may still
-# answer successfully and create a false positive. Only send API auth when both
-# values are present, using the official login/api_key query form.
+# ---------------------------------------------------------------------------
+# Correct Danbooru semantics.
+#
+# Danbooru API authentication is a PAIR: login + api_key. A lone API key is
+# not an authenticated account. Public endpoints can still return HTTP 200,
+# which previously created the false impression that API-key-only auth worked.
+# Use the official login/api_key query form for the complete pair; never send
+# partial API credentials and never infer login success from a public search.
+# ---------------------------------------------------------------------------
 replace_once(
     handler,
-    '''  bool _preferLoginQueryAuth = false;
+    "import 'dart:convert';\nimport 'dart:io';\n",
+    "import 'dart:io';\n",
+    'remove-basic-auth-import',
+)
 
-  bool get _hasApiKey => booru.apiKey?.trim().isNotEmpty == true;
-  bool get _hasLogin => booru.userID?.trim().isNotEmpty == true;
+replace_once(
+    handler,
+    '''  bool _preferLegacySearchAuth = false;
+
+  bool get _hasApiCredentials =>
+      booru.userID?.trim().isNotEmpty == true &&
+      booru.apiKey?.trim().isNotEmpty == true;
+
+  String get _basicAuthorization =>
+      'Basic ${base64Encode(utf8.encode("${booru.userID!.trim()}:${booru.apiKey!.trim()}"))}';
 
   @override
+  Map<String, String> getHeaders() {
+    final defaultHeaders = super.getHeaders();
+    defaultHeaders['User-Agent'] = Tools.appUserAgent;
+    if (_hasApiCredentials) {
+      defaultHeaders['Authorization'] = _basicAuthorization;
+    }
+    return defaultHeaders;
+  }
 ''',
     '''  bool get _hasApiKey => booru.apiKey?.trim().isNotEmpty == true;
   bool get _hasLogin => booru.userID?.trim().isNotEmpty == true;
   bool get _hasCompleteApiCredentials => _hasApiKey && _hasLogin;
 
   @override
+  Map<String, String> getHeaders() {
+    final defaultHeaders = super.getHeaders();
+    defaultHeaders['User-Agent'] = Tools.appUserAgent;
+    return defaultHeaders;
+  }
 ''',
-    'danbooru-complete-credential-state',
+    'danbooru-complete-pair-auth-state',
 )
 
-old_search_flow = '''    final Map<String, String> requestHeaders = Map<String, String>.from(headers)
-      ..remove('Authorization');
+old_fetch = '''    final Map<String, String> requestHeaders = Map<String, String>.from(headers);
     Map<String, dynamic>? requestQueryParams = queryParams;
-    if (_hasApiKey) {
+    if (_hasApiCredentials && _preferLegacySearchAuth) {
+      requestHeaders.remove('Authorization');
       requestQueryParams = <String, dynamic>{
         ...?queryParams,
-        if (_preferLoginQueryAuth && _hasLogin) 'login': booru.userID!.trim(),
+        'login': booru.userID!.trim(),
         'api_key': booru.apiKey!.trim(),
       };
     }
 
     final Map<String, String> safeHeadersForLog = {
       ...requestHeaders,
+      if (requestHeaders.containsKey('Authorization')) 'Authorization': 'Basic ***',
       if (requestHeaders.containsKey('Cookie')) 'Cookie': '<present>',
     };
     Logger.Inst().log(
-      "fetching: $uri with headers: $safeHeadersForLog auth=${_hasApiKey ? _preferLoginQueryAuth && _hasLogin ? 'login+api-key-query' : 'api-key-only-query' : cookies.isNotEmpty ? 'session-cookie' : 'anonymous'}",
+      "fetching: $uri with headers: $safeHeadersForLog auth=${_hasApiCredentials ? _preferLegacySearchAuth ? 'legacy-query' : 'basic' : cookies.isNotEmpty ? 'session-cookie' : 'anonymous'}",
       className,
       'Search',
       LogTypes.booruHandlerSearchURL,
@@ -69,41 +99,40 @@ old_search_flow = '''    final Map<String, String> requestHeaders = Map<String, 
             : null,
       );
     } on DioException catch (e) {
-      if (!_hasApiKey ||
-          !_hasLogin ||
-          _preferLoginQueryAuth ||
+      if (!_hasApiCredentials ||
+          _preferLegacySearchAuth ||
           e.response?.statusCode != HttpStatus.unauthorized) {
         rethrow;
       }
 
-      // API-key-only is the preferred mode because some Danbooru-compatible
-      // servers reject requests as soon as a login is supplied. Add login only
-      // after an actual 401 and remember it if that fallback succeeds.
+      // Some older Danbooru-compatible forks do not accept HTTP Basic auth.
+      // Retry exactly once using the legacy login/api_key query parameters.
+      final Map<String, String> fallbackHeaders = Map<String, String>.from(headers)..remove('Authorization');
       final Map<String, dynamic> fallbackQuery = <String, dynamic>{
         ...?queryParams,
         'login': booru.userID!.trim(),
         'api_key': booru.apiKey!.trim(),
       };
       Logger.Inst().log(
-        'Danbooru API-key-only auth returned 401; retrying once with login + api_key',
+        'Danbooru Basic auth returned 401; retrying once with legacy login/api_key parameters',
         className,
         'Search',
         LogTypes.booruHandlerInfo,
       );
       final Response fallbackResponse = await DioNetwork.get(
         uri.toString(),
-        headers: requestHeaders,
+        headers: fallbackHeaders,
         queryParameters: fallbackQuery,
         options: fetchSearchOptions(),
         customInterceptor: withCaptchaCheck
             ? (dio) => DioNetwork.captchaInterceptor(dio, customUserAgent: Tools.appUserAgent)
             : null,
       );
-      _preferLoginQueryAuth = true;
+      _preferLegacySearchAuth = true;
       return fallbackResponse;
     }
 '''
-new_search_flow = '''    final Map<String, String> requestHeaders = Map<String, String>.from(headers)
+new_fetch = '''    final Map<String, String> requestHeaders = Map<String, String>.from(headers)
       ..remove('Authorization');
     Map<String, dynamic>? requestQueryParams = queryParams;
     if (_hasCompleteApiCredentials) {
@@ -119,7 +148,7 @@ new_search_flow = '''    final Map<String, String> requestHeaders = Map<String, 
       if (requestHeaders.containsKey('Cookie')) 'Cookie': '<present>',
     };
     Logger.Inst().log(
-      "fetching: $uri with headers: $safeHeadersForLog auth=${_hasCompleteApiCredentials ? 'verified-login+api-key-query' : cookies.isNotEmpty ? 'session-cookie' : 'anonymous'}",
+      "fetching: $uri with headers: $safeHeadersForLog auth=${_hasCompleteApiCredentials ? 'login+api-key-query' : cookies.isNotEmpty ? 'session-cookie' : 'anonymous'}",
       className,
       'Search',
       LogTypes.booruHandlerSearchURL,
@@ -135,26 +164,36 @@ new_search_flow = '''    final Map<String, String> requestHeaders = Map<String, 
           : null,
     );
 '''
-replace_once(handler, old_search_flow, new_search_flow, 'danbooru-real-auth-search-flow')
+replace_once(handler, old_fetch, new_fetch, 'danbooru-complete-pair-search-auth')
 
 replace_once(
     handler,
-    '''        queryParameters: {
+    '''      final res = await DioNetwork.get(
+        '${booru.baseURL}/users.json',
+        headers: getHeaders(),
+        queryParameters: {
           'search[id]': item.uploaderId,
-          if (_hasApiKey) 'api_key': booru.apiKey!.trim(),
-          if (_hasApiKey && _hasLogin && _preferLoginQueryAuth) 'login': booru.userID!.trim(),
         },
+      );
 ''',
-    '''        queryParameters: {
+    '''      final res = await DioNetwork.get(
+        '${booru.baseURL}/users.json',
+        headers: getHeaders(),
+        queryParameters: {
           'search[id]': item.uploaderId,
           if (_hasCompleteApiCredentials) 'login': booru.userID!.trim(),
           if (_hasCompleteApiCredentials) 'api_key': booru.apiKey!.trim(),
         },
+      );
 ''',
-    'danbooru-real-auth-aux-flow',
+    'danbooru-complete-pair-aux-auth',
 )
 
-# Add Dio access to the editor so it can prove identity against /profile.json.
+# ---------------------------------------------------------------------------
+# Editor: validate the credentials against /profile.json. Danbooru's profile
+# JSON returns CurrentUser.user, so this proves which account the API actually
+# authenticated instead of merely testing a public endpoint.
+# ---------------------------------------------------------------------------
 replace_once(
     editor,
     "import 'package:flutter/material.dart';\n\n",
@@ -179,21 +218,18 @@ replace_once(
   String? _lastSuccessfulTestSignature;
   String? _verifiedDanbooruLogin;
 ''',
-    'danbooru-verification-state',
+    'danbooru-verified-login-state',
 )
 
-# Replace the dialog with one that validates credentials against the authenticated
-# profile endpoint before applying them. A 200 from posts.json is not sufficient
-# because public searches also succeed anonymously.
-start_marker = '  Future<void> _showDanbooruLoginDialog() async {'
-end_marker = '\n  @override\n  Widget build(BuildContext context) {'
 p = Path(editor)
 text = p.read_text(encoding='utf-8')
+start_marker = '  Future<void> _showDanbooruLoginDialog() async {'
+end_marker = '\n  @override\n  Widget build(BuildContext context) {'
 start = text.find(start_marker)
 end = text.find(end_marker, start)
 if start < 0 or end < 0:
     raise SystemExit('danbooru-verified-login-dialog: markers not found')
-old_dialog = text[start:end]
+
 new_dialog = '''  Future<({bool ok, String message, String? userName})> _verifyDanbooruLogin(
     String login,
     String apiKey,
@@ -455,7 +491,6 @@ new_dialog = '''  Future<({bool ok, String message, String? userName})> _verifyD
 p.write_text(text[:start] + new_dialog + text[end:], encoding='utf-8')
 print('PATCHED danbooru-verified-login-dialog:', p)
 
-# The summary must distinguish configured credentials from a profile-verified login.
 replace_once(
     editor,
     '''                  booruUserIDController.text.trim().isNotEmpty && booruAPIKeyController.text.trim().isNotEmpty
@@ -471,12 +506,12 @@ replace_once(
     'danbooru-auth-status-summary',
 )
 
-# Correct the old v8.4 explanatory copy.
 replace_once(
     editor,
     '''        return '<b>Danbooru authentication</b><br>'
-            'API Key is used first and can work by itself. Login is optional.<br>'
-            'If API Key alone returns 401 and Login is configured, LoliSnatcher retries once with login + api_key and remembers that mode for the session.<br>'
+            'Leave Login and API Key empty to use an existing web session/cookie when available.<br>'
+            'Enter both Login and API Key to use HTTP Basic Authentication. '
+            'If a compatible older server returns 401, LoliSnatcher retries once with legacy login + api_key parameters.<br>'
             '<b>Never enter your account password in the API Key field.</b>';
 ''',
     '''        return '<b>Danbooru authentication</b><br>'
@@ -484,12 +519,9 @@ replace_once(
             'Use Danbooru Login to validate /profile.json; only a response identifying your account is considered authenticated.<br>'
             '<b>Never enter your account password in the API Key field.</b>';
 ''',
-    'danbooru-real-auth-instructions',
+    'danbooru-verified-auth-instructions',
 )
 
-# Saving/testing a Danbooru config must not succeed merely because posts.json is
-# public. Reject partial credentials and verify the account profile before the
-# generic booru connectivity test.
 insert_after = '''    if (!ContentPolicy.isBooruTypeAllowed(selectedBooruType)) {
       showSourceUnavailableMessage();
       return false;
@@ -543,20 +575,21 @@ replacement = '''    if (!ContentPolicy.isBooruTypeAllowed(selectedBooruType)) {
 
     booruFaviconController.text = booruFaviconController.text.trim().isEmpty
 '''
-replace_once(editor, insert_after, replacement, 'danbooru-save-requires-real-auth-verification')
+replace_once(editor, insert_after, replacement, 'danbooru-save-requires-profile-verification')
 
 handler_text = Path(handler).read_text(encoding='utf-8')
 editor_text = Path(editor).read_text(encoding='utf-8')
 checks = {
     'complete credentials only': 'bool get _hasCompleteApiCredentials => _hasApiKey && _hasLogin;' in handler_text,
-    'no api-key-only query mode': 'api-key-only-query' not in handler_text,
-    'no auth retry heuristic': '_preferLoginQueryAuth' not in handler_text,
+    'basic auth removed': "defaultHeaders['Authorization']" not in handler_text,
+    'legacy heuristic removed': '_preferLegacySearchAuth' not in handler_text,
     'paired query auth': "'login': booru.userID!.trim(),\n        'api_key': booru.apiKey!.trim()" in handler_text,
     'profile verification endpoint': "'$baseUrl/profile.json'" in editor_text,
     'profile identity checked': "data['name']" in editor_text,
-    '401 reported': '401: Login o API Key incorrectos' in editor_text,
+    '401 explicit': '401: Login o API Key incorrectos' in editor_text,
     'verified summary': 'Autenticado como $_verifiedDanbooruLogin' in editor_text,
     'partial credentials rejected': 'Danbooru Login incompleto' in editor_text,
+    'public success not auth': 'Una búsqueda pública que responde 200 no demuestra' in editor_text,
 }
 for label, ok in checks.items():
     if not ok:
