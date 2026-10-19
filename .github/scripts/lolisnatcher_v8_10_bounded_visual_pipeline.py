@@ -48,8 +48,8 @@ custom.write_text(text, encoding='utf-8')
 # viewport to be disposed before they start a network/cache/decode pipeline.
 thumbnail = Path('lib/src/widgets/thumbnail/thumbnail.dart')
 thumb = thumbnail.read_text(encoding='utf-8')
-old_delay = "Duration(milliseconds: widget.isStandalone ? 200 : 0),"
-new_delay = "Duration(milliseconds: widget.isStandalone ? (Platform.isWindows ? 350 : 200) : 0),"
+old_delay = """    debounceLoading = Timer(\n      Duration(milliseconds: widget.isStandalone ? 200 : 0),\n"""
+new_delay = """    debounceLoading = Timer(\n      Duration(milliseconds: widget.isStandalone ? (Platform.isWindows ? 350 : 200) : 0),\n"""
 count = thumb.count(old_delay)
 if count != 1:
     raise SystemExit(f'v8.10 windows-scroll-debounce: expected 1 match, found {count}')
