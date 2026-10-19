@@ -128,10 +128,27 @@ new_make = '''    // Credentials are intentionally never embedded in the normal 
 '''
 replace_once(handler, old_make, new_make, 'danbooru-credentials-out-of-normal-url')
 
+old_uploader = '''      final res = await DioNetwork.get(
+        '${booru.baseURL}/users.json',
+        queryParameters: {
+          'search[id]': item.uploaderId,
+        },
+      );
+'''
+new_uploader = '''      final res = await DioNetwork.get(
+        '${booru.baseURL}/users.json',
+        headers: getHeaders(),
+        queryParameters: {
+          'search[id]': item.uploaderId,
+        },
+      );
+'''
+replace_once(handler, old_uploader, new_uploader, 'danbooru-uploader-auth-headers')
+
 # Dio's global Talker/Alice interceptors print request headers and query
 # parameters. Automatically suppress detailed network logging for GET requests
 # carrying authentication/session material. This also protects the legacy
-# api_key fallback and any other authenticated GET request in the app.
+# api_key fallback and authenticated auxiliary API calls.
 dio_network = Path('lib/src/utils/dio_network.dart')
 old_get = '''  static Future<Response> get(
     String url, {
@@ -231,6 +248,7 @@ checks = {
     '401 fallback': "e.response?.statusCode != HttpStatus.unauthorized" in handler_text,
     'legacy fallback login': "'login': booru.userID!.trim()" in handler_text,
     'normal URL has no credentials': "page=$pageNum';" in handler_text and "loginStr" not in handler_text,
+    'uploader endpoint authenticated': "headers: getHeaders(),\n        queryParameters: {\n          'search[id]'" in handler_text,
     'generic UI instructions': '<b>Danbooru authentication</b>' in editor_text,
     'valid info log type': 'LogTypes.booruHandlerInfo' in handler_text,
     'safe Basic auth quoting': 'utf8.encode("${booru.userID!.trim()}:${booru.apiKey!.trim()}")' in handler_text,
@@ -244,6 +262,7 @@ for label, ok in checks.items():
 print('DANBOORU_SESSION_COOKIE_AUTH=PASS')
 print('DANBOORU_BASIC_AUTH=PASS')
 print('DANBOORU_LEGACY_QUERY_FALLBACK=PASS')
+print('DANBOORU_AUX_API_AUTH=PASS')
 print('DANBOORU_SECRET_REDACTION=PASS')
 print('DIO_SENSITIVE_GET_LOG_SUPPRESSION=PASS')
 print('V11_GENERIC_DANBOORU_AUTH=PASS')
