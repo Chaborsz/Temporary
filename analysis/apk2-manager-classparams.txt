@@ -1,0 +1,24 @@
+CLASSPARAMS 0x14a1dede0
++0x00 ClassNoRegisterFunc=0x1450ce860 sec=.sdata exec=True
++0x08 ClassConfigNameUTF8=0x0 sec=None exec=False
++0x10 CppClassInfo=0x14a1dea70 sec=.shared exec=False
++0x18 DependencySingletonFuncArray=0x14a1dea60 sec=.shared exec=False
++0x20 FunctionLinkArray=0x0 sec=None exec=False
++0x28 PropertyArray=0x14a1dea78 sec=.shared exec=False
++0x30 ImplementedInterfaceArray=0x0 sec=None exec=False
++0x38 packed=0x00010002 deps=2 funcs=0 props=2 interfaces=0
++0x3c ClassFlags=0x000000a0
++0x40 q=0x14a1d4678
++0x48 q=0x0
+
+=== DEPENDENCIES ===
+0 0x144cd5ad0 (5449276112, 5449276159)
+1 0x144e60480 (5450892416, 5450892463)
+
+=== FUNCTIONS ===
+
+=== PROPERTIES ===
+0: desc=0x14a1dead0 name='EncryptKey' rep=0x0 PropertyFlags=0x0020080000010001 GenFlags=0x15 ObjectFlags=0x00000045 setter=0x0 getter=0x0 ArrayDim=1 Offset=0x30 NumMeta=0
+1: desc=0x14a1dea90 name='SaveGame' rep=0x0 PropertyFlags=0x0040000000000000 GenFlags=0x12 ObjectFlags=0x00000045 setter=0x0 getter=0x0 ArrayDim=1 Offset=0x40 NumMeta=0
+
+=== UFUNCTION THUNK DISASSEMBLY ===
