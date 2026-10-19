@@ -365,3 +365,9 @@ print('DANBOORU_LOGIN_DIALOG=PASS')
 print('DANBOORU_API_SECRET_HIDDEN=PASS')
 print('DANBOORU_STICKY_AUTH_MODE=PASS')
 print('V8_3_DANBOORU_LOGIN_UI=PASS')
+
+# Apply the API-key-first correction after the v8.3 dialog/sticky-auth patch.
+# This keeps Login stored in the editor but stops it from automatically forcing
+# HTTP Basic on servers where API Key alone is the proven working mode.
+apikey_first_patch = Path(__file__).with_name('lolisnatcher_v8_4_apikey_first_auth_patch.py')
+exec(compile(apikey_first_patch.read_text(encoding='utf-8'), str(apikey_first_patch), 'exec'))
