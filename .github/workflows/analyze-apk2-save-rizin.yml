@@ -1,0 +1,182 @@
+name: Analyze APK2 save encryption with Rizin
+
+on:
+  push:
+    paths:
+      - '.github/workflows/analyze-apk2-save-rizin.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Download APK2 executable and Rizin 0.9.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 \
+            'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' \
+            -o APK2-Win64-Shipping.exe
+          curl -L --fail --retry 5 \
+            'https://github.com/rizinorg/rizin/releases/download/v0.9.1/rizin-v0.9.1-static-x86_64.tar.xz' \
+            -o rizin.tar.xz
+          echo '9102249a9f0b6319c5334a2e5cf8d9cc3f2035e1d3def027c41f6a90f647e8cf  rizin.tar.xz' | sha256sum -c -
+          mkdir rizin && tar -xJf rizin.tar.xz -C rizin
+          RIZIN="$(find rizin -type f -name rizin -perm -111 | head -n1)"
+          RZBIN="$(find rizin -type f -name rz-bin -perm -111 | head -n1)"
+          test -n "$RIZIN" && test -n "$RZBIN"
+          echo "RIZIN=$RIZIN" >> "$GITHUB_ENV"
+          echo "RZBIN=$RZBIN" >> "$GITHUB_ENV"
+          "$RIZIN" -v
+          sha256sum APK2-Win64-Shipping.exe
+
+      - name: Basic PE and import reconnaissance
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p report
+          {
+            echo '=== FILE ==='
+            file APK2-Win64-Shipping.exe
+            sha256sum APK2-Win64-Shipping.exe
+            stat -c 'size=%s' APK2-Win64-Shipping.exe
+            echo
+            echo '=== RIZIN INFO ==='
+            "$RIZIN" -q -c 'iI;q' APK2-Win64-Shipping.exe
+            echo
+            echo '=== CRYPTO-RELATED IMPORTS ==='
+            "$RIZIN" -q -c 'ii~BCrypt;ii~Crypt;ii~bcrypt;ii~crypt;q' APK2-Win64-Shipping.exe || true
+          } | tee report/01_basic.txt
+
+      - name: Search strings and possible static keys
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            echo '=== ASCII SAVE/CRYPTO STRINGS ==='
+            strings -a -n 5 APK2-Win64-Shipping.exe | grep -Ei 'DefaultData|\.sav|SaveGame|save data|AES|encrypt|decrypt|cipher|crypto|padding|Rijndael' | sort -u | head -n 400 || true
+            echo
+            echo '=== UTF16-LE SAVE/CRYPTO STRINGS ==='
+            strings -el -n 5 APK2-Win64-Shipping.exe | grep -Ei 'DefaultData|\.sav|SaveGame|save data|AES|encrypt|decrypt|cipher|crypto|padding|Rijndael' | sort -u | head -n 400 || true
+            echo
+            echo '=== 64-HEX ASCII CANDIDATES (possible 256-bit keys) ==='
+            strings -a -n 32 APK2-Win64-Shipping.exe | grep -Eo '[0-9A-Fa-f]{64}' | sort -u | head -n 300 || true
+            echo
+            echo '=== 32-BYTE PRINTABLE CANDIDATES NEAR AES/KEY WORDING ==='
+            strings -a -n 24 APK2-Win64-Shipping.exe | grep -Ei 'aes|key|encrypt|decrypt' | head -n 400 || true
+          } | tee report/02_strings.txt
+
+      - name: Rizin string addresses
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RZBIN" -zzj APK2-Win64-Shipping.exe > report/strings.json
+          python3 - <<'PY' | tee report/03_target_strings.txt
+          import json,re
+          d=json.load(open('report/strings.json','r',encoding='utf-8'))
+          if isinstance(d,dict):
+              arr=d.get('strings') or d.get('entries') or []
+          else:
+              arr=d
+          pat=re.compile(r'DefaultData|\.sav|SaveGame|save data|AES|encrypt|decrypt|cipher|crypto|padding|Rijndael',re.I)
+          rows=[]
+          for s in arr:
+              txt=str(s.get('string',s.get('name','')))
+              if pat.search(txt):
+                  rows.append((int(s.get('vaddr',0)),int(s.get('paddr',0)),txt))
+          for va,pa,txt in sorted(rows):
+              print(f'vaddr=0x{va:x} paddr=0x{pa:x} {txt}')
+          print('COUNT',len(rows))
+          PY
+
+      - name: Detect AES tables and AES-NI instructions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' | tee report/04_aes_signatures.txt
+          from pathlib import Path
+          b=Path('APK2-Win64-Shipping.exe').read_bytes()
+          pats={
+            'AES_SBOX_HEAD': bytes.fromhex('637c777bf26b6fc53001672bfed7ab76'),
+            'AES_INV_SBOX_HEAD': bytes.fromhex('52096ad53036a538bf40a39e81f3d7fb'),
+            'AESENC': bytes.fromhex('660f38dc'),
+            'AESENCLAST': bytes.fromhex('660f38dd'),
+            'AESDEC': bytes.fromhex('660f38de'),
+            'AESDECLAST': bytes.fromhex('660f38df'),
+            'AESKEYGENASSIST': bytes.fromhex('660f3adf'),
+          }
+          for name,p in pats.items():
+              offs=[]; i=0
+              while True:
+                  i=b.find(p,i)
+                  if i<0: break
+                  offs.append(i); i+=1
+              print(name,'count=',len(offs),'offsets=',','.join(hex(x) for x in offs[:80]))
+          PY
+          {
+            echo '=== RIZIN AES-NI virtual-address searches ==='
+            "$RIZIN" -q -c '/x 660f38dc;/x 660f38dd;/x 660f38de;/x 660f38df;/x 660f3adf;q' APK2-Win64-Shipping.exe || true
+          } | tee -a report/04_aes_signatures.txt
+
+      - name: Directed xref pass for save strings
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,re
+          d=json.load(open('report/strings.json','r',encoding='utf-8'))
+          arr=d.get('strings') if isinstance(d,dict) else d
+          arr=arr or []
+          pat=re.compile(r'DefaultData|\.sav|SaveGame|save data',re.I)
+          addrs=[]
+          for s in arr:
+              txt=str(s.get('string',s.get('name','')))
+              if pat.search(txt):
+                  v=int(s.get('vaddr',0))
+                  if v: addrs.append((v,txt))
+          with open('report/xref_cmds.rz','w') as f:
+              f.write('e scr.color=false\n')
+              f.write('aa\n')
+              f.write('aar\n')
+              for v,txt in addrs[:120]:
+                  f.write(f'?e ==== STRING 0x{v:x} ====\n')
+                  f.write(f'axt @ 0x{v:x}\n')
+              f.write('q\n')
+          print('target addresses',len(addrs))
+          PY
+          timeout 35m "$RIZIN" -q -i report/xref_cmds.rz APK2-Win64-Shipping.exe > report/05_xrefs.txt 2>&1 || true
+          echo '=== XREF REPORT HEAD ==='
+          sed -n '1,800p' report/05_xrefs.txt
+
+      - name: Summarize candidate code addresses
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' | tee report/06_summary.txt
+          import re
+          t=open('report/05_xrefs.txt','r',errors='ignore').read()
+          # Rizin xrefs generally render source addresses as 0x...
+          addrs=[]
+          for line in t.splitlines():
+              if '0x' not in line: continue
+              if 'STRING 0x' in line: continue
+              m=re.search(r'0x[0-9a-fA-F]+',line)
+              if m: addrs.append(m.group(0).lower())
+          seen=[]
+          for a in addrs:
+              if a not in seen: seen.append(a)
+          print('unique candidate xref addresses:',len(seen))
+          for a in seen[:200]: print(a)
+          PY
+          echo '=== DONE ==='
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk2-save-rizin-report
+          path: report/
+          retention-days: 7
