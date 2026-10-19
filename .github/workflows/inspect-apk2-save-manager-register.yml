@@ -1,0 +1,173 @@
+name: Inspect APK2 save manager registration
+
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-apk2-save-manager-register.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fetch verified executable and inspect manager registration
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 \
+            'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' \
+            -o APK2-Win64-Shipping.exe
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+          python3 -m pip -q install pefile capstone
+          mkdir -p analysis-results/apk2-save-manager-register
+          python3 - <<'PY'
+          from pathlib import Path
+          import pefile,struct,bisect,json
+          from capstone import Cs,CS_ARCH_X86,CS_MODE_64
+          from capstone.x86 import X86_OP_MEM,X86_REG_RIP,X86_OP_IMM
+
+          fn='APK2-Win64-Shipping.exe'; out=Path('analysis-results/apk2-save-manager-register')
+          b=Path(fn).read_bytes(); pe=pefile.PE(fn,fast_load=False); base=pe.OPTIONAL_HEADER.ImageBase
+          secs=[]
+          for s in pe.sections:
+              secs.append({'raw':s.PointerToRawData,'sz':s.SizeOfRawData,'rva':s.VirtualAddress,
+                           'vsz':max(s.Misc_VirtualSize,s.SizeOfRawData),'ch':s.Characteristics,
+                           'name':s.Name.rstrip(b'\0').decode('ascii','replace')})
+          def va2off(va):
+              r=va-base
+              for s in secs:
+                  if s['rva']<=r<s['rva']+s['sz']:return s['raw']+(r-s['rva'])
+              return None
+          def off2va(off):
+              for s in secs:
+                  if s['raw']<=off<s['raw']+s['sz']:return base+s['rva']+(off-s['raw']),s['name']
+              return None,None
+          def secva(va):
+              r=va-base
+              for s in secs:
+                  if s['rva']<=r<s['rva']+s['vsz']:return s['name']
+              return None
+          def cstr(va,limit=180):
+              off=va2off(va)
+              if off is None:return None
+              raw=b[off:off+limit].split(b'\0',1)[0]
+              if len(raw)>=2 and all(32<=x<127 for x in raw):
+                  try:return raw.decode()
+                  except:return None
+              return None
+          def wstr(va,limit=100):
+              off=va2off(va)
+              if off is None:return None
+              s=[]
+              for i in range(limit):
+                  if off+2*i+1>=len(b):break
+                  a,c=b[off+2*i],b[off+2*i+1]
+                  if a==0 and c==0:break
+                  if c or not 32<=a<127:return None
+                  s.append(chr(a))
+              return ''.join(s) if len(s)>=2 else None
+
+          funcs=[]
+          for e in pe.DIRECTORY_ENTRY_EXCEPTION:
+              st=base+e.struct.BeginAddress; en=base+e.struct.EndAddress
+              if st<en:funcs.append((st,en))
+          funcs=sorted(set(funcs)); starts=[a for a,_ in funcs]
+          def cfunc(va):
+              i=bisect.bisect_right(starts,va)-1
+              return funcs[i] if i>=0 and funcs[i][0]<=va<funcs[i][1] else None
+
+          seeds=[0x1450ce860,0x1450cea10,0x1450ceb20,0x1450cec30,0x1450ccfc0,0x1450cce00,0x1450ccec0]
+          md=Cs(CS_ARCH_X86,CS_MODE_64); md.detail=True
+          all_rip=[]; all_calls=[]
+          with (out/'registration_functions.txt').open('w',encoding='utf-8') as f:
+              for seed in seeds:
+                  fr=cfunc(seed)
+                  if not fr:continue
+                  st,en=fr; off=va2off(st)
+                  f.write(f'\n===== FUNCTION 0x{st:x}-0x{en:x} seed=0x{seed:x} size=0x{en-st:x} =====\n')
+                  insns=list(md.disasm(b[off:off+(en-st)],st))
+                  for ins in insns:
+                      anns=[]
+                      for op in ins.operands:
+                          if op.type==X86_OP_MEM and op.mem.base==X86_REG_RIP:
+                              dst=ins.address+ins.size+op.mem.disp; ds=secva(dst)
+                              ann=f'RIP->0x{dst:x}({ds})'
+                              a=cstr(dst); w=wstr(dst)
+                              if a:ann+=f' ASCII={a!r}'
+                              if w:ann+=f' WIDE={w!r}'
+                              anns.append(ann); all_rip.append((ins.address,dst,ds,a,w,st,en))
+                      if ins.mnemonic=='call' and ins.operands and ins.operands[0].type==X86_OP_IMM:
+                          dst=ins.operands[0].imm; cf=cfunc(dst); anns.append(f'CALL->0x{dst:x} func={cf}')
+                          all_calls.append((ins.address,dst,cf,st,en))
+                      f.write(f'0x{ins.address:x}: {ins.mnemonic:9s} {ins.op_str}' + (('  ; '+' | '.join(anns)) if anns else '')+'\n')
+
+          # Structured dump around every RIP data destination in these generated functions.
+          with (out/'rip_target_context.txt').open('w',encoding='utf-8') as f:
+              seen=set()
+              for src,dst,ds,a,w,st,en in all_rip:
+                  if dst in seen or ds is None:continue
+                  seen.add(dst); off=va2off(dst)
+                  if off is None:continue
+                  f.write(f'\n===== dst=0x{dst:x} section={ds} from=0x{src:x} =====\n')
+                  lo=max(0,off-0x40); hi=min(len(b),off+0xc0)
+                  for p in range(lo,hi,8):
+                      q=struct.unpack_from('<Q',b,p)[0]; pva,psec=off2va(p)
+                      qa=cstr(q); qw=wstr(q); qsec=secva(q)
+                      an=[]
+                      if qsec:an.append(f'PTR->{qsec}:0x{q:x}')
+                      if qa:an.append(f'ASCII={qa!r}')
+                      if qw:an.append(f'WIDE={qw!r}')
+                      f.write(f'file=0x{p:x} va=0x{pva:x} q=0x{q:016x} '+ ' | '.join(an)+'\n')
+
+          # Search for executable refs to exact ClassParams/property-array/descriptors, byte-level then validate at function boundaries.
+          targets={
+              0x14a1dead0:'EncryptKey_descriptor',
+              0x14a1dea78:'PropPointers_entry_or_array',
+              0x14a1dee08:'ClassParams_candidate',
+              0x14a1d45f8:'EncryptKey_string',
+              0x14b1edee0:'UAPKSaveGameManager_name_slot',
+          }
+          ops={0x8d,0x8b,0x89,0x39,0x3b,0x31,0x33,0x21,0x23,0x09,0x0b,0x85,0x83,0x81,0xff}
+          raw=[]
+          for s in secs:
+              if not(s['ch']&0x20000000):continue
+              buf=memoryview(b)[s['raw']:s['raw']+s['sz']]; secbase=base+s['rva']
+              for i in range(max(0,len(buf)-8)):
+                  if 0x40<=buf[i]<=0x4f and buf[i+1] in ops and (buf[i+2]&0xc7)==5:
+                      disp=struct.unpack_from('<i',buf,i+3)[0]; src=secbase+i; dst=src+7+disp
+                      if dst in targets:raw.append((src,dst,targets[dst]))
+                  if buf[i] in ops and (buf[i+1]&0xc7)==5:
+                      disp=struct.unpack_from('<i',buf,i+2)[0]; src=secbase+i; dst=src+6+disp
+                      if dst in targets:raw.append((src,dst,targets[dst]))
+          valid=[]
+          for src,dst,nm in sorted(set(raw)):
+              fr=cfunc(src)
+              if not fr:continue
+              off=va2off(fr[0]); imap={x.address:x for x in md.disasm(b[off:off+(fr[1]-fr[0])],fr[0])}
+              ins=imap.get(src)
+              if not ins:continue
+              for op in ins.operands:
+                  if op.type==X86_OP_MEM and op.mem.base==X86_REG_RIP and ins.address+ins.size+op.mem.disp==dst:
+                      valid.append((src,dst,nm,fr,ins.mnemonic,ins.op_str));break
+          with (out/'exact_metadata_code_refs.txt').open('w') as f:
+              for src,dst,nm,fr,mn,ops2 in valid:
+                  f.write(f'src=0x{src:x} -> {nm}@0x{dst:x} function=0x{fr[0]:x}-0x{fr[1]:x} :: {mn} {ops2}\n')
+              f.write(f'VALID={len(valid)}\n')
+          PY
+      - name: Commit reports
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add analysis-results/apk2-save-manager-register
+          git commit -m 'Inspect APK2 save manager registration' || exit 0
+          git pull --rebase origin main
+          git push origin main
