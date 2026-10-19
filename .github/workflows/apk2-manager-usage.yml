@@ -1,0 +1,137 @@
+name: Trace APK2 SaveGameManager usage
+on:
+  push:
+    paths: ['.github/workflows/apk2-manager-usage.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Trace manager usage
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 5 'https://github.com/Chaborsz/Temporary/releases/download/apk2-mediafire-transfer-2026-10-18/APK2-Win64-Shipping.exe' -o /tmp/a.exe
+          python3 -m pip -q install pefile capstone
+          mkdir -p /tmp/out
+          python3 - <<'PY' > /tmp/out/apk2-manager-usage.txt
+          import pefile,struct,bisect
+          from pathlib import Path
+          from capstone import Cs,CS_ARCH_X86,CS_MODE_64
+          from capstone.x86 import X86_OP_MEM,X86_REG_RIP,X86_REG_RDX
+          b=Path('/tmp/a.exe').read_bytes();pe=pefile.PE('/tmp/a.exe',fast_load=False);base=pe.OPTIONAL_HEADER.ImageBase
+          secs=[]
+          for s in pe.sections:secs.append((s.VirtualAddress,s.SizeOfRawData,s.PointerToRawData,s.Name.rstrip(b'\0').decode('ascii','replace'),s.Characteristics))
+          def vo(v):
+            r=v-base
+            for sr,sz,raw,n,ch in secs:
+              if sr<=r<sr+sz:return raw+r-sr
+          def si(v):
+            r=v-base
+            for sr,sz,raw,n,ch in secs:
+              if sr<=r<sr+sz:return n,ch
+            return None,0
+          def q(v):return struct.unpack_from('<Q',b,vo(v))[0]
+          def d(v):return struct.unpack_from('<I',b,vo(v))[0]
+          def cstr(v):
+            o=vo(v)
+            if o is None:return None
+            z=b.find(b'\0',o,o+300);z=o+300 if z<0 else z
+            return b[o:z].decode('utf-8','replace')
+          def wstr(v):
+            o=vo(v)
+            if o is None:return None
+            out=[]
+            for i in range(0,300,2):
+              w=struct.unpack_from('<H',b,o+i)[0]
+              if w==0:break
+              if w<32 or w>0x10ffff:return None
+              out.append(chr(w))
+            return ''.join(out)
+          fs=[]
+          for e in pe.DIRECTORY_ENTRY_EXCEPTION:
+            s=base+e.struct.BeginAddress;e2=base+e.struct.EndAddress
+            if s<e2:fs.append((s,e2))
+          fs.sort();starts=[x[0] for x in fs]
+          def cf(v):
+            i=bisect.bisect_right(starts,v)-1
+            return fs[i] if i>=0 and fs[i][0]<=v<fs[i][1] else None
+          md=Cs(CS_ARCH_X86,CS_MODE_64);md.detail=True
+          def disasm_func(v,maxlen=0x1200):
+            f=cf(v);st=f[0] if f else v;en=f[1] if f else v+0x200;o=vo(st)
+            return st,en,list(md.disasm(b[o:o+min(en-st,maxlen)],st)) if o is not None else []
+          def decode_cp(cp,label):
+            vals=[q(cp+i*8) for i in range(7)];p=d(cp+0x38);flags=d(cp+0x3c)
+            print(f'CLASSPARAMS {label} 0x{cp:x} ClassNoReg=0x{vals[0]:x} deps=0x{vals[3]:x} funcs=0x{vals[4]:x} props=0x{vals[5]:x} packed=0x{p:x} flags=0x{flags:x}')
+            print(' counts',p&0xf,(p>>4)&0x7ff,(p>>15)&0x7ff,(p>>26)&0x3f)
+            return vals
+          print('=== MANAGER SUPERCLASS ===')
+          mcp=0x14a1dede0;mv=decode_cp(mcp,'Manager');deps=mv[3];super_z=q(deps);pkg_z=q(deps+8)
+          print('super_Z',hex(super_z),'pkg_Z',hex(pkg_z))
+          st,en,ins=disasm_func(super_z,0x300)
+          super_cp=None
+          for x in ins:
+            extras=[]
+            for op in x.operands:
+              if op.type==X86_OP_MEM and op.mem.base==X86_REG_RIP:
+                dst=x.address+x.size+op.mem.disp;ws=wstr(dst);cs=cstr(dst);extras.append((dst,ws,cs))
+                if x.mnemonic=='lea' and x.operands[0].reg==X86_REG_RDX:super_cp=dst
+            print(f'0x{x.address:x}: {x.mnemonic} {x.op_str}'+(' refs='+repr(extras) if extras else ''))
+          if super_cp:
+            sv=decode_cp(super_cp,'Super')
+            sstatic=sv[0];print('SUPER_STATICCLASS',hex(sstatic))
+            sst,sen,sins=disasm_func(sstatic,0x500)
+            print('--- SUPER StaticClass disasm ---')
+            for x in sins:
+              extras=[]
+              for op in x.operands:
+                if op.type==X86_OP_MEM and op.mem.base==X86_REG_RIP:
+                  dst=x.address+x.size+op.mem.disp;extras.append((hex(dst),wstr(dst),cstr(dst)))
+              print(f'0x{x.address:x}: {x.mnemonic} {x.op_str}'+(' refs='+repr(extras) if extras else ''))
+          print('\n=== DIRECT E8 CALLERS ===')
+          targets={0x1450ce860:'ManagerStaticClass',0x1450ceb20:'ManagerZConstruct',0x1450d58c0:'ManagerInternalCtor'}
+          callerfuncs=set()
+          for sr,sz,raw,n,ch in secs:
+            if not(ch&0x20000000):continue
+            data=b[raw:raw+sz];secva=base+sr;pos=0
+            while True:
+              i=data.find(b'\xe8',pos)
+              if i<0:break
+              if i+5<=len(data):
+                rel=struct.unpack_from('<i',data,i+1)[0];src=secva+i;dst=src+5+rel
+                if dst in targets:
+                  f=cf(src);print(targets[dst],'callsite',hex(src),'caller',f); 
+                  if f:callerfuncs.add(f[0])
+              pos=i+1
+          print('\n=== CALLER FUNCTIONS ===')
+          for v in sorted(callerfuncs):
+            st,en,ins=disasm_func(v,0x3000);print(f'FUNCTION 0x{st:x}-0x{en:x}')
+            for x in ins:print(f' 0x{x.address:x}: {x.mnemonic} {x.op_str}')
+          print('\n=== BASE CONSTRUCTOR ===')
+          st,en,ins=disasm_func(0x144d03fc0,0x2000);print(f'FUNCTION 0x{st:x}-0x{en:x}')
+          for x in ins:
+            extras=[]
+            for op in x.operands:
+              if op.type==X86_OP_MEM and op.mem.base==X86_REG_RIP:
+                dst=x.address+x.size+op.mem.disp;extras.append((hex(dst),wstr(dst),cstr(dst)))
+            print(f'0x{x.address:x}: {x.mnemonic} {x.op_str}'+(' refs='+repr(extras) if extras else ''))
+          PY
+          wc -l -c /tmp/out/apk2-manager-usage.txt
+      - name: Publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name github-actions[bot]
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git fetch origin apk2-analysis-output
+          git checkout -B apk2-analysis-output origin/apk2-analysis-output
+          mkdir -p analysis
+          cp /tmp/out/apk2-manager-usage.txt analysis/
+          git add analysis/apk2-manager-usage.txt
+          git commit -m 'Trace APK2 manager usage' || true
+          git push origin HEAD:apk2-analysis-output
