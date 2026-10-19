@@ -90,9 +90,8 @@ new_fetch = '''    final Map<String, String> safeHeadersForLog = {
         rethrow;
       }
 
-      // Some older Danbooru-compatible forks do not accept HTTP Basic auth
-      // even though modern Danbooru does. Retry once with the legacy
-      // login/api_key query parameters for compatibility.
+      // Some older Danbooru-compatible forks do not accept HTTP Basic auth.
+      // Retry exactly once using the legacy login/api_key query parameters.
       final Map<String, String> fallbackHeaders = Map<String, String>.from(headers)..remove('Authorization');
       final Map<String, dynamic> fallbackQuery = <String, dynamic>{
         ...?queryParams,
@@ -116,20 +115,92 @@ new_fetch = '''    final Map<String, String> safeHeadersForLog = {
       );
     }
 '''
-replace_once(handler, old_fetch, new_fetch, 'danbooru-auth-fallback-and-redacted-logging')
+replace_once(handler, old_fetch, new_fetch, 'danbooru-auth-fallback-and-redacted-handler-log')
 
 old_make = '''    final String loginStr = booru.userID?.isNotEmpty == true ? '&login=${booru.userID}' : '';
     final String apiKeyStr = booru.apiKey?.isNotEmpty == true ? '&api_key=${booru.apiKey}' : '';
     return '${booru.baseURL}/posts.json?tags=$tags&limit=$limit&page=$pageNum$loginStr$apiKeyStr';
 '''
-new_make = '''    // With a complete credential pair authentication is sent via HTTP Basic
-    // headers, keeping the API key out of URLs and ordinary request logs.
-    // Partial credentials retain the legacy URL behavior for compatibility.
-    final String loginStr = !_hasApiCredentials && booru.userID?.isNotEmpty == true ? '&login=${booru.userID}' : '';
-    final String apiKeyStr = !_hasApiCredentials && booru.apiKey?.isNotEmpty == true ? '&api_key=${booru.apiKey}' : '';
-    return '${booru.baseURL}/posts.json?tags=$tags&limit=$limit&page=$pageNum$loginStr$apiKeyStr';
+new_make = '''    // Credentials are intentionally never embedded in the normal URL. A
+    // complete pair is sent with HTTP Basic auth; the legacy query form is
+    // used only for the single 401 compatibility retry in fetchSearch().
+    return '${booru.baseURL}/posts.json?tags=$tags&limit=$limit&page=$pageNum';
 '''
-replace_once(handler, old_make, new_make, 'danbooru-api-key-out-of-url')
+replace_once(handler, old_make, new_make, 'danbooru-credentials-out-of-normal-url')
+
+# Dio's global Talker/Alice interceptors print request headers and query
+# parameters. Automatically suppress detailed network logging for GET requests
+# carrying authentication/session material. This also protects the legacy
+# api_key fallback and any other authenticated GET request in the app.
+dio_network = Path('lib/src/utils/dio_network.dart')
+old_get = '''  static Future<Response> get(
+    String url, {
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    Map<String, dynamic>? headers = const {},
+    CancelToken? cancelToken,
+    void Function(int, int)? onReceiveProgress,
+    Dio Function(Dio)? customInterceptor,
+  }) async {
+    final client = customInterceptor != null ? customInterceptor(getClient()) : getClient();
+    final urlAndQuery = separateUrlAndQueryParams(url, queryParameters);
+
+    final res = await client.get(
+      urlAndQuery['url'],
+      queryParameters: urlAndQuery['query'],
+      options: mergeOptions(options, headers),
+      cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+    );
+    client.close();
+    return res;
+  }
+'''
+new_get = '''  static Future<Response> get(
+    String url, {
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    Map<String, dynamic>? headers = const {},
+    CancelToken? cancelToken,
+    void Function(int, int)? onReceiveProgress,
+    Dio Function(Dio)? customInterceptor,
+  }) async {
+    final urlAndQuery = separateUrlAndQueryParams(url, queryParameters);
+    final Map<String, dynamic>? effectiveQuery = urlAndQuery['query'] as Map<String, dynamic>?;
+    const sensitiveHeaders = <String>{'authorization', 'cookie', 'proxy-authorization'};
+    const sensitiveQueryKeys = <String>{
+      'api_key',
+      'apikey',
+      'api-key',
+      'access_token',
+      'token',
+      'password',
+      'password_hash',
+    };
+    final bool hasSensitiveHeader = (headers ?? const <String, dynamic>{})
+        .keys
+        .map((key) => key.toLowerCase())
+        .any(sensitiveHeaders.contains);
+    final bool hasSensitiveQuery = (effectiveQuery ?? const <String, dynamic>{})
+        .keys
+        .map((key) => key.toLowerCase())
+        .any(sensitiveQueryKeys.contains);
+    final bool skipSensitiveLogging = hasSensitiveHeader || hasSensitiveQuery;
+    final Dio baseClient = getClient(skipLogging: skipSensitiveLogging);
+    final Dio client = customInterceptor != null ? customInterceptor(baseClient) : baseClient;
+
+    final res = await client.get(
+      urlAndQuery['url'],
+      queryParameters: effectiveQuery,
+      options: mergeOptions(options, headers),
+      cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+    );
+    client.close();
+    return res;
+  }
+'''
+replace_once(dio_network, old_get, new_get, 'dio-get-sensitive-request-log-suppression')
 
 editor = Path('lib/src/pages/settings/booru_edit_page.dart')
 old_instructions = '''      case BooruType.Hydrus:
@@ -151,17 +222,20 @@ new_instructions = '''      case BooruType.Danbooru:
 replace_once(editor, old_instructions, new_instructions, 'danbooru-auth-ui-instructions')
 
 handler_text = handler.read_text(encoding='utf-8')
+dio_text = dio_network.read_text(encoding='utf-8')
 editor_text = editor.read_text(encoding='utf-8')
 checks = {
     'basic authorization': "defaultHeaders['Authorization'] = _basicAuthorization" in handler_text,
-    'redacted authorization log': "'Authorization': 'Basic ***'" in handler_text,
-    'redacted cookie log': "'Cookie': '<present>'" in handler_text,
+    'redacted authorization handler log': "'Authorization': 'Basic ***'" in handler_text,
+    'redacted cookie handler log': "'Cookie': '<present>'" in handler_text,
     '401 fallback': "e.response?.statusCode != HttpStatus.unauthorized" in handler_text,
     'legacy fallback login': "'login': booru.userID!.trim()" in handler_text,
-    'api key hidden from normal URL': "!_hasApiCredentials && booru.apiKey?.isNotEmpty" in handler_text,
+    'normal URL has no credentials': "page=$pageNum';" in handler_text and "loginStr" not in handler_text,
     'generic UI instructions': '<b>Danbooru authentication</b>' in editor_text,
     'valid info log type': 'LogTypes.booruHandlerInfo' in handler_text,
     'safe Basic auth quoting': 'utf8.encode("${booru.userID!.trim()}:${booru.apiKey!.trim()}")' in handler_text,
+    'sensitive header logging suppressed': "'authorization', 'cookie', 'proxy-authorization'" in dio_text,
+    'sensitive query logging suppressed': "'api_key'" in dio_text and 'skipSensitiveLogging' in dio_text,
 }
 for label, ok in checks.items():
     if not ok:
@@ -171,4 +245,5 @@ print('DANBOORU_SESSION_COOKIE_AUTH=PASS')
 print('DANBOORU_BASIC_AUTH=PASS')
 print('DANBOORU_LEGACY_QUERY_FALLBACK=PASS')
 print('DANBOORU_SECRET_REDACTION=PASS')
+print('DIO_SENSITIVE_GET_LOG_SUPPRESSION=PASS')
 print('V11_GENERIC_DANBOORU_AUTH=PASS')
