@@ -1,0 +1,42 @@
+name: APK2 Rizin Fast Xrefs
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apk2-rizin-fast.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rizin:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Download APK2 and Rizin
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release download apk2-mediafire-transfer-2026-10-18 --repo Chaborsz/Temporary --pattern APK2-Win64-Shipping.exe --dir .
+          echo 'ce3bc03574a9a3e76420c54ec8548a8a113175422a432c1f3f968baf54746940  APK2-Win64-Shipping.exe' | sha256sum -c -
+          gh release download v0.9.1 --repo rizinorg/rizin --pattern rizin-v0.9.1-static-x86_64.tar.xz --dir .
+          mkdir rz && tar -xJf rizin-v0.9.1-static-x86_64.tar.xz -C rz
+
+      - name: Analyze save path xrefs
+        run: |
+          set -euo pipefail
+          RZ=rz/bin/rizin
+          RZBIN=rz/bin/rz-bin
+          mkdir out
+          "$RZBIN" -zz APK2-Win64-Shipping.exe 2>/dev/null | grep -Eai 'SaveGames/|SaveGamePipe|SaveGameSystem\.cpp|APKGameSaveData|APKSaveData|DefaultData|GVAS|CryptDecrypt|CryptCreateHash|BCryptGenRandom|FAES|EncryptData|DecryptData' > out/strings.txt || true
+          "$RZ" -2 -q -e scr.color=false -c 'aa;axt @ 0x149b17990;axt @ 0x149b302e8;axt @ 0x149b30330;axt @ 0x149b303f0;axt @ 0x149b304b0;axt @ 0x149b30570;axt @ 0x149b30750;axt @ 0x14a07d3b8;axt @ 0x14a07d3f8;axt @ 0x14a7e9578;ii~CryptDecrypt;ii~CryptCreateHash;ii~CryptSetHashParam;ii~CryptGetUserKey;ii~BCryptGenRandom;ii~CreateFile;ii~ReadFile;ii~WriteFile;q' APK2-Win64-Shipping.exe > out/xrefs.txt 2>&1 || true
+          "$RZBIN" -i APK2-Win64-Shipping.exe > out/imports.txt 2>&1 || true
+          "$RZBIN" -S APK2-Win64-Shipping.exe > out/sections.txt 2>&1 || true
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: apk2-rizin-fast-xrefs
+          path: out/
+          retention-days: 2
