@@ -1,0 +1,127 @@
+
+===== REGISTRATION POINTERS UAPKSaveGameLibrary nameVA=0x14a1cf718 =====
+NAMEPTR_SLOT 0x14b1ede10 file 0xb1ed210 sec .data2
+ PREV 16 0x1450cd830 sec .sdata exec True pdata (5453436976, 5453437023)
+ PREV 8 0x1450ccfc0 sec .sdata exec True pdata (5453434816, 5453434990)
+ ZFUNC 0x1450cd830 CLASSPARAMS 0x14a1d0390
+
+===== CLASSPARAMS UAPKSaveGameLibrary 0x14a1d0390 =====
+ClassNoRegister 0x1450ccfc0 
+Config 0x0 
+CppInfo 0x14a1d03d0 
+Deps 0x14a1d0380 
+FuncInfo 0x14a1d0310 
+Props 0x0 
+Interfaces 0x0 
+COUNTS deps 2 funcs 7 props 0 interfaces 0 ClassFlags 0xa0 packed 0x72
+FUNC 0 0x1450cd6e0 'AddActionRestriction' pdata (5453436640, 5453436687)
+FUNC 1 0x1450cd710 'IsActionRestriction' pdata (5453436688, 5453436735)
+FUNC 2 0x1450cd740 'IsGameFlag' pdata (5453436736, 5453436783)
+FUNC 3 0x1450cd770 'OffGameFlag' pdata (5453436784, 5453436831)
+FUNC 4 0x1450cd7a0 'OnGameFlag' pdata (5453436832, 5453436879)
+FUNC 5 0x1450cd7d0 'ReleaseActionRestriction' pdata (5453436880, 5453436927)
+FUNC 6 0x1450cd800 'SetGenericFlag' pdata (5453436928, 5453436975)
+
+===== REGISTRATION POINTERS UAPKSaveGameManager nameVA=0x14a1d45d0 =====
+NAMEPTR_SLOT 0x14b1edee0 file 0xb1ed2e0 sec .data2
+ PREV 16 0x1450ceb20 sec .sdata exec True pdata (5453441824, 5453441871)
+ PREV 8 0x1450ce860 sec .sdata exec True pdata (5453441120, 5453441294)
+ ZFUNC 0x1450ceb20 CLASSPARAMS 0x14a1dede0
+
+===== CLASSPARAMS UAPKSaveGameManager 0x14a1dede0 =====
+ClassNoRegister 0x1450ce860 
+Config 0x0 
+CppInfo 0x14a1dea70 
+Deps 0x14a1dea60 
+FuncInfo 0x0 
+Props 0x14a1dea78 
+Interfaces 0x0 
+COUNTS deps 2 funcs 0 props 2 interfaces 0 ClassFlags 0xa0 packed 0x10002
+PROP 0 0x14a1dead0 'EncryptKey' gen 0x15 offset 0x30 arraydim 1
+PROP 1 0x14a1dea90 'SaveGame' gen 0x12 offset 0x40 arraydim 1
+
+===== UFUNCTION THUNKS + DIRECT CALLS =====
+
+--- UAPKSaveGameLibrary::AddActionRestriction thunk=0x1450cd6e0 range=0x1450cd6e0-0x1450cd70f ---
+0x1450cd6e0: sub rsp, 0x28
+0x1450cd6e4: mov rax, qword ptr [rip + 0x67a8aad]
+0x1450cd6eb: test rax, rax
+0x1450cd6ee: jne 0x1450cd70a
+0x1450cd6f0: lea rdx, [rip + 0x6120549]
+0x1450cd6f7: lea rcx, [rip + 0x67a8a9a]
+0x1450cd6fe: call 0x14155d510 DIRECT_CALL=0x14155d510 target_pdata=(5391111440, 5391111556)
+0x1450cd703: mov rax, qword ptr [rip + 0x67a8a8e]
+0x1450cd70a: add rsp, 0x28
+0x1450cd70e: ret 
+
+--- UAPKSaveGameLibrary::IsActionRestriction thunk=0x1450cd710 range=0x1450cd710-0x1450cd73f ---
+0x1450cd710: sub rsp, 0x28
+0x1450cd714: mov rax, qword ptr [rip + 0x67a8a6d]
+0x1450cd71b: test rax, rax
+0x1450cd71e: jne 0x1450cd73a
+0x1450cd720: lea rdx, [rip + 0x6120559]
+0x1450cd727: lea rcx, [rip + 0x67a8a5a]
+0x1450cd72e: call 0x14155d510 DIRECT_CALL=0x14155d510 target_pdata=(5391111440, 5391111556)
+0x1450cd733: mov rax, qword ptr [rip + 0x67a8a4e]
+0x1450cd73a: add rsp, 0x28
+0x1450cd73e: ret 
+
+--- UAPKSaveGameLibrary::IsGameFlag thunk=0x1450cd740 range=0x1450cd740-0x1450cd76f ---
+0x1450cd740: sub rsp, 0x28
+0x1450cd744: mov rax, qword ptr [rip + 0x67a8a45]
+0x1450cd74b: test rax, rax
+0x1450cd74e: jne 0x1450cd76a
+0x1450cd750: lea rdx, [rip + 0x6120569]
+0x1450cd757: lea rcx, [rip + 0x67a8a32]
+0x1450cd75e: call 0x14155d510 DIRECT_CALL=0x14155d510 target_pdata=(5391111440, 5391111556)
+0x1450cd763: mov rax, qword ptr [rip + 0x67a8a26]
+0x1450cd76a: add rsp, 0x28
+0x1450cd76e: ret 
+
+--- UAPKSaveGameLibrary::OffGameFlag thunk=0x1450cd770 range=0x1450cd770-0x1450cd79f ---
+0x1450cd770: sub rsp, 0x28
+0x1450cd774: mov rax, qword ptr [rip + 0x67a89f5]
+0x1450cd77b: test rax, rax
+0x1450cd77e: jne 0x1450cd79a
+0x1450cd780: lea rdx, [rip + 0x6120579]
+0x1450cd787: lea rcx, [rip + 0x67a89e2]
+0x1450cd78e: call 0x14155d510 DIRECT_CALL=0x14155d510 target_pdata=(5391111440, 5391111556)
+0x1450cd793: mov rax, qword ptr [rip + 0x67a89d6]
+0x1450cd79a: add rsp, 0x28
+0x1450cd79e: ret 
+
+--- UAPKSaveGameLibrary::OnGameFlag thunk=0x1450cd7a0 range=0x1450cd7a0-0x1450cd7cf ---
+0x1450cd7a0: sub rsp, 0x28
+0x1450cd7a4: mov rax, qword ptr [rip + 0x67a89cd]
+0x1450cd7ab: test rax, rax
+0x1450cd7ae: jne 0x1450cd7ca
+0x1450cd7b0: lea rdx, [rip + 0x6120589]
+0x1450cd7b7: lea rcx, [rip + 0x67a89ba]
+0x1450cd7be: call 0x14155d510 DIRECT_CALL=0x14155d510 target_pdata=(5391111440, 5391111556)
+0x1450cd7c3: mov rax, qword ptr [rip + 0x67a89ae]
+0x1450cd7ca: add rsp, 0x28
+0x1450cd7ce: ret 
+
+--- UAPKSaveGameLibrary::ReleaseActionRestriction thunk=0x1450cd7d0 range=0x1450cd7d0-0x1450cd7ff ---
+0x1450cd7d0: sub rsp, 0x28
+0x1450cd7d4: mov rax, qword ptr [rip + 0x67a89a5]
+0x1450cd7db: test rax, rax
+0x1450cd7de: jne 0x1450cd7fa
+0x1450cd7e0: lea rdx, [rip + 0x6120599]
+0x1450cd7e7: lea rcx, [rip + 0x67a8992]
+0x1450cd7ee: call 0x14155d510 DIRECT_CALL=0x14155d510 target_pdata=(5391111440, 5391111556)
+0x1450cd7f3: mov rax, qword ptr [rip + 0x67a8986]
+0x1450cd7fa: add rsp, 0x28
+0x1450cd7fe: ret 
+
+--- UAPKSaveGameLibrary::SetGenericFlag thunk=0x1450cd800 range=0x1450cd800-0x1450cd82f ---
+0x1450cd800: sub rsp, 0x28
+0x1450cd804: mov rax, qword ptr [rip + 0x67a895d]
+0x1450cd80b: test rax, rax
+0x1450cd80e: jne 0x1450cd82a
+0x1450cd810: lea rdx, [rip + 0x61205a9]
+0x1450cd817: lea rcx, [rip + 0x67a894a]
+0x1450cd81e: call 0x14155d510 DIRECT_CALL=0x14155d510 target_pdata=(5391111440, 5391111556)
+0x1450cd823: mov rax, qword ptr [rip + 0x67a893e]
+0x1450cd82a: add rsp, 0x28
+0x1450cd82e: ret 
