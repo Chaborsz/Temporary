@@ -51,6 +51,12 @@ exec(compile(visual_cache_integrity_patch.read_text(encoding='utf-8'), str(visua
 pagination_freeze_patch = Path(__file__).with_name('lolisnatcher_v8_13_danbooru_page_batch_patch.py')
 exec(compile(pagination_freeze_patch.read_text(encoding='utf-8'), str(pagination_freeze_patch), 'exec'))
 
+# v8.14 uses an append-only filter path for Danbooru pages, removes the
+# redundant second tag scan/type queue, defers tracked-value lookup and moves
+# typed-tag persistence away from the immediate page boundary.
+incremental_catalog_merge_patch = Path(__file__).with_name('lolisnatcher_v8_14_incremental_catalog_merge_patch.py')
+exec(compile(incremental_catalog_merge_patch.read_text(encoding='utf-8'), str(incremental_catalog_merge_patch), 'exec'))
+
 print('V8_5_VERIFIED_LOGIN_CHAIN=PASS')
 print('V8_6_ROBUST_LOGIN_VALIDATION_CHAIN=PASS')
 print('V8_7_CHALLENGE_AUTH_CHAIN=PASS')
@@ -60,3 +66,4 @@ print('V8_10_BOUNDED_VISUAL_PIPELINE_CHAIN=PASS')
 print('V8_11_FREEZE_ROOTCAUSE_PATCH_CHAIN=PASS')
 print('V8_12_VISUAL_CACHE_INTEGRITY_CHAIN=PASS')
 print('V8_13_PAGINATION_FREEZE_HOTFIX_CHAIN=PASS')
+print('V8_14_CATALOG_MERGE_HOTFIX_CHAIN=PASS')
