@@ -187,7 +187,7 @@ jobs:
           echo "=== Java source files ==="
           find "$PROJECT_DIR" -type f -name '*.java' -print | sort | head -180 || true
           echo "=== summon/spawn source matches ==="
-          rg -n -i -C 18 'summon|spawn|could not|couldn.t' "$PROJECT_DIR" --glob '*.java' --glob '*.json' --glob '*.properties' | head -420 || true
+          grep -RniE 'summon|spawn|could not|couldn.t' "$PROJECT_DIR/src/main" --include='*.java' --include='*.json' --include='*.properties' | sed -n '1,420p' || true
           echo "=== exact production command/entity files ==="
           for f in \
             "$PROJECT_DIR/src/main/java/dev/companion/minecraft/CompanionCommands.java" \
@@ -199,8 +199,10 @@ jobs:
               sed -n '1,320p' "$f"
             fi
           done
-          echo "=== source file fallback grep ==="
-          grep -RniE 'could not be spawned|spawnEntity|summon' "$PROJECT_DIR/src/main" --include='*.java' | head -240 || true
+          echo "=== exact safe-spawn method ==="
+          grep -n -A100 -B20 'placeAtSafeSpawnNear' "$PROJECT_DIR/src/main/java/dev/companion/minecraft/CompanionEntity.java" || true
+          echo "=== flaky idle-movement GameTest source ==="
+          grep -n -A100 -B20 'followIdleEventuallyMakesSmallBoundedMovement' "$PROJECT_DIR/src/main/java/dev/companion/minecraft/CompanionGameTests.java" || true
 
       - name: Verify Gradle and Java
         shell: bash
