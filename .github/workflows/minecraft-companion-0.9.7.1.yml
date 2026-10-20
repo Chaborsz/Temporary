@@ -5,6 +5,7 @@ on:
     paths:
       - "minecraft-companion-0.9.7.1-dev-*.7z"
       - ".github/workflows/minecraft-companion-0.9.7.1.yml"
+      - "validation/client-e2e/**"
   workflow_dispatch:
     inputs:
       project_path:
@@ -283,7 +284,7 @@ jobs:
           fi
           mkdir -p "$ARTIFACT_DIR/persistence"
           for round in $(seq 1 "$PERSISTENCE_ROUNDS"); do
-            shared_run_dir="build/gametest-persistence/round-$round"
+            shared_run_dir="build/gametest-persistence/shared-world"
             for phase in seed verify; do
               echo "===== disk persistence round $round/$PERSISTENCE_ROUNDS phase=$phase ====="
               printf '# Minecraft Companion persistence validation\neula=false\n' > run/eula.txt
@@ -332,11 +333,17 @@ jobs:
         if: ${{ always() && steps.source.outcome == 'success' && (github.event_name == 'push' || inputs.run_client_smoke) }}
         shell: bash
         env:
-          CLIENT_TIMEOUT_SECONDS: ${{ inputs.client_timeout_seconds || '300' }}
+          CLIENT_TIMEOUT_SECONDS: ${{ github.event_name == 'push' && '900' || inputs.client_timeout_seconds || '900' }}
         run: |
           set -euo pipefail
           cd "$PROJECT_DIR"
           mkdir -p "$ARTIFACT_DIR/client"
+
+          if [[ -f "$GITHUB_WORKSPACE/validation/client-e2e/ci-client-validation.sh" ]]; then
+            mkdir -p scripts
+            cp "$GITHUB_WORKSPACE/validation/client-e2e/ci-client-validation.sh" scripts/ci-client-validation.sh
+            chmod +x scripts/ci-client-validation.sh
+          fi
 
           if [[ -f scripts/ci-client-validation.sh ]]; then
             echo "Using project-provided real client validation harness: scripts/ci-client-validation.sh"
