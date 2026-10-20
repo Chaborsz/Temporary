@@ -33,9 +33,16 @@ exec(compile(gallery_freeze_hotfix.read_text(encoding='utf-8'), str(gallery_free
 bounded_visual_pipeline = Path(__file__).with_name('lolisnatcher_v8_10_bounded_visual_pipeline.py')
 exec(compile(bounded_visual_pipeline.read_text(encoding='utf-8'), str(bounded_visual_pipeline), 'exec'))
 
+# v8.11 makes that gate cancellation-aware, stops forced ImageCache eviction,
+# disables WebP background conversion entirely, migrates old WebP thumbnail rows
+# out of the packed cache, and records low-overhead frame/event-loop stalls.
+freeze_rootcause_patch = Path(__file__).with_name('lolisnatcher_v8_11_freeze_rootcause_patch.py')
+exec(compile(freeze_rootcause_patch.read_text(encoding='utf-8'), str(freeze_rootcause_patch), 'exec'))
+
 print('V8_5_VERIFIED_LOGIN_CHAIN=PASS')
 print('V8_6_ROBUST_LOGIN_VALIDATION_CHAIN=PASS')
 print('V8_7_CHALLENGE_AUTH_CHAIN=PASS')
 print('V8_8_IDENTITY_DIAGNOSTIC_CHAIN=PASS')
 print('V8_9_GALLERY_FREEZE_HOTFIX_CHAIN=PASS')
 print('V8_10_BOUNDED_VISUAL_PIPELINE_CHAIN=PASS')
+print('V8_11_FREEZE_ROOTCAUSE_PATCH_CHAIN=PASS')
