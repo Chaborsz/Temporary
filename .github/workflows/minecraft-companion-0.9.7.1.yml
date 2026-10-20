@@ -243,14 +243,12 @@ jobs:
           fi
 
           mkdir -p "$ARTIFACT_DIR/gametests"
-
           for run in $(seq 1 "$GAMETEST_RUNS"); do
             echo "===== Minecraft/Fabric GameTest pass $run/$GAMETEST_RUNS ====="
             printf '# Minecraft Companion GameTest validation\neula=false\n' > run/eula.txt
-
             set +e
-            gradle $GRADLE_ARGS --rerun-tasks \\
-              -PcompanionGameTestRunDir="build/gametest/pass-${run}" companionGameTest \\
+            gradle $GRADLE_ARGS --rerun-tasks \
+              -PcompanionGameTestRunDir="build/gametest/pass-${run}" companionGameTest \
               2>&1 | tee "$ARTIFACT_DIR/gametests/pass-${run}.log"
             task_rc=${PIPESTATUS[0]}
             set -e
@@ -259,8 +257,15 @@ jobs:
             else
               echo "WARNING: Fabric GameTest XML report missing for pass $run" | tee "$ARTIFACT_DIR/gametests/pass-${run}-report-missing.txt"
             fi
-
-            if grep -RIl --include='eula.txt' '^eula=true[[:space:]]*
+            if grep -RIl --include='eula.txt' '^eula=true[[:space:]]*$' . | grep -q .; then
+              echo "ERROR: eula=true appeared after GameTest run $run" >&2
+              exit 41
+            fi
+            if [[ "$task_rc" -ne 0 ]]; then
+              echo "GameTest pass $run failed with exit code $task_rc; preserving XML and logs." >&2
+              exit "$task_rc"
+            fi
+          done
 
           echo "Completed $GAMETEST_RUNS/$GAMETEST_RUNS GameTest task passes successfully." \
             | tee "$ARTIFACT_DIR/gametests/summary.txt"
