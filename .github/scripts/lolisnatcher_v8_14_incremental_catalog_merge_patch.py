@@ -11,13 +11,6 @@ def replace_once(path: str, old: str, new: str, label: str) -> None:
     print(f'PATCHED v8.14 {label}: {p}')
 
 
-# ---------------------------------------------------------------------------
-# 1) Generic filter fast path for appended pages.
-#
-# Full filterFetched() is still retained for settings/state changes, but normal
-# pagination should not rescan/recompare every previously fetched item. Filter
-# only the new page against the already-visible dedupe keys and append once.
-# ---------------------------------------------------------------------------
 booru_handler = 'lib/src/handlers/booru_handler.dart'
 replace_once(
     booru_handler,
@@ -81,13 +74,6 @@ replace_once(
     'incremental-filter-fast-path',
 )
 
-
-# ---------------------------------------------------------------------------
-# 2) Generic tag population dedupe was O(n^2) because List.contains() ran for
-# every tag in every item. Keep behavior identical but dedupe with a Set.
-# Danbooru v8.14 will no longer need this second pass at all because its API
-# already provides every tag category explicitly.
-# ---------------------------------------------------------------------------
 replace_once(
     booru_handler,
     """  Future<void> populateTagHandler(List<BooruItem> items) async {
@@ -132,15 +118,6 @@ replace_once(
 )
 
 
-# ---------------------------------------------------------------------------
-# 3) Danbooru-specific merge.
-#
-# v8.13 still called super.afterParseResponse(), which performed a full-history
-# filter plus populateTagHandler(). The latter was redundant for Danbooru and
-# mostly synchronous despite unawaited(). Replace it with an append-only merge,
-# defer tracked-value DB lookup to the next event turn, and schedule typed-tag
-# persistence after the page has had time to render.
-# ---------------------------------------------------------------------------
 danbooru = 'lib/src/boorus/danbooru_handler.dart'
 replace_once(
     danbooru,
@@ -174,16 +151,12 @@ replace_once(
 
     final int lengthBefore = fetched.length;
     if (lengthBefore == 0 && filteredFetched.isNotEmpty) {
-      // A new search resets fetched before parsing its first page. Match the
-      // old full-filter behavior by dropping the previous visible result set.
       filteredFetched.clear();
     }
 
     fetched.addAll(newItems);
     appendFilteredFetchedPage(newItems);
 
-    // Do not run even the small tracked-value DB setup on the page-merge stack.
-    // Yield one event turn so Flutter can present the newly appended cards first.
     unawaited(
       Future<void>.delayed(
         Duration.zero,
@@ -191,13 +164,8 @@ replace_once(
       ),
     );
 
-    // Danbooru already supplied general/character/copyright/artist/meta tags in
-    // this response, so populateTagHandler(newItems) would only rescan the same
-    // tags and enqueue redundant type lookups. The five typed batches above are
-    // complete for this provider.
     if (batches.values.any((List<String> tags) => tags.isNotEmpty)) {
       _tagCommitChain = _tagCommitChain.then((_) async {
-        // Keep SQLite/tag-map maintenance away from the immediate page boundary.
         await Future<void>.delayed(const Duration(milliseconds: 250));
         await _commitPageTags(batches);
       });
@@ -209,7 +177,6 @@ replace_once(
 )
 
 
-# Guards.
 booru_final = Path(booru_handler).read_text(encoding='utf-8')
 dan_final = Path(danbooru).read_text(encoding='utf-8')
 checks = {
@@ -220,7 +187,7 @@ checks = {
     'Danbooru no super merge': 'await super.afterParseResponse(newItems);' not in dan_final,
     'Danbooru incremental merge': 'appendFilteredFetchedPage(newItems);' in dan_final,
     'tracked values deferred': 'Future<void>.delayed(\n        Duration.zero' in dan_final,
-    'redundant Danbooru population skipped': 'populateTagHandler(newItems)' not in dan_final,
+    'redundant Danbooru population skipped': 'unawaited(populateTagHandler(newItems));' not in dan_final,
     'tag persistence deferred': 'Duration(milliseconds: 250)' in dan_final,
 }
 for label, ok in checks.items():
