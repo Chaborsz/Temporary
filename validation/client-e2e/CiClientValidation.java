@@ -47,6 +47,7 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
     private static UUID companionUuid;
     private static int serverTicks;
     private static int targetStableTicks;
+    private static int ownerStableTicks;
     private static float initialZombieHealth = -1.0F;
     private static float previousOwnerHealth = Float.NaN;
     private static boolean ownerTookZombieDamage;
@@ -127,9 +128,16 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
             trace("CI_WORLD_READY player=" + ownerUuid + " world=" + client.world.getRegistryKey().getValue());
         }
         if (!summonSent.get()) {
-            summonSent.set(true);
-            client.getNetworkHandler().sendChatCommand("companion summon");
-            trace("CI_PRODUCTION_SUMMON_SENT");
+            boolean stableWorld = client.player.isOnGround()
+                    && client.world.isChunkLoaded(client.player.getBlockPos())
+                    && client.player.age > 40;
+            ownerStableTicks = stableWorld ? ownerStableTicks + 1 : 0;
+            if (ownerStableTicks >= 40) {
+                summonSent.set(true);
+                client.getNetworkHandler().sendChatCommand("companion summon");
+                trace("CI_PRODUCTION_SUMMON_SENT groundedTicks=" + ownerStableTicks
+                        + " playerAge=" + client.player.age + " pos=" + client.player.getBlockPos());
+            }
         }
         CompanionEntity companion = client.world.getEntitiesByClass(CompanionEntity.class,
                         client.player.getBoundingBox().expand(64.0D), entity -> ownerUuid.equals(entity.getOwnerUuid()))
