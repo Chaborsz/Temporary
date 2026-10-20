@@ -1,6 +1,6 @@
 from pathlib import Path
 
-# Build trigger checkpoint: v8.15 strict DB-only visual cache.
+# Build trigger checkpoint: v8.15 strict DB-only visual cache (matcher fix).
 path = Path('lib/src/pages/settings/booru_edit_page.dart')
 text = path.read_text(encoding='utf-8')
 
