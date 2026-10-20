@@ -25,6 +25,20 @@ on:
       - ".github/scripts/lolisnatcher_v8_compressed_visual_cache_patch.py"
       - ".github/scripts/lolisnatcher_v8_cache_path_label_fix.py"
       - ".github/scripts/lolisnatcher_v8_webp_thumbnail_cache_patch.py"
+      - ".github/scripts/lolisnatcher_v8_danbooru_login_dialog_patch.py"
+      - ".github/scripts/lolisnatcher_v8_4_apikey_first_auth_patch.py"
+      - ".github/scripts/lolisnatcher_v8_5_verified_danbooru_login_patch.py"
+      - ".github/scripts/lolisnatcher_v8_6_danbooru_login_validation_patch.py"
+      - ".github/scripts/lolisnatcher_v8_7_danbooru_challenge_auth_patch.py"
+      - ".github/scripts/lolisnatcher_v8_8_danbooru_identity_diagnostic_patch.py"
+      - ".github/scripts/lolisnatcher_v8_9_gallery_freeze_hotfix.py"
+      - ".github/scripts/lolisnatcher_v8_10_bounded_visual_pipeline.py"
+      - ".github/scripts/lolisnatcher_v8_11_freeze_rootcause_patch.py"
+      - ".github/scripts/lolisnatcher_v8_12_visual_cache_integrity_patch.py"
+      - ".github/scripts/lolisnatcher_v8_13_danbooru_page_batch_patch.py"
+      - ".github/scripts/lolisnatcher_v8_14_incremental_catalog_merge_patch.py"
+      - ".github/scripts/lolisnatcher_v8_15_strict_db_only_visual_cache_patch.py"
+      - ".github/scripts/lolisnatcher_v8_16_visual_decode_and_tag_idle_patch.py"
       - ".github/scripts/lolisnatcher_v11_generic_danbooru_auth.py"
       - ".github/scripts/lolisnatcher_sync_esmx.py"
 
@@ -32,12 +46,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: lolisnatcher-windows-portable-v8-danbooru-auth-${{ github.ref }}
+  group: lolisnatcher-windows-portable-v8-canonical-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
-    name: Windows x64 / True Portable v8 / Danbooru Auth / Release
+    name: Windows x64 / True Portable v8.16 / Canonical Release
     runs-on: windows-2022
     timeout-minutes: 60
     env:
@@ -70,7 +84,7 @@ jobs:
           "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
           "build=$($Matches[2])" >> $env:GITHUB_OUTPUT
 
-      - name: Apply portable patches v1-v8.2 + generic Danbooru auth
+      - name: Apply portable patches through v8.16
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
@@ -90,7 +104,7 @@ jobs:
           python ..\builder\.github\scripts\lolisnatcher_v8_cache_path_label_fix.py
           python ..\builder\.github\scripts\lolisnatcher_v8_webp_thumbnail_cache_patch.py
           python ..\builder\.github\scripts\lolisnatcher_v11_generic_danbooru_auth.py
-          'PATCH_CHAIN_V8_2_DANBOORU_AUTH=PASS'
+          'PATCH_CHAIN_V8_16=PASS'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -110,13 +124,13 @@ jobs:
         working-directory: LoliSnatcher_Droid
         run: flutter pub get
 
-      - name: Verify WebP encoder resolution
+      - name: Verify image dependency
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
           $lock = Get-Content pubspec.lock -Raw
           if ($lock -notmatch '(?ms)^  image:\s+.*?version: "4\.10\.2"') { throw 'image 4.10.2 was not resolved' }
-          'IMAGE_WEBP_ENCODER_4_10_2=PASS'
+          'IMAGE_4_10_2=PASS'
 
       - name: Verify PR2838 plugin resolution
         shell: bash
@@ -149,8 +163,8 @@ jobs:
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
-          dart format lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
-          flutter analyze --no-fatal-infos --no-fatal-warnings lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
+          dart format lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/booru_handler.dart lib/src/handlers/tag_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/image_writer_isolate.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
+          flutter analyze --no-fatal-infos --no-fatal-warnings lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/booru_handler.dart lib/src/handlers/tag_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/image_writer_isolate.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
 
       - name: Build Windows x64 Release
         id: build
@@ -161,7 +175,7 @@ jobs:
           $exe = 'build\windows\x64\runner\Release\lolisnatcher.exe'
           if (-not (Test-Path $exe)) { throw "Expected executable not found: $exe" }
 
-      - name: Package True Portable v8 build
+      - name: Package True Portable v8.16 build
         id: package
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -177,25 +191,18 @@ jobs:
           $dataDir = Join-Path $releaseDir 'Data'
           New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
           @"
-          LoliSnatcher TRUE PORTABLE Windows x64 - v8.2
+          LoliSnatcher TRUE PORTABLE Windows x64 - v8.16
 
-          v8.2 cache/viewer changes:
-          - Windows gallery requests thumbnailURL only; larger sampleURL previews are not preloaded by grid cards.
-          - Static gallery thumbnails are resized to at most 512px and stored as lossy WebP quality 74 in Data\LoliSnatcher\cache\visual_cache.db.
-          - WebP conversion is capped at two background workers to avoid CPU saturation.
-          - Animated or unsupported thumbnail formats fall back to their original preview bytes.
-          - Clicking an image opens fileURL in its original format; full-resolution viewer bytes remain memory-only and are not persisted to media cache.
-          - Windows download output can still be selected as Original, JPEG, or PNG in Save/Cache settings.
-
-          Generic Danbooru authentication:
-          - Existing session cookies are used when available.
-          - Login + API Key uses HTTP Basic Authentication by default.
-          - A 401 from Basic Auth retries once with legacy login/api_key parameters for compatible older servers.
-          - Complete credentials are not embedded in normal request URLs.
-          - Authorization, Cookie and sensitive GET parameters are suppressed from detailed HTTP logging.
-          - Auxiliary Danbooru API GETs such as uploader lookup receive the same Basic Auth headers.
-
-          v7 native InAppBrowser login/captcha fixes are retained.
+          Runtime invariants:
+          - Danbooru login/API-key validation from v8.8 is retained.
+          - Windows catalog requests thumbnailURL only; samples are viewer-only and memory-only.
+          - Persistent visual thumbnails are DB-only in Data\LoliSnatcher\cache\visual_cache.db.
+          - Loose thumbnails/samples paths are forbidden and legacy loose folders are purged.
+          - WebP runtime conversion is disabled; thumbnail source bytes are stored in the DB.
+          - Danbooru page merge is incremental (merge_ms expected near 0).
+          - Windows visual thumbnail load/decode pipeline is serialized (max 1).
+          - Typed tag persistence is bulk, serialized and coalesced after 2.5s of pagination quiet.
+          - Performance diagnostics are written to Data\performance-stalls.log.
           "@ | Set-Content -Encoding UTF8 (Join-Path $dataDir 'PORTABLE-README.txt')
           @(
             "PROJECT=LoliSnatcher_Droid"
@@ -205,18 +212,18 @@ jobs:
             "TARGET=windows-x64"
             "CONFIGURATION=Release"
             "PORTABLE_MODE=TRUE"
-            "PATCH_LEVEL=TRUE_PORTABLE_V8_2_WEBP_THUMBNAILS_DANBOORU_AUTH"
-            "WINDOWS_LOGIN_BROWSER=NATIVE_INAPPBROWSER"
-            "DANBOORU_AUTH=SESSION_COOKIE,BASIC_AUTH,LEGACY_QUERY_FALLBACK"
-            "DANBOORU_SECRET_LOGGING=SUPPRESSED"
+            "PATCH_LEVEL=TRUE_PORTABLE_V8_16"
+            "WORKFLOW_LINE=V8_CANONICAL"
+            "DANBOORU_AUTH=V8_8_VERIFIED_LOGIN"
             "VISUAL_CACHE=.\Data\LoliSnatcher\cache\visual_cache.db"
-            "THUMBNAIL_CACHE=WEBP_LOSSY_Q74_MAX512"
-            "THUMBNAIL_WEBP_WORKERS=2"
+            "VISUAL_CACHE_MODE=DB_ONLY_SOURCE_BYTES"
+            "LOOSE_THUMBNAILS_SAMPLES=FORBIDDEN"
             "WINDOWS_GRID_PREVIEW=THUMBNAIL_ONLY"
-            "FULLRES_VIEWER=ORIGINAL_FILE_FORMAT"
             "FULLRES_VIEWER_CACHE=MEMORY_ONLY"
-            "DOWNLOAD_FORMATS=ORIGINAL,JPEG,PNG"
-            "WEBVIEW_DIAGNOSTIC=.\Data\webview-diagnostic.txt"
+            "WINDOWS_VISUAL_PIPELINE_MAX=1"
+            "DANBOORU_INCREMENTAL_MERGE=TRUE"
+            "TAG_IDLE_COALESCE_MS=2500"
+            "PERFORMANCE_STALL_LOG=.\Data\performance-stalls.log"
             "ENABLED_LOCALE=es_MX"
             "INAPPWEBVIEW_WINDOWS_FIX=FULL_PR2838_832d6517b50b3b8094d2658800aa84ee5b9294bf"
             "WORKFLOW_RUN=${{ github.run_id }}"
@@ -230,7 +237,7 @@ jobs:
           "sha256=$hash" >> $env:GITHUB_OUTPUT
           "SHA256=$hash"
 
-      - name: Publish updated True Portable prerelease
+      - name: Publish canonical True Portable v8.16 prerelease
         id: release
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -241,15 +248,18 @@ jobs:
           SOURCE_SHA: ${{ steps.meta.outputs.source_sha }}
           FLUTTER_VERSION: ${{ inputs.flutter_version || '3.47.3' }}
           ZIP_NAME: ${{ steps.package.outputs.zip_name }}
+          EXPECTED_SHA: ${{ steps.package.outputs.sha256 }}
         run: |
           $tag = "lolisnatcher-windows-trueportable-$env:VERSION-$env:BUILD_NUMBER"
           $zipPath = Join-Path $PWD "dist\$env:ZIP_NAME"
           $hashPath = "$zipPath.sha256"
-          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable"
+          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v8.16"
           $notes = @"
-          Unofficial TRUE PORTABLE Windows x64 build - v8.2 with generic Danbooru authentication.
+          Unofficial TRUE PORTABLE Windows x64 build - canonical v8.16.
 
-          Windows gallery cards now use thumbnailURL only. Static thumbnails are resized to <=512px and stored as lossy WebP quality 74 in the packed visual cache, with conversion limited to two background workers. Clicking an image loads its original fileURL/format into RAM; full-resolution viewer images are not persisted. Danbooru authentication, v7 native WebView2 login/captcha fixes, es-MX live sync and PR #2838 are retained.
+          v8.16 retains verified Danbooru authentication, strict DB-only thumbnail cache, samples/full-resolution viewer data in RAM only, incremental Danbooru page merge, performance-stall diagnostics, a serialized Windows thumbnail load/decode pipeline, and 2.5-second idle-coalesced tag persistence.
+
+          v7 is a superseded historical workflow with a separate tag/asset namespace and cannot overwrite this release.
 
           Upstream commit: $env:SOURCE_SHA
           Flutter: $env:FLUTTER_VERSION
@@ -257,12 +267,23 @@ jobs:
           & gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
           if ($LASTEXITCODE -eq 0) {
             gh release upload $tag $zipPath $hashPath --clobber --repo $env:GITHUB_REPOSITORY
-            if ($LASTEXITCODE -ne 0) { throw 'Failed to upload release assets' }
+            if ($LASTEXITCODE -ne 0) { throw 'Failed to upload canonical v8 assets' }
             gh release edit $tag --repo $env:GITHUB_REPOSITORY --title $title --notes $notes --prerelease
           } else {
             gh release create $tag $zipPath $hashPath --repo $env:GITHUB_REPOSITORY --title $title --notes $notes --prerelease
           }
           if ($LASTEXITCODE -ne 0) { throw "Failed to publish release $tag" }
+
+          $apiPath = "repos/$env:GITHUB_REPOSITORY/releases/tags/$tag"
+          $remoteDigest = (gh api $apiPath --jq ".assets[] | select(.name == \"$env:ZIP_NAME\") | .digest").Trim()
+          if ($remoteDigest -ne "sha256:$env:EXPECTED_SHA") {
+            throw "Canonical asset digest mismatch: remote=$remoteDigest expected=sha256:$env:EXPECTED_SHA"
+          }
+          $remoteBody = gh api $apiPath --jq .body
+          if ($remoteBody -notmatch 'canonical v8\.16') { throw 'Canonical release notes do not identify v8.16' }
+          'V8_16_CANONICAL_ASSET_DIGEST=PASS'
+          'V8_16_RELEASE_IDENTITY=PASS'
+
           $releaseUrl = (gh release view $tag --repo $env:GITHUB_REPOSITORY --json url --jq .url).Trim()
           "release_url=$releaseUrl" >> $env:GITHUB_OUTPUT
 
@@ -271,19 +292,17 @@ jobs:
         shell: pwsh
         run: |
           @"
-          ## LoliSnatcher Windows x64 True Portable v8.2 + generic Danbooru auth
+          ## LoliSnatcher Windows x64 True Portable v8.16
           - Build: `${{ steps.build.outcome }}`
-          - Danbooru session-cookie auth: enabled
-          - Danbooru Basic Auth: enabled
-          - Danbooru legacy query fallback after 401: enabled
-          - Auth/cookie/API-key request logging: suppressed
-          - Native Windows InAppBrowser: enabled
-          - Windows grid preview: thumbnailURL only
-          - Thumbnail cache: lossy WebP q74, max 512px
-          - WebP conversion workers: 2
-          - Full-res viewer: original file format, memory-only
-          - Download formats: Original / JPEG / PNG
-          - es-MX live sync: enabled
+          - Patch level: TRUE_PORTABLE_V8_16
+          - Verified Danbooru auth: retained
+          - Windows visual cache: SQLite DB-only
+          - Loose samples/thumbnails: forbidden + purge
+          - Performance diagnostics: Data\performance-stalls.log
+          - Incremental page merge: retained
+          - Windows visual pipeline max: 1
+          - Tag idle coalescing: 2500 ms
+          - Canonical asset digest verification: `${{ steps.release.outcome }}`
           - SHA-256: `${{ steps.package.outputs.sha256 }}`
           - Release: ${{ steps.release.outputs.release_url }}
           "@ >> $env:GITHUB_STEP_SUMMARY
