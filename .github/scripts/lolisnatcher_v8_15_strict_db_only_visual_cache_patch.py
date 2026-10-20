@@ -11,11 +11,8 @@ def replace_once(path: str, old: str, new: str, label: str) -> None:
     print(f'PATCHED v8.15 {label}: {p}')
 
 
-# ---------------------------------------------------------------------------
-# 1) Every Thumbnail on Windows is thumbnailURL-only. Samples belong to the
-#    actual viewer provider and are memory-only there; Thumbnail must never ask
-#    for sampleURL, including viewer placeholders.
-# ---------------------------------------------------------------------------
+# All Thumbnail widgets on Windows are thumbnailURL-only. Samples are loaded
+# only by the real viewer provider, which v8.12 already made memory-only.
 thumbnail = 'lib/src/widgets/thumbnail/thumbnail.dart'
 replace_once(
     thumbnail,
@@ -25,11 +22,8 @@ replace_once(
 )
 
 
-# ---------------------------------------------------------------------------
-# 2) CustomNetworkImage must never construct a physical thumbnails/samples path
-#    on Windows. The packed cache gets an opaque logical key preserving the same
-#    basename that the existing DB key function expects.
-# ---------------------------------------------------------------------------
+# Packed visual entries use an opaque logical key. Do not even construct a
+# physical .../thumbnails/... or .../samples/... path for Windows packed cache.
 custom = 'lib/src/widgets/image/custom_network_image.dart'
 replace_once(
     custom,
@@ -110,12 +104,7 @@ replace_once(
 )
 
 
-# ---------------------------------------------------------------------------
-# 3) Hard API-level block: any remaining code path asking ImageWriter for a
-#    physical visual-cache path on Windows is a bug. Returning/creating such a
-#    path is forbidden. Existing getCachePath/writeCacheFromBytes blocks from
-#    v8.12 remain in force; this closes getCachePathString as well.
-# ---------------------------------------------------------------------------
+# Hard API-level block for any remaining physical visual-cache path request.
 image_writer = 'lib/src/services/image_writer.dart'
 replace_once(
     image_writer,
@@ -141,7 +130,6 @@ replace_once(
 """,
     'forbid-loose-visual-cache-path-api',
 )
-
 replace_once(
     image_writer,
     """  Future deleteFileFromCache(
@@ -166,20 +154,18 @@ replace_once(
 )
 
 
-# ---------------------------------------------------------------------------
-# 4) Defense in depth: if a stale/foreign build recreates either loose folder
-#    while this process is running, packed cache operations purge it at most once
-#    every 5 seconds. This is not the primary mechanism; the hard path blocks
-#    above prevent this build from creating them in the first place.
-# ---------------------------------------------------------------------------
+# Defense in depth. v8.9 already added the background-write set, so preserve it
+# and add a throttled purge beside it.
 cache = 'lib/src/services/compressed_visual_cache.dart'
 replace_once(
     cache,
     """  Future<Database>? _databaseFuture;
+  final Set<String> _backgroundThumbnailWrites = <String>{};
 
   static bool isVisualFolder(String? folder) => folder == 'thumbnails' || folder == 'samples';
 """,
     """  Future<Database>? _databaseFuture;
+  final Set<String> _backgroundThumbnailWrites = <String>{};
   int _lastLoosePurgeMs = 0;
 
   static bool isVisualFolder(String? folder) => folder == 'thumbnails' || folder == 'samples';
@@ -200,7 +186,6 @@ replace_once(
 """,
     'throttled-loose-visual-purge-helper',
 )
-
 replace_once(
     cache,
     """    // DB-only invariant for Windows portable visual cache. Old/regressed loose
@@ -223,7 +208,6 @@ replace_once(
 """,
     'db-open-uses-central-loose-purge',
 )
-
 replace_once(
     cache,
     """  Future<Uint8List?> read(String folder, String legacyPath) async {
@@ -235,7 +219,6 @@ replace_once(
 """,
     'packed-read-throttled-loose-purge',
 )
-
 replace_once(
     cache,
     """  Future<Uint8List> write(String folder, String legacyPath, Uint8List bytes) async {
@@ -249,20 +232,18 @@ replace_once(
 )
 
 
-# Guards.
 thumb_final = Path(thumbnail).read_text(encoding='utf-8')
 custom_final = Path(custom).read_text(encoding='utf-8')
 writer_final = Path(image_writer).read_text(encoding='utf-8')
 cache_final = Path(cache).read_text(encoding='utf-8')
 checks = {
-    'all Windows thumbnails are thumbnail-only': 'if (Platform.isWindows) {' in thumb_final and 'if (Platform.isWindows && widget.isStandalone) {' not in thumb_final,
-    'packed custom path is opaque': custom_final.count('__packed_visual__') >= 2,
-    'packed visual path bypasses getCachePathString': 'if (useCompressedVisualCache) {' in custom_final,
+    'all Windows thumbnails thumbnail-only': 'if (Platform.isWindows && widget.isStandalone) {' not in thumb_final,
+    'packed logical keys': custom_final.count('__packed_visual__') >= 2,
     'physical visual path API forbidden': "throw StateError('Loose visual cache paths are forbidden on Windows');" in writer_final,
-    'main writer visual guard retained': "typeFolder == 'thumbnails' || typeFolder == 'samples'" in writer_final,
-    'central purge helper exists': '_purgeForbiddenLooseVisualFolders' in cache_final,
-    'purge runs on read': 'Future<Uint8List?> read(String folder, String legacyPath) async {\n    await _purgeForbiddenLooseVisualFolders();' in cache_final,
-    'purge runs on write': 'Future<Uint8List> write(String folder, String legacyPath, Uint8List bytes) async {\n    await _purgeForbiddenLooseVisualFolders();' in cache_final,
+    'v8.12 writer guards retained': writer_final.count("typeFolder == 'thumbnails' || typeFolder == 'samples'") >= 4,
+    'central purge helper': '_purgeForbiddenLooseVisualFolders' in cache_final,
+    'purge on read': 'Future<Uint8List?> read(String folder, String legacyPath) async {\n    await _purgeForbiddenLooseVisualFolders();' in cache_final,
+    'purge on write': 'Future<Uint8List> write(String folder, String legacyPath, Uint8List bytes) async {\n    await _purgeForbiddenLooseVisualFolders();' in cache_final,
 }
 for label, ok in checks.items():
     if not ok:
