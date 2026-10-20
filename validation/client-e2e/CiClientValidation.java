@@ -139,15 +139,18 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                         + " playerAge=" + client.player.age + " pos=" + client.player.getBlockPos());
             }
         }
+        // Owner UUID is server-owned NBT state and is not a vanilla spawn field. Discover the
+        // replicated entity by type/range here; serverTick independently verifies its owner.
         CompanionEntity companion = client.world.getEntitiesByClass(CompanionEntity.class,
-                        client.player.getBoundingBox().expand(64.0D), entity -> ownerUuid.equals(entity.getOwnerUuid()))
+                        client.player.getBoundingBox().expand(64.0D), Entity::isAlive)
                 .stream().min(Comparator.comparingDouble(entity -> entity.squaredDistanceTo(client.player))).orElse(null);
         if (companion != null && companionAnnounced.compareAndSet(false, true)) {
             companionUuid = companion.getUuid();
             client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
             client.player.lookAt(EntityAnchorArgumentTypeCompat.EYES, companion.getEyePos());
             trace("CI_COMPANION_SYNCED uuid=" + companionUuid + " mode=" + companion.getCombatMode()
-                    + " order=" + companion.getOrder() + " owner=" + companion.getOwnerUuid());
+                    + " order=" + companion.getOrder() + " clientOwnerField=" + companion.getOwnerUuid()
+                    + " distance=" + companion.distanceTo(client.player));
         }
         if (companion != null && Files.exists(uiCompletePath())
                 && companion.getCombatMode() == CompanionCombatMode.DEFENSIVE
@@ -178,6 +181,16 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
             }
         }
         previousOwnerHealth = ownerHealth;
+        if (summonSent.get() && serverTicks % 40 == 0) {
+            var nearbyCompanions = owner.getWorld().getEntitiesByClass(CompanionEntity.class,
+                    owner.getBoundingBox().expand(64.0D), Entity::isAlive);
+            trace("CI_SERVER_SPAWN_DIAGNOSTIC owner=" + owner.getUuid() + " nearby=" + nearbyCompanions.size());
+            for (CompanionEntity observed : nearbyCompanions) {
+                trace("CI_SERVER_COMPANION uuid=" + observed.getUuid() + " owner=" + observed.getOwnerUuid()
+                        + " alive=" + observed.isAlive() + " distance=" + observed.distanceTo(owner)
+                        + " ownerMatch=" + owner.getUuid().equals(observed.getOwnerUuid()));
+            }
+        }
         CompanionEntity companion = findOwnedCompanion(owner);
         if (companion == null) return;
         if (zombieUuid != null) {
