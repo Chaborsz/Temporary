@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
   build:
-    name: Windows x64 / True Portable v8.19 / Canonical Release
+    name: Windows x64 / True Portable v8.20 / Canonical Release
     runs-on: windows-2022
     timeout-minutes: 60
     env:
@@ -60,7 +60,7 @@ jobs:
           "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
           "build=$($Matches[2])" >> $env:GITHUB_OUTPUT
 
-      - name: Apply portable patches through v8.19
+      - name: Apply portable patches through v8.20
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
@@ -80,7 +80,7 @@ jobs:
           python ..\builder\.github\scripts\lolisnatcher_v8_cache_path_label_fix.py
           python ..\builder\.github\scripts\lolisnatcher_v8_webp_thumbnail_cache_patch.py
           python ..\builder\.github\scripts\lolisnatcher_v11_generic_danbooru_auth.py
-          'PATCH_CHAIN_V8_19=PASS'
+          'PATCH_CHAIN_V8_20=PASS'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -139,7 +139,7 @@ jobs:
           $exe = 'build\windows\x64\runner\Release\lolisnatcher.exe'
           if (-not (Test-Path $exe)) { throw "Expected executable not found: $exe" }
 
-      - name: Package True Portable v8.19 build
+      - name: Package True Portable v8.20 build
         id: package
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -155,7 +155,7 @@ jobs:
           $dataDir = Join-Path $releaseDir 'Data'
           New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
           @"
-          LoliSnatcher TRUE PORTABLE Windows x64 - v8.19
+          LoliSnatcher TRUE PORTABLE Windows x64 - v8.20
 
           Runtime invariants:
           - Danbooru verified login/API-key behavior is retained.
@@ -166,8 +166,9 @@ jobs:
           - Danbooru page merge remains incremental.
           - Windows visual thumbnail load/decode pipeline remains serialized (max 1).
           - Windows packed-thumbnail Dio clients remain persistent/reused.
-          - Typed Danbooru tags are coalesced after 5s quiet, processed in one category pass, and persisted with at most one DB call per flush.
-          - Tag SQLite lookup chunk is 900 names; TAG_BATCH logs changed/map_ms/db_ms/total ms.
+          - Typed Danbooru tags remain coalesced after 5s quiet and persisted with at most one DB call per flush.
+          - Tag-map stale cutoff/timestamp is calculated once per flush and map processing yields every 32 tags.
+          - TAG_BATCH logs changed/map_ms/db_ms/slice_max_ms/yields/total ms.
           - Thumbnail BLOB persistence remains coalesced into SQLite batches (max 16 / 100 ms).
           - VISUAL_DB_READ / VISUAL_CODEC / EVENT_LOOP_STALL diagnostics are retained.
           "@ | Set-Content -Encoding UTF8 (Join-Path $dataDir 'PORTABLE-README.txt')
@@ -179,7 +180,7 @@ jobs:
             "TARGET=windows-x64"
             "CONFIGURATION=Release"
             "PORTABLE_MODE=TRUE"
-            "PATCH_LEVEL=TRUE_PORTABLE_V8_19"
+            "PATCH_LEVEL=TRUE_PORTABLE_V8_20"
             "WORKFLOW_LINE=V8_CANONICAL"
             "DANBOORU_AUTH=V8_8_VERIFIED_LOGIN"
             "VISUAL_CACHE=.\Data\LoliSnatcher\cache\visual_cache.db"
@@ -195,6 +196,9 @@ jobs:
             "TAG_DB_CALLS_PER_FLUSH_MAX=1"
             "TAG_SQLITE_MODE=TRUE_BULK_LOOKUP_BATCH"
             "TAG_SQLITE_LOOKUP_CHUNK=900"
+            "TAG_STALE_CUTOFF=PER_FLUSH"
+            "TAG_MAP_SLICE_SIZE=32"
+            "TAG_MAP_COOPERATIVE_YIELD=TRUE"
             "VISUAL_DB_BATCH_MAX=16"
             "VISUAL_DB_COALESCE_MS=100"
             "VISUAL_DIAGNOSTIC_CODEC_THRESHOLD_MS=25"
@@ -213,7 +217,7 @@ jobs:
           "sha256=$hash" >> $env:GITHUB_OUTPUT
           "SHA256=$hash"
 
-      - name: Publish canonical True Portable v8.19 prerelease
+      - name: Publish canonical True Portable v8.20 prerelease
         id: release
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -229,11 +233,11 @@ jobs:
           $tag = "lolisnatcher-windows-trueportable-$env:VERSION-$env:BUILD_NUMBER"
           $zipPath = Join-Path $PWD "dist\$env:ZIP_NAME"
           $hashPath = "$zipPath.sha256"
-          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v8.19"
+          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v8.20"
           $notes = @"
-          Unofficial TRUE PORTABLE Windows x64 build - canonical v8.19.
+          Unofficial TRUE PORTABLE Windows x64 build - canonical v8.20.
 
-          v8.19 retains all v8.18 visual/HTTP fixes. Runtime evidence from v8.18 showed no >=400 ms EVENT_LOOP_STALL and no slow VISUAL_CODEC, while TAG_BATCH reached 509 ms and could overlap the next page because the old 2.5 s idle timer was close to normal pagination intervals. Typed Danbooru categories are now processed in one pass, persisted with at most one DB call per idle flush, use a 900-name SQLite lookup chunk, and wait for 5 seconds of pagination quiet. TAG_BATCH now reports changed, map_ms and db_ms separately.
+          v8.20 retains all v8.19 batching and v8.18 visual/HTTP fixes. Runtime evidence from v8.19 showed TAG_BATCH tags=1232 changed=366 map_ms=525 db_ms=166 ms=691 coincident with EVENT_LOOP_STALL gap_ms=574 and SLOW_FRAME total_ms=515, proving the synchronous in-memory tag-map phase was the dominant blocker. v8.20 computes the stale cutoff/timestamp once per flush and cooperatively yields every 32 processed tags. TAG_BATCH now also reports slice_max_ms and yields so runtime can prove the longest synchronous tag-map slice is bounded.
 
           v7 remains a superseded historical workflow with a separate tag/asset namespace and cannot overwrite this release.
 
@@ -260,9 +264,9 @@ jobs:
           if ($remoteDigest -ne "sha256:$env:EXPECTED_SHA") {
             throw "Canonical asset digest mismatch: remote=$remoteDigest expected=sha256:$env:EXPECTED_SHA"
           }
-          if ([string]$remoteRelease.body -notmatch 'canonical v8\.19') { throw 'Canonical release notes do not identify v8.19' }
-          'V8_19_CANONICAL_ASSET_DIGEST=PASS'
-          'V8_19_RELEASE_IDENTITY=PASS'
+          if ([string]$remoteRelease.body -notmatch 'canonical v8\.20') { throw 'Canonical release notes do not identify v8.20' }
+          'V8_20_CANONICAL_ASSET_DIGEST=PASS'
+          'V8_20_RELEASE_IDENTITY=PASS'
           "release_url=$([string]$remoteRelease.html_url)" >> $env:GITHUB_OUTPUT
 
       - name: Build summary
@@ -270,9 +274,9 @@ jobs:
         shell: pwsh
         run: |
           @"
-          ## LoliSnatcher Windows x64 True Portable v8.19
+          ## LoliSnatcher Windows x64 True Portable v8.20
           - Build: `${{ steps.build.outcome }}`
-          - Patch level: TRUE_PORTABLE_V8_19
+          - Patch level: TRUE_PORTABLE_V8_20
           - Verified Danbooru auth: retained
           - Windows visual cache: SQLite DB-only
           - Windows visual pipeline max: 1
@@ -282,6 +286,8 @@ jobs:
           - Tag category pass: single
           - Tag DB calls per flush: max 1
           - Tag SQLite lookup chunk: 900
+          - Tag stale cutoff: once per flush
+          - Tag map cooperative slice: 32
           - Visual DB persistence: max 16 / 100 ms coalescing
           - Event-loop stall threshold: 400 ms
           - Canonical asset digest verification: `${{ steps.release.outcome }}`
