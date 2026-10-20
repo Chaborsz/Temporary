@@ -39,6 +39,12 @@ exec(compile(bounded_visual_pipeline.read_text(encoding='utf-8'), str(bounded_vi
 freeze_rootcause_patch = Path(__file__).with_name('lolisnatcher_v8_11_freeze_rootcause_patch.py')
 exec(compile(freeze_rootcause_patch.read_text(encoding='utf-8'), str(freeze_rootcause_patch), 'exec'))
 
+# v8.12 enforces the intended Windows cache invariant: grid uses thumbnailURL
+# only, samples are viewer-only and memory-only, and thumbnails/samples can no
+# longer be written/read as loose legacy files beside visual_cache.db.
+visual_cache_integrity_patch = Path(__file__).with_name('lolisnatcher_v8_12_visual_cache_integrity_patch.py')
+exec(compile(visual_cache_integrity_patch.read_text(encoding='utf-8'), str(visual_cache_integrity_patch), 'exec'))
+
 print('V8_5_VERIFIED_LOGIN_CHAIN=PASS')
 print('V8_6_ROBUST_LOGIN_VALIDATION_CHAIN=PASS')
 print('V8_7_CHALLENGE_AUTH_CHAIN=PASS')
@@ -46,3 +52,4 @@ print('V8_8_IDENTITY_DIAGNOSTIC_CHAIN=PASS')
 print('V8_9_GALLERY_FREEZE_HOTFIX_CHAIN=PASS')
 print('V8_10_BOUNDED_VISUAL_PIPELINE_CHAIN=PASS')
 print('V8_11_FREEZE_ROOTCAUSE_PATCH_CHAIN=PASS')
+print('V8_12_VISUAL_CACHE_INTEGRITY_CHAIN=PASS')
