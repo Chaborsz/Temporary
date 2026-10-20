@@ -77,6 +77,12 @@ exec(compile(visual_decode_and_tag_idle_patch.read_text(encoding='utf-8'), str(v
 sqlite_batching_patch = Path(__file__).with_name('lolisnatcher_v8_17_sqlite_batching_patch.py')
 exec(compile(sqlite_batching_patch.read_text(encoding='utf-8'), str(sqlite_batching_patch), 'exec'))
 
+# v8.18 follows the v8.17 runtime evidence: parse/merge and SQLite are no longer
+# the dominant stall source. Reuse Windows packed-thumbnail Dio clients to avoid
+# per-image client/socket churn and add focused packed-read/codec diagnostics.
+http_codec_stall_patch = Path(__file__).with_name('lolisnatcher_v8_18_http_codec_stall_patch.py')
+exec(compile(http_codec_stall_patch.read_text(encoding='utf-8'), str(http_codec_stall_patch), 'exec'))
+
 print('V8_5_VERIFIED_LOGIN_CHAIN=PASS')
 print('V8_6_ROBUST_LOGIN_VALIDATION_CHAIN=PASS')
 print('V8_7_CHALLENGE_AUTH_CHAIN=PASS')
@@ -90,3 +96,4 @@ print('V8_14_CATALOG_MERGE_HOTFIX_CHAIN=PASS')
 print('V8_15_STRICT_DB_ONLY_VISUAL_CACHE_CHAIN=PASS')
 print('V8_16_FRAME_STALL_REDUCTION_CHAIN=PASS')
 print('V8_17_SQLITE_STALL_REDUCTION_CHAIN=PASS')
+print('V8_18_HTTP_CODEC_STALL_REDUCTION_CHAIN=PASS')
