@@ -44,6 +44,7 @@ PY
 
 sha256sum "$PROJECT_DIR"/build/libs/*.jar > "$CI_VALIDATION_DIR/product-jars-before-client.txt"
 
+watcher_pid=""
 set +e
 setsid timeout "${CLIENT_TIMEOUT_SECONDS:-900}s" gradle --no-daemon --no-build-cache --stacktrace \
   -x classes -x processResources runClient > "$CI_VALIDATION_DIR/runClient-console.log" 2>&1 &
@@ -58,6 +59,7 @@ cleanup() {
     cat "$CI_VALIDATION_DIR/runtime-trace.log" >&2 || true
     find "$CI_VALIDATION_DIR" -maxdepth 1 -type f -printf '%f %s bytes\\n' >&2 || true
   fi
+  if [[ -n "$watcher_pid" ]]; then kill "$watcher_pid" 2>/dev/null || true; wait "$watcher_pid" 2>/dev/null || true; fi
   kill -TERM -- "-$client_pid" 2>/dev/null || true
   pkill -TERM -f '[n]et.fabricmc.devlaunchinjector.Main' 2>/dev/null || true
   pkill -TERM -f '[n]et.minecraft.client.main.Main' 2>/dev/null || true
@@ -127,6 +129,7 @@ grep -q 'CI_OWNER_DEFENSE_E2E_PASS' "$CI_VALIDATION_DIR/runtime-trace.log" || {
 python3 "$VALIDATION_SOURCE_DIR/capture_client_evidence.py" \
   --trace "$CI_VALIDATION_DIR/runtime-trace.log" --output "$CI_VALIDATION_DIR"
 wait "$watcher_pid" || watcher_rc=$?
+watcher_pid=""
 if [[ "${watcher_rc:-0}" -gt 1 ]]; then
   echo "Swing frame capture did not finish with the integrated combat scenario." >&2
   exit 64

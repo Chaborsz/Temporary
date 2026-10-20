@@ -86,16 +86,15 @@ def main():
     screenshot(args.screenshots / "companion-idle.png")
     subprocess.run(["xdotool", "key", "k"], check=True)
     time.sleep(1.0)
-    # Fixed 1920x1080 Xvfb layout: use the visible button centers rather
-    # than making gameplay input depend on OCR recognition of the small GUI font.
+    # Fixed 1920x1080 Xvfb layout: click visible controls by their centers.
     screenshot(args.screenshots / "management-screen.png")
-    click_at(750, 584)  # Passive mode, to make a real mode transition
+    click_at(750, 584)
     time.sleep(0.6)
     screenshot(args.screenshots / "management-passive.png")
-    click_at(960, 584)  # Defensive mode
+    click_at(960, 584)
     time.sleep(0.6)
     screenshot(args.screenshots / "management-defensive.png")
-    click_at(750, 472)  # Follow order
+    click_at(750, 472)
     time.sleep(0.6)
     subprocess.run(["xdotool", "key", "Escape"], check=True)
     trace_path = Path(os.environ["CI_VALIDATION_DIR"])
