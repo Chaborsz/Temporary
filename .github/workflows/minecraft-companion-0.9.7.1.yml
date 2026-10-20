@@ -1,6 +1,10 @@
 name: Minecraft Companion 0.9.7.1 validation
 
 on:
+  push:
+    paths:
+      - "minecraft-companion-0.9.7.1-dev.3-fabric-1.20.1.7z"
+      - ".github/workflows/minecraft-companion-0.9.7.1.yml"
   workflow_dispatch:
     inputs:
       project_path:
@@ -80,8 +84,8 @@ jobs:
         shell: bash
         env:
           INPUT_PROJECT_PATH: ${{ inputs.project_path }}
-          INPUT_SOURCE_ARCHIVE: ${{ inputs.source_archive }}
-          INPUT_EXPECTED_SHA: ${{ inputs.expected_source_sha256 }}
+          INPUT_SOURCE_ARCHIVE: ${{ github.event_name == 'push' && 'minecraft-companion-0.9.7.1-dev.3-fabric-1.20.1.7z' || inputs.source_archive }}
+          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && '4c112911a29c2847957e4d6f7c9d46a476eb94f02825a74cb7e28b6483bf1ac9' || inputs.expected_source_sha256 }}
         run: |
           set -euo pipefail
           mkdir -p "$ARTIFACT_DIR"
@@ -223,7 +227,7 @@ jobs:
       - name: Fabric Minecraft GameTests x N
         shell: bash
         env:
-          GAMETEST_RUNS: ${{ inputs.gametest_runs }}
+          GAMETEST_RUNS: ${{ github.event_name == 'push' && '5' || inputs.gametest_runs }}
         run: |
           set -euo pipefail
           cd "$PROJECT_DIR"
@@ -267,17 +271,17 @@ jobs:
           fi
 
       - name: Install graphical client dependencies
-        if: ${{ inputs.run_client_smoke }}
+        if: ${{ github.event_name == 'push' || inputs.run_client_smoke }}
         shell: bash
         run: |
           set -euo pipefail
           glxinfo -B 2>&1 | tee "$ARTIFACT_DIR/glxinfo-host.txt" || true
 
       - name: Real client validation hook or Xvfb smoke
-        if: ${{ inputs.run_client_smoke }}
+        if: ${{ github.event_name == 'push' || inputs.run_client_smoke }}
         shell: bash
         env:
-          CLIENT_TIMEOUT_SECONDS: ${{ inputs.client_timeout_seconds }}
+          CLIENT_TIMEOUT_SECONDS: ${{ inputs.client_timeout_seconds || '300' }}
         run: |
           set -euo pipefail
           cd "$PROJECT_DIR"
