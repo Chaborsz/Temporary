@@ -1,5 +1,7 @@
 name: LoliSnatcher Windows x64 True Portable v7
 
+# v7 is superseded by the v8 line. Keep it available for explicit historical
+# rebuilds only; it must never race or overwrite the canonical v8 release.
 on:
   workflow_dispatch:
     inputs:
@@ -13,16 +15,6 @@ on:
         required: true
         default: "3.47.3"
         type: string
-  push:
-    paths:
-      - ".github/workflows/lolisnatcher-windows-portable-v7.yml"
-      - ".github/scripts/lolisnatcher_true_portable_patch.py"
-      - ".github/scripts/lolisnatcher_v4_patch.py"
-      - ".github/scripts/lolisnatcher_v5_login_cloudflare_patch.py"
-      - ".github/scripts/lolisnatcher_v6_nginx_antiddos_patch.py"
-      - ".github/scripts/lolisnatcher_v7_native_inappbrowser_patch.py"
-      - ".github/scripts/lolisnatcher_v7_import_fix.py"
-      - ".github/scripts/lolisnatcher_sync_esmx.py"
 
 permissions:
   contents: write
@@ -33,7 +25,7 @@ concurrency:
 
 jobs:
   build:
-    name: Windows x64 / True Portable v7 / Release
+    name: Windows x64 / True Portable v7 / Historical Release
     runs-on: windows-2022
     timeout-minutes: 60
     env:
@@ -161,13 +153,10 @@ jobs:
           $dataDir = Join-Path $releaseDir 'Data'
           New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
           @"
-          LoliSnatcher TRUE PORTABLE Windows x64 - v7
+          LoliSnatcher TRUE PORTABLE Windows x64 - v7 HISTORICAL
 
-          Windows login/captcha WebView fix:
-          - Uses native InAppBrowser/CoreWebView2Controller instead of the embedded composition texture path.
-          - Login and anti-DDoS browser windows share the same portable WebView2 profile in Data\WebView2.
-          - Cloudflare and Nginx-Lua/processChallenge handling from v6 is retained.
-          - Runtime flow is logged in Data\webview-diagnostic.txt with NATIVE_BROWSER_* markers.
+          This is the superseded v7 branch. It is intentionally published under
+          a v7-specific asset/tag and cannot overwrite the canonical v8 release.
           "@ | Set-Content -Encoding UTF8 (Join-Path $dataDir 'PORTABLE-README.txt')
           @(
             "PROJECT=LoliSnatcher_Droid"
@@ -178,14 +167,10 @@ jobs:
             "CONFIGURATION=Release"
             "PORTABLE_MODE=TRUE"
             "PATCH_LEVEL=TRUE_PORTABLE_V7_NATIVE_INAPPBROWSER"
-            "WINDOWS_LOGIN_BROWSER=NATIVE_INAPPBROWSER"
-            "WINDOWS_EMBEDDED_COMPOSITION=BYPASSED_FOR_LOGIN_AND_CHALLENGE"
-            "WEBVIEW_DIAGNOSTIC=.\Data\webview-diagnostic.txt"
-            "ENABLED_LOCALE=es_MX"
-            "INAPPWEBVIEW_WINDOWS_FIX=FULL_PR2838_832d6517b50b3b8094d2658800aa84ee5b9294bf"
+            "WORKFLOW_LINE=V7_HISTORICAL"
             "WORKFLOW_RUN=${{ github.run_id }}"
           ) | Set-Content -Encoding UTF8 (Join-Path $releaseDir 'BUILD-INFO.txt')
-          $zipName = "LoliSnatcher-$env:VERSION+$env:BUILD_NUMBER-Windows-x64-TruePortable.zip"
+          $zipName = "LoliSnatcher-$env:VERSION+$env:BUILD_NUMBER-Windows-x64-TruePortable-v7.zip"
           $zipPath = Join-Path $outDir $zipName
           Compress-Archive -Path (Join-Path $releaseDir '*') -DestinationPath $zipPath -CompressionLevel Optimal -Force
           $hash = (Get-FileHash -Algorithm SHA256 $zipPath).Hash.ToLowerInvariant()
@@ -194,7 +179,7 @@ jobs:
           "sha256=$hash" >> $env:GITHUB_OUTPUT
           "SHA256=$hash"
 
-      - name: Publish updated True Portable prerelease
+      - name: Publish isolated v7 historical prerelease
         id: release
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -206,14 +191,15 @@ jobs:
           FLUTTER_VERSION: ${{ inputs.flutter_version || '3.47.3' }}
           ZIP_NAME: ${{ steps.package.outputs.zip_name }}
         run: |
-          $tag = "lolisnatcher-windows-trueportable-$env:VERSION-$env:BUILD_NUMBER"
+          $tag = "lolisnatcher-windows-trueportable-v7-$env:VERSION-$env:BUILD_NUMBER"
+          if ($tag -eq "lolisnatcher-windows-trueportable-$env:VERSION-$env:BUILD_NUMBER") { throw 'v7 must never publish to the canonical v8 tag' }
           $zipPath = Join-Path $PWD "dist\$env:ZIP_NAME"
           $hashPath = "$zipPath.sha256"
-          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable"
+          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v7 Historical"
           $notes = @"
-          Unofficial TRUE PORTABLE Windows x64 build - v7.
+          Historical TRUE PORTABLE Windows x64 build - v7.
 
-          v7 bypasses the Windows embedded composition WebView path for login/challenges and uses the plugin's native InAppBrowser/CoreWebView2Controller window instead. It shares the same portable Data\WebView2 profile and retains v6 Cloudflare/Nginx-Lua handling, es-MX live sync and PR #2838.
+          This superseded line is isolated from the canonical v8 release and cannot overwrite v8 assets.
 
           Upstream commit: $env:SOURCE_SHA
           Flutter: $env:FLUTTER_VERSION
@@ -221,12 +207,12 @@ jobs:
           & gh release view $tag --repo $env:GITHUB_REPOSITORY *> $null
           if ($LASTEXITCODE -eq 0) {
             gh release upload $tag $zipPath $hashPath --clobber --repo $env:GITHUB_REPOSITORY
-            if ($LASTEXITCODE -ne 0) { throw 'Failed to upload release assets' }
+            if ($LASTEXITCODE -ne 0) { throw 'Failed to upload isolated v7 assets' }
             gh release edit $tag --repo $env:GITHUB_REPOSITORY --title $title --notes $notes --prerelease
           } else {
             gh release create $tag $zipPath $hashPath --repo $env:GITHUB_REPOSITORY --title $title --notes $notes --prerelease
           }
-          if ($LASTEXITCODE -ne 0) { throw "Failed to publish release $tag" }
+          if ($LASTEXITCODE -ne 0) { throw "Failed to publish historical v7 release $tag" }
           $releaseUrl = (gh release view $tag --repo $env:GITHUB_REPOSITORY --json url --jq .url).Trim()
           "release_url=$releaseUrl" >> $env:GITHUB_OUTPUT
 
@@ -235,12 +221,10 @@ jobs:
         shell: pwsh
         run: |
           @"
-          ## LoliSnatcher Windows x64 True Portable v7
+          ## LoliSnatcher Windows x64 True Portable v7 Historical
+          - Trigger: workflow_dispatch only
+          - Canonical v8 release overwrite: impossible by tag/asset namespace
           - Build: `${{ steps.build.outcome }}`
-          - Native Windows InAppBrowser: enabled
-          - Embedded composition bypass for login/challenge: enabled
-          - Nginx-Lua / Cloudflare handling: retained
-          - es-MX live sync: enabled
           - SHA-256: `${{ steps.package.outputs.sha256 }}`
           - Release: ${{ steps.release.outputs.release_url }}
           "@ >> $env:GITHUB_STEP_SUMMARY
