@@ -45,6 +45,12 @@ exec(compile(freeze_rootcause_patch.read_text(encoding='utf-8'), str(freeze_root
 visual_cache_integrity_patch = Path(__file__).with_name('lolisnatcher_v8_12_visual_cache_integrity_patch.py')
 exec(compile(visual_cache_integrity_patch.read_text(encoding='utf-8'), str(visual_cache_integrity_patch), 'exec'))
 
+# v8.13 removes Danbooru's per-post/per-tag SQLite write storm by collecting
+# typed tags per page, bulk-writing each category and serializing page commits.
+# It also records page parse/merge timings in performance-stalls.log.
+pagination_freeze_patch = Path(__file__).with_name('lolisnatcher_v8_13_danbooru_page_batch_patch.py')
+exec(compile(pagination_freeze_patch.read_text(encoding='utf-8'), str(pagination_freeze_patch), 'exec'))
+
 print('V8_5_VERIFIED_LOGIN_CHAIN=PASS')
 print('V8_6_ROBUST_LOGIN_VALIDATION_CHAIN=PASS')
 print('V8_7_CHALLENGE_AUTH_CHAIN=PASS')
@@ -53,3 +59,4 @@ print('V8_9_GALLERY_FREEZE_HOTFIX_CHAIN=PASS')
 print('V8_10_BOUNDED_VISUAL_PIPELINE_CHAIN=PASS')
 print('V8_11_FREEZE_ROOTCAUSE_PATCH_CHAIN=PASS')
 print('V8_12_VISUAL_CACHE_INTEGRITY_CHAIN=PASS')
+print('V8_13_PAGINATION_FREEZE_HOTFIX_CHAIN=PASS')
