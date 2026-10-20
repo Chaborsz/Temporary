@@ -347,7 +347,7 @@ jobs:
           fi
 
       - name: Install graphical client dependencies
-        if: ${{ always() && steps.source.outcome == 'success' && (github.event_name == 'push' || inputs.run_client_smoke) }}
+        if: ${{ !cancelled() && steps.source.outcome == 'success' && (github.event_name == 'push' || inputs.run_client_smoke) }}
         shell: bash
         run: |
           set -euo pipefail
