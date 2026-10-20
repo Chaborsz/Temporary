@@ -9,8 +9,8 @@ import time
 
 
 def screenshot(path: Path):
-    subprocess.run(["import", "-window", "root", "-depth", "8", str(path)], check=True,
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(["timeout", "15s", "scrot", "-o", "-z", str(path)], check=True,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=20)
 
 
 def wait_marker(trace: Path, marker: str, timeout=60):

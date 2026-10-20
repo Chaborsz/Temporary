@@ -11,9 +11,13 @@ import time
 import shutil
 
 
+def screenshot(path: Path):
+    subprocess.run(["timeout", "15s", "scrot", "-o", "-z", str(path)], check=True,
+                   stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=20)
+
+
 def capture(path: Path):
-    subprocess.run(["import", "-window", "root", "-depth", "8", str(path)], check=True,
-                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    screenshot(path)
     result = subprocess.run(["tesseract", str(path), "stdout", "tsv"], check=True,
                             capture_output=True, text=True)
     groups = {}
@@ -118,16 +122,14 @@ def main():
     if not trace_has(args.trace, "CI_COMPANION_SYNCED"):
         raise RuntimeError("Production command did not create/sync an owned Companion")
 
-    subprocess.run(["import", "-window", "root", "-depth", "8",
-                    str(args.screenshots / "companion-idle.png")], check=True)
+    screenshot(args.screenshots / "companion-idle.png")
     subprocess.run(["xdotool", "key", "k"], check=True)
     mode_text, mode_lines = wait_for_text(
         "Companion management screen with Defensive mode",
         lambda text, lines: "companion" in text and "combat" in text and "defensive" in text,
         args.screenshots / "management-current.png", timeout=90)
     (args.screenshots / "management-screen-ocr.txt").write_text(mode_text, encoding="utf-8")
-    subprocess.run(["import", "-window", "root", "-depth", "8",
-                    str(args.screenshots / "management-defensive.png")], check=True)
+    screenshot(args.screenshots / "management-defensive.png")
 
     if not click_line(mode_lines, "defensive mode"):
         if not click_line(mode_lines, "defensivo"):
