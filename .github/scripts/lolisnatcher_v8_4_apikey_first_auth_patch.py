@@ -70,6 +70,13 @@ exec(compile(strict_db_only_visual_cache_patch.read_text(encoding='utf-8'), str(
 visual_decode_and_tag_idle_patch = Path(__file__).with_name('lolisnatcher_v8_16_visual_decode_and_tag_idle_patch.py')
 exec(compile(visual_decode_and_tag_idle_patch.read_text(encoding='utf-8'), str(visual_decode_and_tag_idle_patch), 'exec'))
 
+# v8.17 fixes the remaining SQLite design bottleneck proven by runtime logs:
+# typed tags now use one bounded bulk lookup plus sqflite Batch writes instead of
+# SELECT+write per tag; thumbnail BLOB persistence is also coalesced into bounded
+# SQLite batches and logs slow VISUAL_DB_BATCH operations for follow-up.
+sqlite_batching_patch = Path(__file__).with_name('lolisnatcher_v8_17_sqlite_batching_patch.py')
+exec(compile(sqlite_batching_patch.read_text(encoding='utf-8'), str(sqlite_batching_patch), 'exec'))
+
 print('V8_5_VERIFIED_LOGIN_CHAIN=PASS')
 print('V8_6_ROBUST_LOGIN_VALIDATION_CHAIN=PASS')
 print('V8_7_CHALLENGE_AUTH_CHAIN=PASS')
@@ -82,3 +89,4 @@ print('V8_13_PAGINATION_FREEZE_HOTFIX_CHAIN=PASS')
 print('V8_14_CATALOG_MERGE_HOTFIX_CHAIN=PASS')
 print('V8_15_STRICT_DB_ONLY_VISUAL_CACHE_CHAIN=PASS')
 print('V8_16_FRAME_STALL_REDUCTION_CHAIN=PASS')
+print('V8_17_SQLITE_STALL_REDUCTION_CHAIN=PASS')
