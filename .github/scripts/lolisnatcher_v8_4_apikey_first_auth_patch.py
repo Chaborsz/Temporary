@@ -57,6 +57,13 @@ exec(compile(pagination_freeze_patch.read_text(encoding='utf-8'), str(pagination
 incremental_catalog_merge_patch = Path(__file__).with_name('lolisnatcher_v8_14_incremental_catalog_merge_patch.py')
 exec(compile(incremental_catalog_merge_patch.read_text(encoding='utf-8'), str(incremental_catalog_merge_patch), 'exec'))
 
+# v8.15 makes the visual-cache invariant structural: packed Windows thumbnails
+# use logical SQLite keys without ever constructing loose samples/thumbnails
+# paths, ImageWriter forbids physical visual-cache paths, and all Thumbnail
+# widgets on Windows are thumbnailURL-only.
+strict_db_only_visual_cache_patch = Path(__file__).with_name('lolisnatcher_v8_15_strict_db_only_visual_cache_patch.py')
+exec(compile(strict_db_only_visual_cache_patch.read_text(encoding='utf-8'), str(strict_db_only_visual_cache_patch), 'exec'))
+
 print('V8_5_VERIFIED_LOGIN_CHAIN=PASS')
 print('V8_6_ROBUST_LOGIN_VALIDATION_CHAIN=PASS')
 print('V8_7_CHALLENGE_AUTH_CHAIN=PASS')
@@ -67,3 +74,4 @@ print('V8_11_FREEZE_ROOTCAUSE_PATCH_CHAIN=PASS')
 print('V8_12_VISUAL_CACHE_INTEGRITY_CHAIN=PASS')
 print('V8_13_PAGINATION_FREEZE_HOTFIX_CHAIN=PASS')
 print('V8_14_CATALOG_MERGE_HOTFIX_CHAIN=PASS')
+print('V8_15_STRICT_DB_ONLY_VISUAL_CACHE_CHAIN=PASS')
