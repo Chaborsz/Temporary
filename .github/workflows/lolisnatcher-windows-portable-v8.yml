@@ -15,33 +15,8 @@ on:
         type: string
   push:
     paths:
-      - ".github/scripts/lolisnatcher_true_portable_patch.py"
-      - ".github/scripts/lolisnatcher_v4_patch.py"
-      - ".github/scripts/lolisnatcher_v5_login_cloudflare_patch.py"
-      - ".github/scripts/lolisnatcher_v6_nginx_antiddos_patch.py"
-      - ".github/scripts/lolisnatcher_v7_native_inappbrowser_patch.py"
-      - ".github/scripts/lolisnatcher_v7_import_fix.py"
-      - ".github/scripts/lolisnatcher_v8_compressed_visual_cache_patch.py"
-      - ".github/scripts/lolisnatcher_v8_cache_path_label_fix.py"
-      - ".github/scripts/lolisnatcher_v8_webp_thumbnail_cache_patch.py"
-      - ".github/scripts/lolisnatcher_v8_danbooru_login_dialog_patch.py"
-      - ".github/scripts/lolisnatcher_v8_4_apikey_first_auth_patch.py"
-      - ".github/scripts/lolisnatcher_v8_5_verified_danbooru_login_patch.py"
-      - ".github/scripts/lolisnatcher_v8_6_danbooru_login_validation_patch.py"
-      - ".github/scripts/lolisnatcher_v8_7_danbooru_challenge_auth_patch.py"
-      - ".github/scripts/lolisnatcher_v8_8_danbooru_identity_diagnostic_patch.py"
-      - ".github/scripts/lolisnatcher_v8_9_gallery_freeze_hotfix.py"
-      - ".github/scripts/lolisnatcher_v8_10_bounded_visual_pipeline.py"
-      - ".github/scripts/lolisnatcher_v8_11_freeze_rootcause_patch.py"
-      - ".github/scripts/lolisnatcher_v8_12_visual_cache_integrity_patch.py"
-      - ".github/scripts/lolisnatcher_v8_13_danbooru_page_batch_patch.py"
-      - ".github/scripts/lolisnatcher_v8_14_incremental_catalog_merge_patch.py"
-      - ".github/scripts/lolisnatcher_v8_15_strict_db_only_visual_cache_patch.py"
-      - ".github/scripts/lolisnatcher_v8_16_visual_decode_and_tag_idle_patch.py"
-      - ".github/scripts/lolisnatcher_v8_17_sqlite_batching_patch.py"
-      - ".github/scripts/lolisnatcher_v8_18_http_codec_stall_patch.py"
-      - ".github/scripts/lolisnatcher_v11_generic_danbooru_auth.py"
-      - ".github/scripts/lolisnatcher_sync_esmx.py"
+      - ".github/scripts/lolisnatcher_*.py"
+      - ".github/workflows/lolisnatcher-windows-portable-v8.yml"
 
 permissions:
   contents: write
@@ -52,7 +27,7 @@ concurrency:
 
 jobs:
   build:
-    name: Windows x64 / True Portable v8.18 / Canonical Release
+    name: Windows x64 / True Portable v8.19 / Canonical Release
     runs-on: windows-2022
     timeout-minutes: 60
     env:
@@ -85,7 +60,7 @@ jobs:
           "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
           "build=$($Matches[2])" >> $env:GITHUB_OUTPUT
 
-      - name: Apply portable patches through v8.18
+      - name: Apply portable patches through v8.19
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
@@ -105,7 +80,7 @@ jobs:
           python ..\builder\.github\scripts\lolisnatcher_v8_cache_path_label_fix.py
           python ..\builder\.github\scripts\lolisnatcher_v8_webp_thumbnail_cache_patch.py
           python ..\builder\.github\scripts\lolisnatcher_v11_generic_danbooru_auth.py
-          'PATCH_CHAIN_V8_18=PASS'
+          'PATCH_CHAIN_V8_19=PASS'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -125,26 +100,14 @@ jobs:
         working-directory: LoliSnatcher_Droid
         run: flutter pub get
 
-      - name: Verify image dependency
+      - name: Verify pinned dependencies
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
           $lock = Get-Content pubspec.lock -Raw
           if ($lock -notmatch '(?ms)^  image:\s+.*?version: "4\.10\.2"') { throw 'image 4.10.2 was not resolved' }
-          'IMAGE_4_10_2=PASS'
-
-      - name: Verify PR2838 plugin resolution
-        shell: bash
-        working-directory: LoliSnatcher_Droid
-        run: |
-          python - <<'PY'
-          from pathlib import Path
-          expected='832d6517b50b3b8094d2658800aa84ee5b9294bf'
-          lock=Path('pubspec.lock').read_text(encoding='utf-8')
-          if expected not in lock:
-              raise SystemExit('PR2838 commit missing from pubspec.lock')
-          print('PR2838=PASS')
-          PY
+          if ($lock -notmatch '832d6517b50b3b8094d2658800aa84ee5b9294bf') { throw 'PR2838 commit missing from pubspec.lock' }
+          'PINNED_DEPENDENCIES=PASS'
 
       - name: Sync current es-MX from POEditor
         shell: pwsh
@@ -176,7 +139,7 @@ jobs:
           $exe = 'build\windows\x64\runner\Release\lolisnatcher.exe'
           if (-not (Test-Path $exe)) { throw "Expected executable not found: $exe" }
 
-      - name: Package True Portable v8.18 build
+      - name: Package True Portable v8.19 build
         id: package
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -192,21 +155,21 @@ jobs:
           $dataDir = Join-Path $releaseDir 'Data'
           New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
           @"
-          LoliSnatcher TRUE PORTABLE Windows x64 - v8.18
+          LoliSnatcher TRUE PORTABLE Windows x64 - v8.19
 
           Runtime invariants:
-          - Danbooru login/API-key validation from v8.8 is retained.
-          - Windows catalog requests thumbnailURL only; samples are viewer-only and memory-only.
-          - Persistent visual thumbnails are DB-only in Data\LoliSnatcher\cache\visual_cache.db.
-          - Loose thumbnails/samples paths are forbidden and legacy loose folders are purged.
-          - WebP runtime conversion is disabled; thumbnail source bytes are stored in the DB.
-          - Danbooru page merge is incremental (merge_ms expected near 0).
-          - Windows visual thumbnail load/decode pipeline is serialized (max 1).
-          - Typed tag persistence is coalesced after 2.5s quiet and uses true SQLite bulk lookup/batches.
-          - Thumbnail BLOB persistence is coalesced into SQLite batches (max 16 / 100 ms).
-          - Windows packed-thumbnail HTTP clients are persistent/reused to preserve keep-alive and reduce per-image client/socket churn.
-          - Slow packed DB reads/codecs emit VISUAL_DB_READ / VISUAL_CODEC; event-loop gaps >=400 ms emit EVENT_LOOP_STALL.
-          - Performance diagnostics are written to Data\performance-stalls.log.
+          - Danbooru verified login/API-key behavior is retained.
+          - Windows catalog remains thumbnailURL-only; samples/full-res viewer data remain memory-only.
+          - Persistent visual thumbnails remain DB-only in Data\LoliSnatcher\cache\visual_cache.db.
+          - Loose thumbnails/samples remain forbidden and legacy loose folders are purged.
+          - WebP runtime conversion remains disabled; thumbnail source bytes are stored in the DB.
+          - Danbooru page merge remains incremental.
+          - Windows visual thumbnail load/decode pipeline remains serialized (max 1).
+          - Windows packed-thumbnail Dio clients remain persistent/reused.
+          - Typed Danbooru tags are coalesced after 5s quiet, processed in one category pass, and persisted with at most one DB call per flush.
+          - Tag SQLite lookup chunk is 900 names; TAG_BATCH logs changed/map_ms/db_ms/total ms.
+          - Thumbnail BLOB persistence remains coalesced into SQLite batches (max 16 / 100 ms).
+          - VISUAL_DB_READ / VISUAL_CODEC / EVENT_LOOP_STALL diagnostics are retained.
           "@ | Set-Content -Encoding UTF8 (Join-Path $dataDir 'PORTABLE-README.txt')
           @(
             "PROJECT=LoliSnatcher_Droid"
@@ -216,7 +179,7 @@ jobs:
             "TARGET=windows-x64"
             "CONFIGURATION=Release"
             "PORTABLE_MODE=TRUE"
-            "PATCH_LEVEL=TRUE_PORTABLE_V8_18"
+            "PATCH_LEVEL=TRUE_PORTABLE_V8_19"
             "WORKFLOW_LINE=V8_CANONICAL"
             "DANBOORU_AUTH=V8_8_VERIFIED_LOGIN"
             "VISUAL_CACHE=.\Data\LoliSnatcher\cache\visual_cache.db"
@@ -225,13 +188,15 @@ jobs:
             "WINDOWS_GRID_PREVIEW=THUMBNAIL_ONLY"
             "FULLRES_VIEWER_CACHE=MEMORY_ONLY"
             "WINDOWS_VISUAL_PIPELINE_MAX=1"
+            "WINDOWS_VISUAL_HTTP_CLIENT=REUSED_PERSISTENT"
             "DANBOORU_INCREMENTAL_MERGE=TRUE"
-            "TAG_IDLE_COALESCE_MS=2500"
+            "TAG_IDLE_COALESCE_MS=5000"
+            "TAG_CATEGORY_PASS=SINGLE"
+            "TAG_DB_CALLS_PER_FLUSH_MAX=1"
             "TAG_SQLITE_MODE=TRUE_BULK_LOOKUP_BATCH"
-            "TAG_SQLITE_LOOKUP_CHUNK=400"
+            "TAG_SQLITE_LOOKUP_CHUNK=900"
             "VISUAL_DB_BATCH_MAX=16"
             "VISUAL_DB_COALESCE_MS=100"
-            "WINDOWS_VISUAL_HTTP_CLIENT=REUSED_PERSISTENT"
             "VISUAL_DIAGNOSTIC_CODEC_THRESHOLD_MS=25"
             "EVENT_LOOP_STALL_THRESHOLD_MS=400"
             "PERFORMANCE_STALL_LOG=.\Data\performance-stalls.log"
@@ -248,7 +213,7 @@ jobs:
           "sha256=$hash" >> $env:GITHUB_OUTPUT
           "SHA256=$hash"
 
-      - name: Publish canonical True Portable v8.18 prerelease
+      - name: Publish canonical True Portable v8.19 prerelease
         id: release
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -264,11 +229,11 @@ jobs:
           $tag = "lolisnatcher-windows-trueportable-$env:VERSION-$env:BUILD_NUMBER"
           $zipPath = Join-Path $PWD "dist\$env:ZIP_NAME"
           $hashPath = "$zipPath.sha256"
-          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v8.18"
+          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v8.19"
           $notes = @"
-          Unofficial TRUE PORTABLE Windows x64 build - canonical v8.18.
+          Unofficial TRUE PORTABLE Windows x64 build - canonical v8.19.
 
-          v8.18 retains the verified v8.17 SQLite batching, strict DB-only thumbnails, memory-only viewer data, incremental page merge and serialized Windows visual pipeline. Runtime evidence from v8.17 showed remaining long frame spans with near-zero build/raster time and rising process RSS, while parse/merge stayed at 0 ms and no slow visual DB batch was observed. The Windows packed-thumbnail path now reuses persistent Dio clients instead of constructing/closing one per image, preserving HTTP keep-alive and reducing native/client churn. Slow packed-cache reads and codec setup now emit VISUAL_DB_READ/VISUAL_CODEC, and EVENT_LOOP_STALL is captured from 400 ms.
+          v8.19 retains all v8.18 visual/HTTP fixes. Runtime evidence from v8.18 showed no >=400 ms EVENT_LOOP_STALL and no slow VISUAL_CODEC, while TAG_BATCH reached 509 ms and could overlap the next page because the old 2.5 s idle timer was close to normal pagination intervals. Typed Danbooru categories are now processed in one pass, persisted with at most one DB call per idle flush, use a 900-name SQLite lookup chunk, and wait for 5 seconds of pagination quiet. TAG_BATCH now reports changed, map_ms and db_ms separately.
 
           v7 remains a superseded historical workflow with a separate tag/asset namespace and cannot overwrite this release.
 
@@ -295,33 +260,29 @@ jobs:
           if ($remoteDigest -ne "sha256:$env:EXPECTED_SHA") {
             throw "Canonical asset digest mismatch: remote=$remoteDigest expected=sha256:$env:EXPECTED_SHA"
           }
-          $remoteBody = [string]$remoteRelease.body
-          if ($remoteBody -notmatch 'canonical v8\.18') { throw 'Canonical release notes do not identify v8.18' }
-          'V8_18_CANONICAL_ASSET_DIGEST=PASS'
-          'V8_18_RELEASE_IDENTITY=PASS'
-
-          $releaseUrl = [string]$remoteRelease.html_url
-          "release_url=$releaseUrl" >> $env:GITHUB_OUTPUT
+          if ([string]$remoteRelease.body -notmatch 'canonical v8\.19') { throw 'Canonical release notes do not identify v8.19' }
+          'V8_19_CANONICAL_ASSET_DIGEST=PASS'
+          'V8_19_RELEASE_IDENTITY=PASS'
+          "release_url=$([string]$remoteRelease.html_url)" >> $env:GITHUB_OUTPUT
 
       - name: Build summary
         if: always()
         shell: pwsh
         run: |
           @"
-          ## LoliSnatcher Windows x64 True Portable v8.18
+          ## LoliSnatcher Windows x64 True Portable v8.19
           - Build: `${{ steps.build.outcome }}`
-          - Patch level: TRUE_PORTABLE_V8_18
+          - Patch level: TRUE_PORTABLE_V8_19
           - Verified Danbooru auth: retained
           - Windows visual cache: SQLite DB-only
-          - Loose samples/thumbnails: forbidden + purge
-          - Performance diagnostics: Data\performance-stalls.log
-          - Incremental page merge: retained
           - Windows visual pipeline max: 1
-          - Tag idle coalescing: 2500 ms
-          - Tag SQLite persistence: bulk lookup + Batch
-          - Visual DB persistence: max 16 / 100 ms coalescing
           - Windows visual HTTP client: persistent/reused
-          - Visual DB/codec diagnostic threshold: 25 ms
+          - Incremental page merge: retained
+          - Tag idle coalescing: 5000 ms
+          - Tag category pass: single
+          - Tag DB calls per flush: max 1
+          - Tag SQLite lookup chunk: 900
+          - Visual DB persistence: max 16 / 100 ms coalescing
           - Event-loop stall threshold: 400 ms
           - Canonical asset digest verification: `${{ steps.release.outcome }}`
           - SHA-256: `${{ steps.package.outputs.sha256 }}`
