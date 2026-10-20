@@ -157,7 +157,7 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                 && companion.getOrder() == CompanionOrder.FOLLOW
                 && attackerSent.compareAndSet(false, true)) {
             client.getNetworkHandler().sendChatCommand("time set midnight");
-            client.getNetworkHandler().sendChatCommand("summon minecraft:zombie ~8 ~ ~");
+            client.getNetworkHandler().sendChatCommand("summon minecraft:zombie ~2 ~ ~");
             trace("CI_REAL_ZOMBIE_SPAWN_COMMAND_SENT");
         }
     }
@@ -224,7 +224,11 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                 .min(Comparator.comparingDouble(entity -> entity.squaredDistanceTo(owner))).orElse(null)
                 : findZombie((ServerWorld) owner.getWorld(), zombieUuid);
         if (zombie != null) {
-            if (initialZombieHealth < 0.0F) initialZombieHealth = zombie.getHealth();
+            if (initialZombieHealth < 0.0F) {
+                initialZombieHealth = zombie.getHealth();
+                trace("CI_ZOMBIE_ACQUIRED uuid=" + zombie.getUuid() + " distanceOwner=" + zombie.distanceTo(owner)
+                        + " distanceCompanion=" + companion.distanceTo(zombie) + " health=" + initialZombieHealth);
+            }
             if (ownerTookZombieDamage && zombie.getUuid().equals(zombieUuid)) {
                 if (companion.getTarget() == zombie) {
                     if (!companionAcquiredZombie) {

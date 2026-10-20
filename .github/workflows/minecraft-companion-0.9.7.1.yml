@@ -16,12 +16,12 @@ on:
       source_archive:
         description: "Checkpoint .7z/.zip dentro del repo; si no existe se usa project_path/autodetección"
         required: false
-        default: "minecraft-companion-0.9.7.1-dev.5-fabric-1.20.1.7z"
+        default: "minecraft-companion-0.9.7.1-dev.4-fabric-1.20.1.7z"
         type: string
       expected_source_sha256:
         description: "SHA-256 esperado del checkpoint; dejar vacío para no comprobar archivo"
         required: false
-        default: "d3f1abbc7f1a96e9806f19181d87203a22d2cc3c006eced91becc9e9cbc69120"
+        default: "c49113e4801885333d73e3a8d5b4f14b448fa1cbe5874fefa9e04348b5e2f595"
         type: string
       gametest_runs:
         description: "Número de pasadas completas de GameTests"
@@ -90,8 +90,8 @@ jobs:
         shell: bash
         env:
           INPUT_PROJECT_PATH: ${{ inputs.project_path }}
-          INPUT_SOURCE_ARCHIVE: ${{ github.event_name == 'push' && 'minecraft-companion-0.9.7.1-dev.5-fabric-1.20.1.7z' || inputs.source_archive }}
-          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && 'd3f1abbc7f1a96e9806f19181d87203a22d2cc3c006eced91becc9e9cbc69120' || inputs.expected_source_sha256 }}
+          INPUT_SOURCE_ARCHIVE: ${{ github.event_name == 'push' && 'minecraft-companion-0.9.7.1-dev.4-fabric-1.20.1.7z' || inputs.source_archive }}
+          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && 'c49113e4801885333d73e3a8d5b4f14b448fa1cbe5874fefa9e04348b5e2f595' || inputs.expected_source_sha256 }}
         run: |
           set -euo pipefail
           mkdir -p "$ARTIFACT_DIR"
