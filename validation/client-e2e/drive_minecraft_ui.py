@@ -8,6 +8,7 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+import shutil
 
 
 def capture(path: Path):
