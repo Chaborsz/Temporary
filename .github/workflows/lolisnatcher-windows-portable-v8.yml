@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
   build:
-    name: Windows x64 / True Portable v8.20 / Canonical Release
+    name: Windows x64 / True Portable v8.21 / Canonical Release
     runs-on: windows-2022
     timeout-minutes: 60
     env:
@@ -60,7 +60,7 @@ jobs:
           "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
           "build=$($Matches[2])" >> $env:GITHUB_OUTPUT
 
-      - name: Apply portable patches through v8.20
+      - name: Apply portable patches through v8.21
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
@@ -80,7 +80,7 @@ jobs:
           python ..\builder\.github\scripts\lolisnatcher_v8_cache_path_label_fix.py
           python ..\builder\.github\scripts\lolisnatcher_v8_webp_thumbnail_cache_patch.py
           python ..\builder\.github\scripts\lolisnatcher_v11_generic_danbooru_auth.py
-          'PATCH_CHAIN_V8_20=PASS'
+          'PATCH_CHAIN_V8_21=PASS'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -127,8 +127,8 @@ jobs:
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
-          dart format lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/booru_handler.dart lib/src/handlers/tag_handler.dart lib/src/handlers/database_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/image_writer_isolate.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
-          flutter analyze --no-fatal-infos --no-fatal-warnings lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/booru_handler.dart lib/src/handlers/tag_handler.dart lib/src/handlers/database_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/image_writer_isolate.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
+          dart format lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/booru_handler.dart lib/src/handlers/tag_handler.dart lib/src/handlers/database_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/image_writer_isolate.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/services/performance_watchdog.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
+          flutter analyze --no-fatal-infos --no-fatal-warnings lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/booru_handler.dart lib/src/handlers/tag_handler.dart lib/src/handlers/database_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/image_writer_isolate.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/services/performance_watchdog.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
 
       - name: Build Windows x64 Release
         id: build
@@ -139,7 +139,7 @@ jobs:
           $exe = 'build\windows\x64\runner\Release\lolisnatcher.exe'
           if (-not (Test-Path $exe)) { throw "Expected executable not found: $exe" }
 
-      - name: Package True Portable v8.20 build
+      - name: Package True Portable v8.21 build
         id: package
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -155,7 +155,7 @@ jobs:
           $dataDir = Join-Path $releaseDir 'Data'
           New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
           @"
-          LoliSnatcher TRUE PORTABLE Windows x64 - v8.20
+          LoliSnatcher TRUE PORTABLE Windows x64 - v8.21
 
           Runtime invariants:
           - Danbooru verified login/API-key behavior is retained.
@@ -167,10 +167,12 @@ jobs:
           - Windows visual thumbnail load/decode pipeline remains serialized (max 1).
           - Windows packed-thumbnail Dio clients remain persistent/reused.
           - Typed Danbooru tags remain coalesced after 5s quiet and persisted with at most one DB call per flush.
-          - Tag-map stale cutoff/timestamp is calculated once per flush and map processing yields every 32 tags.
-          - TAG_BATCH logs changed/map_ms/db_ms/slice_max_ms/yields/total ms.
-          - Thumbnail BLOB persistence remains coalesced into SQLite batches (max 16 / 100 ms).
-          - VISUAL_DB_READ / VISUAL_CODEC / EVENT_LOOP_STALL diagnostics are retained.
+          - Tag-map processing remains cooperatively sliced every 32 tags.
+          - Deferred tracked-state refreshes are serialized and use compact IN lookups plus O(1) result maps.
+          - Optional DB indexes now include BooruItem postURL/fileURL when indexesEnabled is on.
+          - TRACKED_BATCH logs lookup/apply/change timing; TAG_BATCH retains slice diagnostics.
+          - Independent watchdog isolate flushes >=150 ms stalls immediately with active phase labels.
+          - In-isolate EVENT_LOOP_STALL sampling is 50 ms with a 150 ms threshold.
           "@ | Set-Content -Encoding UTF8 (Join-Path $dataDir 'PORTABLE-README.txt')
           @(
             "PROJECT=LoliSnatcher_Droid"
@@ -180,7 +182,7 @@ jobs:
             "TARGET=windows-x64"
             "CONFIGURATION=Release"
             "PORTABLE_MODE=TRUE"
-            "PATCH_LEVEL=TRUE_PORTABLE_V8_20"
+            "PATCH_LEVEL=TRUE_PORTABLE_V8_21"
             "WORKFLOW_LINE=V8_CANONICAL"
             "DANBOORU_AUTH=V8_8_VERIFIED_LOGIN"
             "VISUAL_CACHE=.\Data\LoliSnatcher\cache\visual_cache.db"
@@ -199,10 +201,15 @@ jobs:
             "TAG_STALE_CUTOFF=PER_FLUSH"
             "TAG_MAP_SLICE_SIZE=32"
             "TAG_MAP_COOPERATIVE_YIELD=TRUE"
+            "TRACKED_LOOKUP=IN_QUERY_O1_MAP"
+            "TRACKED_REFRESH_SERIAL=TRUE"
+            "TRACKED_URL_INDEXES=WHEN_INDEXES_ENABLED"
             "VISUAL_DB_BATCH_MAX=16"
             "VISUAL_DB_COALESCE_MS=100"
             "VISUAL_DIAGNOSTIC_CODEC_THRESHOLD_MS=25"
-            "EVENT_LOOP_STALL_THRESHOLD_MS=400"
+            "WATCHDOG_ISOLATE=TRUE"
+            "WATCHDOG_STALL_THRESHOLD_MS=150"
+            "EVENT_LOOP_STALL_THRESHOLD_MS=150"
             "PERFORMANCE_STALL_LOG=.\Data\performance-stalls.log"
             "ENABLED_LOCALE=es_MX"
             "INAPPWEBVIEW_WINDOWS_FIX=FULL_PR2838_832d6517b50b3b8094d2658800aa84ee5b9294bf"
@@ -217,7 +224,7 @@ jobs:
           "sha256=$hash" >> $env:GITHUB_OUTPUT
           "SHA256=$hash"
 
-      - name: Publish canonical True Portable v8.20 prerelease
+      - name: Publish canonical True Portable v8.21 prerelease
         id: release
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -233,13 +240,13 @@ jobs:
           $tag = "lolisnatcher-windows-trueportable-$env:VERSION-$env:BUILD_NUMBER"
           $zipPath = Join-Path $PWD "dist\$env:ZIP_NAME"
           $hashPath = "$zipPath.sha256"
-          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v8.20"
+          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v8.21"
           $notes = @"
-          Unofficial TRUE PORTABLE Windows x64 build - canonical v8.20.
+          Unofficial TRUE PORTABLE Windows x64 build - canonical v8.21.
 
-          v8.20 retains all v8.19 batching and v8.18 visual/HTTP fixes. Runtime evidence from v8.19 showed TAG_BATCH tags=1232 changed=366 map_ms=525 db_ms=166 ms=691 coincident with EVENT_LOOP_STALL gap_ms=574 and SLOW_FRAME total_ms=515, proving the synchronous in-memory tag-map phase was the dominant blocker. v8.20 computes the stale cutoff/timestamp once per flush and cooperatively yields every 32 processed tags. TAG_BATCH now also reports slice_max_ms and yields so runtime can prove the longest synchronous tag-map slice is bounded.
+          v8.21 retains all v8.20 tag slicing and v8.18-v8.19 visual/SQLite fixes. Runtime evidence from v8.20 showed TAG_BATCH 419 tags completing in 86 ms with map_ms=0, while a later SLOW_FRAME=202 ms occurred with build/raster near 1 ms and pending=0. The deferred tracked-state refresh was outside PAGE_PHASE and used a long OR query over BooruItem postURL/fileURL without creating the corresponding optional URL indexes. v8.21 rewrites that lookup to compact IN sets plus O(1) maps, updates Rx flags only when values change, serializes Danbooru tracked refreshes, restores URL indexes when indexesEnabled is on, and adds TRACKED_BATCH diagnostics. A separate watchdog isolate now writes >=150 ms stall markers immediately with active phase labels so hard freezes survive process termination.
 
-          v7 remains a superseded historical workflow with a separate tag/asset namespace and cannot overwrite this release.
+          LoliSnatcher work is maintained on branch lolisnatcher-canonical-v8 to avoid unrelated Temporary-repository commits overwriting its canonical build chain.
 
           Upstream commit: $env:SOURCE_SHA
           Flutter: $env:FLUTTER_VERSION
@@ -264,9 +271,9 @@ jobs:
           if ($remoteDigest -ne "sha256:$env:EXPECTED_SHA") {
             throw "Canonical asset digest mismatch: remote=$remoteDigest expected=sha256:$env:EXPECTED_SHA"
           }
-          if ([string]$remoteRelease.body -notmatch 'canonical v8\.20') { throw 'Canonical release notes do not identify v8.20' }
-          'V8_20_CANONICAL_ASSET_DIGEST=PASS'
-          'V8_20_RELEASE_IDENTITY=PASS'
+          if ([string]$remoteRelease.body -notmatch 'canonical v8\.21') { throw 'Canonical release notes do not identify v8.21' }
+          'V8_21_CANONICAL_ASSET_DIGEST=PASS'
+          'V8_21_RELEASE_IDENTITY=PASS'
           "release_url=$([string]$remoteRelease.html_url)" >> $env:GITHUB_OUTPUT
 
       - name: Build summary
@@ -274,22 +281,22 @@ jobs:
         shell: pwsh
         run: |
           @"
-          ## LoliSnatcher Windows x64 True Portable v8.20
+          ## LoliSnatcher Windows x64 True Portable v8.21
           - Build: `${{ steps.build.outcome }}`
-          - Patch level: TRUE_PORTABLE_V8_20
+          - Patch level: TRUE_PORTABLE_V8_21
           - Verified Danbooru auth: retained
           - Windows visual cache: SQLite DB-only
           - Windows visual pipeline max: 1
           - Windows visual HTTP client: persistent/reused
           - Incremental page merge: retained
           - Tag idle coalescing: 5000 ms
-          - Tag category pass: single
           - Tag DB calls per flush: max 1
-          - Tag SQLite lookup chunk: 900
-          - Tag stale cutoff: once per flush
           - Tag map cooperative slice: 32
-          - Visual DB persistence: max 16 / 100 ms coalescing
-          - Event-loop stall threshold: 400 ms
+          - Tracked lookup: IN query + O(1) maps
+          - Tracked refresh serialization: enabled
+          - Tracked URL indexes: when indexesEnabled
+          - Watchdog isolate threshold: 150 ms
+          - Event-loop stall threshold: 150 ms
           - Canonical asset digest verification: `${{ steps.release.outcome }}`
           - SHA-256: `${{ steps.package.outputs.sha256 }}`
           - Release: ${{ steps.release.outputs.release_url }}
