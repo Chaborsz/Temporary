@@ -45,7 +45,7 @@ PY
 sha256sum "$PROJECT_DIR"/build/libs/*.jar > "$CI_VALIDATION_DIR/product-jars-before-client.txt"
 
 set +e
-timeout "${CLIENT_TIMEOUT_SECONDS:-900}s" gradle --no-daemon --no-build-cache --stacktrace \
+setsid timeout "${CLIENT_TIMEOUT_SECONDS:-900}s" gradle --no-daemon --no-build-cache --stacktrace \
   -x classes -x processResources runClient > "$CI_VALIDATION_DIR/runClient-console.log" 2>&1 &
 client_pid=$!
 set -e
@@ -58,9 +58,13 @@ cleanup() {
     cat "$CI_VALIDATION_DIR/runtime-trace.log" >&2 || true
     find "$CI_VALIDATION_DIR" -maxdepth 1 -type f -printf '%f %s bytes\\n' >&2 || true
   fi
+  kill -TERM -- "-$client_pid" 2>/dev/null || true
+  pkill -TERM -f '[n]et.fabricmc.devlaunchinjector.Main' 2>/dev/null || true
   pkill -TERM -f '[n]et.minecraft.client.main.Main' 2>/dev/null || true
   kill "$client_pid" 2>/dev/null || true
   sleep 2
+  kill -KILL -- "-$client_pid" 2>/dev/null || true
+  pkill -KILL -f '[n]et.fabricmc.devlaunchinjector.Main' 2>/dev/null || true
   pkill -KILL -f '[n]et.minecraft.client.main.Main' 2>/dev/null || true
   exit "$rc"
 }
@@ -98,7 +102,7 @@ UI_TIMEOUT_SECONDS=300 python3 "$VALIDATION_SOURCE_DIR/drive_minecraft_ui.py" \
   --trace "$CI_VALIDATION_DIR/runtime-trace.log" \
   --screenshots "$CI_VALIDATION_DIR"
 
-deadline=$((SECONDS + ${CLIENT_TIMEOUT_SECONDS:-900}))
+deadline=$((SECONDS + 180))
 while (( SECONDS < deadline )); do
   if grep -q 'CI_OWNER_DEFENSE_E2E_PASS' "$CI_VALIDATION_DIR/runtime-trace.log" 2>/dev/null; then
     break
