@@ -1,6 +1,6 @@
 from pathlib import Path
 
-# Build trigger checkpoint: v8.12 strict DB-only Windows visual cache.
+# Build trigger checkpoint: v8.13 Danbooru page batching + phase diagnostics.
 path = Path('lib/src/pages/settings/booru_edit_page.dart')
 text = path.read_text(encoding='utf-8')
 
