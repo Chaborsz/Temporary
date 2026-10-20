@@ -1,12 +1,12 @@
 package validation;
 
 import dev.companion.minecraft.CompanionEntity;
+import dev.companion.minecraft.CompanionCombatMode;
 import dev.companion.minecraft.CompanionOrder;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -44,6 +44,7 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
     private static int serverTicks;
     private static int targetStableTicks;
     private static float initialZombieHealth = -1.0F;
+    private static float previousOwnerHealth = Float.NaN;
     private static boolean ownerTookZombieDamage;
     private static boolean companionAcquiredZombie;
     private static boolean navigationStarted;
@@ -60,25 +61,6 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
     @Override
     public void onInitializeClient() {
         trace("CI_HARNESS_READY");
-        ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damageTaken, blocked) -> {
-            if (entity instanceof ServerPlayerEntity player && source.getAttacker() instanceof ZombieEntity zombie
-                    && damageTaken > 0.0F && player.getHealth() < player.getMaxHealth()) {
-                ownerUuid = player.getUuid();
-                zombieUuid = zombie.getUuid();
-                ownerTookZombieDamage = true;
-                trace("CI_OWNER_DAMAGE accepted=true player=" + player.getUuid() + " zombie=" + zombie.getUuid()
-                        + " source=" + source.getName() + " applied=" + damageTaken);
-            }
-            if (entity instanceof ZombieEntity zombie && source.getAttacker() instanceof CompanionEntity companion
-                    && damageTaken > 0.0F) {
-                companionDamagedZombie = true;
-                companionUuid = companion.getUuid();
-                trace("CI_COMPANION_DAMAGE zombie=" + zombie.getUuid() + " companion=" + companion.getUuid()
-                        + " weapon=" + net.minecraft.registry.Registries.ITEM.getId(
-                        companion.getEquippedStack(EquipmentSlot.MAINHAND).getItem())
-                        + " applied=" + damageTaken + " health=" + zombie.getHealth());
-            }
-        });
         ServerTickEvents.END_SERVER_TICK.register(CiClientValidation::serverTick);
         ClientTickEvents.END_CLIENT_TICK.register(CiClientValidation::clientTick);
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
@@ -131,7 +113,7 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                     + " order=" + companion.getOrder() + " owner=" + companion.getOwnerUuid());
         }
         if (companion != null && Files.exists(uiCompletePath())
-                && companion.getCombatMode() == net.companion.minecraft.CompanionCombatMode.DEFENSIVE
+                && companion.getCombatMode() == CompanionCombatMode.DEFENSIVE
                 && companion.getOrder() == CompanionOrder.FOLLOW
                 && attackerSent.compareAndSet(false, true)) {
             client.getNetworkHandler().sendChatCommand("time set midnight");
@@ -146,14 +128,41 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
         ServerPlayerEntity owner = ownerUuid == null ? server.getPlayerManager().getPlayerList().stream()
                 .findFirst().orElse(null) : server.getPlayerManager().getPlayer(ownerUuid);
         if (owner == null) return;
+        float ownerHealth = owner.getHealth();
+        if (Float.isNaN(previousOwnerHealth)) previousOwnerHealth = ownerHealth;
+        if (ownerHealth < previousOwnerHealth) {
+            Entity attacker = owner.getAttacker();
+            if (attacker instanceof ZombieEntity zombie) {
+                ownerUuid = owner.getUuid();
+                zombieUuid = zombie.getUuid();
+                ownerTookZombieDamage = true;
+                trace("CI_OWNER_DAMAGE accepted=true player=" + owner.getUuid() + " zombie=" + zombie.getUuid()
+                        + " attacker=" + attacker.getType() + " health=" + previousOwnerHealth + "->" + ownerHealth);
+            }
+        }
+        previousOwnerHealth = ownerHealth;
         CompanionEntity companion = findOwnedCompanion(owner);
         if (companion == null) return;
+        if (zombieUuid != null) {
+            ZombieEntity damagedZombie = findZombie((ServerWorld) owner.getWorld(), zombieUuid);
+            if (damagedZombie != null && damagedZombie.getHealth() < damagedZombie.getMaxHealth()
+                    && companionUuid != null) {
+                Entity damageSource = damagedZombie.getAttacker();
+                if (damageSource instanceof CompanionEntity && damageSource.getUuid().equals(companionUuid)) {
+                    companionDamagedZombie = true;
+                    trace("CI_COMPANION_DAMAGE zombie=" + damagedZombie.getUuid() + " companion=" + companionUuid
+                            + " weapon=" + net.minecraft.registry.Registries.ITEM.getId(
+                            companion.getEquippedStack(EquipmentSlot.MAINHAND).getItem())
+                            + " health=" + damagedZombie.getHealth());
+                }
+            }
+        }
         if (companionUuid == null) companionUuid = companion.getUuid();
         if (attackerSent.get() && !uiReadyAnnounced.get()) {
             uiReadyAnnounced.set(true);
             trace("CI_SERVER_UI_STATE mode=" + companion.getCombatMode() + " order=" + companion.getOrder()
                     + " owner=" + companion.getOwnerUuid() + " player=" + owner.getUuid());
-            if (companion.getCombatMode() != net.companion.minecraft.CompanionCombatMode.DEFENSIVE
+            if (companion.getCombatMode() != CompanionCombatMode.DEFENSIVE
                     || companion.getOrder() != CompanionOrder.FOLLOW) {
                 failed = true;
                 trace("CI_OWNER_DEFENSE_E2E_FAIL UI selection did not reach server DEFENSIVE/FOLLOW state");
@@ -163,7 +172,7 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
         ZombieEntity zombie = zombieUuid == null ? owner.getWorld().getEntitiesByClass(ZombieEntity.class,
                         owner.getBoundingBox().expand(24.0D), Entity::isAlive).stream()
                 .min(Comparator.comparingDouble(entity -> entity.squaredDistanceTo(owner))).orElse(null)
-                : findZombie(owner.getWorld(), zombieUuid);
+                : findZombie((ServerWorld) owner.getWorld(), zombieUuid);
         if (zombie != null) {
             if (initialZombieHealth < 0.0F) initialZombieHealth = zombie.getHealth();
             if (ownerTookZombieDamage && zombie.getUuid().equals(zombieUuid)) {
