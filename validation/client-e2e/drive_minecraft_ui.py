@@ -84,7 +84,7 @@ def main():
         raise RuntimeError("Integrated test world did not start; last OCR was: " + text[:1600])
     print(f"UI_WORLD_READY_SECONDS={int(time.monotonic() - start)}", flush=True)
 
-    deadline = time.monotonic() + 120
+    deadline = time.monotonic() + 60
     while time.monotonic() < deadline and not trace_has(args.trace, "CI_COMPANION_SYNCED"):
         time.sleep(1)
     if not trace_has(args.trace, "CI_COMPANION_SYNCED"):
