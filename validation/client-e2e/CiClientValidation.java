@@ -20,6 +20,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Box;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.option.Perspective;
 
 import java.io.IOException;
@@ -27,11 +28,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Comparator;
+import java.lang.reflect.Method;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /** Temporary CI-only observer for the real integrated client/server path. */
 public final class CiClientValidation implements ModInitializer, ClientModInitializer {
+    private static final AtomicBoolean worldCreationRequested = new AtomicBoolean();
+    private static final AtomicBoolean worldCreationStarted = new AtomicBoolean();
     private static final AtomicBoolean worldAnnounced = new AtomicBoolean();
     private static final AtomicBoolean summonSent = new AtomicBoolean();
     private static final AtomicBoolean companionAnnounced = new AtomicBoolean();
@@ -88,7 +92,32 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
         return 1;
     }
 
+    private static void ensureIntegratedWorld(MinecraftClient client) {
+        if (client.currentScreen instanceof CreateWorldScreen createScreen) {
+            if (worldCreationStarted.compareAndSet(false, true)) {
+                try {
+                    createScreen.getWorldCreator().setCheatsEnabled(true);
+                    Method createLevel = CreateWorldScreen.class.getDeclaredMethod("createLevel");
+                    createLevel.setAccessible(true);
+                    createLevel.invoke(createScreen);
+                    trace("CI_INTEGRATED_WORLD_CREATE_STARTED cheats=true");
+                } catch (ReflectiveOperationException failure) {
+                    trace("CI_INTEGRATED_WORLD_CREATE_FAILURE " + failure);
+                    throw new IllegalStateException("Could not start the CI integrated test world", failure);
+                }
+            }
+            return;
+        }
+        if (worldCreationRequested.compareAndSet(false, true)) {
+            CreateWorldScreen.create(client, client.currentScreen);
+            trace("CI_INTEGRATED_WORLD_CREATE_SCREEN_REQUESTED");
+        }
+    }
+
     private static void clientTick(MinecraftClient client) {
+        if (client.player == null && client.world == null) {
+            ensureIntegratedWorld(client);
+        }
         if (client.player == null || client.world == null || client.getNetworkHandler() == null) {
             worldAnnounced.set(false);
             return;

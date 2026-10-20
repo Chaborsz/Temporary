@@ -8,7 +8,6 @@ from pathlib import Path
 import subprocess
 import sys
 import time
-import shutil
 
 
 def screenshot(path: Path):
@@ -77,44 +76,13 @@ def main():
     frame = args.screenshots / "ui-current.png"
     ui_timeout = int(os.environ.get("UI_TIMEOUT_SECONDS", "300"))
     start = time.monotonic()
-    end = start + ui_timeout
-    last_report = start
-    commands_enabled = False
-
-    while time.monotonic() < end and not trace_has(args.trace, "CI_WORLD_READY"):
-        text, lines = capture(frame)
-        low = text.lower()
-        now = time.monotonic()
-        if now - last_report >= 10:
-            elapsed = int(now - start)
-            snapshot = args.screenshots / f"ui-progress-{elapsed:04d}.png"
-            shutil.copy2(frame, snapshot)
-            print(f"UI_PROGRESS_SECONDS={elapsed} OCR={text[:700]!r}", flush=True)
-            last_report = now
-        if "welcome to minecraft" in low and click_line(lines, "continue"):
-            print("UI_CLICK=accessibility_continue", flush=True)
-        elif "singleplayer" in low and click_line(lines, "singleplayer"):
-            print("UI_CLICK=singleplayer", flush=True)
-        elif "game mode" in low and ("allow commands" in low or "allow cheats" in low):
-            if ("allow commands on" in low or "allow commands: on" in low
-                    or "allow cheats on" in low or "allow cheats: on" in low):
-                commands_enabled = True
-            if "allow commands off" in low or "allow cheats off" in low or "allow commands: off" in low:
-                click_line(lines, "allow commands") or click_line(lines, "allow cheats")
-                print("UI_CLICK=enable_commands", flush=True)
-                time.sleep(1)
-                continue
-            if commands_enabled and click_line(lines, "create new world", minimum_y=600):
-                print("UI_CLICK=create_world_start", flush=True)
-        elif "create new world" in low:
-            if click_line(lines, "create new world", minimum_y=600):
-                print("UI_CLICK=create_world_select", flush=True)
-        elif "select world" in low and click_line(lines, "create new world", minimum_y=600):
-            print("UI_CLICK=create_world_select", flush=True)
-        time.sleep(2)
-
+    deadline = start + ui_timeout
+    while time.monotonic() < deadline and not trace_has(args.trace, "CI_WORLD_READY"):
+        time.sleep(1)
     if not trace_has(args.trace, "CI_WORLD_READY"):
-        raise RuntimeError("Integrated world did not reach the real client harness; last OCR was: " + text[:1600])
+        text, _ = capture(frame)
+        raise RuntimeError("Integrated test world did not start; last OCR was: " + text[:1600])
+    print(f"UI_WORLD_READY_SECONDS={int(time.monotonic() - start)}", flush=True)
 
     deadline = time.monotonic() + 120
     while time.monotonic() < deadline and not trace_has(args.trace, "CI_COMPANION_SYNCED"):
