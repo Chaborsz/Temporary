@@ -15,7 +15,6 @@ on:
         type: string
   push:
     paths:
-      - ".github/workflows/lolisnatcher-windows-portable-v8.yml"
       - ".github/scripts/lolisnatcher_true_portable_patch.py"
       - ".github/scripts/lolisnatcher_v4_patch.py"
       - ".github/scripts/lolisnatcher_v5_login_cloudflare_patch.py"
@@ -275,16 +274,21 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw "Failed to publish release $tag" }
 
           $apiPath = "repos/$env:GITHUB_REPOSITORY/releases/tags/$tag"
-          $remoteDigest = (gh api $apiPath --jq ".assets[] | select(.name == \"$env:ZIP_NAME\") | .digest").Trim()
+          $releaseJson = gh api $apiPath
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to read canonical release metadata' }
+          $remoteRelease = $releaseJson | ConvertFrom-Json
+          $remoteAsset = $remoteRelease.assets | Where-Object { $_.name -eq $env:ZIP_NAME } | Select-Object -First 1
+          if ($null -eq $remoteAsset) { throw "Canonical ZIP asset missing: $env:ZIP_NAME" }
+          $remoteDigest = [string]$remoteAsset.digest
           if ($remoteDigest -ne "sha256:$env:EXPECTED_SHA") {
             throw "Canonical asset digest mismatch: remote=$remoteDigest expected=sha256:$env:EXPECTED_SHA"
           }
-          $remoteBody = gh api $apiPath --jq .body
+          $remoteBody = [string]$remoteRelease.body
           if ($remoteBody -notmatch 'canonical v8\.16') { throw 'Canonical release notes do not identify v8.16' }
           'V8_16_CANONICAL_ASSET_DIGEST=PASS'
           'V8_16_RELEASE_IDENTITY=PASS'
 
-          $releaseUrl = (gh release view $tag --repo $env:GITHUB_REPOSITORY --json url --jq .url).Trim()
+          $releaseUrl = [string]$remoteRelease.html_url
           "release_url=$releaseUrl" >> $env:GITHUB_OUTPUT
 
       - name: Build summary
