@@ -184,10 +184,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          echo "=== summon-related source ==="
-          rg -n -i -C 24 'could not be spawned|failed to spawn|spawn entity|spawnentity' "$PROJECT_DIR/src/main/java" || true
-          echo "=== spawn type/restriction source ==="
-          rg -n -i -C 8 'SpawnRestriction|canSpawn|spawnEntity\(' "$PROJECT_DIR/src/main/java" | head -240 || true
+          echo "=== Java source files ==="
+          find "$PROJECT_DIR" -type f -name '*.java' -print | sort | head -180 || true
+          echo "=== summon/spawn source matches ==="
+          rg -n -i -C 18 'summon|spawn|could not|couldn.t' "$PROJECT_DIR" --glob '*.java' --glob '*.json' --glob '*.properties' | head -420 || true
 
       - name: Verify Gradle and Java
         shell: bash
