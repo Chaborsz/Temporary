@@ -20,6 +20,7 @@ _chain = [
     ('lolisnatcher_v8_19_tag_idle_batch_patch.py', 'V8_19_TAG_STALL_REDUCTION_CHAIN=PASS'),
     ('lolisnatcher_v8_20_cooperative_tag_map_patch.py', 'V8_20_EVENT_LOOP_STALL_REDUCTION_CHAIN=PASS'),
     ('lolisnatcher_v8_21_tracked_lookup_watchdog_patch.py', 'V8_21_POST_PAGE_STALL_REDUCTION_CHAIN=PASS'),
+    ('lolisnatcher_v8_21_analyzer_fix_patch.py', 'V8_21_ANALYZER_FIX_CHAIN=PASS'),
 ]
 
 for filename, marker in _chain:
