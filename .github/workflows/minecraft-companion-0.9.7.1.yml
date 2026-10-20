@@ -3,7 +3,8 @@ name: Minecraft Companion 0.9.7.1 validation
 on:
   push:
     paths:
-      - "minecraft-companion-0.9.7.1-dev.3-fabric-1.20.1.7z"
+      - "minecraft-companion-0.9.7.1-dev.4-fabric-1.20.1.7z"
+      - "minecraft-companion-0.9.7.1-dev.4-fabric-1.20.1.7z"
       - ".github/workflows/minecraft-companion-0.9.7.1.yml"
   workflow_dispatch:
     inputs:
@@ -15,12 +16,12 @@ on:
       source_archive:
         description: "Checkpoint .7z/.zip dentro del repo; si no existe se usa project_path/autodetección"
         required: false
-        default: "minecraft-companion-0.9.7.1-dev.3-fabric-1.20.1.7z"
+        default: "minecraft-companion-0.9.7.1-dev.4-fabric-1.20.1.7z"
         type: string
       expected_source_sha256:
         description: "SHA-256 esperado del checkpoint; dejar vacío para no comprobar archivo"
         required: false
-        default: "4c112911a29c2847957e4d6f7c9d46a476eb94f02825a74cb7e28b6483bf1ac9"
+        default: "c49113e4801885333d73e3a8d5b4f14b448fa1cbe5874fefa9e04348b5e2f595"
         type: string
       gametest_runs:
         description: "Número de pasadas completas de GameTests"
@@ -84,8 +85,8 @@ jobs:
         shell: bash
         env:
           INPUT_PROJECT_PATH: ${{ inputs.project_path }}
-          INPUT_SOURCE_ARCHIVE: ${{ github.event_name == 'push' && 'minecraft-companion-0.9.7.1-dev.3-fabric-1.20.1.7z' || inputs.source_archive }}
-          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && '4c112911a29c2847957e4d6f7c9d46a476eb94f02825a74cb7e28b6483bf1ac9' || inputs.expected_source_sha256 }}
+          INPUT_SOURCE_ARCHIVE: ${{ github.event_name == 'push' && 'minecraft-companion-0.9.7.1-dev.4-fabric-1.20.1.7z' || inputs.source_archive }}
+          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && 'c49113e4801885333d73e3a8d5b4f14b448fa1cbe5874fefa9e04348b5e2f595' || inputs.expected_source_sha256 }}
         run: |
           set -euo pipefail
           mkdir -p "$ARTIFACT_DIR"
@@ -271,14 +272,14 @@ jobs:
           fi
 
       - name: Install graphical client dependencies
-        if: ${{ github.event_name == 'push' || inputs.run_client_smoke }}
+        if: ${{ always() && steps.source.outcome == 'success' && (github.event_name == 'push' || inputs.run_client_smoke) }}
         shell: bash
         run: |
           set -euo pipefail
           glxinfo -B 2>&1 | tee "$ARTIFACT_DIR/glxinfo-host.txt" || true
 
       - name: Real client validation hook or Xvfb smoke
-        if: ${{ github.event_name == 'push' || inputs.run_client_smoke }}
+        if: ${{ always() && steps.source.outcome == 'success' && (github.event_name == 'push' || inputs.run_client_smoke) }}
         shell: bash
         env:
           CLIENT_TIMEOUT_SECONDS: ${{ inputs.client_timeout_seconds || '300' }}
