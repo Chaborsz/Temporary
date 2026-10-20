@@ -1,0 +1,430 @@
+name: Minecraft Companion 0.9.7.1 validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_path:
+        description: "Ruta del proyecto extraído dentro del repo (fallback si no se usa archivo)"
+        required: false
+        default: "minecraft-companion"
+        type: string
+      source_archive:
+        description: "Checkpoint .7z/.zip dentro del repo; si no existe se usa project_path/autodetección"
+        required: false
+        default: "minecraft-companion-0.9.7.1-dev.3-fabric-1.20.1.7z"
+        type: string
+      expected_source_sha256:
+        description: "SHA-256 esperado del checkpoint; dejar vacío para no comprobar archivo"
+        required: false
+        default: "4c112911a29c2847957e4d6f7c9d46a476eb94f02825a74cb7e28b6483bf1ac9"
+        type: string
+      gametest_runs:
+        description: "Número de pasadas completas de GameTests"
+        required: true
+        default: "5"
+        type: string
+      run_client_smoke:
+        description: "Intentar cliente real con Xvfb/Mesa tras build + GameTests"
+        required: true
+        default: true
+        type: boolean
+      client_timeout_seconds:
+        description: "Timeout del smoke del cliente si no existe scripts/ci-client-validation.sh"
+        required: true
+        default: "300"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: minecraft-companion-0.9.7.1-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: Build + GameTests + client
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+
+    env:
+      GRADLE_ARGS: --no-daemon --no-build-cache --stacktrace
+      ARTIFACT_DIR: ${{ github.workspace }}/ci-artifacts
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Gradle 8.8
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.8"
+          cache-disabled: true
+
+      - name: Install runtime tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            p7zip-full unzip xvfb xauth imagemagick mesa-utils libgl1-mesa-dri libasound2t64
+
+      - name: Resolve source project
+        id: source
+        shell: bash
+        env:
+          INPUT_PROJECT_PATH: ${{ inputs.project_path }}
+          INPUT_SOURCE_ARCHIVE: ${{ inputs.source_archive }}
+          INPUT_EXPECTED_SHA: ${{ inputs.expected_source_sha256 }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$ARTIFACT_DIR"
+
+          archive="$INPUT_SOURCE_ARCHIVE"
+          requested_project="$INPUT_PROJECT_PATH"
+          candidate=""
+
+          if [[ -n "$archive" && -f "$GITHUB_WORKSPACE/$archive" ]]; then
+            archive="$GITHUB_WORKSPACE/$archive"
+            echo "Using source archive: $archive"
+
+            actual_sha="$(sha256sum "$archive" | awk '{print $1}')"
+            echo "SOURCE_ARCHIVE_SHA256=$actual_sha" | tee "$ARTIFACT_DIR/source-archive-sha256.txt"
+
+            if [[ -n "$INPUT_EXPECTED_SHA" && "$actual_sha" != "$INPUT_EXPECTED_SHA" ]]; then
+              echo "ERROR: source archive SHA-256 mismatch" >&2
+              echo "expected=$INPUT_EXPECTED_SHA" >&2
+              echo "actual=$actual_sha" >&2
+              exit 21
+            fi
+
+            checkpoint_dir="$RUNNER_TEMP/minecraft-companion-checkpoint"
+            project_extract="$RUNNER_TEMP/minecraft-companion-project"
+            rm -rf "$checkpoint_dir" "$project_extract"
+            mkdir -p "$checkpoint_dir" "$project_extract"
+
+            case "$archive" in
+              *.7z)
+                7z x -y "$archive" "-o$checkpoint_dir" >/dev/null
+                ;;
+              *.zip)
+                unzip -q "$archive" -d "$checkpoint_dir"
+                ;;
+              *)
+                echo "ERROR: unsupported source archive: $archive" >&2
+                exit 22
+                ;;
+            esac
+
+            nested_zip="$(find "$checkpoint_dir" -type f -name 'source-project.zip' -print -quit || true)"
+            if [[ -n "$nested_zip" ]]; then
+              echo "Found nested source-project.zip: $nested_zip"
+              unzip -q "$nested_zip" -d "$project_extract"
+              search_root="$project_extract"
+            else
+              search_root="$checkpoint_dir"
+            fi
+
+            build_file="$(find "$search_root" -maxdepth 8 -type f \( -name 'build.gradle' -o -name 'build.gradle.kts' \) -print -quit || true)"
+            if [[ -z "$build_file" ]]; then
+              echo "ERROR: build.gradle/build.gradle.kts not found after archive extraction" >&2
+              find "$search_root" -maxdepth 4 -type f | sort | head -200 || true
+              exit 23
+            fi
+            candidate="$(dirname "$build_file")"
+          else
+            if [[ -n "$archive" ]]; then
+              echo "Archive '$archive' is not present in the repository; falling back to project_path/autodetection."
+            fi
+
+            if [[ -n "$requested_project" && -d "$GITHUB_WORKSPACE/$requested_project" ]]; then
+              candidate="$GITHUB_WORKSPACE/$requested_project"
+            else
+              build_file="$(find "$GITHUB_WORKSPACE" -maxdepth 6 -type f \( -name 'build.gradle' -o -name 'build.gradle.kts' \) -not -path '*/.git/*' -print -quit || true)"
+              if [[ -n "$build_file" ]]; then
+                candidate="$(dirname "$build_file")"
+              fi
+            fi
+          fi
+
+          if [[ -z "$candidate" || ! -d "$candidate" ]]; then
+            echo "ERROR: Minecraft Companion source not found." >&2
+            echo "Commit either the checkpoint archive or the extracted project, then dispatch again." >&2
+            exit 24
+          fi
+
+          if [[ ! -f "$candidate/settings.gradle" && ! -f "$candidate/settings.gradle.kts" ]]; then
+            echo "WARNING: settings.gradle not found at project root; continuing because build.gradle exists."
+          fi
+
+          candidate="$(cd "$candidate" && pwd)"
+          echo "PROJECT_DIR=$candidate" >> "$GITHUB_ENV"
+          echo "project_dir=$candidate" >> "$GITHUB_OUTPUT"
+
+          echo "Resolved project: $candidate"
+          find "$candidate" -maxdepth 2 -type f \( -name 'build.gradle*' -o -name 'gradle.properties' -o -name 'fabric.mod.json' \) -print | sort || true
+
+      - name: Verify Gradle and Java
+        shell: bash
+        run: |
+          set -euo pipefail
+          java -version 2>&1 | tee "$ARTIFACT_DIR/java-version.txt"
+          gradle --version | tee "$ARTIFACT_DIR/gradle-version.txt"
+          gradle_version="$(gradle --version | awk '/^Gradle / {print $2; exit}')"
+          if [[ "$gradle_version" != "8.8" ]]; then
+            echo "ERROR: expected Gradle 8.8, got $gradle_version" >&2
+            exit 30
+          fi
+
+      - name: Enforce eula=false
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$PROJECT_DIR"
+          mkdir -p run
+          printf '# Minecraft Companion CI validation\neula=false\n' > run/eula.txt
+          if grep -RIl --include='eula.txt' '^eula=true[[:space:]]*$' . | grep -q .; then
+            echo "ERROR: eula=true detected. This workflow never accepts the Minecraft EULA on the user's behalf." >&2
+            grep -RIl --include='eula.txt' '^eula=true[[:space:]]*$' . || true
+            exit 31
+          fi
+
+      - name: Clean build and project checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$PROJECT_DIR"
+          gradle $GRADLE_ARGS clean check build 2>&1 | tee "$ARTIFACT_DIR/clean-check-build.log"
+
+          mkdir -p "$ARTIFACT_DIR/libs"
+          find build/libs -maxdepth 1 -type f -print -exec cp -f {} "$ARTIFACT_DIR/libs/" \; 2>/dev/null || true
+
+          if [[ -d build/reports ]]; then
+            cp -a build/reports "$ARTIFACT_DIR/build-reports"
+          fi
+
+      - name: Hash build outputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$PROJECT_DIR"
+          : > "$ARTIFACT_DIR/build-sha256.txt"
+          while IFS= read -r -d '' file; do
+            sha256sum "$file" >> "$ARTIFACT_DIR/build-sha256.txt"
+          done < <(find build/libs -maxdepth 1 -type f -print0 2>/dev/null | sort -z)
+          cat "$ARTIFACT_DIR/build-sha256.txt"
+
+      - name: Fabric Minecraft GameTests x N
+        shell: bash
+        env:
+          GAMETEST_RUNS: ${{ inputs.gametest_runs }}
+        run: |
+          set -euo pipefail
+          cd "$PROJECT_DIR"
+
+          if ! [[ "$GAMETEST_RUNS" =~ ^[1-9][0-9]*$ ]]; then
+            echo "ERROR: gametest_runs must be a positive integer" >&2
+            exit 40
+          fi
+
+          mkdir -p "$ARTIFACT_DIR/gametests"
+
+          for run in $(seq 1 "$GAMETEST_RUNS"); do
+            echo "===== Minecraft/Fabric GameTest pass $run/$GAMETEST_RUNS ====="
+            printf '# Minecraft Companion GameTest validation\neula=false\n' > run/eula.txt
+
+            gradle $GRADLE_ARGS --rerun-tasks companionGameTest \
+              2>&1 | tee "$ARTIFACT_DIR/gametests/pass-${run}.log"
+
+            if grep -RIl --include='eula.txt' '^eula=true[[:space:]]*$' . | grep -q .; then
+              echo "ERROR: eula=true appeared after GameTest run $run" >&2
+              exit 41
+            fi
+          done
+
+          echo "Completed $GAMETEST_RUNS/$GAMETEST_RUNS GameTest task passes successfully." \
+            | tee "$ARTIFACT_DIR/gametests/summary.txt"
+
+      - name: Collect Minecraft runtime logs
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$ARTIFACT_DIR/runtime-logs"
+          if [[ -n "${PROJECT_DIR:-}" && -d "$PROJECT_DIR" ]]; then
+            cd "$PROJECT_DIR"
+            find . -type f \( -path '*/logs/*.log' -o -path '*/crash-reports/*.txt' -o -name 'latest.log' \) -print0 \
+              | while IFS= read -r -d '' f; do
+                  safe="$(printf '%s' "$f" | sed 's#^\./##; s#/#__#g')"
+                  cp -f "$f" "$ARTIFACT_DIR/runtime-logs/$safe" || true
+                done
+          fi
+
+      - name: Install graphical client dependencies
+        if: ${{ inputs.run_client_smoke }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          glxinfo -B 2>&1 | tee "$ARTIFACT_DIR/glxinfo-host.txt" || true
+
+      - name: Real client validation hook or Xvfb smoke
+        if: ${{ inputs.run_client_smoke }}
+        shell: bash
+        env:
+          CLIENT_TIMEOUT_SECONDS: ${{ inputs.client_timeout_seconds }}
+        run: |
+          set -euo pipefail
+          cd "$PROJECT_DIR"
+          mkdir -p "$ARTIFACT_DIR/client"
+
+          if [[ -f scripts/ci-client-validation.sh ]]; then
+            echo "Using project-provided real client validation harness: scripts/ci-client-validation.sh"
+            chmod +x scripts/ci-client-validation.sh
+            timeout 1200s xvfb-run -a -s '-screen 0 1920x1080x24' \
+              env LIBGL_ALWAYS_SOFTWARE=1 MESA_LOADER_DRIVER_OVERRIDE=llvmpipe \
+              bash scripts/ci-client-validation.sh \
+              2>&1 | tee "$ARTIFACT_DIR/client/client-e2e.log"
+            echo "CLIENT_VALIDATION_MODE=project-e2e" | tee "$ARTIFACT_DIR/client/mode.txt"
+          else
+            if ! [[ "$CLIENT_TIMEOUT_SECONDS" =~ ^[1-9][0-9]*$ ]]; then
+              echo "ERROR: client_timeout_seconds must be a positive integer" >&2
+              exit 50
+            fi
+
+            echo "No scripts/ci-client-validation.sh found. Running graphical client smoke only."
+            echo "IMPORTANT: smoke proves client startup/render availability, NOT owner-defense or swing/HUD E2E."
+
+            export CLIENT_TIMEOUT_SECONDS
+            export PROJECT_DIR
+            export ARTIFACT_DIR
+            export GRADLE_ARGS
+
+            xvfb-run -a -s '-screen 0 1920x1080x24' bash -euo pipefail -c '
+              export LIBGL_ALWAYS_SOFTWARE=1
+              export MESA_LOADER_DRIVER_OVERRIDE=llvmpipe
+              cd "$PROJECT_DIR"
+
+              mkdir -p "$ARTIFACT_DIR/client"
+              console="$ARTIFACT_DIR/client/runClient-console.log"
+
+              set +e
+              timeout "${CLIENT_TIMEOUT_SECONDS}s" gradle $GRADLE_ARGS runClient >"$console" 2>&1 &
+              wrapper_pid=$!
+              set -e
+
+              launched=0
+              for i in $(seq 1 "$CLIENT_TIMEOUT_SECONDS"); do
+                if grep -Eiq "(LWJGL|OpenGL|Reloading ResourceManager|Setting user:|Backend library|Sound engine started|Created: [0-9]+x[0-9]+)" "$console" 2>/dev/null; then
+                  launched=1
+                  break
+                fi
+
+                latest="$(find . -type f -path "*/logs/latest.log" -print -quit 2>/dev/null || true)"
+                if [[ -n "$latest" ]] && grep -Eiq "(LWJGL|OpenGL|Reloading ResourceManager|Setting user:|Backend library|Sound engine started|Created: [0-9]+x[0-9]+)" "$latest"; then
+                  launched=1
+                  break
+                fi
+
+                if ! kill -0 "$wrapper_pid" 2>/dev/null; then
+                  set +e
+                  wait "$wrapper_pid"
+                  rc=$?
+                  set -e
+                  echo "runClient exited before launch marker, rc=$rc" >&2
+                  cat "$console" >&2 || true
+                  exit "${rc:-1}"
+                fi
+                sleep 1
+              done
+
+              if [[ "$launched" != "1" ]]; then
+                echo "No graphical client launch marker observed before timeout." >&2
+                kill "$wrapper_pid" 2>/dev/null || true
+                wait "$wrapper_pid" 2>/dev/null || true
+                exit 51
+              fi
+
+              echo "Graphical client launch marker observed. Waiting 20 seconds before screenshot."
+              sleep 20
+              import -window root "$ARTIFACT_DIR/client/client-smoke.png" || true
+
+              pkill -TERM -f "net.minecraft.client.main.Main" 2>/dev/null || true
+              kill "$wrapper_pid" 2>/dev/null || true
+              sleep 3
+              pkill -KILL -f "net.minecraft.client.main.Main" 2>/dev/null || true
+              wait "$wrapper_pid" 2>/dev/null || true
+            '
+
+            echo "CLIENT_VALIDATION_MODE=graphical-smoke-only" | tee "$ARTIFACT_DIR/client/mode.txt"
+          fi
+
+      - name: Collect final logs and metadata
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$ARTIFACT_DIR/final"
+
+          {
+            echo "repository=${GITHUB_REPOSITORY}"
+            echo "commit=${GITHUB_SHA}"
+            echo "run_id=${GITHUB_RUN_ID}"
+            echo "run_number=${GITHUB_RUN_NUMBER}"
+            echo "project_dir=${PROJECT_DIR:-UNRESOLVED}"
+            echo "java=17"
+            echo "gradle=8.8"
+            echo "requested_gametest_runs=${{ inputs.gametest_runs }}"
+            echo "run_client_smoke=${{ inputs.run_client_smoke }}"
+            echo "source_archive=${{ inputs.source_archive }}"
+            echo "expected_source_sha256=${{ inputs.expected_source_sha256 }}"
+          } > "$ARTIFACT_DIR/final/metadata.txt"
+
+          if [[ -n "${PROJECT_DIR:-}" && -d "$PROJECT_DIR" ]]; then
+            cd "$PROJECT_DIR"
+            find . -type f -path '*/logs/latest.log' -print0 2>/dev/null \
+              | while IFS= read -r -d '' f; do
+                  cp -f "$f" "$ARTIFACT_DIR/final/latest-$(basename "$(dirname "$f")").log" || true
+                done
+          fi
+
+      - name: Validation summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "## Minecraft Companion 0.9.7.1 validation"
+            echo
+            echo "- Repository: \`${GITHUB_REPOSITORY}\`"
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Java requested: 17"
+            echo "- Gradle requested: 8.8"
+            echo "- GameTest passes requested: ${{ inputs.gametest_runs }}"
+            echo "- Client requested: ${{ inputs.run_client_smoke }}"
+            echo
+            if [[ -f "$ARTIFACT_DIR/client/mode.txt" ]]; then
+              echo "### Client mode"
+              echo
+              echo '```'
+              cat "$ARTIFACT_DIR/client/mode.txt"
+              echo '```'
+            fi
+            echo
+            echo "Artifacts include build hashes, JARs, GameTest logs, runtime logs and client evidence when available."
+            echo
+            echo "A graphical smoke alone MUST NOT be interpreted as proof of owner-defense, visible swing or HUD correctness. For those hard gates add/maintain \`scripts/ci-client-validation.sh\` in the project and make it fail unless the real integrated-client scenarios pass."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload validation artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: minecraft-companion-0.9.7.1-validation-${{ github.run_number }}
+          path: ci-artifacts/
+          if-no-files-found: warn
+          retention-days: 14
