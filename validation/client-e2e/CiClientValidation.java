@@ -50,6 +50,7 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
     private static int ownerStableTicks;
     private static float initialZombieHealth = -1.0F;
     private static float previousOwnerHealth = Float.NaN;
+    private static boolean ownerTestSetup;
     private static boolean ownerTookZombieDamage;
     private static boolean companionAcquiredZombie;
     private static boolean navigationStarted;
