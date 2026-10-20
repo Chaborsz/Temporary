@@ -188,6 +188,19 @@ jobs:
           find "$PROJECT_DIR" -type f -name '*.java' -print | sort | head -180 || true
           echo "=== summon/spawn source matches ==="
           rg -n -i -C 18 'summon|spawn|could not|couldn.t' "$PROJECT_DIR" --glob '*.java' --glob '*.json' --glob '*.properties' | head -420 || true
+echo "=== exact production command/entity files ==="
+for f in \
+  "$PROJECT_DIR/src/main/java/dev/companion/minecraft/CompanionCommands.java" \
+  "$PROJECT_DIR/src/main/java/dev/companion/minecraft/CompanionEntities.java" \
+  "$PROJECT_DIR/src/main/java/dev/companion/minecraft/CompanionEntity.java" \
+  "$PROJECT_DIR/src/main/java/dev/companion/minecraft/CompanionOwnershipIndex.java"; do
+  if [[ -f "$f" ]]; then
+    echo "===== $f ====="
+    sed -n '1,320p' "$f"
+  fi
+done
+echo "=== source file fallback grep ==="
+grep -RniE 'could not be spawned|spawnEntity|summon' "$PROJECT_DIR/src/main" --include='*.java' | head -240 || true
 
       - name: Verify Gradle and Java
         shell: bash
