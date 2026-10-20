@@ -50,18 +50,51 @@ timeout "${CLIENT_TIMEOUT_SECONDS:-900}s" gradle --no-daemon --no-build-cache --
 client_pid=$!
 set -e
 cleanup() {
+  rc=$?
+  trap - EXIT
+  if [[ "$rc" -ne 0 ]]; then
+    echo "=== CLIENT HARNESS DIAGNOSTICS ===" >&2
+    tail -160 "$CI_VALIDATION_DIR/runClient-console.log" >&2 || true
+    cat "$CI_VALIDATION_DIR/runtime-trace.log" >&2 || true
+    find "$CI_VALIDATION_DIR" -maxdepth 1 -type f -printf '%f %s bytes\\n' >&2 || true
+  fi
   pkill -TERM -f '[n]et.minecraft.client.main.Main' 2>/dev/null || true
   kill "$client_pid" 2>/dev/null || true
   sleep 2
   pkill -KILL -f '[n]et.minecraft.client.main.Main' 2>/dev/null || true
+  exit "$rc"
 }
 trap cleanup EXIT
+
+launch_deadline=$((SECONDS + 180))
+launched=0
+while (( SECONDS < launch_deadline )); do
+  if grep -Eiq '(LWJGL|OpenGL|Reloading ResourceManager|Setting user:|Backend library|Sound engine started|Created: [0-9]+x[0-9]+)' "$CI_VALIDATION_DIR/runClient-console.log" 2>/dev/null; then
+    launched=1
+    break
+  fi
+  latest_log="$(find "$PROJECT_DIR" -type f -path '*/logs/latest.log' -print -quit 2>/dev/null || true)"
+  if [[ -n "$latest_log" ]] && grep -Eiq '(LWJGL|OpenGL|Reloading ResourceManager|Setting user:|Backend library|Sound engine started|Created: [0-9]+x[0-9]+)' "$latest_log"; then
+    launched=1
+    break
+  fi
+  if ! kill -0 "$client_pid" 2>/dev/null; then
+    echo "runClient exited before the client reached a graphical screen." >&2
+    tail -160 "$CI_VALIDATION_DIR/runClient-console.log" >&2 || true
+    exit 65
+  fi
+  sleep 2
+done
+if [[ "$launched" != "1" ]]; then
+  echo "No graphical client launch marker observed after 180 seconds." >&2
+  exit 66
+fi
 
 python3 "$VALIDATION_SOURCE_DIR/capture_client_evidence.py" \
   --watch --trace "$CI_VALIDATION_DIR/runtime-trace.log" --output "$CI_VALIDATION_DIR" &
 watcher_pid=$!
 
-python3 "$VALIDATION_SOURCE_DIR/drive_minecraft_ui.py" \
+UI_TIMEOUT_SECONDS=300 python3 "$VALIDATION_SOURCE_DIR/drive_minecraft_ui.py" \
   --trace "$CI_VALIDATION_DIR/runtime-trace.log" \
   --screenshots "$CI_VALIDATION_DIR"
 

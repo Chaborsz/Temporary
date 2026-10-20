@@ -70,12 +70,22 @@ def main():
     args = parser.parse_args()
     args.screenshots.mkdir(parents=True, exist_ok=True)
     frame = args.screenshots / "ui-current.png"
-    end = time.monotonic() + int(os.environ.get("CLIENT_TIMEOUT_SECONDS", "900"))
+    ui_timeout = int(os.environ.get("UI_TIMEOUT_SECONDS", "300"))
+    start = time.monotonic()
+    end = start + ui_timeout
+    last_report = start
     commands_enabled = False
 
     while time.monotonic() < end and not trace_has(args.trace, "CI_WORLD_READY"):
         text, lines = capture(frame)
         low = text.lower()
+        now = time.monotonic()
+        if now - last_report >= 10:
+            elapsed = int(now - start)
+            snapshot = args.screenshots / f"ui-progress-{elapsed:04d}.png"
+            shutil.copy2(frame, snapshot)
+            print(f"UI_PROGRESS_SECONDS={elapsed} OCR={text[:700]!r}", flush=True)
+            last_report = now
         if "welcome to minecraft" in low and click_line(lines, "continue"):
             print("UI_CLICK=accessibility_continue", flush=True)
         elif "singleplayer" in low and click_line(lines, "singleplayer"):
@@ -99,7 +109,7 @@ def main():
         time.sleep(2)
 
     if not trace_has(args.trace, "CI_WORLD_READY"):
-        raise RuntimeError("Integrated world did not reach the real client harness")
+        raise RuntimeError("Integrated world did not reach the real client harness; last OCR was: " + text[:1600])
 
     deadline = time.monotonic() + 120
     while time.monotonic() < deadline and not trace_has(args.trace, "CI_COMPANION_SYNCED"):
