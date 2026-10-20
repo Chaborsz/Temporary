@@ -38,6 +38,7 @@ on:
       - ".github/scripts/lolisnatcher_v8_14_incremental_catalog_merge_patch.py"
       - ".github/scripts/lolisnatcher_v8_15_strict_db_only_visual_cache_patch.py"
       - ".github/scripts/lolisnatcher_v8_16_visual_decode_and_tag_idle_patch.py"
+      - ".github/scripts/lolisnatcher_v8_17_sqlite_batching_patch.py"
       - ".github/scripts/lolisnatcher_v11_generic_danbooru_auth.py"
       - ".github/scripts/lolisnatcher_sync_esmx.py"
 
@@ -50,7 +51,7 @@ concurrency:
 
 jobs:
   build:
-    name: Windows x64 / True Portable v8.16 / Canonical Release
+    name: Windows x64 / True Portable v8.17 / Canonical Release
     runs-on: windows-2022
     timeout-minutes: 60
     env:
@@ -83,7 +84,7 @@ jobs:
           "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
           "build=$($Matches[2])" >> $env:GITHUB_OUTPUT
 
-      - name: Apply portable patches through v8.16
+      - name: Apply portable patches through v8.17
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
@@ -103,7 +104,7 @@ jobs:
           python ..\builder\.github\scripts\lolisnatcher_v8_cache_path_label_fix.py
           python ..\builder\.github\scripts\lolisnatcher_v8_webp_thumbnail_cache_patch.py
           python ..\builder\.github\scripts\lolisnatcher_v11_generic_danbooru_auth.py
-          'PATCH_CHAIN_V8_16=PASS'
+          'PATCH_CHAIN_V8_17=PASS'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -162,8 +163,8 @@ jobs:
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
-          dart format lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/booru_handler.dart lib/src/handlers/tag_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/image_writer_isolate.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
-          flutter analyze --no-fatal-infos --no-fatal-warnings lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/booru_handler.dart lib/src/handlers/tag_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/image_writer_isolate.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
+          dart format lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/booru_handler.dart lib/src/handlers/tag_handler.dart lib/src/handlers/database_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/image_writer_isolate.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
+          flutter analyze --no-fatal-infos --no-fatal-warnings lib/main.dart lib/src/boorus/danbooru_handler.dart lib/src/handlers/booru_handler.dart lib/src/handlers/tag_handler.dart lib/src/handlers/database_handler.dart lib/src/handlers/service_handler.dart lib/src/utils/logger.dart lib/src/handlers/secure_storage_handler.dart lib/src/pages/settings/language_page.dart lib/src/pages/settings/booru_page.dart lib/src/pages/settings/booru_edit_page.dart lib/src/pages/settings/save_cache_page.dart lib/src/widgets/webview/webview_page.dart lib/src/widgets/image/custom_network_image.dart lib/src/widgets/image/image_viewer.dart lib/src/widgets/thumbnail/thumbnail.dart lib/src/services/image_writer.dart lib/src/services/image_writer_isolate.dart lib/src/services/compressed_visual_cache.dart lib/src/services/portable_media_policy.dart lib/src/utils/tools.dart lib/src/utils/dio_network.dart
 
       - name: Build Windows x64 Release
         id: build
@@ -174,7 +175,7 @@ jobs:
           $exe = 'build\windows\x64\runner\Release\lolisnatcher.exe'
           if (-not (Test-Path $exe)) { throw "Expected executable not found: $exe" }
 
-      - name: Package True Portable v8.16 build
+      - name: Package True Portable v8.17 build
         id: package
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -190,7 +191,7 @@ jobs:
           $dataDir = Join-Path $releaseDir 'Data'
           New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
           @"
-          LoliSnatcher TRUE PORTABLE Windows x64 - v8.16
+          LoliSnatcher TRUE PORTABLE Windows x64 - v8.17
 
           Runtime invariants:
           - Danbooru login/API-key validation from v8.8 is retained.
@@ -200,8 +201,9 @@ jobs:
           - WebP runtime conversion is disabled; thumbnail source bytes are stored in the DB.
           - Danbooru page merge is incremental (merge_ms expected near 0).
           - Windows visual thumbnail load/decode pipeline is serialized (max 1).
-          - Typed tag persistence is bulk, serialized and coalesced after 2.5s of pagination quiet.
-          - Performance diagnostics are written to Data\performance-stalls.log.
+          - Typed tag persistence is coalesced after 2.5s quiet and now uses true SQLite bulk lookup/batches.
+          - Thumbnail BLOB persistence is coalesced into SQLite batches (max 16 / 100 ms).
+          - Performance diagnostics are written to Data\performance-stalls.log; slow visual DB batches emit VISUAL_DB_BATCH.
           "@ | Set-Content -Encoding UTF8 (Join-Path $dataDir 'PORTABLE-README.txt')
           @(
             "PROJECT=LoliSnatcher_Droid"
@@ -211,7 +213,7 @@ jobs:
             "TARGET=windows-x64"
             "CONFIGURATION=Release"
             "PORTABLE_MODE=TRUE"
-            "PATCH_LEVEL=TRUE_PORTABLE_V8_16"
+            "PATCH_LEVEL=TRUE_PORTABLE_V8_17"
             "WORKFLOW_LINE=V8_CANONICAL"
             "DANBOORU_AUTH=V8_8_VERIFIED_LOGIN"
             "VISUAL_CACHE=.\Data\LoliSnatcher\cache\visual_cache.db"
@@ -222,6 +224,10 @@ jobs:
             "WINDOWS_VISUAL_PIPELINE_MAX=1"
             "DANBOORU_INCREMENTAL_MERGE=TRUE"
             "TAG_IDLE_COALESCE_MS=2500"
+            "TAG_SQLITE_MODE=TRUE_BULK_LOOKUP_BATCH"
+            "TAG_SQLITE_LOOKUP_CHUNK=400"
+            "VISUAL_DB_BATCH_MAX=16"
+            "VISUAL_DB_COALESCE_MS=100"
             "PERFORMANCE_STALL_LOG=.\Data\performance-stalls.log"
             "ENABLED_LOCALE=es_MX"
             "INAPPWEBVIEW_WINDOWS_FIX=FULL_PR2838_832d6517b50b3b8094d2658800aa84ee5b9294bf"
@@ -236,7 +242,7 @@ jobs:
           "sha256=$hash" >> $env:GITHUB_OUTPUT
           "SHA256=$hash"
 
-      - name: Publish canonical True Portable v8.16 prerelease
+      - name: Publish canonical True Portable v8.17 prerelease
         id: release
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -252,13 +258,13 @@ jobs:
           $tag = "lolisnatcher-windows-trueportable-$env:VERSION-$env:BUILD_NUMBER"
           $zipPath = Join-Path $PWD "dist\$env:ZIP_NAME"
           $hashPath = "$zipPath.sha256"
-          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v8.16"
+          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v8.17"
           $notes = @"
-          Unofficial TRUE PORTABLE Windows x64 build - canonical v8.16.
+          Unofficial TRUE PORTABLE Windows x64 build - canonical v8.17.
 
-          v8.16 retains verified Danbooru authentication, strict DB-only thumbnail cache, samples/full-resolution viewer data in RAM only, incremental Danbooru page merge, performance-stall diagnostics, a serialized Windows thumbnail load/decode pipeline, and 2.5-second idle-coalesced tag persistence.
+          v8.17 retains verified Danbooru authentication, strict DB-only thumbnails, memory-only samples/full-resolution viewer data, incremental Danbooru page merge and the serialized Windows visual pipeline. It replaces per-tag SQLite round-trips with true bulk lookup/batched writes and coalesces thumbnail BLOB persistence into bounded SQLite batches. Slow visual DB batches are reported as VISUAL_DB_BATCH in Data\performance-stalls.log.
 
-          v7 is a superseded historical workflow with a separate tag/asset namespace and cannot overwrite this release.
+          v7 remains a superseded historical workflow with a separate tag/asset namespace and cannot overwrite this release.
 
           Upstream commit: $env:SOURCE_SHA
           Flutter: $env:FLUTTER_VERSION
@@ -284,9 +290,9 @@ jobs:
             throw "Canonical asset digest mismatch: remote=$remoteDigest expected=sha256:$env:EXPECTED_SHA"
           }
           $remoteBody = [string]$remoteRelease.body
-          if ($remoteBody -notmatch 'canonical v8\.16') { throw 'Canonical release notes do not identify v8.16' }
-          'V8_16_CANONICAL_ASSET_DIGEST=PASS'
-          'V8_16_RELEASE_IDENTITY=PASS'
+          if ($remoteBody -notmatch 'canonical v8\.17') { throw 'Canonical release notes do not identify v8.17' }
+          'V8_17_CANONICAL_ASSET_DIGEST=PASS'
+          'V8_17_RELEASE_IDENTITY=PASS'
 
           $releaseUrl = [string]$remoteRelease.html_url
           "release_url=$releaseUrl" >> $env:GITHUB_OUTPUT
@@ -296,9 +302,9 @@ jobs:
         shell: pwsh
         run: |
           @"
-          ## LoliSnatcher Windows x64 True Portable v8.16
+          ## LoliSnatcher Windows x64 True Portable v8.17
           - Build: `${{ steps.build.outcome }}`
-          - Patch level: TRUE_PORTABLE_V8_16
+          - Patch level: TRUE_PORTABLE_V8_17
           - Verified Danbooru auth: retained
           - Windows visual cache: SQLite DB-only
           - Loose samples/thumbnails: forbidden + purge
@@ -306,6 +312,8 @@ jobs:
           - Incremental page merge: retained
           - Windows visual pipeline max: 1
           - Tag idle coalescing: 2500 ms
+          - Tag SQLite persistence: bulk lookup + Batch
+          - Visual DB persistence: max 16 / 100 ms coalescing
           - Canonical asset digest verification: `${{ steps.release.outcome }}`
           - SHA-256: `${{ steps.package.outputs.sha256 }}`
           - Release: ${{ steps.release.outputs.release_url }}
