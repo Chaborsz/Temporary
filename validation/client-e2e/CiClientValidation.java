@@ -156,9 +156,10 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                 && companion.getCombatMode() == CompanionCombatMode.DEFENSIVE
                 && companion.getOrder() == CompanionOrder.FOLLOW
                 && attackerSent.compareAndSet(false, true)) {
+            client.getNetworkHandler().sendChatCommand("gamemode survival");
             client.getNetworkHandler().sendChatCommand("time set midnight");
             client.getNetworkHandler().sendChatCommand("summon minecraft:zombie ~2 ~ ~");
-            trace("CI_REAL_ZOMBIE_SPAWN_COMMAND_SENT");
+            trace("CI_REAL_ZOMBIE_SPAWN_COMMAND_SENT gameMode=" + client.player.interactionManager.getCurrentGameMode());
         }
     }
 
