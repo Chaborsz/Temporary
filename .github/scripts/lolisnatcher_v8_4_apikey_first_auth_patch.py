@@ -64,6 +64,12 @@ exec(compile(incremental_catalog_merge_patch.read_text(encoding='utf-8'), str(in
 strict_db_only_visual_cache_patch = Path(__file__).with_name('lolisnatcher_v8_15_strict_db_only_visual_cache_patch.py')
 exec(compile(strict_db_only_visual_cache_patch.read_text(encoding='utf-8'), str(strict_db_only_visual_cache_patch), 'exec'))
 
+# v8.16 serializes the complete Windows thumbnail load/decode pipeline and
+# moves typed Danbooru tag persistence into a 2.5s idle/coalescing window so
+# SQLite work does not compete with the thumbnail burst at page boundaries.
+visual_decode_and_tag_idle_patch = Path(__file__).with_name('lolisnatcher_v8_16_visual_decode_and_tag_idle_patch.py')
+exec(compile(visual_decode_and_tag_idle_patch.read_text(encoding='utf-8'), str(visual_decode_and_tag_idle_patch), 'exec'))
+
 print('V8_5_VERIFIED_LOGIN_CHAIN=PASS')
 print('V8_6_ROBUST_LOGIN_VALIDATION_CHAIN=PASS')
 print('V8_7_CHALLENGE_AUTH_CHAIN=PASS')
@@ -75,3 +81,4 @@ print('V8_12_VISUAL_CACHE_INTEGRITY_CHAIN=PASS')
 print('V8_13_PAGINATION_FREEZE_HOTFIX_CHAIN=PASS')
 print('V8_14_CATALOG_MERGE_HOTFIX_CHAIN=PASS')
 print('V8_15_STRICT_DB_ONLY_VISUAL_CACHE_CHAIN=PASS')
+print('V8_16_FRAME_STALL_REDUCTION_CHAIN=PASS')
