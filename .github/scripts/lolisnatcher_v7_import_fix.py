@@ -1,6 +1,6 @@
 from pathlib import Path
 
-# Build trigger checkpoint: v8.13 Danbooru page batching + phase diagnostics.
+# Build trigger checkpoint: v8.14 incremental Danbooru catalog merge.
 path = Path('lib/src/pages/settings/booru_edit_page.dart')
 text = path.read_text(encoding='utf-8')
 
