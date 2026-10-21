@@ -53,6 +53,7 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
     private static float initialZombieHealth = -1.0F;
     private static float previousOwnerHealth = Float.NaN;
     private static boolean ownerTestSetup;
+    private static boolean zombieDisappearanceAnnounced;
     private static boolean ownerTookZombieDamage;
     private static boolean companionAcquiredZombie;
     private static boolean navigationStarted;
@@ -169,7 +170,7 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                 && attackerSent.compareAndSet(false, true)) {
             client.getNetworkHandler().sendChatCommand("gamemode survival");
             client.getNetworkHandler().sendChatCommand("time set midnight");
-            client.getNetworkHandler().sendChatCommand("summon minecraft:zombie ~2 ~ ~");
+            client.getNetworkHandler().sendChatCommand("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b}");
             trace("CI_REAL_ZOMBIE_SPAWN_COMMAND_SENT");
         }
     }
@@ -236,10 +237,17 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                 .min(Comparator.comparingDouble(entity -> entity.squaredDistanceTo(owner))).orElse(null)
                 : findZombie((ServerWorld) owner.getWorld(), zombieUuid);
         if (zombie != null) {
+            if (zombieUuid == null) zombieUuid = zombie.getUuid();
             if (initialZombieHealth < 0.0F) {
                 initialZombieHealth = zombie.getHealth();
                 trace("CI_ZOMBIE_ACQUIRED uuid=" + zombie.getUuid() + " distanceOwner=" + zombie.distanceTo(owner)
                         + " distanceCompanion=" + companion.distanceTo(zombie) + " health=" + initialZombieHealth);
+            }
+            if (attackerSent.get() && serverTicks % 20 == 0) {
+                trace("CI_ZOMBIE_STATE uuid=" + zombie.getUuid() + " alive=" + zombie.isAlive()
+                        + " health=" + zombie.getHealth() + " target=" + (zombie.getTarget() == null ? "null" : zombie.getTarget().getUuid())
+                        + " ownerHealth=" + owner.getHealth() + " ownerGameMode=" + owner.interactionManager.getGameMode()
+                        + " difficulty=" + owner.getWorld().getDifficulty());
             }
             if (ownerTookZombieDamage && zombie.getUuid().equals(zombieUuid)) {
                 if (companion.getTarget() == zombie) {
@@ -264,6 +272,11 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                 && (zombie == null || zombie.isDead() || companion.getTarget() == null)) {
             followResumed = companion.getOrder() == CompanionOrder.FOLLOW;
         }
+        if (attackerSent.get() && zombieUuid != null && zombie == null && !zombieDisappearanceAnnounced) {
+            zombieDisappearanceAnnounced = true;
+            trace("CI_ZOMBIE_DISAPPEARED uuid=" + zombieUuid + " ownerHealth=" + owner.getHealth()
+                    + " ownerAttacker=" + owner.getAttacker() + " companionTarget=" + companion.getTarget());
+        }
         if (ownerTookZombieDamage && companionAcquiredZombie && navigationStarted
                 && targetSurvivedTwoTicks && companionDamagedZombie && followResumed) {
             passAnnounced.set(true);
@@ -277,7 +290,9 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                     + " targetStableTicks=" + targetStableTicks + " navigation=" + navigationStarted
                     + " companionMeleeDamage=" + companionDamagedZombie + " followResumed=" + followResumed
                     + " player=" + owner.getUuid() + " companionOwner=" + companion.getOwnerUuid()
-                    + " companion=" + companion.getUuid() + " zombie=" + zombieUuid + " currentTarget=" + companion.getTarget());
+                    + " companion=" + companion.getUuid() + " zombie=" + zombieUuid + " currentTarget=" + companion.getTarget()
+                    + " ownerHealth=" + owner.getHealth() + " ownerGameMode=" + owner.interactionManager.getGameMode()
+                    + " difficulty=" + owner.getWorld().getDifficulty());
         }
     }
 
