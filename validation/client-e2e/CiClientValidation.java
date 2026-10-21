@@ -170,7 +170,11 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                 && attackerSent.compareAndSet(false, true)) {
             client.getNetworkHandler().sendChatCommand("gamemode survival");
             client.getNetworkHandler().sendChatCommand("time set midnight");
-            client.getNetworkHandler().sendChatCommand("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b}");
+            // Separate the real hostile from the Companion so vanilla zombie AI can reach
+            // and damage the owner before the Companion receives the retaliation event.
+            // This changes only test geometry; it never writes a target or threat into mod state.
+            client.getNetworkHandler().sendChatCommand("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] ~-8 ~ ~");
+            client.getNetworkHandler().sendChatCommand("summon minecraft:zombie ~3 ~ ~ {PersistenceRequired:1b}");
             trace("CI_REAL_ZOMBIE_SPAWN_COMMAND_SENT");
         }
     }
