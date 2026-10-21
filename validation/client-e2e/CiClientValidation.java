@@ -54,6 +54,10 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
     private static float previousOwnerHealth = Float.NaN;
     private static boolean ownerTestSetup;
     private static boolean zombieDisappearanceAnnounced;
+    private static UUID lastLoggedDamageUuid;
+    private static float lastLoggedZombieHealth = Float.NaN;
+    private static UUID swordDamageUuid;
+    private static float lastSwordZombieHealth = Float.NaN;
     private static boolean ownerTookZombieDamage;
     private static boolean companionAcquiredZombie;
     private static boolean navigationStarted;
@@ -180,7 +184,7 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
     }
 
     private static void serverTick(MinecraftServer server) {
-        if (failed || passAnnounced.get()) return;
+        if (failed) return;
         serverTicks++;
         ServerPlayerEntity owner = ownerUuid == null ? server.getPlayerManager().getPlayerList().stream()
                 .findFirst().orElse(null) : server.getPlayerManager().getPlayer(ownerUuid);
@@ -210,6 +214,27 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
         }
         CompanionEntity companion = findOwnedCompanion(owner);
         if (companion == null) return;
+        if (passAnnounced.get()) {
+            if (companion.getEquippedStack(EquipmentSlot.MAINHAND).getItem()
+                    == net.minecraft.item.Items.IRON_SWORD) {
+                var swordTargets = owner.getWorld().getEntitiesByClass(ZombieEntity.class,
+                        owner.getBoundingBox().expand(24.0D), Entity::isAlive);
+                for (ZombieEntity target : swordTargets) {
+                    if (target.getUuid().equals(zombieUuid) || target.getHealth() >= target.getMaxHealth()
+                            || target.getAttacker() != companion) continue;
+                    if (!target.getUuid().equals(swordDamageUuid)
+                            || target.getHealth() < lastSwordZombieHealth - 0.01F) {
+                        swordDamageUuid = target.getUuid();
+                        lastSwordZombieHealth = target.getHealth();
+                        trace("CI_COMPANION_DAMAGE zombie=" + target.getUuid() + " companion=" + companion.getUuid()
+                                + " weapon=" + net.minecraft.registry.Registries.ITEM.getId(
+                                companion.getEquippedStack(EquipmentSlot.MAINHAND).getItem())
+                                + " health=" + target.getHealth());
+                    }
+                }
+            }
+            return;
+        }
         if (zombieUuid != null) {
             ZombieEntity damagedZombie = findZombie((ServerWorld) owner.getWorld(), zombieUuid);
             if (damagedZombie != null && damagedZombie.getHealth() < damagedZombie.getMaxHealth()
@@ -217,10 +242,15 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                 Entity damageSource = damagedZombie.getAttacker();
                 if (damageSource instanceof CompanionEntity && damageSource.getUuid().equals(companionUuid)) {
                     companionDamagedZombie = true;
-                    trace("CI_COMPANION_DAMAGE zombie=" + damagedZombie.getUuid() + " companion=" + companionUuid
-                            + " weapon=" + net.minecraft.registry.Registries.ITEM.getId(
-                            companion.getEquippedStack(EquipmentSlot.MAINHAND).getItem())
-                            + " health=" + damagedZombie.getHealth());
+                    if (!damagedZombie.getUuid().equals(lastLoggedDamageUuid)
+                            || damagedZombie.getHealth() < lastLoggedZombieHealth - 0.01F) {
+                        lastLoggedDamageUuid = damagedZombie.getUuid();
+                        lastLoggedZombieHealth = damagedZombie.getHealth();
+                        trace("CI_COMPANION_DAMAGE zombie=" + damagedZombie.getUuid() + " companion=" + companionUuid
+                                + " weapon=" + net.minecraft.registry.Registries.ITEM.getId(
+                                companion.getEquippedStack(EquipmentSlot.MAINHAND).getItem())
+                                + " health=" + damagedZombie.getHealth());
+                    }
                 }
             }
         }

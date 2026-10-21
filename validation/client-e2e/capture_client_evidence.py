@@ -44,17 +44,19 @@ def watch_attacks(trace: Path, output: Path):
                     screenshot(output / f"swing-{style}-{attack_index}-frame-{frame:02d}.png")
                     time.sleep(0.045)
             seen = len(hits)
-        if "CI_OWNER_DEFENSE_E2E_PASS" in text:
-            return 0
         if "CI_OWNER_DEFENSE_E2E_FAIL" in text:
             return 1
+        if "CI_OWNER_DEFENSE_E2E_PASS" in text and any(
+                "weapon=minecraft:iron_sword" in line for line in hits):
+            return 0
         time.sleep(0.05)
     return 2
 
 
 def hud_screens(trace: Path, output: Path):
     send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:iron_sword")
-    send_chat("summon minecraft:zombie ~8 ~ ~")
+    send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] ~8 ~ ~")
+    send_chat("summon minecraft:zombie ~-3 ~ ~ {PersistenceRequired:1b}")
     if not wait_marker(trace, "weapon=minecraft:iron_sword", timeout=120):
         raise RuntimeError("a real sword attack did not produce a Companion melee damage event")
     time.sleep(0.5)
