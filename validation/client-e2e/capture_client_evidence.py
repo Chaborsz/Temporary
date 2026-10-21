@@ -55,7 +55,9 @@ def watch_attacks(trace: Path, output: Path):
 
 def hud_screens(trace: Path, output: Path):
     send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:iron_sword")
-    send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] ~8 ~ ~")
+    # The owner-defense scenario has already passed. Switch through the public
+    # owner command to test a real, visible sword attack without synthetic targets.
+    send_chat("companion mode aggressive")
     send_chat("summon minecraft:zombie ~-3 ~ ~ {PersistenceRequired:1b}")
     if not wait_marker(trace, "weapon=minecraft:iron_sword", timeout=120):
         raise RuntimeError("a real sword attack did not produce a Companion melee damage event")
