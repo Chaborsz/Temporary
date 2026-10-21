@@ -38,6 +38,8 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
     private static final AtomicBoolean worldCreationStarted = new AtomicBoolean();
     private static final AtomicBoolean worldAnnounced = new AtomicBoolean();
     private static final AtomicBoolean summonSent = new AtomicBoolean();
+    private static final AtomicBoolean testArenaPrepared = new AtomicBoolean();
+    private static int testArenaWarmupTicks;
     private static final AtomicBoolean companionAnnounced = new AtomicBoolean();
     private static final AtomicBoolean attackerSent = new AtomicBoolean();
     private static final AtomicBoolean uiReadyAnnounced = new AtomicBoolean();
@@ -133,11 +135,19 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
                     && client.world.isChunkLoaded(client.player.getBlockPos())
                     && client.player.age > 40;
             ownerStableTicks = stableWorld ? ownerStableTicks + 1 : 0;
-            if (ownerStableTicks >= 40) {
-                summonSent.set(true);
-                client.getNetworkHandler().sendChatCommand("companion summon");
-                trace("CI_PRODUCTION_SUMMON_SENT groundedTicks=" + ownerStableTicks
-                        + " playerAge=" + client.player.age + " pos=" + client.player.getBlockPos());
+            if (ownerStableTicks >= 40 && testArenaPrepared.compareAndSet(false, true)) {
+                client.getNetworkHandler().sendChatCommand("gamemode survival");
+                client.getNetworkHandler().sendChatCommand("difficulty normal");
+                client.getNetworkHandler().sendChatCommand("fill ~-4 ~ ~-4 ~4 ~2 ~4 minecraft:air");
+                client.getNetworkHandler().sendChatCommand("fill ~-4 ~-1 ~-4 ~4 ~-1 ~4 minecraft:stone");
+                trace("CI_TEST_ARENA_PREPARED center=" + client.player.getBlockPos());
+            } else if (testArenaPrepared.get() && !summonSent.get()) {
+                if (++testArenaWarmupTicks >= 20) {
+                    summonSent.set(true);
+                    client.getNetworkHandler().sendChatCommand("companion summon");
+                    trace("CI_PRODUCTION_SUMMON_SENT groundedTicks=" + ownerStableTicks
+                            + " playerAge=" + client.player.age + " pos=" + client.player.getBlockPos());
+                }
             }
         }
         // Owner UUID is server-owned NBT state and is not a vanilla spawn field. Discover the
