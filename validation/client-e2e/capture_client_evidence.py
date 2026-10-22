@@ -56,6 +56,9 @@ def watch_attacks(trace: Path, output: Path):
             send_chat("companion order follow")
             send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] @p")
             send_chat("companion mode aggressive")
+            # Keep the Companion alive for multiple visible matrix cases; this
+            # is a validation-only survival effect, not a combat-state mutation.
+            send_chat("effect give @e[type=minecraft_companion:companion,limit=1,sort=nearest] minecraft:resistance 120 255 true")
             send_chat("companion appearance model default")
             send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:air")
             send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] armor.chest with minecraft:iron_chestplate")
