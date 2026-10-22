@@ -1,0 +1,39 @@
+name: Export Minecraft Companion dev.5 checkpoint
+
+on:
+  push:
+    paths:
+      - ".github/workflows/export-minecraft-companion-dev5.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify exact checkpoint
+        shell: bash
+        run: |
+          set -euo pipefail
+          file="minecraft-companion-0.9.7.1-dev.5-fabric-1.20.1.zip"
+          expected="a67c82b77aa366981d09124996aaff9c346de366c480acad3f59da8262102414"
+          test -f "$file"
+          actual="$(sha256sum "$file" | awk '{print $1}')"
+          echo "expected=$expected"
+          echo "actual=$actual"
+          test "$actual" = "$expected"
+
+      - name: Upload exact checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: minecraft-companion-0.9.7.1-dev.5-exact
+          path: minecraft-companion-0.9.7.1-dev.5-fabric-1.20.1.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 14
