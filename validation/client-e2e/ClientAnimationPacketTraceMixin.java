@@ -27,3 +27,4 @@ abstract class ClientAnimationPacketTraceMixin {
                     + " beforeHand=" + companion.preferredHand);
     }
 }
+}
