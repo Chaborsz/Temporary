@@ -9,6 +9,7 @@ mkdir -p "$CI_VALIDATION_DIR" "$PROJECT_DIR/ci-validation/src/main/java/validati
 cp "$VALIDATION_SOURCE_DIR/CiClientValidation.java" "$PROJECT_DIR/ci-validation/src/main/java/validation/"
 mkdir -p "$PROJECT_DIR/ci-validation/src/main/java/validation/mixin"
 cp "$VALIDATION_SOURCE_DIR/ClientSwingTraceMixin.java" "$PROJECT_DIR/ci-validation/src/main/java/validation/mixin/"
+cp "$VALIDATION_SOURCE_DIR/EntityStatusTraceMixin.java" "$PROJECT_DIR/ci-validation/src/main/java/validation/mixin/"
 
 cat > "$PROJECT_DIR/ci-validation/init.gradle" <<'GRADLE'
 import org.gradle.api.tasks.compile.JavaCompile
@@ -34,7 +35,7 @@ cat > "$PROJECT_DIR/build/resources/main/ci_swing_trace.mixins.json" <<'JSON'
   "required": true,
   "package": "validation.mixin",
   "compatibilityLevel": "JAVA_17",
-  "client": ["ClientSwingTraceMixin"],
+  "client": ["EntityStatusTraceMixin", "ClientSwingTraceMixin"],
   "injectors": {"defaultRequire": 1}
 }
 JSON

@@ -14,19 +14,6 @@ abstract class ClientSwingTraceMixin {
     @Unique private int ci$lastLoggedSwingTick = Integer.MIN_VALUE;
     @Unique private boolean ci$lastLoggedSwinging;
 
-    @Inject(method = "handleStatus", at = @At("TAIL"))
-    private void ci$afterStatus(byte status, CallbackInfo ci) {
-        if ((Object) this instanceof CompanionEntity companion && (status == 0 || status == 3)) {
-            validation.CiClientValidation.trace("CI_SWING_STATUS_RECEIVED side="
-                    + (companion.getWorld().isClient ? "CLIENT" : "SERVER")
-                    + " status=" + status + " entityId=" + companion.getId()
-                    + " uuid=" + companion.getUuid() + " age=" + companion.age
-                    + " handSwinging=" + companion.handSwinging
-                    + " handSwingTicks=" + companion.handSwingTicks
-                    + " progress=" + companion.getHandSwingProgress(1.0F));
-        }
-    }
-
     @Inject(method = "tickHandSwing", at = @At("TAIL"))
     private void ci$afterSwingTick(CallbackInfo ci) {
         if ((Object) this instanceof CompanionEntity companion && companion.getWorld().isClient) {
