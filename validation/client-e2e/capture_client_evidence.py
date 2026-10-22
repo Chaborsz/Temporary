@@ -25,7 +25,7 @@ def wait_marker(trace: Path, marker: str, timeout=60):
 def send_chat(command: str):
     subprocess.run(["xdotool", "key", "t"], check=True)
     time.sleep(0.3)
-    subprocess.run(["xdotool", "type", "--clearmodifiers", command], check=True)
+    subprocess.run(["xdotool", "type", "--clearmodifiers", command if command.startswith("/") else "/" + command], check=True)
     subprocess.run(["xdotool", "key", "Return"], check=True)
     time.sleep(1.0)
 
