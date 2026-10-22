@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Drive a real Minecraft GUI until an enabled-command integrated world exists."""
 import argparse
-import csv
-import io
 import os
 from pathlib import Path
 import subprocess
@@ -16,27 +14,10 @@ def screenshot(path: Path):
 
 
 def capture(path: Path):
+    # UI progression is gated by integrated-server trace markers and direct-coordinate clicks.
+    # OCR is diagnostic only and deliberately omitted to keep the graphics runner lightweight.
     screenshot(path)
-    result = subprocess.run(["tesseract", str(path), "stdout", "tsv"], check=True,
-                            capture_output=True, text=True)
-    groups = {}
-    for row in csv.DictReader(io.StringIO(result.stdout), delimiter="\t"):
-        word = row.get("text", "").strip()
-        if not word:
-            continue
-        key = (row.get("page_num"), row.get("block_num"), row.get("par_num"), row.get("line_num"))
-        rec = groups.setdefault(key, {"words": [], "left": 10**9, "top": 10**9, "right": 0, "bottom": 0})
-        rec["words"].append(word)
-        x, y = int(row["left"]), int(row["top"])
-        rec["left"] = min(rec["left"], x)
-        rec["top"] = min(rec["top"], y)
-        rec["right"] = max(rec["right"], x + int(row["width"]))
-        rec["bottom"] = max(rec["bottom"], y + int(row["height"]))
-    lines = []
-    for rec in groups.values():
-        rec["text"] = " ".join(rec["words"])
-        lines.append(rec)
-    return "\n".join(line["text"] for line in lines), lines
+    return "OCR diagnostic skipped; inspect the saved screenshot and server trace.", []
 
 
 def click_at(x, y):
