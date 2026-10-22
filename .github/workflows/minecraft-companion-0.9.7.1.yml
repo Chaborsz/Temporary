@@ -1,4 +1,3 @@
-# Isolated dev.8 exact-source validation.
 name: Minecraft Companion 0.9.7.1 validation
 
 on:
@@ -6,6 +5,7 @@ on:
     paths:
       - "minecraft-companion-0.9.7.1-dev-*.7z"
       - "minecraft-companion-0.9.7.1-dev-*.zip"
+      - "minecraft-companion-0.9.7.1-dev.*-fabric-1.20.1.zip"
       - ".github/workflows/minecraft-companion-0.9.7.1.yml"
       - "validation/client-e2e/**"
   workflow_dispatch:
@@ -18,12 +18,12 @@ on:
       source_archive:
         description: "Checkpoint .7z/.zip dentro del repo; si no existe se usa project_path/autodetección"
         required: false
-        default: "minecraft-companion-0.9.7.1-dev.8-fabric-1.20.1.zip"
+        default: "minecraft-companion-0.9.7.1-dev.9-fabric-1.20.1.zip"
         type: string
       expected_source_sha256:
         description: "SHA-256 esperado del checkpoint; dejar vacío para no comprobar archivo"
         required: false
-        default: "adc45eb29fa6be0495da3339bd3240667277ea17319f44b3e271f2a84e2fbb18"
+        default: "921639d3ba12cbd6eba02d71f6e6653ac85f736db04e7251f3dc2465f5764766"
         type: string
       gametest_runs:
         description: "Número de pasadas completas de GameTests"
@@ -94,8 +94,8 @@ jobs:
         shell: bash
         env:
           INPUT_PROJECT_PATH: ${{ inputs.project_path }}
-          INPUT_SOURCE_ARCHIVE: ${{ github.event_name == 'push' && 'minecraft-companion-0.9.7.1-dev.8-fabric-1.20.1.zip' || inputs.source_archive }}
-          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && 'adc45eb29fa6be0495da3339bd3240667277ea17319f44b3e271f2a84e2fbb18' || inputs.expected_source_sha256 }}
+          INPUT_SOURCE_ARCHIVE: ${{ github.event_name == 'push' && 'minecraft-companion-0.9.7.1-dev.9-fabric-1.20.1.zip' || inputs.source_archive }}
+          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && '921639d3ba12cbd6eba02d71f6e6653ac85f736db04e7251f3dc2465f5764766' || inputs.expected_source_sha256 }}
         run: |
           set -euo pipefail
           mkdir -p "$ARTIFACT_DIR"
