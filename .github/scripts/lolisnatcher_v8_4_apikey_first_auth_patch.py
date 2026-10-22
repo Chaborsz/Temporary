@@ -23,6 +23,7 @@ _chain = [
     ('lolisnatcher_v8_21_analyzer_fix_patch.py', 'V8_21_ANALYZER_FIX_CHAIN=PASS'),
     ('lolisnatcher_v8_22_read_query_compat_patch.py', 'V8_22_READ_QUERY_COMPAT_CHAIN=PASS'),
     ('lolisnatcher_v8_22_visual_db_memory_stall_patch.py', 'V8_22_VISUAL_MEMORY_STALL_REDUCTION_CHAIN=PASS'),
+    ('lolisnatcher_v8_23_fetch_and_decode_target_patch.py', 'V8_23_FETCH_AND_DECODE_TARGET_REDUCTION_CHAIN=PASS'),
 ]
 
 for filename, marker in _chain:
