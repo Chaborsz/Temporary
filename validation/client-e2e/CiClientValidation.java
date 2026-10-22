@@ -65,6 +65,8 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
     private static boolean targetSurvivedTwoTicks;
     private static boolean followResumed;
     private static boolean failed;
+    private static String lastClientSwingPhase = "";
+    private static boolean clientSwingObserved;
 
     @Override
     public void onInitialize() {
@@ -160,6 +162,26 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
         CompanionEntity companion = client.world.getEntitiesByClass(CompanionEntity.class,
                         client.player.getBoundingBox().expand(64.0D), Entity::isAlive)
                 .stream().min(Comparator.comparingDouble(entity -> entity.squaredDistanceTo(client.player))).orElse(null);
+        if (companion != null) {
+            float progress = companion.getHandSwingProgress(1.0F);
+            String phase;
+            if (!companion.handSwinging) {
+                phase = clientSwingObserved ? "IDLE_AGAIN" : "IDLE";
+                clientSwingObserved = false;
+            } else {
+                clientSwingObserved = true;
+                phase = progress < 0.25F ? "EARLY" : progress < 0.70F ? "MID" : "LATE";
+            }
+            if (!phase.equals(lastClientSwingPhase)) {
+                lastClientSwingPhase = phase;
+                trace("CI_RENDER_SWING_PHASE phase=" + phase + " progress=" + progress
+                        + " handSwingTicks=" + companion.handSwingTicks
+                        + " model=" + companion.getModelVariant().name()
+                        + " weapon=" + companion.getEquippedStack(EquipmentSlot.MAINHAND).getItem()
+                        + " chest=" + companion.getEquippedStack(EquipmentSlot.CHEST).getItem()
+                        + " head=" + companion.getEquippedStack(EquipmentSlot.HEAD).getItem());
+            }
+        }
         if (companion != null && companionAnnounced.compareAndSet(false, true)) {
             companionUuid = companion.getUuid();
             client.options.setPerspective(Perspective.THIRD_PERSON_BACK);
