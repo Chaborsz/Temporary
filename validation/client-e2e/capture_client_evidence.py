@@ -48,44 +48,48 @@ def watch_attacks(trace: Path, output: Path):
             seen = len(hits)
         if "CI_OWNER_DEFENSE_E2E_FAIL" in text:
             return 1
-        if stage == 0 and "CI_OWNER_DEFENSE_E2E_PASS" in text and hits:
-            # First pass proves Default/Classic empty-hand owner defense. Set up an
-            # ordinary second hostile through production commands, not target injection.
-            # Owner defense is already fully proven. Keep the visual matrix stable
-            # by protecting the owner and using the production Aggressive mode for
-            # ordinary autonomous target acquisition and melee.
+        if stage == 0 and "CI_OWNER_DEFENSE_E2E_PASS" in text:
+            # The owner-defense chain is complete. Prove render swings with
+            # autonomous production combat, independent of how many E2E hits
+            # the earlier scanner happened to observe.
             send_chat("gamemode creative")
             send_chat("companion order follow")
             send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] @p")
             send_chat("companion mode aggressive")
             send_chat("companion appearance model default")
-            send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:iron_sword")
+            send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:air")
             send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] armor.chest with minecraft:iron_chestplate")
             send_chat("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b,Health:40.0f}")
             stage = 1
             stage_start = time.monotonic()
+        default_empty = [line for line in hits if "model=DEFAULT" in line and "weapon=minecraft:air" in line]
         sword_hits = [line for line in hits if "weapon=minecraft:iron_sword" in line]
-        if stage == 1 and len(sword_hits) >= 2:
-            send_chat("effect give @p minecraft:instant_health 1 20 true")
+        if stage == 1 and default_empty:
+            send_chat("companion appearance model default")
+            send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:iron_sword")
+            send_chat("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b,Health:40.0f}")
+            stage = 2
+            stage_start = time.monotonic()
+        if stage == 2 and len(sword_hits) >= 2:
             send_chat("companion order follow")
             send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] @p")
             send_chat("companion appearance model slim_arms")
             send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:air")
             send_chat("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b,Health:40.0f}")
-            stage = 2
+            stage = 3
             stage_start = time.monotonic()
         slim_empty = [line for line in hits if "model=SLIM_ARMS" in line and "weapon=minecraft:air" in line]
-        if stage == 2 and len(slim_empty) >= 2:
+        if stage == 3 and len(slim_empty) >= 2:
             (output / "swing-visual-matrix.txt").write_text(
-                "Default/Classic + empty hand: captured during real owner-defense E2E.\n"
-                "Default/Classic + iron sword + iron chestplate: captured during a second naturally targeted zombie encounter.\n"
-                "Slim arms + empty hand + iron chestplate: captured during a third naturally targeted zombie encounter.\n"
+                "Default/Classic + empty hand: captured in an autonomous post-E2E Aggressive encounter.\n"
+                "Default/Classic + iron sword + iron chestplate: captured during a second autonomous encounter.\n"
+                "Slim arms + empty hand + iron chestplate: captured during a third autonomous encounter.\n"
                 "All captures are rendered client frames associated with actual companion-attributed zombie health loss.\n",
                 encoding="utf-8")
             return 0
         if stage and time.monotonic() - stage_start > 180:
             (output / "swing-visual-matrix-failure.txt").write_text(
-                f"Timed out in stage {stage}; swordHits={len(sword_hits)}; slimEmptyHits={len(slim_empty)}\n{text[-6000:]}",
+                f"Timed out in stage {stage}; defaultEmptyHits={len(default_empty)}; swordHits={len(sword_hits)}; slimEmptyHits={len(slim_empty)}\n{text[-6000:]}",
                 encoding="utf-8")
             return 1
         time.sleep(0.05)
