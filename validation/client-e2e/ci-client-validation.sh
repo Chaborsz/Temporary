@@ -128,15 +128,17 @@ grep -q 'CI_OWNER_DEFENSE_E2E_PASS' "$CI_VALIDATION_DIR/runtime-trace.log" || {
   exit 63
 }
 
-python3 "$VALIDATION_SOURCE_DIR/capture_client_evidence.py" \
-  --trace "$CI_VALIDATION_DIR/runtime-trace.log" --output "$CI_VALIDATION_DIR"
 wait "$watcher_pid" || watcher_rc=$?
-watcher_pid=""
 watcher_pid=""
 if [[ "${watcher_rc:-0}" -gt 1 ]]; then
   echo "Swing frame capture did not finish with the integrated combat scenario." >&2
   exit 64
 fi
+
+# Serialize the HUD commands after all attack-view commands so the two
+# screenshot drivers cannot type into the same in-game chat at once.
+python3 "$VALIDATION_SOURCE_DIR/capture_client_evidence.py" \
+  --trace "$CI_VALIDATION_DIR/runtime-trace.log" --output "$CI_VALIDATION_DIR"
 
 sha256sum "$PROJECT_DIR"/build/libs/*.jar > "$CI_VALIDATION_DIR/product-jars-after-client.txt"
 cmp "$CI_VALIDATION_DIR/product-jars-before-client.txt" "$CI_VALIDATION_DIR/product-jars-after-client.txt"
