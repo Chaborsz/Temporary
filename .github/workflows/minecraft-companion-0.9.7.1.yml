@@ -282,7 +282,18 @@ jobs:
             set -e
             if [[ -f build/gametest-results.xml ]]; then
               cp -f build/gametest-results.xml "$ARTIFACT_DIR/gametests/pass-${run}.xml"
-            else
+              cp -f build/gametest-results.xml "$ARTIFACT_DIR/gametests/pass-${run}-run-dir.xml"
+            fi
+            report_candidates=("build/gametest/pass-${run}/gametest-results.xml" "build/gametest/pass-${run}/reports/gametest-results.xml" "build/gametest/pass-${run}/logs/latest.log")
+            for report in "${report_candidates[@]}"; do
+              if [[ -f "$report" ]]; then
+                cp -f "$report" "$ARTIFACT_DIR/gametests/pass-${run}-$(basename "$(dirname "$report")").$( [[ "$report" == *.xml ]] && echo xml || echo log )"
+              fi
+            done
+            if [[ "$task_rc" -ne 0 ]]; then
+              find build/gametest/pass-${run} -type f -maxdepth 5 -print -exec cp --parents -f {} "$ARTIFACT_DIR/gametests/" \; 2>/dev/null || true
+            fi
+            if [[ ! -f "$ARTIFACT_DIR/gametests/pass-${run}.xml" ]]; then
               echo "WARNING: Fabric GameTest XML report missing for pass $run" | tee "$ARTIFACT_DIR/gametests/pass-${run}-report-missing.txt"
             fi
             if grep -RIl --include='eula.txt' '^eula=true[[:space:]]*$' . | grep -q .; then
