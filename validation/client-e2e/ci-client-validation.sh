@@ -5,32 +5,15 @@ PROJECT_DIR="$(pwd)"
 VALIDATION_SOURCE_DIR="${GITHUB_WORKSPACE:?}/validation/client-e2e"
 CI_VALIDATION_DIR="${ARTIFACT_DIR:?}/client"
 export CI_VALIDATION_DIR
-mkdir -p "$CI_VALIDATION_DIR" "$PROJECT_DIR/ci-validation/src/main/java/validation"
-cp "$VALIDATION_SOURCE_DIR/CiClientValidation.java" "$PROJECT_DIR/ci-validation/src/main/java/validation/"
-mkdir -p "$PROJECT_DIR/ci-validation/src/main/java/validation/mixin"
-cp "$VALIDATION_SOURCE_DIR/ClientSwingTraceMixin.java" "$PROJECT_DIR/ci-validation/src/main/java/validation/mixin/"
-cp "$VALIDATION_SOURCE_DIR/EntityStatusTraceMixin.java" "$PROJECT_DIR/ci-validation/src/main/java/validation/mixin/"
+mkdir -p "$CI_VALIDATION_DIR" "$PROJECT_DIR/src/main/java/validation/mixin" "$PROJECT_DIR/src/main/resources"
+# Inject diagnostic sources and metadata before Gradle evaluates compileJava,
+# processResources, and runClient. The previous post-build resource mutation
+# was too late for Fabric Loom's development mod metadata discovery.
+cp "$VALIDATION_SOURCE_DIR/CiClientValidation.java" "$PROJECT_DIR/src/main/java/validation/"
+cp "$VALIDATION_SOURCE_DIR/ClientSwingTraceMixin.java" "$PROJECT_DIR/src/main/java/validation/mixin/"
+cp "$VALIDATION_SOURCE_DIR/EntityStatusTraceMixin.java" "$PROJECT_DIR/src/main/java/validation/mixin/"
 
-cat > "$PROJECT_DIR/ci-validation/init.gradle" <<'GRADLE'
-import org.gradle.api.tasks.compile.JavaCompile
-
-gradle.projectsEvaluated {
-    def p = gradle.rootProject
-    p.tasks.register('ciCompileClientHarness', JavaCompile) {
-        source = p.fileTree('ci-validation/src/main/java') { include '**/*.java' }
-        classpath = p.files(p.sourceSets.main.compileClasspath, p.sourceSets.main.output)
-        destinationDirectory = p.layout.buildDirectory.dir('ci-validation/classes')
-        options.encoding = 'UTF-8'
-        options.release = 17
-    }
-}
-GRADLE
-
-gradle --no-daemon --no-build-cache --stacktrace -I ci-validation/init.gradle ciCompileClientHarness \
-  2>&1 | tee "$CI_VALIDATION_DIR/harness-compile.log"
-cp -a "$PROJECT_DIR/build/ci-validation/classes/." "$PROJECT_DIR/build/classes/java/main/"
-
-cat > "$PROJECT_DIR/build/resources/main/ci_swing_trace.mixins.json" <<'JSON'
+cat > "$PROJECT_DIR/src/main/resources/ci_swing_trace.mixins.json" <<'JSON'
 {
   "required": true,
   "package": "validation.mixin",
@@ -40,7 +23,7 @@ cat > "$PROJECT_DIR/build/resources/main/ci_swing_trace.mixins.json" <<'JSON'
 }
 JSON
 
-python3 - "$PROJECT_DIR/build/resources/main/fabric.mod.json" <<'PY'
+python3 - "$PROJECT_DIR/src/main/resources/fabric.mod.json" <<'PY'
 import json, sys
 path = sys.argv[1]
 with open(path, encoding='utf-8') as handle:
@@ -63,8 +46,9 @@ sha256sum "$PROJECT_DIR"/build/libs/*.jar > "$CI_VALIDATION_DIR/product-jars-bef
 watcher_pid=""
 phase_watcher_pid=""
 set +e
-setsid timeout "${CLIENT_TIMEOUT_SECONDS:-900}s" gradle --no-daemon --no-build-cache --stacktrace \
-  -x classes -x processResources runClient > "$CI_VALIDATION_DIR/runClient-console.log" 2>&1 &
+JAVA_TOOL_OPTIONS="${JAVA_TOOL_OPTIONS:-} -Dmixin.debug.verbose=true -Dmixin.debug.export=true" \
+  setsid timeout "${CLIENT_TIMEOUT_SECONDS:-900}s" gradle --no-daemon --no-build-cache --stacktrace \
+  runClient > "$CI_VALIDATION_DIR/runClient-console.log" 2>&1 &
 client_pid=$!
 set -e
 cleanup() {
