@@ -42,9 +42,12 @@ def watch_attacks(trace: Path, output: Path):
             for attack_index, line in enumerate(hits[seen:], seen + 1):
                 (output / f"attack-event-{attack_index}.txt").write_text(line + "\n", encoding="utf-8")
                 style = "sword" if "weapon=minecraft:iron_sword" in line else "empty-hand"
-                for frame in range(8):
+                # Capture the active entity render repeatedly at a dense cadence.
+                # The exact vanilla swing phase is animation-progress driven, so
+                # preserve the full temporal sequence for visual frame inspection.
+                for frame in range(24):
                     screenshot(output / f"swing-{style}-{attack_index}-frame-{frame:02d}.png")
-                    time.sleep(0.045)
+                    time.sleep(0.025)
             seen = len(hits)
         if "CI_OWNER_DEFENSE_E2E_FAIL" in text:
             return 1
@@ -77,20 +80,26 @@ def watch_attacks(trace: Path, output: Path):
             stage = 2
             stage_start = time.monotonic()
         if stage == 2 and len(sword_hits) >= 2:
+            # Slim model with sleeves/base layer, held item and armor; an
+            # intentional walk order gives the renderer a walk+attack case.
             send_chat("companion order follow")
-            send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] @p")
             send_chat("companion appearance model slim_arms")
-            send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:air")
+            send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:iron_sword")
+            send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] armor.chest with minecraft:iron_chestplate")
+            send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] armor.head with minecraft:iron_helmet")
+            send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] @p ~4 ~ ~")
             send_chat("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b,Health:40.0f}")
             stage = 3
             stage_start = time.monotonic()
-        slim_empty = [line for line in hits if "model=SLIM_ARMS" in line and "weapon=minecraft:air" in line]
-        if stage == 3 and len(slim_empty) >= 2:
+        slim_sword = [line for line in hits if "model=SLIM_ARMS" in line and "weapon=minecraft:iron_sword" in line]
+        if stage == 3 and len(slim_sword) >= 2:
             (output / "swing-visual-matrix.txt").write_text(
-                "Default/Classic + empty hand: captured in an autonomous post-E2E Aggressive encounter.\n"
-                "Default/Classic + iron sword + iron chestplate: captured during a second autonomous encounter.\n"
-                "Slim arms + empty hand + iron chestplate: captured during a third autonomous encounter.\n"
-                "All captures are rendered client frames associated with actual companion-attributed zombie health loss.\n",
+                "Classic/default + empty hand + chestplate + helmet: real rendered frames during production melee.\n"
+                "Classic/default + iron sword + chestplate + helmet: real rendered frames during production melee.\n"
+                "Slim arms + iron sword + chestplate + helmet + follow movement: real rendered frames during production melee.\n"
+                "Each attack-event has 24 consecutive client screenshots; inspect temporal phases and returning idle pose visually.\n"
+                "All attack screenshots are rendered frames associated with actual companion-attributed Zombie health loss.\n"
+                "Sleeve appearance is whatever the configured production skin layer renders; separate layer visibility is not asserted by pixel inspection in this harness.\n",
                 encoding="utf-8")
             return 0
         if stage and time.monotonic() - stage_start > 180:
