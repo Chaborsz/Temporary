@@ -177,7 +177,7 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
             // Keep the real hostile near the Companion while leaving it close enough to
             // acquire and damage the owner. This gives retaliation a fair pathing window and
             // changes only world geometry; it never writes a target or threat into mod state.
-            client.getNetworkHandler().sendChatCommand("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] ~-8 ~ ~");
+            client.getNetworkHandler().sendChatCommand("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] ~8 ~ ~");
             client.getNetworkHandler().sendChatCommand("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b}");
             trace("CI_REAL_ZOMBIE_SPAWN_COMMAND_SENT");
         }
