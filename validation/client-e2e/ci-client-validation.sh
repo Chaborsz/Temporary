@@ -12,13 +12,14 @@ mkdir -p "$CI_VALIDATION_DIR" "$PROJECT_DIR/src/main/java/validation/mixin" "$PR
 cp "$VALIDATION_SOURCE_DIR/CiClientValidation.java" "$PROJECT_DIR/src/main/java/validation/"
 cp "$VALIDATION_SOURCE_DIR/ClientSwingTraceMixin.java" "$PROJECT_DIR/src/main/java/validation/mixin/"
 cp "$VALIDATION_SOURCE_DIR/EntityStatusTraceMixin.java" "$PROJECT_DIR/src/main/java/validation/mixin/"
+cp "$VALIDATION_SOURCE_DIR/ClientAnimationPacketTraceMixin.java" "$PROJECT_DIR/src/main/java/validation/mixin/"
 
 cat > "$PROJECT_DIR/src/main/resources/ci_swing_trace.mixins.json" <<'JSON'
 {
   "required": true,
   "package": "validation.mixin",
   "compatibilityLevel": "JAVA_17",
-  "client": ["EntityStatusTraceMixin", "ClientSwingTraceMixin"],
+  "client": ["EntityStatusTraceMixin", "ClientSwingTraceMixin", "ClientAnimationPacketTraceMixin"],
   "injectors": {"defaultRequire": 1}
 }
 JSON

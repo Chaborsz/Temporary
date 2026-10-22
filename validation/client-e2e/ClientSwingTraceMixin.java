@@ -13,6 +13,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 abstract class ClientSwingTraceMixin {
     @Unique private int ci$lastLoggedSwingTick = Integer.MIN_VALUE;
     @Unique private boolean ci$lastLoggedSwinging;
+    @Unique private int ci$lastEntityTick = Integer.MIN_VALUE;
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void ci$afterLivingTick(CallbackInfo ci) {
+        if ((Object) this instanceof CompanionEntity companion && companion.getWorld().isClient
+                && companion.age != ci$lastEntityTick) {
+            ci$lastEntityTick = companion.age;
+            if ((companion.age & 3) == 0) {
+                validation.CiClientValidation.trace("CI_SWING_ENTITY_TICK side=CLIENT thread="
+                        + Thread.currentThread().getName() + " entityId=" + companion.getId()
+                        + " uuid=" + companion.getUuid() + " class=" + companion.getClass().getName()
+                        + " age=" + companion.age + " handSwinging=" + companion.handSwinging
+                        + " handSwingTicks=" + companion.handSwingTicks
+                        + " preferredHand=" + companion.preferredHand
+                        + " duration=" + companion.getHandSwingDuration()
+                        + " progress=" + companion.getHandSwingProgress(1.0F));
+            }
+        }
+    }
 
     @Inject(method = "tickHandSwing", at = @At("TAIL"))
     private void ci$afterSwingTick(CallbackInfo ci) {
