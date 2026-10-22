@@ -53,6 +53,8 @@ def watch_attacks(trace: Path, output: Path):
             # autonomous production combat, independent of how many E2E hits
             # the earlier scanner happened to observe.
             send_chat("gamemode creative")
+            send_chat("time set noon")
+            send_chat("effect give @p minecraft:night_vision 120 0 true")
             send_chat("companion order follow")
             send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] @p")
             send_chat("companion mode aggressive")
@@ -62,6 +64,7 @@ def watch_attacks(trace: Path, output: Path):
             send_chat("companion appearance model default")
             send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:air")
             send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] armor.chest with minecraft:iron_chestplate")
+            send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] armor.head with minecraft:iron_helmet")
             send_chat("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b,Health:40.0f}")
             stage = 1
             stage_start = time.monotonic()
