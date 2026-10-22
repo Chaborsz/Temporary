@@ -32,6 +32,8 @@ def send_chat(command: str):
 
 def watch_attacks(trace: Path, output: Path):
     seen = 0
+    stage = 0
+    stage_start = time.monotonic()
     deadline = time.monotonic() + int(os.environ.get("CLIENT_TIMEOUT_SECONDS", "900"))
     while time.monotonic() < deadline:
         text = trace.read_text(encoding="utf-8", errors="replace") if trace.exists() else ""
@@ -46,11 +48,38 @@ def watch_attacks(trace: Path, output: Path):
             seen = len(hits)
         if "CI_OWNER_DEFENSE_E2E_FAIL" in text:
             return 1
-        if "CI_OWNER_DEFENSE_E2E_PASS" in text and hits:
-            # The real owner-defense sequence already produced Companion melee
-            # damage. Capture its swing frames; do not require a second target
-            # after the combat scenario has ended.
+        if stage == 0 and "CI_OWNER_DEFENSE_E2E_PASS" in text and hits:
+            # First pass proves Default/Classic empty-hand owner defense. Set up an
+            # ordinary second hostile through production commands, not target injection.
+            send_chat("effect give @p minecraft:instant_health 1 20 true")
+            send_chat("companion appearance model default")
+            send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:iron_sword")
+            send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] armor.chest with minecraft:iron_chestplate")
+            send_chat("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b}")
+            stage = 1
+            stage_start = time.monotonic()
+        sword_hits = [line for line in hits if "weapon=minecraft:iron_sword" in line]
+        if stage == 1 and len(sword_hits) >= 2:
+            send_chat("effect give @p minecraft:instant_health 1 20 true")
+            send_chat("companion appearance model slim_arms")
+            send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:air")
+            send_chat("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b}")
+            stage = 2
+            stage_start = time.monotonic()
+        slim_empty = [line for line in hits if "model=SLIM_ARMS" in line and "weapon=minecraft:air" in line]
+        if stage == 2 and len(slim_empty) >= 2:
+            (output / "swing-visual-matrix.txt").write_text(
+                "Default/Classic + empty hand: captured during real owner-defense E2E.\n"
+                "Default/Classic + iron sword + iron chestplate: captured during a second naturally targeted zombie encounter.\n"
+                "Slim arms + empty hand + iron chestplate: captured during a third naturally targeted zombie encounter.\n"
+                "All captures are rendered client frames associated with actual companion-attributed zombie health loss.\n",
+                encoding="utf-8")
             return 0
+        if stage and time.monotonic() - stage_start > 180:
+            (output / "swing-visual-matrix-failure.txt").write_text(
+                f"Timed out in stage {stage}; swordHits={len(sword_hits)}; slimEmptyHits={len(slim_empty)}\n{text[-6000:]}",
+                encoding="utf-8")
+            return 1
         time.sleep(0.05)
     return 2
 

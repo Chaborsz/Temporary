@@ -215,22 +215,19 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
         CompanionEntity companion = findOwnedCompanion(owner);
         if (companion == null) return;
         if (passAnnounced.get()) {
-            if (companion.getEquippedStack(EquipmentSlot.MAINHAND).getItem()
-                    == net.minecraft.item.Items.IRON_SWORD) {
-                var swordTargets = owner.getWorld().getEntitiesByClass(ZombieEntity.class,
-                        owner.getBoundingBox().expand(24.0D), Entity::isAlive);
-                for (ZombieEntity target : swordTargets) {
-                    if (target.getUuid().equals(zombieUuid) || target.getHealth() >= target.getMaxHealth()
-                            || target.getAttacker() != companion) continue;
-                    if (!target.getUuid().equals(swordDamageUuid)
-                            || target.getHealth() < lastSwordZombieHealth - 0.01F) {
-                        swordDamageUuid = target.getUuid();
-                        lastSwordZombieHealth = target.getHealth();
-                        trace("CI_COMPANION_DAMAGE zombie=" + target.getUuid() + " companion=" + companion.getUuid()
-                                + " weapon=" + net.minecraft.registry.Registries.ITEM.getId(
-                                companion.getEquippedStack(EquipmentSlot.MAINHAND).getItem())
-                                + " health=" + target.getHealth());
-                    }
+            var visualTargets = owner.getWorld().getEntitiesByClass(ZombieEntity.class,
+                    owner.getBoundingBox().expand(24.0D), Entity::isAlive);
+            for (ZombieEntity target : visualTargets) {
+                if (target.getUuid().equals(zombieUuid) || target.getHealth() >= target.getMaxHealth()
+                        || target.getAttacker() != companion) continue;
+                if (!target.getUuid().equals(swordDamageUuid)
+                        || target.getHealth() < lastSwordZombieHealth - 0.01F) {
+                    swordDamageUuid = target.getUuid();
+                    lastSwordZombieHealth = target.getHealth();
+                    trace("CI_COMPANION_DAMAGE zombie=" + target.getUuid() + " companion=" + companion.getUuid()
+                            + " weapon=" + net.minecraft.registry.Registries.ITEM.getId(
+                            companion.getEquippedStack(EquipmentSlot.MAINHAND).getItem())
+                            + " model=" + companion.getModelVariant() + " health=" + target.getHealth());
                 }
             }
             return;

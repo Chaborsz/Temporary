@@ -79,6 +79,13 @@ def main():
     click_at(750, 472)  # Follow order
     time.sleep(0.6)
     subprocess.run(["xdotool", "key", "Escape"], check=True)
+    time.sleep(0.5)
+    # Side-on camera keeps the production melee arm and target from occluding each other.
+    subprocess.run(["xdotool", "key", "t"], check=True)
+    time.sleep(0.2)
+    subprocess.run(["xdotool", "type", "--clearmodifiers", "/tp @p ~ ~ ~ 0 0"], check=True)
+    subprocess.run(["xdotool", "key", "Return"], check=True)
+    time.sleep(0.7)
     trace_path = Path(os.environ["CI_VALIDATION_DIR"])
     (trace_path / "ui-complete").write_text("management UI clicked Passive, Defensive, and Follow controls\\n", encoding="utf-8")
     print("CLIENT_UI_DEFENSIVE_AND_FOLLOW=PASS; input=direct-coordinate-clicks; OCR=diagnostic-only", flush=True)
