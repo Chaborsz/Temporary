@@ -82,9 +82,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            p7zip-full unzip xvfb xauth xdotool scrot tesseract-ocr imagemagick mesa-utils libgl1-mesa-dri libasound2t64
+          if ! command -v Xvfb >/dev/null || ! command -v xdotool >/dev/null || ! command -v scrot >/dev/null || ! command -v tesseract >/dev/null || ! command -v convert >/dev/null || ! command -v glxinfo >/dev/null; then
+            timeout 300s sudo apt-get update -qq
+            timeout 300s sudo apt-get install -y --no-install-recommends \
+              p7zip-full unzip xvfb xauth xdotool scrot tesseract-ocr imagemagick mesa-utils libgl1-mesa-dri libasound2t64
+          fi
 
       - name: Resolve source project
         id: source
