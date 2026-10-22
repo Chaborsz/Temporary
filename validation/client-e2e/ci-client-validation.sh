@@ -7,6 +7,8 @@ CI_VALIDATION_DIR="${ARTIFACT_DIR:?}/client"
 export CI_VALIDATION_DIR
 mkdir -p "$CI_VALIDATION_DIR" "$PROJECT_DIR/ci-validation/src/main/java/validation"
 cp "$VALIDATION_SOURCE_DIR/CiClientValidation.java" "$PROJECT_DIR/ci-validation/src/main/java/validation/"
+mkdir -p "$PROJECT_DIR/ci-validation/src/main/java/validation/mixin"
+cp "$VALIDATION_SOURCE_DIR/ClientSwingTraceMixin.java" "$PROJECT_DIR/ci-validation/src/main/java/validation/mixin/"
 
 cat > "$PROJECT_DIR/ci-validation/init.gradle" <<'GRADLE'
 import org.gradle.api.tasks.compile.JavaCompile
@@ -27,11 +29,24 @@ gradle --no-daemon --no-build-cache --stacktrace -I ci-validation/init.gradle ci
   2>&1 | tee "$CI_VALIDATION_DIR/harness-compile.log"
 cp -a "$PROJECT_DIR/build/ci-validation/classes/." "$PROJECT_DIR/build/classes/java/main/"
 
+cat > "$PROJECT_DIR/build/resources/main/ci_swing_trace.mixins.json" <<'JSON'
+{
+  "required": true,
+  "package": "validation.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": ["ClientSwingTraceMixin"],
+  "injectors": {"defaultRequire": 1}
+}
+JSON
+
 python3 - "$PROJECT_DIR/build/resources/main/fabric.mod.json" <<'PY'
 import json, sys
 path = sys.argv[1]
 with open(path, encoding='utf-8') as handle:
     metadata = json.load(handle)
+mixins = metadata.setdefault('mixins', [])
+if 'ci_swing_trace.mixins.json' not in mixins:
+    mixins.append('ci_swing_trace.mixins.json')
 entrypoints = metadata.setdefault('entrypoints', {})
 for environment in ('main', 'client'):
     current = entrypoints.setdefault(environment, [])

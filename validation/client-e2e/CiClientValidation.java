@@ -369,7 +369,7 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
         return outputPath().resolve("ui-complete");
     }
 
-    private static synchronized void trace(String message) {
+    public static synchronized void trace(String message) {
         String line = "[CompanionClientE2E] " + message;
         System.out.println(line);
         try {
