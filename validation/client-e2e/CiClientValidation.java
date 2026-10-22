@@ -143,8 +143,8 @@ public final class CiClientValidation implements ModInitializer, ClientModInitia
             if (ownerStableTicks >= 40 && testArenaPrepared.compareAndSet(false, true)) {
                 client.getNetworkHandler().sendChatCommand("gamemode survival");
                 client.getNetworkHandler().sendChatCommand("difficulty normal");
-                client.getNetworkHandler().sendChatCommand("fill ~-4 ~ ~-4 ~4 ~2 ~4 minecraft:air");
-                client.getNetworkHandler().sendChatCommand("fill ~-4 ~-1 ~-4 ~4 ~-1 ~4 minecraft:stone");
+                client.getNetworkHandler().sendChatCommand("fill ~-16 ~ ~-16 ~16 ~2 ~16 minecraft:air");
+                client.getNetworkHandler().sendChatCommand("fill ~-16 ~-1 ~-16 ~16 ~-1 ~16 minecraft:stone");
                 trace("CI_TEST_ARENA_PREPARED center=" + client.player.getBlockPos());
             } else if (testArenaPrepared.get() && !summonSent.get()) {
                 if (++testArenaWarmupTicks >= 20) {
