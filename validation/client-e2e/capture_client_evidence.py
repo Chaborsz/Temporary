@@ -51,11 +51,17 @@ def watch_attacks(trace: Path, output: Path):
         if stage == 0 and "CI_OWNER_DEFENSE_E2E_PASS" in text and hits:
             # First pass proves Default/Classic empty-hand owner defense. Set up an
             # ordinary second hostile through production commands, not target injection.
-            send_chat("effect give @p minecraft:instant_health 1 20 true")
+            # Owner defense is already fully proven. Keep the visual matrix stable
+            # by protecting the owner and using the production Aggressive mode for
+            # ordinary autonomous target acquisition and melee.
+            send_chat("gamemode creative")
+            send_chat("companion order follow")
+            send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] @p")
+            send_chat("companion mode aggressive")
             send_chat("companion appearance model default")
             send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:iron_sword")
             send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] armor.chest with minecraft:iron_chestplate")
-            send_chat("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b}")
+            send_chat("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b,Health:40.0f}")
             stage = 1
             stage_start = time.monotonic()
         sword_hits = [line for line in hits if "weapon=minecraft:iron_sword" in line]
@@ -91,6 +97,7 @@ def hud_screens(trace: Path, output: Path):
     # response. Use that same live client session for the HUD captures.
     states = (("full", "health=24.0 food=20"), ("partial", "health=23.0 food=19"),
               ("empty", "health=12.0 food=10"), ("critical", "health=1.0 food=1"))
+    send_chat("companion mode passive")
     send_chat("companion order follow")
     send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] @p")
     send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] armor.head with minecraft:iron_helmet")
