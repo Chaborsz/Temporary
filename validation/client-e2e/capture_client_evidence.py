@@ -56,6 +56,13 @@ def watch_render_phases(trace: Path, output: Path):
                 + "CAPTURE_COUNT=" + str(len(captured)) + "\n",
                 encoding="utf-8")
             return 0
+        if (output / "swing-visual-matrix-failure.txt").exists():
+            (output / "swing-rendered-phase-failure.txt").write_text(
+                "Attack matrix failed before all render phases could be observed.\n"
+                + (output / "swing-visual-matrix-failure.txt").read_text(
+                    encoding="utf-8", errors="replace"),
+                encoding="utf-8")
+            return 1
         time.sleep(0.025)
     (output / "swing-rendered-phase-failure.txt").write_text(
         f"Timed out; phase events={seen}; captured={len(captured)}\n", encoding="utf-8")
