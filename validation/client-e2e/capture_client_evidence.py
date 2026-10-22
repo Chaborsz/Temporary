@@ -61,9 +61,11 @@ def watch_attacks(trace: Path, output: Path):
         sword_hits = [line for line in hits if "weapon=minecraft:iron_sword" in line]
         if stage == 1 and len(sword_hits) >= 2:
             send_chat("effect give @p minecraft:instant_health 1 20 true")
+            send_chat("companion order follow")
+            send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] @p")
             send_chat("companion appearance model slim_arms")
             send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] weapon.mainhand with minecraft:air")
-            send_chat("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b}")
+            send_chat("summon minecraft:zombie ~-5 ~ ~ {PersistenceRequired:1b,Health:40.0f}")
             stage = 2
             stage_start = time.monotonic()
         slim_empty = [line for line in hits if "model=SLIM_ARMS" in line and "weapon=minecraft:air" in line]
@@ -89,6 +91,8 @@ def hud_screens(trace: Path, output: Path):
     # response. Use that same live client session for the HUD captures.
     states = (("full", "health=24.0 food=20"), ("partial", "health=23.0 food=19"),
               ("empty", "health=12.0 food=10"), ("critical", "health=1.0 food=1"))
+    send_chat("companion order follow")
+    send_chat("tp @e[type=minecraft_companion:companion,limit=1,sort=nearest] @p")
     send_chat("item replace entity @e[type=minecraft_companion:companion,limit=1,sort=nearest] armor.head with minecraft:iron_helmet")
     for name, marker in states:
         send_chat(f"cihud {name}")
