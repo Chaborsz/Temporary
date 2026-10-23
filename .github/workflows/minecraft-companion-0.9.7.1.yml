@@ -276,18 +276,19 @@ jobs:
           hits = []
           with zipfile.ZipFile(jar) as archive:
               for name in archive.namelist():
-                  if name.endswith('.class'):
-                      data = archive.read(name)
-                      if b'tickHandSwing' in data:
-                          hits.append(name[:-6].replace('/', '.'))
+                  if name.endswith('.class') and b'tickHandSwing' in archive.read(name):
+                      hits.append(name[:-6].replace('/', '.'))
           with open(report, 'w', encoding='utf-8') as out:
-              out.write('\\n'.join(hits) + '\\n')
+              for name in hits:
+                  out.write(name + chr(10))
           print('Classes containing tickHandSwing constant-pool reference:')
-          print('\\n'.join(hits))
+          for name in hits:
+              print(name)
           PY
           while IFS= read -r class_name; do
             [[ -z "$class_name" ]] && continue
-            javap -classpath "$mapped_jar" -c -p "$class_name" > "$ARTIFACT_DIR/diagnostics/$(echo "$class_name" | tr '.?' '__').javap.txt"
+            safe_name="$(printf '%s' "$class_name" | tr '.' '_')"
+            javap -classpath "$mapped_jar" -c -p "$class_name" > "$ARTIFACT_DIR/diagnostics/$safe_name.javap.txt"
           done < "$ARTIFACT_DIR/diagnostics/tickHandSwing-callers.txt"
           echo "VANILLA_TICK_HAND_SWING_CALLER_CLASSES=$(wc -l < "$ARTIFACT_DIR/diagnostics/tickHandSwing-callers.txt")"
       - name: Hash build outputs
