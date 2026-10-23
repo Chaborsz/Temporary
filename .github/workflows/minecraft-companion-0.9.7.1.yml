@@ -95,7 +95,7 @@ jobs:
         env:
           INPUT_PROJECT_PATH: ${{ inputs.project_path }}
           INPUT_SOURCE_ARCHIVE: ${{ github.event_name == 'push' && 'minecraft-companion-0.9.7.1-dev.11-fabric-1.20.1.zip' || inputs.source_archive }}
-          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && 'cfe3d01075ff875220fce29421e12d233dcdc51fea989cfc0ec75228fe5fc5b4' || inputs.expected_source_sha256 }}
+          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && '687be0fdacebc64c550f75de614c40c67ab77603177dd1ffd4db7629f6249c95' || inputs.expected_source_sha256 }}
         run: |
           set -euo pipefail
           mkdir -p "$ARTIFACT_DIR"
