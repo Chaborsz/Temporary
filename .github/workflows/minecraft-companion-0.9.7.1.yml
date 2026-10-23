@@ -247,6 +247,23 @@ jobs:
             cp -a build/reports "$ARTIFACT_DIR/build-reports"
           fi
 
+      - name: Dump exact Yarn LivingEntity swing lifecycle bytecode
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$ARTIFACT_DIR/diagnostics"
+          mapped_jar="$(find "$HOME/.gradle/caches" -type f -name 'minecraft-merged-*.jar' -print -quit || true)"
+          if [[ -z "$mapped_jar" ]]; then
+            echo "ERROR: Loom mapped Minecraft 1.20.1 jar not found after build" | tee "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt"
+            find "$HOME/.gradle/caches" -type f -name '*minecraft*.jar' -print | head -100 >> "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt" || true
+            exit 45
+          fi
+          echo "MAPPED_JAR=$mapped_jar" | tee "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt"
+          javap -classpath "$mapped_jar" -c -p net.minecraft.entity.LivingEntity > "$ARTIFACT_DIR/diagnostics/LivingEntity.javap.txt"
+          echo "=== calls/references to tickHandSwing ===" | tee -a "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt"
+          grep -n -B12 -A12 'tickHandSwing' "$ARTIFACT_DIR/diagnostics/LivingEntity.javap.txt" | tee -a "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt" || true
+          echo "=== tickMovement/tick method headers ===" | tee -a "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt"
+          grep -n -E '^  (public|protected).* (tick|tickMovement|tickHandSwing)\\(' "$ARTIFACT_DIR/diagnostics/LivingEntity.javap.txt" | tee -a "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt" || true
       - name: Hash build outputs
         shell: bash
         run: |
