@@ -23,7 +23,7 @@ on:
       expected_source_sha256:
         description: "SHA-256 esperado del checkpoint; dejar vacío para no comprobar archivo"
         required: false
-        default: "0eea9fb8fae88717d88c63c8b81a3495837b6599b218d2756cdf502959a78318"
+        default: "fd99face4a5309c9e94d18a333899d4e38b61e713ad7e35704da86896a5e1bb9"
         type: string
       gametest_runs:
         description: "Número de pasadas completas de GameTests"
@@ -95,7 +95,7 @@ jobs:
         env:
           INPUT_PROJECT_PATH: ${{ inputs.project_path }}
           INPUT_SOURCE_ARCHIVE: ${{ github.event_name == 'push' && 'minecraft-companion-0.9.7.1-dev.12-fabric-1.20.1.zip' || inputs.source_archive }}
-          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && '0eea9fb8fae88717d88c63c8b81a3495837b6599b218d2756cdf502959a78318' || inputs.expected_source_sha256 }}
+          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && 'fd99face4a5309c9e94d18a333899d4e38b61e713ad7e35704da86896a5e1bb9' || inputs.expected_source_sha256 }}
         run: |
           set -euo pipefail
           mkdir -p "$ARTIFACT_DIR"
