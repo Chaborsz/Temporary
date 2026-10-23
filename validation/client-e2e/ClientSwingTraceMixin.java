@@ -27,7 +27,6 @@ abstract class ClientSwingTraceMixin {
                         + " age=" + companion.age + " handSwinging=" + companion.handSwinging
                         + " handSwingTicks=" + companion.handSwingTicks
                         + " preferredHand=" + companion.preferredHand
-                        + " duration=" + companion.getHandSwingDuration()
                         + " progress=" + companion.getHandSwingProgress(1.0F));
             }
         }
