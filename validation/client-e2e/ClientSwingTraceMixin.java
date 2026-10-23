@@ -33,7 +33,18 @@ abstract class ClientSwingTraceMixin {
         }
     }
 
-    @Inject(method = "tickHandSwing", at = @At("TAIL"))
+    @Inject(method = "tickHandSwing()V", at = @At("HEAD"), require = 1)
+    private void ci$beforeSwingTick(CallbackInfo ci) {
+        if ((Object) this instanceof CompanionEntity companion && companion.getWorld().isClient) {
+            validation.CiClientValidation.trace("CI_TICK_HAND_SWING_HEAD side=CLIENT thread="
+                    + Thread.currentThread().getName() + " uuid=" + companion.getUuid()
+                    + " entityId=" + companion.getId() + " age=" + companion.age
+                    + " swinging=" + companion.handSwinging + " ticks=" + companion.handSwingTicks
+                    + " progress=" + companion.getHandSwingProgress(1.0F));
+        }
+    }
+
+    @Inject(method = "tickHandSwing()V", at = @At("TAIL"), require = 1)
     private void ci$afterSwingTick(CallbackInfo ci) {
         if ((Object) this instanceof CompanionEntity companion && companion.getWorld().isClient) {
             int ticks = companion.handSwingTicks;
