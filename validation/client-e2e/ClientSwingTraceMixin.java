@@ -14,6 +14,7 @@ abstract class ClientSwingTraceMixin {
     @Unique private int ci$lastLoggedSwingTick = Integer.MIN_VALUE;
     @Unique private boolean ci$lastLoggedSwinging;
     @Unique private int ci$lastEntityTick = Integer.MIN_VALUE;
+    @Unique private int ci$lastSwingMethodAge = Integer.MIN_VALUE;
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void ci$afterLivingTick(CallbackInfo ci) {
@@ -37,6 +38,14 @@ abstract class ClientSwingTraceMixin {
         if ((Object) this instanceof CompanionEntity companion && companion.getWorld().isClient) {
             int ticks = companion.handSwingTicks;
             boolean swinging = companion.handSwinging;
+            if (companion.age != ci$lastSwingMethodAge) {
+                ci$lastSwingMethodAge = companion.age;
+                validation.CiClientValidation.trace("CI_TICK_HAND_SWING_INVOKED side=CLIENT thread="
+                        + Thread.currentThread().getName() + " uuid=" + companion.getUuid()
+                        + " entityId=" + companion.getId() + " age=" + companion.age
+                        + " swinging=" + swinging + " ticks=" + ticks
+                        + " progress=" + companion.getHandSwingProgress(1.0F));
+            }
             if (ticks != ci$lastLoggedSwingTick || swinging != ci$lastLoggedSwinging) {
                 ci$lastLoggedSwingTick = ticks;
                 ci$lastLoggedSwinging = swinging;
@@ -46,6 +55,18 @@ abstract class ClientSwingTraceMixin {
                         + " handSwingTicks=" + ticks
                         + " progress=" + companion.getHandSwingProgress(1.0F));
             }
+        }
+    }
+
+    @Inject(method = "tickMovement", at = @At("TAIL"))
+    private void ci$afterLivingMovementTick(CallbackInfo ci) {
+        if ((Object) this instanceof CompanionEntity companion && companion.getWorld().isClient
+                && (companion.age & 3) == 0) {
+            validation.CiClientValidation.trace("CI_LIVING_MOVEMENT_TICK side=CLIENT thread="
+                    + Thread.currentThread().getName() + " uuid=" + companion.getUuid()
+                    + " entityId=" + companion.getId() + " age=" + companion.age
+                    + " swinging=" + companion.handSwinging + " ticks=" + companion.handSwingTicks
+                    + " hand=" + companion.preferredHand);
         }
     }
 }
