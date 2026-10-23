@@ -18,7 +18,7 @@ on:
       source_archive:
         description: "Checkpoint .7z/.zip dentro del repo; si no existe se usa project_path/autodetección"
         required: false
-        default: "minecraft-companion-0.9.7.1-dev.10-fabric-1.20.1.zip"
+        default: "minecraft-companion-0.9.7.1-dev.11-fabric-1.20.1.zip"
         type: string
       expected_source_sha256:
         description: "SHA-256 esperado del checkpoint; dejar vacío para no comprobar archivo"
@@ -94,8 +94,8 @@ jobs:
         shell: bash
         env:
           INPUT_PROJECT_PATH: ${{ inputs.project_path }}
-          INPUT_SOURCE_ARCHIVE: ${{ github.event_name == 'push' && 'minecraft-companion-0.9.7.1-dev.10-fabric-1.20.1.zip' || inputs.source_archive }}
-          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && 'dd973108820fcf85717d6215141e74b864f5bf32d6210f9c902e98d9c701908f' || inputs.expected_source_sha256 }}
+          INPUT_SOURCE_ARCHIVE: ${{ github.event_name == 'push' && 'minecraft-companion-0.9.7.1-dev.11-fabric-1.20.1.zip' || inputs.source_archive }}
+          INPUT_EXPECTED_SHA: ${{ github.event_name == 'push' && 'cfe3d01075ff875220fce29421e12d233dcdc51fea989cfc0ec75228fe5fc5b4' || inputs.expected_source_sha256 }}
         run: |
           set -euo pipefail
           mkdir -p "$ARTIFACT_DIR"
@@ -247,50 +247,6 @@ jobs:
             cp -a build/reports "$ARTIFACT_DIR/build-reports"
           fi
 
-      - name: Dump exact Yarn LivingEntity swing lifecycle bytecode
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p "$ARTIFACT_DIR/diagnostics"
-          mapped_jar="$(find "$HOME/.gradle/caches" -type f -name 'minecraft-merged-*.jar' -print -quit || true)"
-          if [[ -z "$mapped_jar" ]]; then
-            echo "ERROR: Loom mapped Minecraft 1.20.1 jar not found after build" | tee "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt"
-            find "$HOME/.gradle/caches" -type f -name '*minecraft*.jar' -print | head -100 >> "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt" || true
-            exit 45
-          fi
-          echo "MAPPED_JAR=$mapped_jar" | tee "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt"
-          javap -classpath "$mapped_jar" -c -p net.minecraft.entity.LivingEntity > "$ARTIFACT_DIR/diagnostics/LivingEntity.javap.txt"
-          echo "=== calls/references to tickHandSwing ===" | tee -a "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt"
-          grep -n -B12 -A12 'tickHandSwing' "$ARTIFACT_DIR/diagnostics/LivingEntity.javap.txt" | tee -a "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt" || true
-          echo "=== tickMovement/tick method headers ===" | tee -a "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt"
-          grep -n -E '^  (public|protected).* (tick|tickMovement|tickHandSwing)\\(' "$ARTIFACT_DIR/diagnostics/LivingEntity.javap.txt" | tee -a "$ARTIFACT_DIR/diagnostics/livingentity-bytecode-status.txt" || true
-      - name: Locate exact vanilla tickHandSwing call sites
-        shell: bash
-        run: |
-          set -euo pipefail
-          mapped_jar="$(find "$HOME/.gradle/caches" -type f -name 'minecraft-merged-*.jar' -print -quit)"
-          mkdir -p "$ARTIFACT_DIR/diagnostics"
-          python3 - "$mapped_jar" "$ARTIFACT_DIR/diagnostics/tickHandSwing-callers.txt" <<'PY'
-          import sys, zipfile
-          jar, report = sys.argv[1:]
-          hits = []
-          with zipfile.ZipFile(jar) as archive:
-              for name in archive.namelist():
-                  if name.endswith('.class') and b'tickHandSwing' in archive.read(name):
-                      hits.append(name[:-6].replace('/', '.'))
-          with open(report, 'w', encoding='utf-8') as out:
-              for name in hits:
-                  out.write(name + chr(10))
-          print('Classes containing tickHandSwing constant-pool reference:')
-          for name in hits:
-              print(name)
-          PY
-          while IFS= read -r class_name; do
-            [[ -z "$class_name" ]] && continue
-            safe_name="$(printf '%s' "$class_name" | tr '.' '_')"
-            javap -classpath "$mapped_jar" -c -p "$class_name" > "$ARTIFACT_DIR/diagnostics/$safe_name.javap.txt"
-          done < "$ARTIFACT_DIR/diagnostics/tickHandSwing-callers.txt"
-          echo "VANILLA_TICK_HAND_SWING_CALLER_CLASSES=$(wc -l < "$ARTIFACT_DIR/diagnostics/tickHandSwing-callers.txt")"
       - name: Hash build outputs
         shell: bash
         run: |
