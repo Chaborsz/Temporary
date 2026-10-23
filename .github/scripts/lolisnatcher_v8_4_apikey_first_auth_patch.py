@@ -24,6 +24,7 @@ _chain = [
     ('lolisnatcher_v8_22_read_query_compat_patch.py', 'V8_22_READ_QUERY_COMPAT_CHAIN=PASS'),
     ('lolisnatcher_v8_22_visual_db_memory_stall_patch.py', 'V8_22_VISUAL_MEMORY_STALL_REDUCTION_CHAIN=PASS'),
     ('lolisnatcher_v8_23_fetch_and_decode_target_patch.py', 'V8_23_FETCH_AND_DECODE_TARGET_REDUCTION_CHAIN=PASS'),
+    ('lolisnatcher_v8_24_page_http_compat_patch.py', 'V8_24_DANBOORU_REQUEST_SHAPE_COMPAT_CHAIN=PASS'),
     ('lolisnatcher_v8_24_logger_network_phase_patch.py', 'V8_24_LOGGER_NETWORK_STALL_REDUCTION_CHAIN=PASS'),
 ]
 
