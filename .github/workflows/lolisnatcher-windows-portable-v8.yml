@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
   build:
-    name: Windows x64 / True Portable v8.23 / Canonical Release
+    name: Windows x64 / True Portable v8.24 / Canonical Release
     runs-on: windows-2022
     timeout-minutes: 60
     env:
@@ -60,7 +60,7 @@ jobs:
           "version=$($Matches[1])" >> $env:GITHUB_OUTPUT
           "build=$($Matches[2])" >> $env:GITHUB_OUTPUT
 
-      - name: Apply portable patches through v8.23
+      - name: Apply portable patches through v8.24
         shell: pwsh
         working-directory: LoliSnatcher_Droid
         run: |
@@ -80,7 +80,7 @@ jobs:
           python ..\builder\.github\scripts\lolisnatcher_v8_cache_path_label_fix.py
           python ..\builder\.github\scripts\lolisnatcher_v8_webp_thumbnail_cache_patch.py
           python ..\builder\.github\scripts\lolisnatcher_v11_generic_danbooru_auth.py
-          'PATCH_CHAIN_V8_23=PASS'
+          'PATCH_CHAIN_V8_24=PASS'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -139,7 +139,7 @@ jobs:
           $exe = 'build\windows\x64\runner\Release\lolisnatcher.exe'
           if (-not (Test-Path $exe)) { throw "Expected executable not found: $exe" }
 
-      - name: Package True Portable v8.23 build
+      - name: Package True Portable v8.24 build
         id: package
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -155,23 +155,21 @@ jobs:
           $dataDir = Join-Path $releaseDir 'Data'
           New-Item -ItemType Directory -Force -Path $dataDir | Out-Null
           @"
-          LoliSnatcher TRUE PORTABLE Windows x64 - v8.23
+          LoliSnatcher TRUE PORTABLE Windows x64 - v8.24
 
           Runtime invariants:
           - Danbooru verified login/API-key behavior is retained.
-          - Captcha content signatures stringify response bodies only for hosts that actually define such signatures; normal Danbooru JSON pages skip the full response-to-string hot path.
+          - v8.23 lazy captcha stringification and corrected Windows thumbnail target geometry are retained.
+          - Windows ordinary Release requests skip TalkerDioLogger/Alice inspection unless app debug mode is explicitly enabled; cookies and captcha handling remain active.
+          - Windows Talker history is bounded to 5000 entries.
+          - File logs flush every 2 s or 64 buffered lines and yield every 32 encoded lines; the previous 1000 s burst is removed.
+          - Watchdog subphases include log_flush, page_cookie, page_http, cookie_get, cookie_save, captcha_check, tag_db, visual_http and visual_codec.
           - Windows catalog remains thumbnailURL-only; samples/full-res viewer data remain memory-only.
           - Persistent visual thumbnails remain DB-only in Data\LoliSnatcher\cache\visual_cache.db.
-          - Loose thumbnails/samples remain forbidden; legacy loose folders are purged when the packed DB opens.
-          - WebP runtime conversion remains disabled; thumbnail source bytes are stored in the DB.
-          - Danbooru page merge remains incremental; tracked and typed-tag optimizations from v8.21/v8.20 are retained.
           - Windows visual thumbnail load/decode pipeline remains serialized (max 1).
-          - Windows packed-thumbnail Dio clients remain persistent/reused.
           - Windows decoded-image LRU remains bounded to 96 entries / 64 MiB.
-          - Windows thumbnail target dimensions are reset per layout and rectangle/landscape heights use width / aspectRatio.
           - Visual DB writes wait for 750 ms quiet and retain at most 32 pending cache-only writes.
           - SQLite WAL autocheckpoint is disabled during browsing; PASSIVE checkpoint runs after 5 s visual-cache quiet.
-          - VISUAL_DB_READ / VISUAL_DB_BATCH / VISUAL_DB_CHECKPOINT and watchdog phase diagnostics are retained.
           - Independent watchdog isolate flushes >=150 ms stalls immediately with active phase labels.
           "@ | Set-Content -Encoding UTF8 (Join-Path $dataDir 'PORTABLE-README.txt')
           @(
@@ -182,10 +180,15 @@ jobs:
             "TARGET=windows-x64"
             "CONFIGURATION=Release"
             "PORTABLE_MODE=TRUE"
-            "PATCH_LEVEL=TRUE_PORTABLE_V8_23"
+            "PATCH_LEVEL=TRUE_PORTABLE_V8_24"
             "WORKFLOW_LINE=V8_CANONICAL"
             "DANBOORU_AUTH=V8_8_VERIFIED_LOGIN"
             "CAPTCHA_CONTENT_STRINGIFY=KNOWN_HOST_ONLY"
+            "WINDOWS_RELEASE_NETWORK_INSPECTORS=DISABLED_UNLESS_DEBUG"
+            "WINDOWS_TALKER_HISTORY_MAX=5000"
+            "LOG_FLUSH_DELAY_MS=2000"
+            "LOG_BUFFER_MAX_LINES=64"
+            "LOG_WRITE_COOPERATIVE_SLICE=32"
             "VISUAL_CACHE=.\Data\LoliSnatcher\cache\visual_cache.db"
             "VISUAL_CACHE_MODE=DB_ONLY_SOURCE_BYTES"
             "LOOSE_THUMBNAILS_SAMPLES=FORBIDDEN"
@@ -212,7 +215,7 @@ jobs:
             "VISUAL_DB_IDLE_FLUSH_MS=750"
             "VISUAL_DB_WAL_AUTOCHECKPOINT=0"
             "VISUAL_DB_IDLE_CHECKPOINT_MS=5000"
-            "VISUAL_DIAGNOSTIC_CODEC_THRESHOLD_MS=25"
+            "WATCHDOG_SUBPHASES=LOG_PAGE_COOKIE_CAPTCHA_TAGDB_VISUAL"
             "WATCHDOG_ISOLATE=TRUE"
             "WATCHDOG_STALL_THRESHOLD_MS=150"
             "EVENT_LOOP_STALL_THRESHOLD_MS=150"
@@ -230,7 +233,7 @@ jobs:
           "sha256=$hash" >> $env:GITHUB_OUTPUT
           "SHA256=$hash"
 
-      - name: Publish canonical True Portable v8.23 prerelease
+      - name: Publish canonical True Portable v8.24 prerelease
         id: release
         shell: pwsh
         working-directory: LoliSnatcher_Droid
@@ -246,11 +249,11 @@ jobs:
           $tag = "lolisnatcher-windows-trueportable-$env:VERSION-$env:BUILD_NUMBER"
           $zipPath = Join-Path $PWD "dist\$env:ZIP_NAME"
           $hashPath = "$zipPath.sha256"
-          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v8.23"
+          $title = "LoliSnatcher $env:VERSION+$env:BUILD_NUMBER Windows x64 True Portable v8.24"
           $notes = @"
-          Unofficial TRUE PORTABLE Windows x64 build - canonical v8.23.
+          Unofficial TRUE PORTABLE Windows x64 build - canonical v8.24.
 
-          v8.22 runtime evidence confirms that the visual SQLite write stall from v8.21 is gone: no slow VISUAL_DB_BATCH appears and idle checkpoints are only 25-36 ms. PAGE_PHASE remains 0/0 ms, TRACKED_BATCH stays 0-7 ms and TAG_BATCH 30-60 ms. The remaining independent watchdog event is a 175 ms stall while page_fetch is active. Static inspection found that the captcha interceptor eagerly converted every successful response body to String before checking whether the host had any content-signature rules; a normal Danbooru JSON page therefore serialized its complete list/maps/tag strings on the main isolate for no useful reason. v8.23 makes that conversion lazy and only for known signature hosts. It also fixes the Windows thumbnail target-size geometry exposed by target decoding: rectangle and landscape staggered heights now use width/aspectRatio rather than width*aspectRatio, with decode dimensions reset on each layout pass. v8.22 DB/WAL/LRU policy is otherwise unchanged.
+          v8.23 runtime keeps PAGE_PHASE at 0/0 ms and TRACKED_BATCH at 0-5 ms, but still records watchdog stalls in page_fetch and idle, plus one overlapping page_fetch+tag_batch+visual_pipeline stall. The idle event occurs about 1000 seconds after session start, matching upstream _DailyFileLogger's 1000-second buffered write timer. That logger also retained up to 100000 Talker history entries. v8.24 removes this burst pattern without removing file logs: Windows history is bounded to 5000, logs flush every 2 seconds or 64 lines, and batch encoding yields every 32 lines. Ordinary Windows Release requests no longer attach TalkerDioLogger and Alice unless app debug mode is explicitly enabled; Alice is only used by the developer network inspector. Cookie/captcha functionality is unchanged. New watchdog subphases distinguish page HTTP, cookies, captcha, tag DB, visual HTTP/codec and log flush so any residual freeze can be attributed directly. v8.23 cache/thumbnail and v8.22 DB/WAL policy are otherwise retained.
 
           LoliSnatcher work remains isolated on branch lolisnatcher-canonical-v8.
 
@@ -277,9 +280,9 @@ jobs:
           if ($remoteDigest -ne "sha256:$env:EXPECTED_SHA") {
             throw "Canonical asset digest mismatch: remote=$remoteDigest expected=sha256:$env:EXPECTED_SHA"
           }
-          if ([string]$remoteRelease.body -notmatch 'canonical v8\.23') { throw 'Canonical release notes do not identify v8.23' }
-          'V8_23_CANONICAL_ASSET_DIGEST=PASS'
-          'V8_23_RELEASE_IDENTITY=PASS'
+          if ([string]$remoteRelease.body -notmatch 'canonical v8\.24') { throw 'Canonical release notes do not identify v8.24' }
+          'V8_24_CANONICAL_ASSET_DIGEST=PASS'
+          'V8_24_RELEASE_IDENTITY=PASS'
           "release_url=$([string]$remoteRelease.html_url)" >> $env:GITHUB_OUTPUT
 
       - name: Build summary
@@ -287,22 +290,18 @@ jobs:
         shell: pwsh
         run: |
           @"
-          ## LoliSnatcher Windows x64 True Portable v8.23
+          ## LoliSnatcher Windows x64 True Portable v8.24
           - Build: `${{ steps.build.outcome }}`
-          - Patch level: TRUE_PORTABLE_V8_23
+          - Patch level: TRUE_PORTABLE_V8_24
           - Verified Danbooru auth: retained
-          - Captcha response stringify: known signature hosts only
+          - Windows Release network inspectors: disabled unless debug
+          - Talker history: 5000 entries on Windows
+          - File log flush: 2000 ms / 64 lines, cooperative 32-line slices
           - Windows visual cache: SQLite DB-only
           - Windows visual pipeline max: 1
           - Windows image cache: 96 entries / 64 MiB
-          - Windows thumbnail target geometry: corrected
-          - Visual DB pending cache writes: max 32
-          - Visual DB idle flush: 750 ms
-          - Visual DB WAL autocheckpoint: disabled during browsing
-          - Visual DB idle checkpoint: 5000 ms
-          - Tracked/tag optimizations: retained
           - Watchdog isolate threshold: 150 ms
-          - Event-loop stall threshold: 150 ms
+          - Watchdog subphases: log/page/cookie/captcha/tag-db/visual
           - Canonical asset digest verification: `${{ steps.release.outcome }}`
           - SHA-256: `${{ steps.package.outputs.sha256 }}`
           - Release: ${{ steps.release.outputs.release_url }}
