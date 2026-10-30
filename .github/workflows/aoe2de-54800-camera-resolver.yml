@@ -1,7 +1,7 @@
 name: AoE2DE 54800 Internal Camera Resolver
 
 on:
-  push:
+  pull_request:
     branches:
       - aoe2de-54800-internal-camera-resolver
     paths:
