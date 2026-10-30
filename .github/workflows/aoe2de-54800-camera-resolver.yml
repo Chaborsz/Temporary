@@ -1,0 +1,55 @@
+name: AoE2DE 54800 Internal Camera Resolver
+
+on:
+  push:
+    branches:
+      - aoe2de-54800-internal-camera-resolver
+    paths:
+      - 'aoe2de-camera-resolver/**'
+      - '.github/workflows/aoe2de-54800-camera-resolver.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install MinGW
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64 zip
+
+      - name: Build
+        working-directory: aoe2de-camera-resolver
+        run: |
+          x86_64-w64-mingw32-gcc -shared -O2 -s \
+            -Wl,--no-insert-timestamp \
+            -Wl,--dynamicbase \
+            -Wl,--nxcompat \
+            -o version.dll proxy.c resolver.c version.def -luser32
+          x86_64-w64-mingw32-objdump -p version.dll > pe.txt
+          sha256sum version.dll > SHA256.txt
+          grep -q 'DLL Name: KERNEL32.dll' pe.txt
+          grep -q 'GetFileVersionInfoA' pe.txt
+          grep -q 'VerQueryValueW' pe.txt
+
+      - name: Package
+        working-directory: aoe2de-camera-resolver
+        run: |
+          mkdir -p package
+          cp version.dll README.txt SHA256.txt package/
+          cd package
+          zip -9 ../AoE2DE_P3O_VIKING_SAGAS_54800_INTERNAL_CAMERA_RESOLVER_RC5.zip version.dll README.txt SHA256.txt
+          cd ..
+          sha256sum AoE2DE_P3O_VIKING_SAGAS_54800_INTERNAL_CAMERA_RESOLVER_RC5.zip > ZIP_SHA256.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AoE2DE_P3O_VIKING_SAGAS_54800_INTERNAL_CAMERA_RESOLVER_RC5
+          path: |
+            aoe2de-camera-resolver/AoE2DE_P3O_VIKING_SAGAS_54800_INTERNAL_CAMERA_RESOLVER_RC5.zip
+            aoe2de-camera-resolver/pe.txt
+            aoe2de-camera-resolver/SHA256.txt
+            aoe2de-camera-resolver/ZIP_SHA256.txt
+          if-no-files-found: error
