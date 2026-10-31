@@ -1,17 +1,27 @@
 @echo off
-setlocal EnableExtensions
+setlocal EnableExtensions EnableDelayedExpansion
 cd /d "%~dp0"
 
 set "RC3ZIP=AoE2DE_P3O_VIKING_SAGAS_54800_MIGRATION_RC3_FIXEDPOINT.zip"
+if not exist "%RC3ZIP%" (
+  set "RC3ZIP="
+  for %%Z in (AoE2DE_P3O_VIKING_SAGAS_54800_MIGRATION_RC3_FIXEDPOINT*.zip) do if not defined RC3ZIP set "RC3ZIP=%%~nxZ"
+)
 set "TMP=%TEMP%\AoE2DE_P3O_RC10_BACKEND_%RANDOM%_%RANDOM%"
 
+if not defined RC3ZIP (
+  echo ERROR: No se encontro ningun ZIP RC3_FIXEDPOINT junto a este archivo.
+  echo Copia aqui AoE2DE_P3O_VIKING_SAGAS_54800_MIGRATION_RC3_FIXEDPOINT*.zip y vuelve a ejecutar este CMD.
+  pause
+  exit /b 2
+)
 if not exist "%RC3ZIP%" (
-  echo ERROR: No se encontro "%RC3ZIP%" junto a este archivo.
-  echo Copia el ZIP RC3_FIXEDPOINT aqui y vuelve a ejecutar este CMD.
+  echo ERROR: No se encontro "%RC3ZIP%".
   pause
   exit /b 2
 )
 
+echo Usando backend fuente: %RC3ZIP%
 if exist "%TMP%" rmdir /s /q "%TMP%"
 mkdir "%TMP%" >nul 2>&1
 if errorlevel 1 (
