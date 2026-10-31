@@ -1,4 +1,4 @@
-name: AoE2DE 54800 P3O Classic Overlay RC9 FIX3
+name: AoE2DE 54800 P3O Monolithic RC10
 
 on:
   pull_request:
@@ -16,46 +16,31 @@ jobs:
       - name: Install MinGW
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64 zip
+          sudo apt-get install -y gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64
       - name: Build and validate
         working-directory: aoe2de-camera-resolver
         run: |
-          x86_64-w64-mingw32-gcc -shared -O2 -s -Wl,--no-insert-timestamp -Wl,--dynamicbase -Wl,--nxcompat -o version.dll proxy.c resolver_fix3.c version.def -luser32
+          x86_64-w64-mingw32-gcc -shared -O2 -s -Wl,--no-insert-timestamp -Wl,--dynamicbase -Wl,--nxcompat -o version.dll proxy.c resolver_monolithic_rc10.c version.def -luser32 -lgdi32
           x86_64-w64-mingw32-objdump -p version.dll > pe.txt
-          x86_64-w64-mingw32-objdump -d version.dll > disasm.txt
           strings -el version.dll > strings-wide.txt || true
           strings version.dll > strings-ascii.txt
           sha256sum version.dll > SHA256.txt
           for n in GetFileVersionInfoA GetFileVersionInfoByHandle GetFileVersionInfoExA GetFileVersionInfoExW GetFileVersionInfoSizeA GetFileVersionInfoSizeExA GetFileVersionInfoSizeExW GetFileVersionInfoSizeW GetFileVersionInfoW VerFindFileA VerFindFileW VerInstallFileA VerInstallFileW VerLanguageNameA VerLanguageNameW VerQueryValueA VerQueryValueW; do grep -q "$n" pe.txt; done
           grep -q 'DLL Name: KERNEL32.dll' pe.txt
           grep -q 'DLL Name: USER32.dll' pe.txt
+          grep -q 'DLL Name: GDI32.dll' pe.txt
+          grep -q 'ONE_DLL=TRUE BACKEND_DLL=FALSE' strings-ascii.txt
           grep -q 'P3O_SPAWN=SUCCESS' strings-ascii.txt
           grep -q 'P3O_INSERT visible=' strings-ascii.txt
           grep -q 'CATALOG units=' strings-ascii.txt
-          grep -q 'AoE2DE_P3O_54800_RC9_FIX3.log' strings-wide.txt
-          echo '=== DLL SHA256 ==='; cat SHA256.txt
-          echo '=== EXPORTS ==='; grep -E 'GetFileVersionInfo|VerFindFile|VerInstallFile|VerLanguageName|VerQueryValue' pe.txt | tail -n 17
-      - name: Package
-        working-directory: aoe2de-camera-resolver
-        run: |
-          mkdir -p package
-          cp version.dll SHA256.txt package/
-          printf '%s\n' 'AoE2DE 101.103.54800.0 P3O RC9 FIX3' 'Classic 280x38 overlay restored.' 'Insert toggles overlay.' 'Overlay only shows in live world_stage=6 while AoE2DE is foreground.' 'F12 spawn backend unchanged from runtime-proven FIX2.' 'Log: %TEMP%\AoE2DE_P3O_54800_RC9_FIX3.log' > package/README.txt
-          cd package
-          zip -9 ../AoE2DE_P3O_VIKING_SAGAS_54800_CLASSIC_OVERLAY_RC9_FIX3.zip version.dll README.txt SHA256.txt
-          cd ..
-          sha256sum AoE2DE_P3O_VIKING_SAGAS_54800_CLASSIC_OVERLAY_RC9_FIX3.zip > ZIP_SHA256.txt
-          cat ZIP_SHA256.txt
-      - name: Upload artifact
+          grep -q 'AoE2DE_P3O_54800_MONOLITHIC_RC10.log' strings-wide.txt
+          echo '=== DLL SHA256 ==='
+          cat SHA256.txt
+          echo '=== EXPORTS ==='
+          grep -E 'GetFileVersionInfo|VerFindFile|VerInstallFile|VerLanguageName|VerQueryValue' pe.txt | tail -n 17
+      - name: Upload only version.dll
         uses: actions/upload-artifact@v4
         with:
-          name: AoE2DE_P3O_VIKING_SAGAS_54800_CLASSIC_OVERLAY_RC9_FIX3
-          path: |
-            aoe2de-camera-resolver/AoE2DE_P3O_VIKING_SAGAS_54800_CLASSIC_OVERLAY_RC9_FIX3.zip
-            aoe2de-camera-resolver/pe.txt
-            aoe2de-camera-resolver/disasm.txt
-            aoe2de-camera-resolver/strings-ascii.txt
-            aoe2de-camera-resolver/strings-wide.txt
-            aoe2de-camera-resolver/SHA256.txt
-            aoe2de-camera-resolver/ZIP_SHA256.txt
+          name: AoE2DE_P3O_VIKING_SAGAS_54800_MONOLITHIC_RC10
+          path: aoe2de-camera-resolver/version.dll
           if-no-files-found: error
