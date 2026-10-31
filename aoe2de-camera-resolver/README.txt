@@ -1,25 +1,29 @@
-AOE2DE 101.103.54800.0 - INTERNAL CAMERA RESOLVER RC6
+AOE2DE 101.103.54800.0 - CAMERA CANDIDATE RC7
 
 Purpose:
-Resolve the Point-at-Mouse camera global and zoom RVA from inside AoE2DE_s.exe.
-RC6 scans the whole mutable/data tail of the module instead of a narrow window around the old candidates.
-This diagnostic does not spawn units and does not write game memory.
+Confirm whether the direct floats at RVA 0x04416E40 / 0x04416E44 are the camera center, while keeping zoom at confirmed RVA 0x040957D8.
+This build is read-only. It does not spawn units and does not write game memory.
 
 Install:
-1. Close the game.
-2. Back up the current version.dll used by the spawner.
+1. Close AoE2DE.
+2. Back up the current version.dll.
 3. Put this diagnostic version.dll beside AoE2DE_s.exe.
-4. Start the game and enter a live match.
+4. Start AoE2DE and enter a live match.
 
-Capture:
-1. Leave the camera at position A and a normal zoom. Press F11 once.
-2. Pan the camera far away and zoom strongly in. Press F11 once.
-3. Pan to another area and zoom strongly out. Press F11 once.
+Capture protocol — IMPORTANT:
+Keep the CAMERA and ZOOM completely fixed for all three samples. Move ONLY the mouse cursor.
 
-Each successful sample emits a Windows beep. The first sample can take longer because RC6 scans the full data range.
-After the third sample, collect:
-%TEMP%\AoE2DE_P3O_54800_InternalCameraResolver_RC6.txt
+1. Put mouse near the center of the game view -> F11.
+2. Without moving/zooming the camera, put mouse near the upper-left of the game view -> F11.
+3. Without moving/zooming the camera, put mouse near the lower-right of the game view -> F11.
 
-Return that TXT to ChatGPT.
+Each successful sample emits a Windows beep.
+Return this file:
+%TEMP%\AoE2DE_P3O_54800_CameraCandidate_RC7.txt
 
-After testing, restore the prior spawner version.dll.
+Expected confirmation:
+- camera=(X,Y) must remain effectively identical in all 3 samples.
+- zoom must remain identical.
+- mouse and projected target must change.
+
+After testing restore the prior spawner version.dll.
