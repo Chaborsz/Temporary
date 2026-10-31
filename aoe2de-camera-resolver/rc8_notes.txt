@@ -1,0 +1,1 @@
+RC8 discriminator: 6 read-only whole-data snapshots. Samples 1-3 pan camera with cursor re-centered and zoom fixed. Samples 4-6 keep camera fixed and move cursor only. Candidate camera pairs must change during pan and remain stable during mouse-only movement.
