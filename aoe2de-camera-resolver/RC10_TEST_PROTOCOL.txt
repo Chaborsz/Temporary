@@ -1,0 +1,9 @@
+RC10 runtime acceptance:
+1. Overlay appearance must match the migrated old P3O/RC3 backend, not RC9 FIX3.
+2. Insert toggle PASS.
+3. Overlay hidden outside match PASS.
+4. Seven categories/catalog visible PASS.
+5. F12 point-at-mouse PASS at normal, zoom-in and zoom-out.
+6. Ctrl+F12/Shift+F12 selector path unchanged.
+7. Menu transition PASS.
+8. Natural process shutdown PASS.
