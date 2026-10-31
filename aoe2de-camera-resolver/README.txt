@@ -1,41 +1,28 @@
-AOE2DE 101.103.54800.0 - P3O OVERLAY + POINT-AT-MOUSE RC9 FIX1
+AOE2DE 101.103.54800.0 - P3O OVERLAY + POINT-AT-MOUSE RC9 FIX2
 
-This replaces the incorrect resolver-based RC9. It is a runtime candidate, not Stable.
+Runtime candidate, not Stable.
 
-Restored behavior:
-- ownerless/no-activate in-game selector overlay;
-- overlay hidden outside a live match or when AoE2DE loses foreground;
-- F12 spawn on the game WndProc/main UI thread;
-- Ctrl+F12 next unit, Shift+F12 previous unit;
+FIX2 specifically addresses FIX1 showing neither overlay nor spawn.
+The fatal PE identity gate and fatal world-context gate have been removed from bootstrap. The DLL now binds to the real foreground AoE2DE window by process + client size, while world state is logged only for diagnosis/lifecycle. F12 is no longer blocked by world_probe.
+
+Preserved:
+- no-activate selector overlay;
+- F12 spawn on subclassed game WndProc;
+- Ctrl+F12 / Shift+F12 selection;
 - 13-position collision fallback;
-- Point-at-Mouse using the 54800 runtime-proven camera and zoom state.
+- direct 54800 camera X/Y 0x04416E40/0x04416E44;
+- zoom 0x040957D8;
+- xsCreateUnit 0x01812E50;
+- existing AoE2DE_P3N.ini / AoE2DE_P3O.ini is reused and never overwritten.
 
-54800 mappings:
-Camera X = 0x04416E40
-Camera Y = 0x04416E44
-Zoom = 0x040957D8
-World = 0x04353698
-xsCreateUnit = 0x01812E50
+Install version.dll beside AoE2DE_s.exe with your current INI unchanged.
 
-INI:
-The DLL does not install or overwrite an INI. It first reads AoE2DE_P3N.ini beside AoE2DE_s.exe, then AoE2DE_P3O.ini if present. A named unit_cycle such as 83:Villager|74:Militia is supported, as is a comma-separated numeric cycle. If no readable cycle exists, the eight Viking Sagas heroes are used as the fallback catalog.
-
-Install:
-1. Close AoE2DE.
-2. Back up the current version.dll.
-3. Keep the existing P3N/P3O INI in place.
-4. Put version.dll beside AoE2DE_s.exe.
-5. Start a live match.
-
-Test:
-- overlay appears in the match and disappears in menus/Alt-Tab;
-- select a unit from the overlay;
-- press F12 near screen center and in opposite quadrants;
-- repeat at more than one zoom level;
-- Ctrl+F12 / Shift+F12 change selection;
-- close the game naturally.
+First runtime test:
+1. Enter a live match.
+2. Confirm the selector overlay appears.
+3. Press F12 once near screen center.
+4. If that works, test opposite screen quadrants and another zoom level.
+5. Close naturally.
 
 Runtime log:
-%TEMP%\AoE2DE_P3O_54800_RC9_FIX1.log
-
-Return the runtime result/log after testing.
+%TEMP%\AoE2DE_P3O_54800_RC9_FIX2.log
