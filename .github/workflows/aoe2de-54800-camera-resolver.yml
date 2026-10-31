@@ -20,7 +20,7 @@ jobs:
       - name: Build and validate
         working-directory: aoe2de-camera-resolver
         run: |
-          x86_64-w64-mingw32-gcc -shared -O2 -s -Wl,--no-insert-timestamp -Wl,--dynamicbase -Wl,--nxcompat -o version.dll proxy.c resolver_monolithic_rc10.c version.def -luser32 -lgdi32
+          x86_64-w64-mingw32-gcc -shared -O2 -s -include windowsx.h -Wl,--no-insert-timestamp -Wl,--dynamicbase -Wl,--nxcompat -o version.dll proxy.c resolver_monolithic_rc10.c version.def -luser32 -lgdi32
           x86_64-w64-mingw32-objdump -p version.dll > pe.txt
           strings -el version.dll > strings-wide.txt || true
           strings version.dll > strings-ascii.txt
