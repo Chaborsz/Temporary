@@ -3,6 +3,7 @@
 
 static HMODULE g_realVersion=NULL;
 static volatile LONG g_state=0;
+static const wchar_t g_workflow_compat[]=L"AoE2DE_P3O_54800_RC9_FIX1.log";
 static int wappend(wchar_t*d,unsigned cap,const wchar_t*s){unsigned n=0,j=0;while(n<cap&&d[n])n++;if(n>=cap)return 0;while(s[j]){if(n+1>=cap)return 0;d[n++]=s[j++];}d[n]=0;return 1;}
 static void ensure_real(void){if(InterlockedCompareExchange(&g_state,1,0)!=0)return;wchar_t p[MAX_PATH+32]={0};UINT n=GetSystemDirectoryW(p,MAX_PATH);if(n&&n<MAX_PATH&&wappend(p,MAX_PATH+32,L"\\version.dll"))g_realVersion=LoadLibraryW(p);InterlockedExchange(&g_state,2);}
 static FARPROC rp(const char*n){if(g_state!=2)ensure_real();if(!g_realVersion){SetLastError(ERROR_PROC_NOT_FOUND);return NULL;}FARPROC p=GetProcAddress(g_realVersion,n);if(!p)SetLastError(ERROR_PROC_NOT_FOUND);return p;}
@@ -26,4 +27,4 @@ DWORD WINAPI VerLanguageNameW(DWORD l,LPWSTR b,DWORD n){typedef DWORD(WINAPI*F)(
 BOOL WINAPI VerQueryValueA(LPCVOID b,LPCSTR s,LPVOID*p,PUINT n){typedef BOOL(WINAPI*F)(LPCVOID,LPCSTR,LPVOID*,PUINT);F x=(F)rp("VerQueryValueA");return x?x(b,s,p,n):(miss(),FALSE);}
 BOOL WINAPI VerQueryValueW(LPCVOID b,LPCWSTR s,LPVOID*p,PUINT n){typedef BOOL(WINAPI*F)(LPCVOID,LPCWSTR,LPVOID*,PUINT);F x=(F)rp("VerQueryValueW");return x?x(b,s,p,n):(miss(),FALSE);}
 BOOL WINAPI GetFileVersionInfoByHandle(DWORD fl,HANDLE h,LPVOID*data,PDWORD len){typedef BOOL(WINAPI*F)(DWORD,HANDLE,LPVOID*,PDWORD);F x=(F)rp("GetFileVersionInfoByHandle");return x?x(fl,h,data,len):(miss(),FALSE);}
-BOOL WINAPI DllMain(HINSTANCE h,DWORD r,LPVOID x){(void)x;if(r==DLL_PROCESS_ATTACH){DisableThreadLibraryCalls(h);resolver_start();}return TRUE;}
+BOOL WINAPI DllMain(HINSTANCE h,DWORD r,LPVOID x){(void)x;if(r==DLL_PROCESS_ATTACH){DisableThreadLibraryCalls(h);OutputDebugStringW(g_workflow_compat);resolver_start();}return TRUE;}
