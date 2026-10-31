@@ -1,4 +1,4 @@
-name: AoE2DE 54800 Camera Candidate RC7
+name: AoE2DE 54800 Camera Discriminator RC8
 
 on:
   pull_request:
@@ -42,18 +42,18 @@ jobs:
           mkdir -p package
           cp version.dll README.txt SHA256.txt package/
           cd package
-          zip -9 ../AoE2DE_P3O_VIKING_SAGAS_54800_CAMERA_CANDIDATE_RC7.zip version.dll README.txt SHA256.txt
+          zip -9 ../AoE2DE_P3O_VIKING_SAGAS_54800_CAMERA_DISCRIMINATOR_RC8.zip version.dll README.txt SHA256.txt
           cd ..
-          sha256sum AoE2DE_P3O_VIKING_SAGAS_54800_CAMERA_CANDIDATE_RC7.zip > ZIP_SHA256.txt
+          sha256sum AoE2DE_P3O_VIKING_SAGAS_54800_CAMERA_DISCRIMINATOR_RC8.zip > ZIP_SHA256.txt
           echo '=== INNER ZIP SHA256 ==='
           cat ZIP_SHA256.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AoE2DE_P3O_VIKING_SAGAS_54800_CAMERA_CANDIDATE_RC7
+          name: AoE2DE_P3O_VIKING_SAGAS_54800_CAMERA_DISCRIMINATOR_RC8
           path: |
-            aoe2de-camera-resolver/AoE2DE_P3O_VIKING_SAGAS_54800_CAMERA_CANDIDATE_RC7.zip
+            aoe2de-camera-resolver/AoE2DE_P3O_VIKING_SAGAS_54800_CAMERA_DISCRIMINATOR_RC8.zip
             aoe2de-camera-resolver/pe.txt
             aoe2de-camera-resolver/SHA256.txt
             aoe2de-camera-resolver/ZIP_SHA256.txt
