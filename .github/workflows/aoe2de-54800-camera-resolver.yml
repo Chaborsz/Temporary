@@ -1,4 +1,4 @@
-name: AoE2DE 54800 P3O Monolithic RC10
+name: AoE2DE 54800 P3O Monolithic RC12
 
 on:
   pull_request:
@@ -17,6 +17,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64
+      - name: Apply RC12 parity patch
+        working-directory: aoe2de-camera-resolver
+        run: python3 patch_rc12.py
       - name: Build and validate
         working-directory: aoe2de-camera-resolver
         run: |
@@ -30,10 +33,12 @@ jobs:
           grep -q 'DLL Name: USER32.dll' pe.txt
           grep -q 'DLL Name: GDI32.dll' pe.txt
           grep -q 'ONE_DLL=TRUE BACKEND_DLL=FALSE' strings-ascii.txt
+          grep -q 'UI_LINEAGE=P3N_RC3_FIX1_RC4_RC5' strings-ascii.txt
           grep -q 'P3O_SPAWN=SUCCESS' strings-ascii.txt
           grep -q 'P3O_INSERT visible=' strings-ascii.txt
-          grep -q 'CATALOG units=' strings-ascii.txt
-          grep -q 'AoE2DE_P3O_54800_MONOLITHIC_RC10.log' strings-wide.txt
+          grep -q 'CAT_SCHEMA exact name=' strings-ascii.txt
+          grep -q 'schema=Catalog/categories' strings-ascii.txt
+          grep -q 'AoE2DE_P3O_54800_MONOLITHIC_RC12.log' strings-wide.txt
           echo '=== DLL SHA256 ==='
           cat SHA256.txt
           echo '=== EXPORTS ==='
@@ -41,6 +46,6 @@ jobs:
       - name: Upload only version.dll
         uses: actions/upload-artifact@v4
         with:
-          name: AoE2DE_P3O_VIKING_SAGAS_54800_MONOLITHIC_RC10
+          name: AoE2DE_P3O_VIKING_SAGAS_54800_MONOLITHIC_RC12
           path: aoe2de-camera-resolver/version.dll
           if-no-files-found: error
