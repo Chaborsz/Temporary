@@ -1,4 +1,4 @@
-name: AoE2DE 54800 P3O Monolithic RC10
+name: AoE2DE 54800 P3N INI Schema RC11 DIAG
 
 on:
   pull_request:
@@ -20,7 +20,7 @@ jobs:
       - name: Build and validate
         working-directory: aoe2de-camera-resolver
         run: |
-          x86_64-w64-mingw32-gcc -shared -O2 -s -include windowsx.h -Wl,--no-insert-timestamp -Wl,--dynamicbase -Wl,--nxcompat -o version.dll proxy.c resolver_monolithic_rc10.c version.def -luser32 -lgdi32
+          x86_64-w64-mingw32-gcc -shared -O2 -s -Wl,--no-insert-timestamp -Wl,--dynamicbase -Wl,--nxcompat -o version.dll proxy.c ini_schema_diag.c version.def -luser32
           x86_64-w64-mingw32-objdump -p version.dll > pe.txt
           strings -el version.dll > strings-wide.txt || true
           strings version.dll > strings-ascii.txt
@@ -28,19 +28,17 @@ jobs:
           for n in GetFileVersionInfoA GetFileVersionInfoByHandle GetFileVersionInfoExA GetFileVersionInfoExW GetFileVersionInfoSizeA GetFileVersionInfoSizeExA GetFileVersionInfoSizeExW GetFileVersionInfoSizeW GetFileVersionInfoW VerFindFileA VerFindFileW VerInstallFileA VerInstallFileW VerLanguageNameA VerLanguageNameW VerQueryValueA VerQueryValueW; do grep -q "$n" pe.txt; done
           grep -q 'DLL Name: KERNEL32.dll' pe.txt
           grep -q 'DLL Name: USER32.dll' pe.txt
-          grep -q 'DLL Name: GDI32.dll' pe.txt
-          grep -q 'ONE_DLL=TRUE BACKEND_DLL=FALSE' strings-ascii.txt
-          grep -q 'P3O_SPAWN=SUCCESS' strings-ascii.txt
-          grep -q 'P3O_INSERT visible=' strings-ascii.txt
-          grep -q 'CATALOG units=' strings-ascii.txt
-          grep -q 'AoE2DE_P3O_54800_MONOLITHIC_RC10.log' strings-wide.txt
+          grep -q 'MODE=READ_ONLY_CONFIG_DUMP' strings-ascii.txt
+          grep -q 'NO_GAME_MEMORY_WRITES=TRUE' strings-ascii.txt
+          grep -q 'STATUS=COMPLETE_SEND_THIS_FILE' strings-ascii.txt
+          grep -q 'AoE2DE_P3N_INI_SCHEMA_RC11_DIAG.txt' strings-wide.txt
           echo '=== DLL SHA256 ==='
           cat SHA256.txt
           echo '=== EXPORTS ==='
           grep -E 'GetFileVersionInfo|VerFindFile|VerInstallFile|VerLanguageName|VerQueryValue' pe.txt | tail -n 17
-      - name: Upload only version.dll
+      - name: Upload diagnostic DLL only
         uses: actions/upload-artifact@v4
         with:
-          name: AoE2DE_P3O_VIKING_SAGAS_54800_MONOLITHIC_RC10
+          name: AoE2DE_P3N_INI_SCHEMA_RC11_DIAG
           path: aoe2de-camera-resolver/version.dll
           if-no-files-found: error
