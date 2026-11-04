@@ -1,0 +1,31 @@
+name: Endurance Windows decryptor - no Python
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "cheats/endurance/decrypt_to_zip_no_python.ps1"
+      - "cheats/endurance/decrypt_to_zip_no_python.bat"
+      - ".github/workflows/endurance-windows-no-python.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  windows-native-decrypt-selftest:
+    runs-on: windows-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify native PowerShell 5.1 Weakfish-CBC ZIP roundtrip
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "cheats\endurance\decrypt_to_zip_no_python.ps1" -SelfTest
+      - name: Package launcher and script (no Python needed)
+        uses: actions/upload-artifact@v4
+        with:
+          name: Endurance-Descifrador-Windows-Sin-Python
+          path: |
+            cheats/endurance/decrypt_to_zip_no_python.ps1
+            cheats/endurance/decrypt_to_zip_no_python.bat
+          retention-days: 30
+          if-no-files-found: error
