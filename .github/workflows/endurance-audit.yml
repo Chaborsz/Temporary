@@ -106,6 +106,16 @@ jobs:
             python cheats/endurance/decode_project_weakfish.py \
               --self-test --output analysis-results/endurance
           fi
+      - name: Correlate Endurance project variable and ID 2054
+        shell: bash
+        run: |
+          if [ -f cheats/endurance/input/project_decrypted.json ]; then
+            python cheats/endurance/correlate_endurance_project.py \
+              --project cheats/endurance/input/project_decrypted.json \
+              --out analysis-results/endurance
+          else
+            echo "No decrypted project data for stage 5."
+          fi
       - name: Publish compact evidence and checkpoint
         if: always()
         uses: actions/upload-artifact@v4
