@@ -142,7 +142,18 @@ def selftest():
         out.extend(xor16(weak_decrypt(enc),prev))
         prev=enc
     assert bytes(out[:len(base)])==base
-    return {"status":"PASS","test":"weakfish CBC roundtrip 2 blocks"}
+    # End-to-end test: header, CBC streaming, final padding, JSON parser and Endurance hit.
+    from tempfile import TemporaryDirectory
+    with TemporaryDirectory(prefix="pgmm-weakfish-test-") as tmp:
+        enc = Path(tmp)/"project.json"
+        dec = Path(tmp)/"decrypted.json"
+        enc.write_bytes(b"enc"+bytes([pad])+bytes(cipher))
+        summary = decrypt_file(enc, dec)
+        assert summary["output_bytes"] == len(base)
+        assert dec.read_bytes() == base
+        report = scan_json(dec,max_hits=5)
+        assert any("endurance" in h["matched_terms"] for h in report["hits"])
+    return {"status":"PASS","test":"weakfish CBC streaming decode + JSON scanner"}
 
 def main():
     arg=argparse.ArgumentParser()
