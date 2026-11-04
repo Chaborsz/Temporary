@@ -124,6 +124,14 @@ jobs:
               --project cheats/endurance/input/project_decrypted.json \
               --out analysis-results/endurance
           fi
+      - name: Confirm Endurance HUD candidate 2047 ownership
+        shell: bash
+        run: |
+          if [ -f cheats/endurance/input/project_decrypted.json ]; then
+            python cheats/endurance/confirm_endurance_hud.py \
+              --project cheats/endurance/input/project_decrypted.json \
+              --out analysis-results/endurance
+          fi
       - name: Publish compact evidence and checkpoint
         if: always()
         uses: actions/upload-artifact@v4
