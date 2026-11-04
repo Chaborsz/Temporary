@@ -200,6 +200,12 @@ def main():
           "decoded_bytes=",report.get("decryption",{}).get("output_bytes",0),
           "hits=",len(report.get("scan",{}).get("hits",[])))
     print("REPORT",output_file)
+    if "scan" in report:
+        scan=report["scan"]
+        print("PROJECT_MATCH_COUNTS",json.dumps(scan.get("matched_term_counts",{}),ensure_ascii=False))
+        print("PROJECT_EVENTS",scan.get("json_events",0))
+        for idx,hit in enumerate(scan.get("hits",[])[:85],1):
+            print("PROJECT_HIT",idx,json.dumps(hit,ensure_ascii=False,separators=(",",":")))
     if report["status"]=="SOURCE_MISSING":
         print("BLOCKER: encrypted project.json is not available; player.exe does not include it.")
         return
