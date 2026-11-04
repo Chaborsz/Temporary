@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install minimal disassembly dependencies
-        run: python -m pip install --disable-pip-version-check --no-cache-dir "pefile==2024.8.26" "capstone==5.0.6"
+        run: python -m pip install --disable-pip-version-check --no-cache-dir "pefile==2024.8.26" "capstone==5.0.6" "ijson==3.4.0"
       - name: Analyze Endurance only, read-only
         run: |
           python cheats/endurance/analyze_endurance.py \
@@ -41,6 +41,25 @@ jobs:
           python cheats/endurance/trace_variable_callers.py \
             --exe cheats/endurance/input/player.exe \
             --out analysis-results/endurance
+      - name: Validate Weakfish decoder and scan project.json when supplied
+        shell: bash
+        run: |
+          set -euo pipefail
+          PROJECT=""
+          for file in \
+            cheats/endurance/input/Resources/data/project.json \
+            cheats/endurance/input/project.json \
+            cheats/endurance/input/project_decrypted.json ; do
+            if [ -f "$file" ]; then PROJECT="$file"; break; fi
+          done
+          if [ -n "$PROJECT" ]; then
+            python cheats/endurance/decode_project_weakfish.py \
+              --self-test --input "$PROJECT" \
+              --output analysis-results/endurance
+          else
+            python cheats/endurance/decode_project_weakfish.py \
+              --self-test --output analysis-results/endurance
+          fi
       - name: Publish compact evidence and checkpoint
         if: always()
         uses: actions/upload-artifact@v4
