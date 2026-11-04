@@ -73,16 +73,16 @@ def main():
       "warning":"Game-data references prove a variable is used, not yet which runtime HUD field maps to Endurance."
     }
     a.out.mkdir(parents=True,exist_ok=True)
-    (a.out/"stage6-endurance-operations.json").write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding="utf-8")
+    (a.out/"stage6-endurance-operations.json").write_text(json.dumps(report,ensure_ascii=False,indent=2,default=str),encoding="utf-8")
     print("STAGE6_DONE",sum(counts.values()),"candidate-operations",len(counts),"categories",len(IDS))
     for k,v in sorted(counts.items(),key=lambda kv:(kv[0][0],kv[0][1],-kv[1])):
         print("VAR_OP",k[0],IDS[k[0]],k[1],"count",v,"path",k[2])
     for k,v in samples.items():
         if k[0] in (2054,2047,2003,2386):
             for sample in v[:2]:
-                print("VAR_SAMPLE",k[0],k[1],json.dumps(sample,ensure_ascii=False)[:1700])
+                print("VAR_SAMPLE",k[0],k[1],json.dumps(sample,ensure_ascii=False,default=str)[:1700])
     for e in player_action_names[:42]:
-        print("ACTION",json.dumps(e,ensure_ascii=False)[:1000])
+        print("ACTION",json.dumps(e,ensure_ascii=False,default=str)[:1000])
 
 if __name__=="__main__":
     main()
