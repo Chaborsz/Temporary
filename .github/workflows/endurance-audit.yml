@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Retrieve large encrypted project.json from an optional GitHub Release
+      - name: Download optional project input from GitHub Release (ZIP, 7z, JSON)
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -38,17 +38,39 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "$RELEASE_TAG" ]; then
-            echo "No Release specified; will test decoder without encrypted input."
+            echo "No release specified: checking repository input."
             exit 0
           fi
-          folder="cheats/endurance/input/Resources/data"
-          mkdir -p "$folder"
-          gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
-            --pattern "project.json" --dir "$folder" --clobber
-          test -s "$folder/project.json"
-          echo "Encrypted asset downloaded. Size: $(stat -c%s "$folder/project.json") bytes"
+          names="$(gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name')"
+          mkdir -p cheats/endurance/input
+          chosen=""
+          for name in project_data.zip project_data.7z project_decrypted.json project.json; do
+            if grep -Fxq -- "$name" <<< "$names"; then chosen="$name"; break; fi
+          done
+          if [ -z "$chosen" ]; then
+            echo "::error::Release has no project_data.zip, project_data.7z, project_decrypted.json or project.json."
+            exit 1
+          fi
+          gh release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" --pattern "$chosen" \
+            --dir cheats/endurance/input --clobber
+          test -s "cheats/endurance/input/$chosen"
+          echo "Download verified: $chosen ($(stat -c%s "cheats/endurance/input/$chosen") bytes)"
       - name: Install minimal disassembly dependencies
-        run: python -m pip install --disable-pip-version-check --no-cache-dir "pefile==2024.8.26" "capstone==5.0.6" "ijson==3.4.0"
+        run: python -m pip install --disable-pip-version-check --no-cache-dir "pefile==2024.8.26" "capstone==5.0.6" "ijson==3.4.0" "py7zr==1.0.0"
+      - name: Unpack project JSON from ZIP or 7z, if provided
+        shell: bash
+        run: |
+          set -euo pipefail
+          python cheats/endurance/unpack_project_archive.py --self-test
+          for archive in \
+            cheats/endurance/input/project_data.zip \
+            cheats/endurance/input/project_data.7z ; do
+            if [ -s "$archive" ]; then
+              python cheats/endurance/unpack_project_archive.py \
+                --archive "$archive" --output-dir cheats/endurance/input
+              break
+            fi
+          done
       - name: Analyze Endurance only, read-only
         run: |
           python cheats/endurance/analyze_endurance.py \
@@ -71,9 +93,9 @@ jobs:
           set -euo pipefail
           PROJECT=""
           for file in \
-            cheats/endurance/input/Resources/data/project.json \
+            cheats/endurance/input/project_decrypted.json \
             cheats/endurance/input/project.json \
-            cheats/endurance/input/project_decrypted.json ; do
+            cheats/endurance/input/Resources/data/project.json ; do
             if [ -f "$file" ]; then PROJECT="$file"; break; fi
           done
           if [ -n "$PROJECT" ]; then
