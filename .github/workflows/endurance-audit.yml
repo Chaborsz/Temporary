@@ -1,0 +1,41 @@
+name: Endurance AGTK static audit
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "cheats/endurance/**"
+      - ".github/workflows/endurance-audit.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: endurance-audit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install minimal disassembly dependencies
+        run: python -m pip install --disable-pip-version-check --no-cache-dir "pefile==2024.8.26" "capstone==5.0.6"
+      - name: Analyze Endurance only, read-only
+        run: |
+          python cheats/endurance/analyze_endurance.py \
+            --exe cheats/endurance/input/player.exe \
+            --assets cheats/endurance/input \
+            --output analysis-results/endurance
+      - name: Publish compact evidence and checkpoint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: endurance-audit-${{ github.run_id }}
+          path: analysis-results/endurance/
+          retention-days: 7
+          if-no-files-found: error
