@@ -35,3 +35,30 @@ The **repository is public**. Uploading the EXE or game assets here makes them p
 - Status AUDITED_WITH_DIRECT_TERMS: candidate strings found, NOT yet verified as live variable
 
 No changes to other Temporary projects.
+
+## Build 29 encrypted project.json (stage 4)
+Previous verified local Windows decryption (2026-10-18):
+- Input: `Resources\data\project.json`
+- `Resources\data\info.json` key resolves to seven bytes `232301 ` (**trailing space is significant**).
+- Encryption: legacy Weakfish CBC, header `enc\\x02` and 16-byte blocks; do **not** use modern Twofish.
+- Earlier output `project_decrypted.json` was **294,287,854 bytes** and valid JSON.
+- Earlier local script: `decrypt_fobs_build29.ps1`; if its original output is still available, it may be reused rather than decrypted again.
+
+Stage-4 source and workflow:
+- `cheats/endurance/decode_project_weakfish.py` is a streaming Python reimplementation of the MIT-licensed PGMM Weakfish logic, with a roundtrip self-test.
+- No full 294 MB decoded copy is committed or archived; the temporary decoded JSON is deleted after streaming `ijson` scanning. Only a bounded Endurance metadata report is retained.
+- `on: release/published` or manual `workflow_dispatch` with `release_tag`: downloads an asset **named exactly `project.json`** from that GitHub Release and processes it.
+- A plain already-decoded `cheats/endurance/input/project_decrypted.json` also works, if supplied through an appropriate authorized input channel.
+- If no project source is available, the workflow self-test runs and records `SOURCE_MISSING`; this is not a decryption failure.
+
+### Large-file transfer (only if you are authorized to redistribute the file)
+GitHub normal repository uploads are unsuitable for this ~294 MB encrypted file. Use Releases:
+1. In `Chaborsz/Temporary`, open **Releases -> Draft a new release**.
+2. Choose an unused tag, e.g. `fobs-build29-endurance-input`.
+3. Attach the encrypted **`Resources\data\project.json`** as a release asset named `project.json`.
+4. Publish the release only after the asset is attached. GitHub Actions should run stage 4 automatically.
+5. Alternatively use the workflow's manual `release_tag` input to process an existing release.
+
+**IMPORTANT: the current repository is PUBLIC. Release assets become public too.** A private repository or processing locally and uploading only a small extracted report is safer for proprietary game data. Do not upload the entire decrypted project publicly.
+
+Source for the historic Weakfish algorithm: https://github.com/blluv/pgmm_decrypt (MIT).
