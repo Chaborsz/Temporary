@@ -1,4 +1,4 @@
-name: AoE2DE 54800 P3O Monolithic RC12
+name: AoE2DE 54800 P3O Monolithic RC13 Silent
 
 on:
   pull_request:
@@ -20,6 +20,9 @@ jobs:
       - name: Apply RC12 parity patch
         working-directory: aoe2de-camera-resolver
         run: python3 patch_rc12.py
+      - name: Apply RC13 silent/no-log patch
+        working-directory: aoe2de-camera-resolver
+        run: python3 patch_rc13.py
       - name: Build and validate
         working-directory: aoe2de-camera-resolver
         run: |
@@ -32,13 +35,18 @@ jobs:
           grep -q 'DLL Name: KERNEL32.dll' pe.txt
           grep -q 'DLL Name: USER32.dll' pe.txt
           grep -q 'DLL Name: GDI32.dll' pe.txt
-          grep -q 'ONE_DLL=TRUE BACKEND_DLL=FALSE' strings-ascii.txt
-          grep -q 'UI_LINEAGE=P3N_RC3_FIX1_RC4_RC5' strings-ascii.txt
-          grep -q 'P3O_SPAWN=SUCCESS' strings-ascii.txt
-          grep -q 'P3O_INSERT visible=' strings-ascii.txt
-          grep -q 'CAT_SCHEMA exact name=' strings-ascii.txt
-          grep -q 'schema=Catalog/categories' strings-ascii.txt
-          grep -q 'AoE2DE_P3O_54800_MONOLITHIC_RC12.log' strings-wide.txt
+          grep -Fq 'static int spawn_selected(HWND h)' resolver_monolithic_rc10.c
+          grep -Fq 'static void load_catalog(void)' resolver_monolithic_rc10.c
+          grep -Fq 'static LRESULT CALLBACK game_proc(' resolver_monolithic_rc10.c
+          grep -Fq 'static LRESULT CALLBACK overlay_proc(' resolver_monolithic_rc10.c
+          grep -Fq 'static void init_log(void){g_log[0]=0;}' resolver_monolithic_rc10.c
+          ! grep -Fq 'MessageBeep(' resolver_monolithic_rc10.c
+          ! grep -Fq '_wfopen' resolver_monolithic_rc10.c
+          ! grep -Fq 'GetTempPathW' resolver_monolithic_rc10.c
+          ! grep -Fq '.log' resolver_monolithic_rc10.c
+          ! grep -Fq 'MessageBeep' pe.txt
+          ! grep -Fq 'MessageBeep' strings-ascii.txt
+          ! grep -Fq '.log' strings-wide.txt
           echo '=== DLL SHA256 ==='
           cat SHA256.txt
           echo '=== EXPORTS ==='
@@ -46,6 +54,6 @@ jobs:
       - name: Upload only version.dll
         uses: actions/upload-artifact@v4
         with:
-          name: AoE2DE_P3O_VIKING_SAGAS_54800_MONOLITHIC_RC12
+          name: AoE2DE_P3O_VIKING_SAGAS_54800_MONOLITHIC_RC13_SILENT
           path: aoe2de-camera-resolver/version.dll
           if-no-files-found: error
