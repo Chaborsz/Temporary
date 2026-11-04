@@ -31,6 +31,11 @@ jobs:
             --exe cheats/endurance/input/player.exe \
             --assets cheats/endurance/input \
             --output analysis-results/endurance
+      - name: Trace Endurance through generic AGTK variable symbols
+        run: |
+          python cheats/endurance/trace_endurance.py \
+            --exe cheats/endurance/input/player.exe \
+            --out analysis-results/endurance
       - name: Publish compact evidence and checkpoint
         if: always()
         uses: actions/upload-artifact@v4
