@@ -36,6 +36,11 @@ jobs:
           python cheats/endurance/trace_endurance.py \
             --exe cheats/endurance/input/player.exe \
             --out analysis-results/endurance
+      - name: Trace callsites for AGTK variable lookup
+        run: |
+          python cheats/endurance/trace_variable_callers.py \
+            --exe cheats/endurance/input/player.exe \
+            --out analysis-results/endurance
       - name: Publish compact evidence and checkpoint
         if: always()
         uses: actions/upload-artifact@v4
