@@ -34,7 +34,7 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || inputs.release_tag }}
+          RELEASE_TAG: ${{ github.event_name == 'release' && github.event.release.tag_name || inputs.release_tag || 'fobs-build29-endurance-input' }}
         run: |
           set -euo pipefail
           if [ -z "$RELEASE_TAG" ]; then
