@@ -116,6 +116,14 @@ jobs:
           else
             echo "No decrypted project data for stage 5."
           fi
+      - name: Inspect specific Endurance-variable writes and HUD actions
+        shell: bash
+        run: |
+          if [ -f cheats/endurance/input/project_decrypted.json ]; then
+            python cheats/endurance/audit_endurance_operations.py \
+              --project cheats/endurance/input/project_decrypted.json \
+              --out analysis-results/endurance
+          fi
       - name: Publish compact evidence and checkpoint
         if: always()
         uses: actions/upload-artifact@v4
