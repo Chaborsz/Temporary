@@ -68,11 +68,11 @@ def apply(source,destination,patches):
             if mm[start:end] != original or len(replacement)!=end-start:
                 raise RuntimeError("Patch preimage mismatch")
             part=memoryview(mm)[frompos:start]
-            w.write(part);h.update(part)
+            w.write(part);h.update(part);del part
             w.write(replacement);h.update(replacement)
             frompos=end
         part=memoryview(mm)[frompos:]
-        w.write(part);h.update(part)
+        w.write(part);h.update(part);del part
     assert destination.stat().st_size == source.stat().st_size
     return h.hexdigest()
 
