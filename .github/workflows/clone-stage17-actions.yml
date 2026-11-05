@@ -1,0 +1,45 @@
+name: Clone Stage17 - existing spawn commands and ABI
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "experiments/clone_mode/audit_spawn_commands.py"
+      - ".github/workflows/clone-stage17-actions.yml"
+permissions:
+  contents: read
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check ijson==3.4.0 pefile==2024.8.26 capstone==5.0.6
+      - name: Pull previously uploaded project data for local CI audit
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/clone-mode
+          gh release download fobs-build29-endurance-input --repo "$GITHUB_REPOSITORY" --pattern project_data.zip --dir /tmp/clone-mode
+          python - <<'PY'
+          import zipfile
+          with zipfile.ZipFile('/tmp/clone-mode/project_data.zip') as z:
+              x=z.getinfo('project_decrypted.json')
+              assert x.file_size==301997021
+              z.extract(x,'/tmp/clone-mode')
+          print('CLONE_STAGE17_INPUT_PASS')
+          PY
+      - name: Decode actor-creation settings and in-engine native ABI
+        run: python experiments/clone_mode/audit_spawn_commands.py
+      - name: Upload bounded metadata only
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: clone-stage17-metadata-${{ github.run_id }}
+          path: experiments/clone_mode/analysis/stage17-spawn-commands.json
+          retention-days: 7
+          if-no-files-found: warn
