@@ -1,0 +1,61 @@
+name: Endurance 2047 freeze-zero TEST build
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "cheats/endurance/stage9_freeze_2047.py"
+      - ".github/workflows/endurance-freeze2047-test.yml"
+permissions:
+  contents: read
+jobs:
+  build-trial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install streaming JSON parser
+        run: python -m pip install --disable-pip-version-check "ijson==3.4.0"
+      - name: Download already uploaded canonical project data
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/endurance-stage9
+          gh release download fobs-build29-endurance-input --repo "$GITHUB_REPOSITORY" \
+            --pattern project_data.zip --dir /tmp/endurance-stage9
+          python - <<'PY'
+          import zipfile
+          z='/tmp/endurance-stage9/project_data.zip'
+          with zipfile.ZipFile(z) as ar:
+              x=ar.getinfo('project_decrypted.json')
+              assert x.file_size==301997021
+              ar.extract(x, '/tmp/endurance-stage9')
+          print('SOURCE_UNPACK_PASS')
+          PY
+      - name: Audit exact variable-2047 patch positions without changing data
+        shell: bash
+        run: |
+          python cheats/endurance/stage9_freeze_2047.py \
+            --input /tmp/endurance-stage9/project_decrypted.json \
+            --out analysis-results/endurance --dry-run
+      - name: Build isolated encrypted game project.json and full CBC roundtrip
+        shell: bash
+        run: |
+          python cheats/endurance/stage9_freeze_2047.py \
+            --input /tmp/endurance-stage9/project_decrypted.json \
+            --out analysis-results/endurance
+      - name: Publish trial + small evidence (DO NOT commit binary)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Endurance-2047-freeze0-TEST-${{ github.run_id }}
+          path: |
+            analysis-results/endurance/endurance_2047_freeze0_TEST.zip
+            analysis-results/endurance/stage9-freeze0-manifest.json
+          retention-days: 7
+          if-no-files-found: warn
+          compression-level: 0
