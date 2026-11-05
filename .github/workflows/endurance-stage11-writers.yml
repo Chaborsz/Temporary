@@ -1,0 +1,28 @@
+name: Endurance Stage11 — AGTK variable writer audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "cheats/endurance/dll/audit_variable_writers.py"
+      - ".github/workflows/endurance-stage11-writers.yml"
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pefile==2024.8.26 capstone==5.0.6
+      - name: Analyze exact AGTK write/read paths and call references
+        run: python cheats/endurance/dll/audit_variable_writers.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: endurance-stage11-static-${{ github.run_id }}
+          path: analysis-results/endurance/stage11-static-writer-audit.json
+          if-no-files-found: warn
+          retention-days: 7
