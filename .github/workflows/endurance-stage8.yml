@@ -1,0 +1,49 @@
+name: Endurance Stage 8 — precise UI 2047 verification
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "cheats/endurance/stage8_ui_candidate.py"
+      - ".github/workflows/endurance-stage8.yml"
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check "ijson==3.4.0"
+      - name: Download already uploaded project_data.zip
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/endurance-input
+          gh release download fobs-build29-endurance-input --repo "$GITHUB_REPOSITORY" \
+            --pattern project_data.zip --dir /tmp/endurance-input
+          python - <<'PY'
+          import zipfile
+          z='/tmp/endurance-input/project_data.zip'
+          with zipfile.ZipFile(z) as f:
+              file=f.getinfo('project_decrypted.json')
+              assert file.file_size==301997021, file.file_size
+              f.extract(file,path='/tmp/endurance-input')
+          print('PROJECT_ORIGINAL_UNPACK_PASS')
+          PY
+      - name: Inspect candidate 2047 and UI object 49
+        run: |
+          python cheats/endurance/stage8_ui_candidate.py \
+            --project /tmp/endurance-input/project_decrypted.json \
+            --out analysis-results/endurance
+      - name: Upload small project evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: endurance-stage8-${{ github.run_id }}
+          path: analysis-results/endurance/stage8-ui-2047-target.json
+          retention-days: 7
+          if-no-files-found: ignore
