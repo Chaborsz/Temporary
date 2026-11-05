@@ -1,0 +1,77 @@
+name: Endurance 2047 diagnostic x86
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "cheats/endurance/dll/endurance_diagnostic_version.cpp"
+      - "cheats/endurance/dll/diagnostic_smoke.cpp"
+      - "cheats/endurance/dll/README_DIAGNOSTICO.md"
+      - ".github/workflows/endurance-diagnostic.yml"
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile 32-bit diagnostic proxy + read-only hook test
+        shell: cmd
+        run: |
+          for /f "delims=" %%V in ('"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath') do @set "VSROOT=%%V"
+          if not defined VSROOT exit /b 1
+          call "%VSROOT%\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x64
+          if errorlevel 1 exit /b 2
+          mkdir dist
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /LD /Fe:dist\version.dll cheats\endurance\dll\endurance_diagnostic_version.cpp /link /DEF:cheats\endurance\dll\version_proxy.def /OUT:dist\version.dll
+          if errorlevel 1 exit /b 3
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /Fe:dist\proxy_smoke.exe cheats\endurance\dll\proxy_smoke.cpp /link /SUBSYSTEM:CONSOLE
+          if errorlevel 1 exit /b 4
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /Fe:dist\diagnostic_smoke.exe cheats\endurance\dll\diagnostic_smoke.cpp /link /SUBSYSTEM:CONSOLE
+          if errorlevel 1 exit /b 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check canonical player EXE and all diagnostic DLL exports
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check pefile==2024.8.26
+          @'
+          import hashlib,pefile,os
+          exe='cheats/endurance/input/player.exe'
+          assert hashlib.sha256(open(exe,'rb').read()).hexdigest()=='02a59baab7a4c941f9a01f485082396d61e750a41dc955cff895bef5395441ea'
+          target=pefile.PE(exe)
+          pro=target.__data__[target.get_offset_from_rva(0x1e8760):][:6]
+          assert pro==bytes.fromhex('55 8b ec 83 e4 c0'),pro.hex()
+          dll=pefile.PE('dist/version.dll')
+          assert dll.FILE_HEADER.Machine==0x14c and dll.is_dll()
+          exports={e.name.decode('ascii') for e in dll.DIRECTORY_ENTRY_EXPORT.symbols if e.name}
+          assert len(exports)==10,exports
+          assert {'GetFileVersionInfoSizeW','GetFileVersionInfoW','VerQueryValueW'}<=exports
+          print('DIAGNOSTIC_DLL_X86_EXPORTS_PASS',len(exports))
+          print('CANONICAL_PLAYER_PROLOGUE_PASS',pro.hex())
+          print('DIAGNOSTIC_DLL_SIZE',os.stat('dist/version.dll').st_size)
+          '@ | python -
+      - name: Run Windows proxy and passthrough tests
+        shell: cmd
+        run: |
+          cd dist
+          proxy_smoke.exe
+          if errorlevel 1 exit /b 1
+          diagnostic_smoke.exe
+          if errorlevel 1 exit /b 2
+          findstr /C:"FIRST_CALL id=2047" EnduranceDiagnostic.log
+          if errorlevel 1 exit /b 3
+          findstr /C:"GUARD_FAIL" EnduranceDiagnostic.log
+          if errorlevel 1 exit /b 4
+          echo ENDURANCE_DIAGNOSTIC_CI_PASS
+      - name: Upload diagnostic DLL only (not original game)
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: EnduranceDiagnostic-x86-${{ github.run_id }}
+          path: |
+            dist/version.dll
+            cheats/endurance/dll/README_DIAGNOSTICO.md
+          retention-days: 14
+          if-no-files-found: error
