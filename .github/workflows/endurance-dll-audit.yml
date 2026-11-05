@@ -1,0 +1,28 @@
+name: Endurance DLL PE reconnaissance
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "cheats/endurance/dll/audit_pe.py"
+      - ".github/workflows/endurance-dll-audit.yml"
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pefile and capstone
+        run: python -m pip install pefile==2024.8.26 capstone==5.0.6
+      - name: Inspect PE32 imports and AGTK variable API
+        run: python cheats/endurance/dll/audit_pe.py
+      - name: Save audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: endurance-dll-api-audit-${{ github.run_id }}
+          path: /tmp/endurance_pe_audit.json
+          retention-days: 7
