@@ -1,0 +1,76 @@
+name: Endurance Stage12 — writer-path read-only DLL
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "cheats/endurance/dll/endurance_writers_diagnostic.cpp"
+      - "cheats/endurance/dll/writers_smoke.cpp"
+      - ".github/workflows/endurance-stage12-writers-dll.yml"
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build x86 VERSION proxy and writer-path ABI tests
+        shell: cmd
+        run: |
+          for /f "delims=" %%V in ('"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath') do @set "VSROOT=%%V"
+          if not defined VSROOT exit /b 1
+          call "%VSROOT%\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x64
+          if errorlevel 1 exit /b 2
+          mkdir dist
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /LD /Fe:dist\version.dll cheats\endurance\dll\endurance_writers_diagnostic.cpp /link /DEF:cheats\endurance\dll\version_proxy.def /OUT:dist\version.dll
+          if errorlevel 1 exit /b 3
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /Fe:dist\proxy_smoke.exe cheats\endurance\dll\proxy_smoke.cpp /link /SUBSYSTEM:CONSOLE
+          if errorlevel 1 exit /b 4
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /Fe:dist\writers_smoke.exe cheats\endurance\dll\writers_smoke.cpp /link /SUBSYSTEM:CONSOLE
+          if errorlevel 1 exit /b 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate exact prologues, x86 binary and expected proxy exports
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check pefile==2024.8.26
+          @'
+          import hashlib,pefile
+          exe='cheats/endurance/input/player.exe'
+          assert hashlib.sha256(open(exe,'rb').read()).hexdigest()=='02a59baab7a4c941f9a01f485082396d61e750a41dc955cff895bef5395441ea'
+          pe=pefile.PE(exe)
+          assert pe.FILE_HEADER.Machine==0x14c
+          for rva,prefix in [(0x6ab90,bytes.fromhex('55 8b ec 83 e4 f8')),
+                             (0x6acb0,bytes.fromhex('55 8b ec f2 0f 10 45 08'))]:
+              actual=pe.__data__[pe.get_offset_from_rva(rva):][:len(prefix)]
+              assert actual==prefix,(hex(rva),actual.hex())
+              print('WRITE_PATH_PROLOGUE_PASS',hex(rva),actual.hex())
+          dll=pefile.PE('dist/version.dll')
+          assert dll.is_dll() and dll.FILE_HEADER.Machine==0x14c
+          names={x.name.decode('ascii') for x in dll.DIRECTORY_ENTRY_EXPORT.symbols if x.name}
+          assert len(names)==10,names
+          assert {'VerQueryValueW','GetFileVersionInfoW','GetFileVersionInfoSizeW'}<=names
+          print('STAGE12_DLL_PE32_EXPORTS_PASS',len(names))
+          '@ | python -
+      - name: Execute real x86 Windows load and no-value-change tests
+        shell: cmd
+        run: |
+          cd dist
+          proxy_smoke.exe
+          if errorlevel 1 exit /b 1
+          writers_smoke.exe
+          if errorlevel 1 exit /b 2
+          findstr /C:"GUARD_FAIL" EnduranceWriters.log
+          if errorlevel 1 exit /b 3
+          echo STAGE12_DIAGNOSTIC_CI_PASS
+      - name: Publish read-only stage12 diagnostic binary
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Endurance-Stage12-Writers-Diagnostic-x86-${{ github.run_id }}
+          path: |
+            dist/version.dll
+            cheats/endurance/dll/README_WRITERS.md
+          retention-days: 14
+          if-no-files-found: error
