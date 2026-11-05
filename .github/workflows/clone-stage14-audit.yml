@@ -1,0 +1,46 @@
+name: Clone mode Stage14 - object and spawn audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "experiments/clone_mode/audit_clone.py"
+      - ".github/workflows/clone-stage14-audit.yml"
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install parsers
+        run: python -m pip install --disable-pip-version-check pefile==2024.8.26 capstone==5.0.6 ijson==3.4.0
+      - name: Reuse previously uploaded decrypted project archive
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/clone-mode
+          gh release download fobs-build29-endurance-input --repo "$GITHUB_REPOSITORY" --pattern project_data.zip --dir /tmp/clone-mode
+          python - <<'PY'
+          import zipfile
+          with zipfile.ZipFile('/tmp/clone-mode/project_data.zip') as z:
+              item=z.getinfo('project_decrypted.json')
+              assert item.file_size==301997021,item.file_size
+              z.extract(item,'/tmp/clone-mode')
+          print('PROJECT_INPUT_VERIFIED')
+          PY
+      - name: Audit exact player object ID and spawn routes
+        run: python experiments/clone_mode/audit_clone.py
+      - name: Save analysis only (no game data)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clone-stage14-report-${{ github.run_id }}
+          path: experiments/clone_mode/analysis/stage14-project-and-engine.json
+          if-no-files-found: ignore
+          retention-days: 7
