@@ -1,0 +1,84 @@
+name: Endurance Stage13 - verified setValue freeze2047 DLL
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "cheats/endurance/dll/endurance_freeze2047_stage13.cpp"
+      - "cheats/endurance/dll/stage13_filter_test.cpp"
+      - ".github/workflows/endurance-stage13-freeze-dll.yml"
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile x86 DLL and mock-setter verification
+        shell: cmd
+        run: |
+          for /f "delims=" %%V in ('"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath') do @set "VSROOT=%%V"
+          if not defined VSROOT exit /b 1
+          call "%VSROOT%\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x64
+          if errorlevel 1 exit /b 2
+          mkdir dist
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /LD /Fe:dist\version.dll cheats\endurance\dll\endurance_freeze2047_stage13.cpp /link /DEF:cheats\endurance\dll\version_proxy.def /OUT:dist\version.dll
+          if errorlevel 1 exit /b 3
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /Fe:dist\proxy_smoke.exe cheats\endurance\dll\proxy_smoke.cpp /link /SUBSYSTEM:CONSOLE
+          if errorlevel 1 exit /b 4
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /Fe:dist\stage13_filter_test.exe cheats\endurance\dll\stage13_filter_test.cpp /link /SUBSYSTEM:CONSOLE
+          if errorlevel 1 exit /b 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate canonical player, target prologue, DLL exports and scope
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check pefile==2024.8.26
+          @'
+          import hashlib,os,pefile
+          exe="cheats/endurance/input/player.exe"
+          expected="02a59baab7a4c941f9a01f485082396d61e750a41dc955cff895bef5395441ea"
+          assert hashlib.sha256(open(exe,"rb").read()).hexdigest()==expected
+          pe=pefile.PE(exe)
+          assert pe.FILE_HEADER.Machine==0x14c and pe.OPTIONAL_HEADER.ImageBase==0x400000
+          off=pe.get_offset_from_rva(0x6ab90)
+          assert pe.__data__[off:off+6]==bytes.fromhex("55 8b ec 83 e4 f8")
+          dll=pefile.PE("dist/version.dll")
+          assert dll.is_dll() and dll.FILE_HEADER.Machine==0x14c
+          names={s.name.decode("ascii") for s in dll.DIRECTORY_ENTRY_EXPORT.symbols if s.name}
+          assert len(names)==10 and {"GetFileVersionInfoSizeW","GetFileVersionInfoW","VerQueryValueW"}<=names
+          source=open("cheats/endurance/dll/endurance_freeze2047_stage13.cpp",encoding="utf-8").read()
+          assert "if(id==2047 && object==nullptr)" in source
+          assert "return original(variable,0.0);" in source
+          assert "return original(variable,requested);" in source
+          assert "InstallHook(" in source and "0x6ab90" in source
+          assert 'InstallHook("PlayVariableData::requestValue"' not in source
+          print("STAGE13_CANONICAL_EXE_PASS")
+          print("STAGE13_DLL_X86_EXPORTS_PASS",len(names))
+          print("STAGE13_HOOK_SCOPE_PASS global2047_only")
+          print("STAGE13_DLL_SIZE_BYTES",os.path.getsize("dist/version.dll"))
+          '@ | python -
+      - name: Verify Windows DLL forwarding, hash guard, and selective freeze
+        shell: cmd
+        run: |
+          cd dist
+          proxy_smoke.exe
+          if errorlevel 1 exit /b 1
+          stage13_filter_test.exe
+          if errorlevel 1 exit /b 2
+          findstr /C:"FREEZE_2047_WRITE" EnduranceFreeze2047.log
+          if errorlevel 1 exit /b 3
+          findstr /C:"GUARD_FAIL" EnduranceFreeze2047.log
+          if errorlevel 1 exit /b 4
+          echo STAGE13_DLL_BUILD_AND_FILTER_PASS
+      - name: Publish only small DLL and instructions
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Endurance-Stage13-Freeze2047-x86-TEST-${{ github.run_id }}
+          path: |
+            dist/version.dll
+            cheats/endurance/dll/README_STAGE13.md
+          retention-days: 14
+          if-no-files-found: error
