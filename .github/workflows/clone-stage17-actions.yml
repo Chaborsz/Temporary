@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "experiments/clone_mode/audit_spawn_commands.py"
+      - "experiments/clone_mode/audit_clone_runtime.py"
       - ".github/workflows/clone-stage17-actions.yml"
 permissions:
   contents: read
@@ -35,6 +36,8 @@ jobs:
           PY
       - name: Decode actor-creation settings and in-engine native ABI
         run: python experiments/clone_mode/audit_spawn_commands.py
+      - name: Find player layer IDs, native spawn result and clone cleanup
+        run: python experiments/clone_mode/audit_clone_runtime.py
       - name: Upload bounded metadata only
         uses: actions/upload-artifact@v4
         if: always()
