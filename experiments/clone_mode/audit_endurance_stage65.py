@@ -95,9 +95,10 @@ def main():
         if oid!=1:source_targets[(str(oid),str(v))]+=1
        if lk in ("variableobjectid","switchobjectid") and v in (0,1,-1,-2):
         target_commands[(str(oid),ct,str(key),str(v))]+=1
-    for lnk in links:
-     for cond in lnk.get("linkConditionList",[]) or []:
-      if isinstance(cond,dict):link_types[str(cond.get("type","?"))]+=1
+   for lnk in links:
+    if not isinstance(lnk,dict):continue
+    for cond in lnk.get("linkConditionList",[]) or []:
+     if isinstance(cond,dict):link_types[str(cond.get("type","?"))]+=1
    if p_refs:per_actor.append({"id":oid,"name":name,"player_references":sum(p_refs.values()),
                           "by_path":p_refs.most_common(20),"actions":len(acts)})
  with (out/"original_object_inventory.csv").open("w",encoding="utf-8",newline="") as f:
