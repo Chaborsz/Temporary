@@ -58,11 +58,18 @@ jobs:
             0x58b380:'addObject@SceneLayer',
             0x58b5c0:'removeObject@SceneLayer',
             0x527d50:'getPosition@Object',
-            0x4270e0:'getScene@SceneLayer',
-            0x4297c0:'getLayerId@SceneLayer',
           }
           for va,needle in methods.items():
             assert needle in exports.get(va,''),(hex(va),exports.get(va))
+          # Identical COMDAT folding gives multiple methods the same RVA.
+          # These trivial getters share entry addresses with other getters.
+          for va,expected in {
+            0x4270e0: bytes.fromhex('8b8190020000c3'),
+            0x4297c0: bytes.fromhex('8b81b8020000c3'),
+          }.items():
+            got=game.__data__[game.get_offset_from_rva(va-0x400000):][:len(expected)]
+            assert got==expected,(hex(va),got.hex())
+          print('CLONE_NATIVE_GETTER_BYTES_PASS')
           print('CLONE_NATIVE_METHOD_SYMBOLS_PASS',len(methods))
           dll=pefile.PE('dist/version.dll')
           assert dll.is_dll() and dll.FILE_HEADER.Machine==0x14c
