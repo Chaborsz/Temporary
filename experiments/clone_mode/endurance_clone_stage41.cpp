@@ -247,6 +247,8 @@ typedef void* (__thiscall *NativeTargetList)(void*,int);
 typedef void (__thiscall *NativeDamaged)(void*,void*,void*,void*);
 typedef double (__thiscall *NativeAddHp)(void*,double);
 static volatile LONG g_targetListCount=0;
+struct TargetListSite { volatile LONG key; volatile LONG count; };
+static TargetListSite g_targetListSites[72]={};
 static volatile LONG g_damagedCount=0;
 static volatile LONG g_hpCount=0;
 static bool TargetOwner(void* object){return object && (object==g_playerObject || object==g_clonedObject);}
@@ -275,8 +277,22 @@ static void* __fastcall TraceTargetList(void* manager,void*,int objectId){
     void* caller=_ReturnAddress();
     void* result=original(manager,objectId);
     if(!g_clonedObject || g_cloneInstance<=0)return result;
-    const LONG n=InterlockedIncrement(&g_targetListCount);
-    if(n<=16 || (n& (n-1))==0){
+    const LONG total=InterlockedIncrement(&g_targetListCount);
+    const DWORD rva=SourceRva(caller);
+    const LONG key=static_cast<LONG>((rva ^ (static_cast<DWORD>(objectId)*0x9e3779b9u))|1u);
+    LONG siteCalls=0;
+    for(unsigned i=0;i<72;i++){
+        LONG found=InterlockedCompareExchange(&g_targetListSites[i].key,0,0);
+        if(!found)found=InterlockedCompareExchange(&g_targetListSites[i].key,key,0);
+        if(found==key){
+            siteCalls=InterlockedIncrement(&g_targetListSites[i].count);
+            break;
+        }
+    }
+    const bool record=(siteCalls==1||siteCalls==2||siteCalls==16||
+                       siteCalls==128||siteCalls==1024||
+                       (siteCalls==0 && (total<=8 || (total&(total-1))==0)));
+    if(record){
         unsigned count=0;
         bool hasOriginal=false,hasClone=false;
         if(result){
@@ -297,9 +313,9 @@ static void* __fastcall TraceTargetList(void* manager,void*,int objectId){
         }
         char msg[240]={};
         sprintf_s(msg,sizeof(msg),
-          "TARGET_LIST id=%d count=%u original=%u clone=%u caller_rva=0x%lx total=%ld",
+          "TARGET_LIST id=%d count=%u original=%u clone=%u caller_rva=0x%lx site_calls=%ld total=%ld",
           objectId,count,hasOriginal?1:0,hasClone?1:0,
-          static_cast<unsigned long>(SourceRva(caller)),n);
+          static_cast<unsigned long>(rva),siteCalls,total);
         Log(msg);
     }
     return result;
