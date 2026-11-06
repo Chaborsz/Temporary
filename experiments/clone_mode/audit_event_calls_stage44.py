@@ -18,8 +18,7 @@ for rva in (0x1533a7,0x147087,0x14725e,0x153826,0x13e691):
  raw=pe.__data__[pe.get_offset_from_rva(va-54):][:135]
  ins=list(md.disasm(raw,va-54))
  print("S44_SITE_DISASM",hex(rva)," | ".join(f"{hex(x.address)} {x.mnemonic} {x.op_str}" for x in ins)[:4800])
-reloc={blk.VirtualAddress+entry.rva-blk.VirtualAddress
-       for blk in getattr(pe,"DIRECTORY_ENTRY_BASERELOC",[])
+reloc={entry.rva for blk in getattr(pe,"DIRECTORY_ENTRY_BASERELOC",[])
        for entry in blk.entries if entry.type==pefile.RELOCATION_TYPE["IMAGE_REL_BASED_HIGHLOW"]}
 for va in (0x549980,0x546470):
  rva=va-b
