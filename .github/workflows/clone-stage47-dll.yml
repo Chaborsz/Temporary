@@ -1,0 +1,232 @@
+name: Clone mode Stage47 — Endurance x86 integrated TEST
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "experiments/clone_mode/endurance_clone_stage47.cpp"
+      - "experiments/clone_mode/test_clone_stage47.cpp"
+      - "experiments/clone_mode/README_CLONE_STAGE47.md"
+      - ".github/workflows/clone-stage47-dll.yml"
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build x86 integrated version.dll and isolated native tests
+        shell: cmd
+        run: |
+          for /f "delims=" %%V in ('"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath') do @set "VSROOT=%%V"
+          if not defined VSROOT exit /b 1
+          call "%VSROOT%\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x64
+          if errorlevel 1 exit /b 2
+          mkdir dist
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /LD /Fe:dist\version.dll experiments\clone_mode\endurance_clone_stage47.cpp /link /DEF:cheats\endurance\dll\version_proxy.def /OUT:dist\version.dll
+          if errorlevel 1 exit /b 3
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /Fe:dist\proxy_smoke.exe cheats\endurance\dll\proxy_smoke.cpp /link /SUBSYSTEM:CONSOLE
+          if errorlevel 1 exit /b 4
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /Fe:dist\clone_stage47_test.exe experiments\clone_mode\test_clone_stage47.cpp /link /SUBSYSTEM:CONSOLE
+          if errorlevel 1 exit /b 5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Exact canonical EXE, native spawn/delete API and 15 ASLR-safe guarded hook prologues
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check pefile==2024.8.26
+          @'
+          import pefile,hashlib
+          fn='cheats/endurance/input/player.exe'
+          assert hashlib.sha256(open(fn,'rb').read()).hexdigest()=='02a59baab7a4c941f9a01f485082396d61e750a41dc955cff895bef5395441ea'
+          game=pefile.PE(fn)
+          assert game.FILE_HEADER.Machine==0x14c and game.OPTIONAL_HEADER.ImageBase==0x400000
+          checks={
+            0x6ab90: bytes.fromhex('55 8b ec 83 e4 f8'),
+            0x18b380: bytes.fromhex('55 8b ec 53 8b d9'),
+            0x18b5c0: bytes.fromhex('55 8b ec 83 e4 f8'),
+          }
+          checks[0x11a020]=bytes.fromhex('53 8b dc 83 ec 08')
+          for rva,expected in checks.items():
+            got=game.__data__[game.get_offset_from_rva(rva):][:len(expected)]
+            assert got==expected, (hex(rva),got.hex())
+            print('CLONE_HOOK_PREIMAGE_PASS',hex(rva))
+          exports={game.OPTIONAL_HEADER.ImageBase+s.address:(s.name or b'').decode('utf-8','replace') for s in game.DIRECTORY_ENTRY_EXPORT.symbols}
+          methods={
+            0x53fcf0:'execActionObjectCreateForScript',
+            0x5d32d0:'getInstance@GameManager',
+            0x5e8470:'getTargetObjectByInstanceId',
+            0x58b380:'addObject@SceneLayer',
+            0x58b5c0:'removeObject@SceneLayer',
+            0x527d50:'getPosition@Object',
+          }
+          for va,needle in methods.items():
+            assert needle in exports.get(va,''),(hex(va),exports.get(va))
+          # Identical COMDAT folding gives multiple methods the same RVA.
+          # These trivial getters share entry addresses with other getters.
+          for va,expected in {
+            0x4270e0: bytes.fromhex('8b8190020000c3'),
+            0x4297c0: bytes.fromhex('8b81b8020000c3'),
+          }.items():
+            got=game.__data__[game.get_offset_from_rva(va-0x400000):][:len(expected)]
+            assert got==expected,(hex(va),got.hex())
+          print('CLONE_NATIVE_GETTER_BYTES_PASS')
+          # ObjectMovement::move has a distinct six-byte prologue and 
+          # owner pointer at movement+0x18 (see Stage29/30 audit).
+          moved=game.__data__[game.get_offset_from_rva(0x11a020):][:6]
+          assert moved==bytes.fromhex('53 8b dc 83 ec 08'),moved.hex()
+          print('CLONE_STAGE47_MOVEMENT_ENTRY_PASS',moved.hex())
+          # Scene::getObjectPlayer is a native, canonical x86 thiscall.
+          va=0x597780
+          exports={game.OPTIONAL_HEADER.ImageBase+x.address:
+            (x.name or b'').decode('ascii','replace')
+            for x in game.DIRECTORY_ENTRY_EXPORT.symbols}
+          assert 'getObjectPlayer@Scene@agtk' in exports.get(va,''),exports.get(va)
+          getter=game.__data__[game.get_offset_from_rva(va-0x400000):][:8]
+          assert getter==bytes.fromhex('55 8b ec 8b 01 83 ec 08'),getter.hex()
+          print('CLONE_STAGE47_SCENE_PLAYER_GETTER_PASS',hex(va))
+          extraPrologues={
+            0x197780:bytes.fromhex('55 8b ec 8b 01 83 ec 08'),
+            0x19be80:bytes.fromhex('55 8b ec 83 e4 f8'),
+            0x1e8470:bytes.fromhex('55 8b ec 8b 01 53')
+          }
+          for rva,pattern in extraPrologues.items():
+            got=game.__data__[game.get_offset_from_rva(rva):][:len(pattern)]
+            assert got==pattern,(hex(rva),got.hex())
+            print('CLONE_STAGE47_READONLY_RESOLVER_PREIMAGE_PASS',hex(rva))
+          victimPrologues={
+            0x1e8500:bytes.fromhex('55 8b ec 51 8b 01'),
+            0x12f760:bytes.fromhex('55 8b ec 83 e4 f8'),
+            0x6c670:bytes.fromhex('55 8b ec 83 e4 c0')
+          }
+          for rva,prefix in victimPrologues.items():
+            got=game.__data__[game.get_offset_from_rva(rva):][:len(prefix)]
+            assert got==prefix,(hex(rva),got.hex())
+            print('STAGE47_VICTIM_API_PROLOGUE_PASS',hex(rva))
+
+
+          # Per-instance PlayObjectData::setControllerId(int) and Object::getControllerId
+          # (verified in full disassembly; clone must not alter original PlayObjectData).
+          for rva,expected in {
+            0x128aa0: bytes.fromhex('558bec83e4f85156'),
+            0x31a60: bytes.fromhex('8b8110030000c3'),
+          }.items():
+            got=game.__data__[game.get_offset_from_rva(rva):][:len(expected)]
+            assert got==expected,(hex(rva),got.hex())
+          print('CLONE_STAGE47_CONTROLLER_API_PROLOGUE_PASS')
+          nativeActionPrologues={
+            0x14d420:bytes.fromhex('55 8b ec 51 8b 41 50'),
+            0x148530:bytes.fromhex('55 8b ec 83 ec 18'),
+            0x149980:bytes.fromhex('55 8b ec 6a ff 68 9c ca 8b 00'),
+            0x146470:bytes.fromhex('55 8b ec 6a ff 68 94 c8 8b 00'),
+            0x1401a0:bytes.fromhex('53 8b dc 83 ec 08')
+          }
+          for rva,expected in nativeActionPrologues.items():
+            got=game.__data__[game.get_offset_from_rva(rva):][:len(expected)]
+            assert got==expected,(hex(rva),got.hex())
+            print('STAGE47_NATIVE_EVENT_ACTION_PROLOGUE_PASS',hex(rva))
+          # The script/variable SEH push-immediate at RVA+6 is
+          # IMAGE_REL_BASED_HIGHLOW and relocates at actual process load.
+          game.parse_data_directories(directories=[
+            pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_BASERELOC']])
+          fixups={entry.rva for block in game.DIRECTORY_ENTRY_BASERELOC
+                  for entry in block.entries
+                  if entry.type==pefile.RELOCATION_TYPE['IMAGE_REL_BASED_HIGHLOW']}
+          assert 0x149986 in fixups and 0x146476 in fixups
+          for rva,raw_address in ((0x149980,0x8bca9c),(0x146470,0x8bc894)):
+            original=game.__data__[game.get_offset_from_rva(rva):][:10]
+            assert original[:6]==bytes.fromhex('55 8b ec 6a ff 68')
+            assert int.from_bytes(original[6:10],'little')==raw_address
+            for relocated_base in (0x400000,0x10000000):
+              expected=relocated_base+(raw_address-0x400000)
+              assert expected-(relocated_base)==raw_address-0x400000
+          print('STAGE47_ASLR_GUARD_EXPECTATION_PASS')
+
+
+          print('CLONE_NATIVE_METHOD_SYMBOLS_PASS',len(methods))
+          dll=pefile.PE('dist/version.dll')
+          assert dll.is_dll() and dll.FILE_HEADER.Machine==0x14c
+          forward={s.name.decode('ascii') for s in dll.DIRECTORY_ENTRY_EXPORT.symbols if s.name}
+          assert len(forward)==10 and {'GetFileVersionInfoW','GetFileVersionInfoSizeW','VerQueryValueW'}<=forward
+          source=open("experiments/clone_mode/endurance_clone_stage47.cpp",encoding="utf-8").read()
+          assert "VK_F6" not in source and "VK_F7" not in source
+          assert "VK_F9" in source and "VK_F10" in source
+          assert "VK_CONTROL" not in source and "VK_SHIFT" not in source
+          assert "ChordEdge(f9,g_prevF9)" in source
+          assert "if(id==2047 && object==nullptr)" in source
+          assert "original(variable,0.0)" in source
+          assert "CheckCloneSeparateData(g_playerObject,g_clonedObject" in source
+          assert "CLONE_MOVEMENT_GATE_READY" in source
+          assert "owner==g_clonedObject && g_cloneInstance>0" in source
+          assert "return original(movement,output,deltaSeconds)" in source
+          assert "SetPlayControllerId" not in source
+          assert "ReacquirePlayerForScene(scene)" in source
+          assert "GameFn<GetScenePlayerObject>(0x197780)" in source
+          assert "PLAYER_REMOVED_BY_ENGINE: actor references cleared; game thread retained." in source
+          assert "AdoptScenePlayer(void* scene,void* actor)" in source
+          assert "TARGET_TRACE_READY: read-only resolver tracing" in source
+          assert "RecordTargetLookup(1,instanceId,ret,scene,caller)" in source
+          assert "RecordTargetLookup(2,instanceId,ret,g_cloneScene,caller)" in source
+          assert "return ret;" in source
+          assert "TraceTargetList(" in source
+          assert "TraceDamaged(" in source
+          assert "TraceAddHp(" in source
+          assert "EVENT_EFFECT_TRACE_READY" in source
+          assert "return original(play,amount);" in source
+          assert "return result;" in source
+          assert "ObjectAction::getTargetObjectInstanceId" in source
+          assert "TraceActionTarget(" in source
+          assert "TraceActionExec(" in source
+          assert "TraceScriptExec(" in source
+          assert "TraceVarExec(" in source
+          assert "TraceObjectChange(" in source
+          assert "return selected;" in source
+          assert "return fn(action,command);" in source
+          assert "fn(action,command);" in source
+          assert "EVENT_ACTION_TRACE_READY" in source
+          assert "CLONE_TARGET_REDIRECT owner=clone" in source
+          assert 'VARIABLE_WRITE id=%lu owner=%s' in source
+          assert 'TraceVariableWrite(variable,id,object,requested);' in source
+          assert 'owner_field40c=%d' in source
+          assert 'VariableOwnerKind(const void* owner)' in source
+          assert 'g_variableTrace[1024]' in source
+          print('STAGE47_VARIABLE_WRITE_TRACE_SCOPE_PASS')
+          assert "EventActionOwner(action)==g_clonedObject" in source
+          assert "selected==g_playerObject && a>0 && b==2" in source
+          assert "return g_clonedObject;" in source
+          assert "imageBase+0x4bca9c" in source and "imageBase+0x4bc894" in source
+          assert "memcpy(scriptExecBytes+6" in source
+          assert "memcpy(varExecBytes+6" in source
+          assert "EventActionOwner(" in source
+          print("STAGE47_CLONE_OWNER_ONLY_REDIRECT_SOURCE_PASS")
+          print("STAGE47_ACTION_OBSERVE_PLUS_SCOPED_REDIRECT_PASS")
+          print("STAGE47_VICTIM_MONITOR_SCOPE_PASS read_only")
+          print("CLONE_STAGE47_GLOBAL_TARGET_RESOLVERS_UNCHANGED_PASS")
+          print("CLONE_STAGE47_SCENE_REACQUIRE_SOURCE_PASS")
+
+          print("CLONE_STAGE47_FILTER_SCOPE_PASS clone_only_move plus Endurance")
+          print("CLONE_STAGE47_INPUT_KEYS_PASS F9 F10 no modifiers")
+          print('CLONE_DLL_PE32_PROXY_EXPORTS_PASS',len(forward))
+          '@ | python -
+      - name: Validate VERSION forwarding and selective cloning mock behavior on Windows
+        shell: cmd
+        run: |
+          cd dist
+          proxy_smoke.exe
+          if errorlevel 1 exit /b 1
+          clone_stage47_test.exe
+          if errorlevel 1 exit /b 2
+          findstr /C:"GUARD_FAIL" EnduranceCloneStage47.log
+          if errorlevel 1 exit /b 3
+          echo CLONE_STAGE47_UNIT_TEST_PASS
+      - name: Upload TEST DLL and safety instructions
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Endurance-CloneMode-F9Toggle-F10Remove-TEST-${{ github.run_id }}
+          path: |
+            dist/version.dll
+            experiments/clone_mode/README_CLONE_STAGE47.md
+          retention-days: 14
+          if-no-files-found: error
