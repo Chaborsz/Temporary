@@ -26,18 +26,11 @@ static bool CheckSet(uint32_t id,bool hasOwner,double requested,double expected)
     return std::fabs(lastValue-expected)<0.000001 &&
            std::fabs(result-(expected+0.125))<0.000001;
 }
-static int controllerSetCalls=0;
-static void __fastcall FakeControllerSet(void* play,void*,int id){
-    ++controllerSetCalls;
-    *reinterpret_cast<int*>(static_cast<BYTE*>(play)+0x20)=id;
-}
-static void __fastcall FakeControllerNoChange(void*,void*,int){++controllerSetCalls;}
 static int __fastcall FakeControllerGet(void* obj,void*){
     void* play=*reinterpret_cast<void**>(static_cast<BYTE*>(obj)+0x310);
     if(!play)return -1;
     return *reinterpret_cast<int*>(static_cast<BYTE*>(play)+0x20);
 }
-
 static int movementRealCalls=0;
 static GameVec2* __fastcall MockMovement(void*,void*,GameVec2* output,float delta){
     ++movementRealCalls;
@@ -79,35 +72,27 @@ int main(){
     *reinterpret_cast<uint32_t*>(playerData+0x18)=1;
     *reinterpret_cast<void**>(clone+0x28c)=cloneData;
     *reinterpret_cast<uint32_t*>(cloneData+0x18)=1;
-    // Controller-ID isolation must modify only clone-owned PlayObjectData.
+    // Original and clone remain separate without changing either controller.
     BYTE playerRuntime[0x80]={},cloneRuntime[0x80]={};
     *reinterpret_cast<void**>(player+0x310)=playerRuntime;
     *reinterpret_cast<void**>(clone+0x310)=cloneRuntime;
-    *reinterpret_cast<int*>(playerRuntime+0x20)=0;
-    *reinterpret_cast<int*>(cloneRuntime+0x20)=0;
-    if(!DisableCloneController(player,clone,reinterpret_cast<SetPlayControllerId>(&FakeControllerSet),reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 30;
-    if(*reinterpret_cast<int*>(playerRuntime+0x20)!=0 ||
-       *reinterpret_cast<int*>(cloneRuntime+0x20)!=-1 || controllerSetCalls!=1)return 31;
-    *reinterpret_cast<void**>(clone+0x310)=playerRuntime;
-    if(DisableCloneController(player,clone,reinterpret_cast<SetPlayControllerId>(&FakeControllerSet),reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 32;
-    *reinterpret_cast<void**>(clone+0x310)=cloneRuntime;
-    *reinterpret_cast<int*>(cloneRuntime+0x20)=0;
-    if(DisableCloneController(player,clone,reinterpret_cast<SetPlayControllerId>(&FakeControllerNoChange),reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 33;
-    if(*reinterpret_cast<int*>(cloneRuntime+0x20)!=0 ||
-       *reinterpret_cast<int*>(playerRuntime+0x20)!=0)return 34;
     *reinterpret_cast<int*>(playerRuntime+0x20)=-1;
-    *reinterpret_cast<int*>(cloneRuntime+0x20)=0;
-    // Real user log: original controller == -1; this is not a reason to
-    // destroy a newly created clone. The setter still must not alter original.
-    if(!DisableCloneController(player,clone,reinterpret_cast<SetPlayControllerId>(&FakeControllerSet),reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 35;
+    *reinterpret_cast<int*>(cloneRuntime+0x20)=-1;
+    if(!CheckCloneSeparateData(player,clone,
+      reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 30;
     if(*reinterpret_cast<int*>(playerRuntime+0x20)!=-1 ||
-       *reinterpret_cast<int*>(cloneRuntime+0x20)!=-1)return 36;
-    // If both were -1, preserve the newly created clone and mark
-    // independence as unproven, not an automatic creation failure.
-    if(!DisableCloneController(player,clone,reinterpret_cast<SetPlayControllerId>(&FakeControllerSet),reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 37;
-    *reinterpret_cast<int*>(playerRuntime+0x20)=0;
-    std::puts("STAGE31_NEGATIVE_ORIGINAL_ACCEPTED_PASS");
-    std::puts("STAGE31_INDEPENDENT_CONTROLLER_PASS isolated_clone_unmapped_original_unchanged");
+       *reinterpret_cast<int*>(cloneRuntime+0x20)!=-1)return 31;
+    *reinterpret_cast<void**>(clone+0x310)=playerRuntime;
+    if(CheckCloneSeparateData(player,clone,
+      reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 32;
+    *reinterpret_cast<void**>(clone+0x310)=cloneRuntime;
+    *reinterpret_cast<int*>(playerRuntime+0x20)=1;
+    *reinterpret_cast<int*>(cloneRuntime+0x20)=3;
+    if(!CheckCloneSeparateData(player,clone,
+      reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 33;
+    if(*reinterpret_cast<int*>(playerRuntime+0x20)!=1 ||
+       *reinterpret_cast<int*>(cloneRuntime+0x20)!=3)return 34;
+    std::puts("STAGE31_SEPARATE_RUNTIME_DATA_PASS no-controller-mutation");
     // Native ObjectMovement::move by-value cocos2d::Vec2 (hidden sret) ABI tests.
     g_trampolineMove=reinterpret_cast<BYTE*>(&MockMovement);
     BYTE originalMover[0x40]={},cloneMover[0x40]={};
