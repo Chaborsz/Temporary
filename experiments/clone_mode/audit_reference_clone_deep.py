@@ -44,7 +44,7 @@ def main():
         for vk,vv in v.items():
          if vk in ("variableObjectId","switchObjectId","variableQualifierId","switchQualifierId","targetObjectId","objectId"):
           refs[(str(oid),str(aid),str(vk),str(vv))]+=1
-    if oid in (1,19,27,72,74) and (matched or oid in (19,72,74) or (oid==27 and aid in (40,41,44,45,54,55,59,60,61,62,63,70,71,72,116,117,123,124,130)) or (oid==1 and aid in (3,4,117,127,128,162,169,170,328,330,331,332,334,339))):
+    if oid in (1,19,27,72,74) and (matched or oid in (19,72,74) or (oid==27 and aid in (40,41,44,45,48,54,55,59,60,61,62,63,70,71,72,116,117,123,124,130)) or (oid==1 and aid in (3,4,117,127,128,162,169,170,328,330,331,332,334,339))):
      all_actions.append({"object_id":oid,"id":aid,"name":str(name)[:160],"commands_total":len(commands),
       "commands":[fields(z) for z in commands[:18] if isinstance(z,dict)]})
    if oid in (1,19,27,72,74):
@@ -70,7 +70,7 @@ def main():
  for z in all_actions:
   if z["object_id"]==1:
    print("PLAYER_ACTION",z["id"],repr(z["name"]),"commands",z["commands_total"])
-   if z["id"] in (3,4,117,128,162,169,170,330,331,332):
+   if z["id"] in (3,4,117,128,162,169,170,328,330,331,332):
     for cmd in z["commands"][:12]:print("  PLAYER_COMMAND",json.dumps(cmd,ensure_ascii=False,default=str)[:1300])
  print("=== OBJECT 27: CLONE/PROJECTILE ACTIONS ===")
  for z in all_actions:
@@ -82,11 +82,11 @@ def main():
  for z in all_actions:
   if z["object_id"] in (19,72,74):
    print("CLONE_ENTITY_ACTION",z["object_id"],z["id"],repr(z["name"]),"commands",z["commands_total"])
-   if z["id"] in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20) or KEYWORD.search(z["name"]):
+   if z["id"] in (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,25,30,33,35,77,78,81,83,85,92,93) or KEYWORD.search(z["name"]):
     for cmd in z["commands"][:8]:print("  CLONE_ENTITY_COMMAND",json.dumps(cmd,ensure_ascii=False,default=str)[:1050])
  print("=== OBJECT 27 ACTION CHAIN EXTRA ===")
  for z in all_actions:
-  if z["object_id"]==27 and z["id"] in (41,44,45,54,55,59,60,61,71,72,123,124,130):
+  if z["object_id"]==27 and z["id"] in (41,44,45,48,54,55,59,60,61,71,72,123,124,130):
    print("MIRROR_ACTION",z["id"],repr(z["name"]),"commands",z["commands_total"])
    for cmd in z["commands"][:8]:print("  MIRROR_COMMAND",json.dumps(cmd,ensure_ascii=False,default=str)[:850])
  print("=== OBJECT CREATES INTO PLAYER 1 OR OBJECT 27 ===")
