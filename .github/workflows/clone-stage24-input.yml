@@ -5,6 +5,7 @@ on:
     paths:
       - "experiments/clone_mode/audit_input_stage24.py"
       - "experiments/clone_mode/audit_controller_stage25.py"
+      - "experiments/clone_mode/audit_controller_stage26.py"
       - ".github/workflows/clone-stage24-input.yml"
 permissions:
   contents: read
@@ -36,7 +37,7 @@ jobs:
           print('STAGE24_PROJECT_READY')
           PY
       - name: Audit player input and keyboard function bindings
-        run: python experiments/clone_mode/audit_controller_stage25.py
+        run: python experiments/clone_mode/audit_controller_stage26.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
