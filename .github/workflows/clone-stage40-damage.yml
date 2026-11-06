@@ -1,0 +1,20 @@
+name: Clone Stage40 - victim-side damage and action audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "experiments/clone_mode/audit_damage_stage40.py"
+      - ".github/workflows/clone-stage40-damage.yml"
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check pefile==2024.8.26 capstone==5.0.6
+      - run: python experiments/clone_mode/audit_damage_stage40.py
