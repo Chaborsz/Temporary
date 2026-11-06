@@ -35,15 +35,15 @@ with project.open("rb") as f:
   selected.append(oid)
   print("S45_OBJECT",json.dumps({"id":oid,"name":entry.get("name"),"keys":list(entry)[:70],
       "operatable":entry.get("operatable"),"objectGroup":entry.get("objectGroup"),
-      "actionListLength":len(entry.get("actionList",[]))},ensure_ascii=False))
+      "actionListLength":len(entry.get("actionList",[]))},ensure_ascii=False,default=str))
   for key,value in entry.items():
    if isinstance(value,list):
     print("S45_LIST",oid,key,"count",len(value),"first_type",type(value[0]).__name__ if value else "-")
    elif isinstance(value,dict) and any(x in key.lower() for x in ("action","link","condition","variable","switch","player","collision")):
     print("S45_MAP",oid,key,brief(value))
   for a in entry.get("actionList",[])[:7]:
-   print("S45_ACTION",oid,json.dumps(show_command(oid,a),ensure_ascii=False)[:6000])
+   print("S45_ACTION",oid,json.dumps(show_command(oid,a),ensure_ascii=False,default=str)[:6000])
   for key,v in entry.items():
    if "actionLink" in key and isinstance(v,list):
-    for x in v[:6]:print("S45_LINK",oid,json.dumps(brief(x),ensure_ascii=False)[:2400])
+    for x in v[:6]:print("S45_LINK",oid,json.dumps(brief(x),ensure_ascii=False,default=str)[:2400])
  print("STAGE45_GAME_OBJECT_IDS_FOUND",selected)
