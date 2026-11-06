@@ -5,6 +5,7 @@ on:
     paths:
       - "experiments/clone_mode/endurance_clone_stage44.cpp"
       - "experiments/clone_mode/test_clone_stage44.cpp"
+      - "experiments/clone_mode/README_CLONE_STAGE44.md"
       - ".github/workflows/clone-stage44-dll.yml"
 permissions:
   contents: read
