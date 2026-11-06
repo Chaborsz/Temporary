@@ -1,0 +1,20 @@
+name: Clone Stage49 — targeted native event routing preflight
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "experiments/clone_mode/audit_event_stage49.py"
+      - ".github/workflows/clone-stage49-audit.yml"
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pefile==2024.8.26 capstone==5.0.6
+      - run: python experiments/clone_mode/audit_event_stage49.py
