@@ -47,7 +47,7 @@ jobs:
           set -euo pipefail
           mkdir -p /tmp/reference analysis-results/clone-reference
           if [[ "$EVENT_KIND" == "push" ]]; then
-            TAG="fobs-build29-endurance-input"; ASSET="project_data.zip"; KIND="ENDURANCE_SELFTEST"
+            TAG="fobs-reference-clone-input"; ASSET="project_decrypted.7z"; KIND="NEW_REFERENCE_GAME"
           else
             TAG="${INPUT_TAG:-fobs-reference-clone-input}"; ASSET="project_decrypted.7z"; KIND="NEW_REFERENCE_GAME"
           fi
@@ -124,7 +124,7 @@ jobs:
           print("NATIVE_SYMBOL_COMPARISON_PASS shared=",len(both))
           PY
       - name: Rizin native reference probe
-        if: steps.data.outputs.ready == 'true' && steps.data.outputs.kind == 'NEW_REFERENCE_GAME' && inputs.deep_native
+        if: steps.data.outputs.ready == 'true' && steps.data.outputs.kind == 'NEW_REFERENCE_GAME' && (github.event_name == 'push' || inputs.deep_native)
         continue-on-error: true
         shell: bash
         env:
@@ -139,8 +139,13 @@ jobs:
           "$RZ" -q -c 'iI; iE; q' "$EXE" > analysis-results/clone-reference/RIZIN_EXPORTS.txt
           "$RZ" -q -c 'aaa; afl; q' "$EXE" > analysis-results/clone-reference/RIZIN_FUNCTIONS.txt
           echo RIZIN_REFERENCE_PASS
+      - uses: actions/setup-java@v4
+        if: steps.data.outputs.ready == 'true' && steps.data.outputs.kind == 'NEW_REFERENCE_GAME'
+        with:
+          distribution: temurin
+          java-version: '21'
       - name: Ghidra headless reference probe
-        if: steps.data.outputs.ready == 'true' && steps.data.outputs.kind == 'NEW_REFERENCE_GAME' && inputs.deep_native
+        if: steps.data.outputs.ready == 'true' && steps.data.outputs.kind == 'NEW_REFERENCE_GAME' && (github.event_name == 'push' || inputs.deep_native)
         continue-on-error: true
         shell: bash
         env:
