@@ -247,6 +247,7 @@ static volatile LONG g_cloneEnabled=0;
 static volatile LONG g_hotkeyPoll=0;
 static bool g_prevF9=false,g_prevF10=false;
 
+static const char* TargetName(void* object); // defined with the existing Stage41 victim helpers
 // Stage43 event action traces: log command owners and exact selected targets.
 // No mutation or return-value redirection. All native calls run unchanged.
 typedef void* (__thiscall *NativeActionTarget)(void*,int,int);
