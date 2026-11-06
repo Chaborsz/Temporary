@@ -455,11 +455,10 @@ static unsigned RouteArrayCount(void* result,bool& orig,bool& clone){
     }
     return count;
 }
-static void* TraceActionObjectArray(void* action,int a,int b,int kind){
+static void* TraceActionObjectArray(void* action,int a,int b,int kind,void* caller){
     NativeActionObjectArray original=reinterpret_cast<NativeActionObjectArray>(
        kind==0?g_trampolineByObjectId:g_trampolineByGroup);
     if(!original)return nullptr;
-    void* caller=_ReturnAddress();
     void* result=original(action,a,b);
     if(!EventTraceActive())return result;
     void* owner=EventActionOwner(action);
@@ -479,17 +478,16 @@ static void* TraceActionObjectArray(void* action,int a,int b,int kind){
     return result;
 }
 static void* __fastcall TraceActionById(void* action,void*,int a,int b){
-    return TraceActionObjectArray(action,a,b,0);
+    return TraceActionObjectArray(action,a,b,0,_ReturnAddress());
 }
 static void* __fastcall TraceActionByGroup(void* action,void*,int a,int b){
-    return TraceActionObjectArray(action,a,b,1);
+    return TraceActionObjectArray(action,a,b,1,_ReturnAddress());
 }
-static bool TraceActionCondition(void* action,void* data,int kind){
+static bool TraceActionCondition(void* action,void* data,int kind,void* caller){
     NativeLinkCondition original=reinterpret_cast<NativeLinkCondition>(
       kind==0?g_trampolineConditionHit:
       kind==1?g_trampolineConditionAttackTouched:g_trampolineConditionFound);
     if(!original)return false;
-    void* caller=_ReturnAddress();
     const bool ret=original(action,data);
     if(!EventTraceActive())return ret;
     void* owner=EventActionOwner(action);
@@ -512,13 +510,13 @@ static bool TraceActionCondition(void* action,void* data,int kind){
     return ret;
 }
 static bool __fastcall TraceConditionHit(void* action,void*,void* data){
-    return TraceActionCondition(action,data,0);
+    return TraceActionCondition(action,data,0,_ReturnAddress());
 }
 static bool __fastcall TraceConditionAttackTouched(void* action,void*,void* data){
-    return TraceActionCondition(action,data,1);
+    return TraceActionCondition(action,data,1,_ReturnAddress());
 }
 static bool __fastcall TraceConditionObjectFound(void* action,void*,void* data){
-    return TraceActionCondition(action,data,2);
+    return TraceActionCondition(action,data,2,_ReturnAddress());
 }
 
 typedef void* (__thiscall *NativeTargetList)(void*,int);
