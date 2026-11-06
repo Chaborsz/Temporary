@@ -1,0 +1,164 @@
+name: AGTK Reference Clone — static compare with Endurance
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release with NEW game's project_decrypted.7z"
+        required: false
+        type: string
+        default: fobs-reference-clone-input
+      deep_native:
+        description: "Run Rizin 0.9.1 and Ghidra 12.2"
+        required: false
+        type: boolean
+        default: true
+  push:
+    paths:
+      - experiments/clone_mode/audit_reference_clone.py
+      - .github/workflows/reference-clone-static-audit.yml
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Set up original Endurance analysis dependencies
+        run: |
+          set -euo pipefail
+          python -m pip install -q --no-cache-dir ijson==3.4.0 pefile==2024.8.26 capstone==5.0.6
+          sudo apt-get -qq update
+          sudo apt-get install -qy p7zip-full
+          python experiments/clone_mode/audit_reference_clone.py --self-test
+      - name: Download reference game asset from GitHub release
+        id: data
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT_KIND: ${{ github.event_name }}
+          INPUT_TAG: ${{ inputs.release_tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/reference analysis-results/clone-reference
+          if [[ "$EVENT_KIND" == "push" ]]; then
+            TAG="fobs-build29-endurance-input"; ASSET="project_data.zip"; KIND="ENDURANCE_SELFTEST"
+          else
+            TAG="${INPUT_TAG:-fobs-reference-clone-input}"; ASSET="project_decrypted.7z"; KIND="NEW_REFERENCE_GAME"
+          fi
+          echo "kind=$KIND" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$KIND" > analysis-results/clone-reference/INPUT_KIND.txt
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "REFERENCE_ARCHIVE_NOT_IN_GITHUB: create release $TAG with project_decrypted.7z" | tee analysis-results/clone-reference/INPUT_BLOCKER.txt
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          ASSETS="$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name')"
+          if ! grep -Fxq "$ASSET" <<< "$ASSETS"; then
+            if [[ "$KIND" == "NEW_REFERENCE_GAME" ]]; then
+              ASSET="$(grep -E '^project_decrypted.*\.(7z|zip)$' <<< "$ASSETS" | head -1 || true)"
+            fi
+          fi
+          if [[ -z "$ASSET" ]] || ! grep -Fxq "$ASSET" <<< "$ASSETS"; then
+            echo "REFERENCE_ARCHIVE_NOT_IN_GITHUB: missing project_decrypted.7z" | tee analysis-results/clone-reference/INPUT_BLOCKER.txt
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --pattern "$ASSET" --dir /tmp/reference --clobber
+          test -s "/tmp/reference/$ASSET"
+          sha256sum "/tmp/reference/$ASSET" | tee analysis-results/clone-reference/ARCHIVE_SHA256.txt
+          7z t "/tmp/reference/$ASSET" | tail -n 12
+          mkdir -p /tmp/reference/unpacked
+          7z x -y "/tmp/reference/$ASSET" -o/tmp/reference/unpacked >/dev/null
+          PROJECT="$(find /tmp/reference/unpacked -type f \( -iname 'project_decrypted.json' -o -iname 'project.json' \) | head -1)"
+          if [[ "$KIND" == "ENDURANCE_SELFTEST" ]]; then
+            EXE="cheats/endurance/input/player.exe"
+          else
+            EXE="$(find /tmp/reference/unpacked -type f -iname '*.exe' | head -1)"
+          fi
+          test -n "$PROJECT" && test -s "$PROJECT"
+          test -n "$EXE" && test -s "$EXE"
+          echo "project=$PROJECT" >> "$GITHUB_OUTPUT"
+          echo "exe=$EXE" >> "$GITHUB_OUTPUT"
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+          sha256sum "$PROJECT" "$EXE" | tee analysis-results/clone-reference/INPUT_SHA256.txt
+          echo "REFERENCE_INPUT_CONFIRMED $KIND"
+      - name: Streaming reference project & PE32 analysis
+        if: steps.data.outputs.ready == 'true'
+        shell: bash
+        env:
+          PROJECT: ${{ steps.data.outputs.project }}
+          EXE: ${{ steps.data.outputs.exe }}
+        run: |
+          set -euo pipefail
+          python experiments/clone_mode/audit_reference_clone.py --project "$PROJECT" --exe "$EXE" --out analysis-results/clone-reference
+          test -s analysis-results/clone-reference/summary.json
+          echo REFERENCE_AUDIT_PASS
+      - name: Compare native exports against canonical Endurance EXE
+        if: steps.data.outputs.ready == 'true'
+        shell: bash
+        env:
+          EXE: ${{ steps.data.outputs.exe }}
+        run: |
+          python - <<'PY'
+          import os,json,pefile,collections,hashlib
+          from pathlib import Path
+          a=Path("cheats/endurance/input/player.exe"); b=Path(os.environ["EXE"])
+          def exports(f):
+              pe=pefile.PE(str(f))
+              return {x.name.decode(errors="replace"):x.address for x in pe.DIRECTORY_ENTRY_EXPORT.symbols if x.name}
+          x=exports(a); y=exports(b); both=set(x)&set(y)
+          offsets=collections.Counter(y[k]-x[k] for k in both)
+          result={"baseline_size":a.stat().st_size,"reference_size":b.stat().st_size,
+              "identical_binary":hashlib.sha256(a.read_bytes()).digest()==hashlib.sha256(b.read_bytes()).digest(),
+              "shared_export_symbols":len(both),"only_reference":len(set(y)-set(x)),
+              "only_baseline":len(set(x)-set(y)),"rva_delta_modes":offsets.most_common(18),
+              "targeting_export_deltas":[{"name":k,"baseline_rva":hex(x[k]),"reference_rva":hex(y[k])}
+                for k in sorted(both) if any(q in k.lower() for q in ("getobject","target","collision","damaged","addhp","instance"))][:140]}
+          Path("analysis-results/clone-reference/compare_native_symbols.json").write_text(json.dumps(result,indent=2))
+          print("NATIVE_SYMBOL_COMPARISON_PASS shared=",len(both))
+          PY
+      - name: Rizin native reference probe
+        if: steps.data.outputs.ready == 'true' && steps.data.outputs.kind == 'NEW_REFERENCE_GAME' && inputs.deep_native
+        continue-on-error: true
+        shell: bash
+        env:
+          EXE: ${{ steps.data.outputs.exe }}
+        run: |
+          set -euo pipefail
+          curl --retry 2 -fLsS -o /tmp/rizin.tar.xz https://github.com/rizinorg/rizin/releases/download/v0.9.1/rizin-v0.9.1-static-x86_64.tar.xz
+          mkdir -p /tmp/rizin
+          tar -xf /tmp/rizin.tar.xz -C /tmp/rizin
+          RZ="$(find /tmp/rizin -type f -name rizin -perm /111 | head -1)"
+          test -x "$RZ"
+          "$RZ" -q -c 'iI; iE; q' "$EXE" > analysis-results/clone-reference/RIZIN_EXPORTS.txt
+          "$RZ" -q -c 'aaa; afl; q' "$EXE" > analysis-results/clone-reference/RIZIN_FUNCTIONS.txt
+          echo RIZIN_REFERENCE_PASS
+      - name: Ghidra headless reference probe
+        if: steps.data.outputs.ready == 'true' && steps.data.outputs.kind == 'NEW_REFERENCE_GAME' && inputs.deep_native
+        continue-on-error: true
+        shell: bash
+        env:
+          EXE: ${{ steps.data.outputs.exe }}
+        run: |
+          set -euo pipefail
+          curl --retry 2 -fLsS -o /tmp/ghidra.zip https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_12.2_build/ghidra_12.2_PUBLIC_20261016.zip
+          mkdir -p /tmp/ghidra /tmp/gp
+          unzip -q /tmp/ghidra.zip -d /tmp/ghidra
+          H="$(find /tmp/ghidra -type f -name analyzeHeadless | head -1)"
+          test -n "$H"
+          "$H" /tmp/gp ReferenceClone -import "$EXE" -analysisTimeoutPerFile 900 -max-cpu 2 -deleteProject > analysis-results/clone-reference/GHIDRA_HEADLESS.txt 2>&1
+          echo GHIDRA_REFERENCE_PASS
+      - name: Upload reports, do not upload full copyrighted game assets
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clone-reference-audit-${{ github.run_id }}
+          path: analysis-results/clone-reference/
+          retention-days: 14
+          if-no-files-found: warn
