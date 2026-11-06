@@ -257,10 +257,8 @@ static bool PlayerClassId1(void* object) {
     if(!data)return false;
     return *reinterpret_cast<uint32_t*>(static_cast<BYTE*>(data)+0x18)==1u;
 }
-static bool ReacquirePlayerForScene(void* scene) {
-    if(!scene)return false;
-    void* actor=GameFn<GetScenePlayerObject>(0x197780)(scene);
-    if(!actor || actor==g_clonedObject || !PlayerClassId1(actor)) {
+static bool AdoptScenePlayer(void* scene,void* actor) {
+    if(!scene || !actor || actor==g_clonedObject || !PlayerClassId1(actor)) {
         Log("PLAYER_REACQUIRE_PENDING: scene player not available or rejected.");
         return false;
     }
@@ -281,6 +279,11 @@ static bool ReacquirePlayerForScene(void* scene) {
         *reinterpret_cast<int*>(static_cast<BYTE*>(layer)+0x2b8));
     Log(line);
     return true;
+}
+static bool ReacquirePlayerForScene(void* scene) {
+    if(!scene)return false;
+    void* actor=GameFn<GetScenePlayerObject>(0x197780)(scene);
+    return AdoptScenePlayer(scene,actor);
 }
 static void CapturePlayer(void* object,void* layer) {
     if(!object||!layer||!PlayerClassId1(object))return;
