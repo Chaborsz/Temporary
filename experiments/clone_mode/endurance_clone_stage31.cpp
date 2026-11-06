@@ -201,42 +201,27 @@ typedef void (__thiscall *NativeDisappear)(void*,bool);
 // ObjectMovement::move(float) returns cocos2d::Vec2 by hidden sret pointer.
 // Machine entry: ECX=movement; [ESP+4]=Vec2* output; [ESP+8]=float delta.
 typedef GameVec2* (__thiscall *MovementOriginal)(void*,GameVec2*,float);
-typedef void (__thiscall *SetPlayControllerId)(void*,int);
 typedef int (__thiscall *GetObjectControllerId)(void*);
-static bool DisableCloneController(void* original,void* clone,
-                                   SetPlayControllerId setter,GetObjectControllerId getter){
-    if(!original||!clone||original==clone||!setter||!getter){
-        Log("CLONE_CONTROLLER_REFUSED: invalid distinct objects/callbacks.");return false;
+// The active player and newly created clone each need their own instance
+// data; controller IDs are NOT reliable evidence of physical movement input
+// in this game's scenes (both often report -1).
+static bool CheckCloneSeparateData(void* original,void* clone,
+                                  GetObjectControllerId getter){
+    if(!original||!clone||original==clone||!getter){
+        Log("CLONE_IDENTITY_REFUSED: object pointers invalid.");return false;
     }
     void* originalPlay=*reinterpret_cast<void**>(static_cast<BYTE*>(original)+0x310);
     void* clonePlay=*reinterpret_cast<void**>(static_cast<BYTE*>(clone)+0x310);
     if(!originalPlay||!clonePlay||originalPlay==clonePlay){
-        Log("CLONE_CONTROLLER_REFUSED: PlayObjectData missing or shared.");return false;
+        Log("CLONE_IDENTITY_REFUSED: runtime data missing or shared.");return false;
     }
-    const int origBefore=getter(original);
-    const int cloneBefore=getter(clone);
-    // A negative result is legitimate: Object::getControllerId first consults
-    // the object's operatable flag and can return -1 before reading system
-    // variable #22. It does not prove the original player is inactive.
-    if(origBefore<0){
-        Log("CLONE_CONTROLLER_ORIGINAL_NEGATIVE: continuing with per-instance checks.");
-    }
-    // Use the motor's own per-instance PlayObjectData::setControllerId.
-    // It assigns system variable ID22 only in the newly created object.
-    setter(clonePlay,-1);
-    const int cloneAfter=getter(clone);
-    const int origAfter=getter(original);
-    char line[180]={};
+    char line[170]={};
     sprintf_s(line,sizeof(line),
-      "CLONE_CONTROLLER_STATE original=%d->%d clone=%d->%d",
-      origBefore,origAfter,cloneBefore,cloneAfter);
+       "CLONE_IDENTITIES_SEPARATE original_controller=%d clone_controller=%d",
+       getter(original),getter(clone));
     Log(line);
-    if(cloneBefore==-1 && cloneAfter==-1){
-        Log("CLONE_CONTROLLER_NOOP_WARNING: cloned controller already -1; input independence unproven.");
-    }
-    return cloneAfter==-1 && origAfter==origBefore;
+    return true;
 }
-
 
 static void* g_playerObject=nullptr;
 static void* g_playerLayer=nullptr;
@@ -389,12 +374,12 @@ static void SpawnCloneOnGameThread(){
         }
     }
     g_cloneScene=scene;
-    // Disassociate just this clone from the player controller; preserve its
-    // own collision, event object identity, actions and scene registration.
-    if(!DisableCloneController(g_playerObject,g_clonedObject,
-        GameFn<SetPlayControllerId>(0x6c500),
+    // No mutation of controller IDs. Their -1 value is already shared by
+    // real protagonist and clone in the user's logs, so it cannot unlink input.
+    // Our per-instance ObjectMovement::move hook suppresses clone motion.
+    if(!CheckCloneSeparateData(g_playerObject,g_clonedObject,
         GameFn<GetObjectControllerId>(0x128aa0))) {
-        Log("CLONE_ISOLATION_FAILED: removing newly spawned copy.");
+        Log("CLONE_IDENTITY_FAILED: removing newly spawned copy.");
         if(g_clonedObject && g_clonedObject!=g_playerObject){
             void** vt=*reinterpret_cast<void***>(g_clonedObject);
             if(vt && vt[0x55c/4]) {
@@ -404,7 +389,7 @@ static void SpawnCloneOnGameThread(){
         }
         return;
     }
-    Log("CLONE_CONTROLLER_CHECK_PASS: original unchanged; clone movement gated by owner identity.");
+    Log("CLONE_MOVEMENT_GATE_READY: clone owned-movement suppressed, original untouched.");
     char msg[205]={};
     sprintf_s(msg,sizeof(msg),
       "CLONE_CREATED object_id=1 instance=%d x=%d y=%d layer=%d object_captured=%u",
@@ -602,7 +587,7 @@ static DWORD WINAPI Startup(LPVOID) {
                               removePrologue,sizeof(removePrologue),
                               reinterpret_cast<const void*>(&InterceptRemoveObject),
                               &g_trampolineRemove);
-    // AGTK ObjectMovement::move (VA 0x0051A020): first 7-byte instruction-aligned
+    // AGTK ObjectMovement::move (VA 0x0051A020): first 6-byte instruction-aligned
     // prologue is push ebx; mov ebx,esp; sub esp,8.
     const BYTE movementPrologue[6]={0x53,0x8b,0xdc,0x83,0xec,0x08};
     const bool moveOk=InstallHook("ObjectMovement::move",0x11a020,
