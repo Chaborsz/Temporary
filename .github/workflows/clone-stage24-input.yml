@@ -1,0 +1,45 @@
+name: Clone Stage24 — object input and F-key evidence
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "experiments/clone_mode/audit_input_stage24.py"
+      - ".github/workflows/clone-stage24-input.yml"
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install parsers
+        run: python -m pip install --disable-pip-version-check pefile==2024.8.26 capstone==5.0.6 ijson==3.4.0
+      - name: Use canonical project data once, without committing extracted assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/clone-control
+          gh release download fobs-build29-endurance-input --repo "$GITHUB_REPOSITORY" --pattern project_data.zip --dir /tmp/clone-control
+          python - <<'PY'
+          import zipfile
+          with zipfile.ZipFile('/tmp/clone-control/project_data.zip') as z:
+              info=z.getinfo('project_decrypted.json')
+              assert info.file_size==301997021
+              z.extract(info,'/tmp/clone-control')
+          print('STAGE24_PROJECT_READY')
+          PY
+      - name: Audit player input and keyboard function bindings
+        run: python experiments/clone_mode/audit_input_stage24.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: clone-stage24-input-report-${{ github.run_id }}
+          path: experiments/clone_mode/analysis/stage24-input-control.json
+          if-no-files-found: ignore
+          retention-days: 7
