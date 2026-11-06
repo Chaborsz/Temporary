@@ -75,18 +75,18 @@ int main(){
     *reinterpret_cast<void**>(clone+0x310)=cloneRuntime;
     *reinterpret_cast<int*>(playerRuntime+0x20)=0;
     *reinterpret_cast<int*>(cloneRuntime+0x20)=0;
-    if(!DisableCloneController(player,clone,&FakeControllerSet,&FakeControllerGet))return 30;
+    if(!DisableCloneController(player,clone,reinterpret_cast<SetPlayControllerId>(&FakeControllerSet),reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 30;
     if(*reinterpret_cast<int*>(playerRuntime+0x20)!=0 ||
        *reinterpret_cast<int*>(cloneRuntime+0x20)!=-1 || controllerSetCalls!=1)return 31;
     *reinterpret_cast<void**>(clone+0x310)=playerRuntime;
-    if(DisableCloneController(player,clone,&FakeControllerSet,&FakeControllerGet))return 32;
+    if(DisableCloneController(player,clone,reinterpret_cast<SetPlayControllerId>(&FakeControllerSet),reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 32;
     *reinterpret_cast<void**>(clone+0x310)=cloneRuntime;
     *reinterpret_cast<int*>(cloneRuntime+0x20)=0;
-    if(DisableCloneController(player,clone,&FakeControllerNoChange,&FakeControllerGet))return 33;
+    if(DisableCloneController(player,clone,reinterpret_cast<SetPlayControllerId>(&FakeControllerNoChange),reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 33;
     if(*reinterpret_cast<int*>(cloneRuntime+0x20)!=0 ||
        *reinterpret_cast<int*>(playerRuntime+0x20)!=0)return 34;
     *reinterpret_cast<int*>(playerRuntime+0x20)=-1;
-    if(DisableCloneController(player,clone,&FakeControllerSet,&FakeControllerGet))return 35;
+    if(DisableCloneController(player,clone,reinterpret_cast<SetPlayControllerId>(&FakeControllerSet),reinterpret_cast<GetObjectControllerId>(&FakeControllerGet)))return 35;
     *reinterpret_cast<int*>(playerRuntime+0x20)=0;
     std::puts("STAGE27_INDEPENDENT_CONTROLLER_PASS isolated_clone_unmapped_original_unchanged");
     InterceptAddObject(layer,nullptr,player);
