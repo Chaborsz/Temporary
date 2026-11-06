@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - experiments/clone_mode/audit_endurance_stage65.py
+      - experiments/clone_mode/audit_endurance_stage65_routes.py
       - .github/workflows/clone-stage65-class-audit.yml
 permissions:
   contents: read
@@ -48,6 +49,10 @@ jobs:
             --exe cheats/endurance/input/player.exe \
             --output analysis-results/clone-stage65 |
             tee analysis-results/clone-stage65/STAGE65_CONSOLE.txt
+          python experiments/clone_mode/audit_endurance_stage65_routes.py \
+            --project /tmp/stage65-original/unpacked/project_decrypted.json \
+            --out analysis-results/clone-stage65 |
+            tee analysis-results/clone-stage65/STAGE65_ROUTE_CONSOLE.txt
           test -s analysis-results/clone-stage65/STAGE65_CLASS_FEASIBILITY.json
       - name: Validate evidence and publish decision summary
         shell: bash
@@ -72,6 +77,14 @@ jobs:
             "## Existing Endurance definitions for those IDs"]
           for id in (19,27,74):
             notes.append(f"- ID {id}: {j[f'object_id_{id}_existing']}")
+          route=json.loads((o/"STAGE65_ROUTE_MATRIX_SUMMARY.json").read_text())
+          notes+=["", "## Inventory of script routing (non-equivalent reference types)",
+            f"- Total player ID1 references: {route['count_player_refs']}",
+            f"- Player-scope references by kind: {route['id1_field_categories']}",
+            f"- Critical variable command references: {route['critical_variable_commands']}",
+            "- See STAGE65_PLAYER_ID1_REFERENCES.csv and STAGE65_CRITICAL_VARIABLE_COMMANDS.csv for grounded migration scope.",
+            "- Explicit variable scope != native hit target; no blanket redirect can be justified.",
+            ""]
           notes+=["","## Consequence",
             "An independently typed clone needs a valid object-class definition, clone lifecycle/actions/colliders, and compatible enemy routing.",
             "Having a free numeric ID is not enough: native spawn resolves the real project class.",
