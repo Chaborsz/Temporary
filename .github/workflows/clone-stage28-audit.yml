@@ -1,0 +1,20 @@
+name: Clone Stage28 - controller path audit
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "experiments/clone_mode/audit_input_stage28.py"
+      - ".github/workflows/clone-stage28-audit.yml"
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check pefile==2024.8.26 capstone==5.0.6
+      - run: python experiments/clone_mode/audit_input_stage28.py
