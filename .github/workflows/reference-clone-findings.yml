@@ -39,6 +39,7 @@ jobs:
           sha256sum "$PROJECT" "$EXE" | tee analysis-results/clone-reference/INPUT_HASHES.txt
           python experiments/clone_mode/audit_reference_clone.py --project "$PROJECT" --exe "$EXE" --out analysis-results/clone-reference
           python experiments/clone_mode/audit_reference_clone_deep.py --project "$PROJECT" --out analysis-results/clone-reference
+          python experiments/clone_mode/audit_reference_clone_native_compare.py --new "$EXE" --old cheats/endurance/input/player.exe --out analysis-results/clone-reference
       - name: Print candidate evidence and comparison notes
         shell: bash
         run: |
