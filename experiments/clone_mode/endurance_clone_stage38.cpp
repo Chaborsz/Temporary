@@ -228,6 +228,17 @@ static bool CheckCloneSeparateData(void* original,void* clone,
 }
 
 static void* g_playerObject=nullptr;
+static void* g_playerLayer=nullptr;
+static void* g_playerScene=nullptr;
+static void* g_clonedObject=nullptr;
+static void* g_newClone=nullptr;
+static void* g_cloneScene=nullptr;
+static int g_cloneInstance=-1;
+static DWORD g_playerThread=0;
+static volatile LONG g_cloneBusy=0;
+static volatile LONG g_cloneEnabled=0;
+static volatile LONG g_hotkeyPoll=0;
+static bool g_prevF9=false,g_prevF10=false;
 typedef void* (__thiscall *NativePlayerLookup)(void*);
 typedef void* (__thiscall *NativeInstanceLookup)(void*,int,int,int);
 typedef void* (__thiscall *NativeTargetByInstance)(void*,int);
@@ -240,7 +251,7 @@ static void RecordTargetLookup(int kind,int requested,void* returned,void* scene
     InterlockedIncrement(&g_resolverTotals[kind]);
     const LONG caller=static_cast<LONG>(reinterpret_cast<uintptr_t>(returnAddress)-
                                       reinterpret_cast<uintptr_t>(GetModuleHandleW(nullptr)));
-    const LONG key=((caller & 0x3fffffff)<<2) | (kind+1);
+    const LONG key=((caller & 0x1fffffff)<<2) | (kind+1);
     if(!key)return;
     LONG count=0;
     for(unsigned i=0;i<72;++i){
@@ -283,17 +294,7 @@ static void* __fastcall TraceTargetByInstance(void* manager,void*,int instanceId
     return ret;
 }
 
-static void* g_playerLayer=nullptr;
-static void* g_playerScene=nullptr;
-static void* g_clonedObject=nullptr;
-static void* g_newClone=nullptr;
-static void* g_cloneScene=nullptr;
-static int g_cloneInstance=-1;
-static DWORD g_playerThread=0;
-static volatile LONG g_cloneBusy=0;
-static volatile LONG g_cloneEnabled=0;
-static volatile LONG g_hotkeyPoll=0;
-static bool g_prevF9=false,g_prevF10=false;
+
 static bool ChordEdge(bool current,bool& previous){const bool fired=current&&!previous;previous=current;return fired;}
 
 template<class T> static T GameFn(DWORD rva){
