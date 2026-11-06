@@ -1,0 +1,92 @@
+name: Stage65 Endurance original project — independent actor feasibility
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - experiments/clone_mode/audit_endurance_stage65.py
+      - .github/workflows/clone-stage65-class-audit.yml
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install 7-Zip and bounded static audit tools
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get -qq update
+          sudo apt-get install -y -qq 7zip
+          command -v 7z
+          python -m pip install -q --no-cache-dir ijson==3.4.0 pefile==2024.8.26 capstone==5.0.6
+      - name: Recover original Endurance project from existing input Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/stage65-original analysis-results/clone-stage65
+          gh release download fobs-build29-endurance-input --repo "$GITHUB_REPOSITORY" --pattern project_data.zip --dir /tmp/stage65-original --clobber
+          7z t /tmp/stage65-original/project_data.zip
+          7z x -y /tmp/stage65-original/project_data.zip -o/tmp/stage65-original/unpacked
+          test -s /tmp/stage65-original/unpacked/project_decrypted.json
+          test -s cheats/endurance/input/player.exe
+          sha256sum /tmp/stage65-original/unpacked/project_decrypted.json cheats/endurance/input/player.exe |
+            tee analysis-results/clone-stage65/INPUT_HASHES.txt
+          echo "STAGE65_ORIGINAL_PROJECT_INPUT_PASS"
+      - name: Analyze original actor ID space and project-controlled routing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python experiments/clone_mode/audit_endurance_stage65.py \
+            --project /tmp/stage65-original/unpacked/project_decrypted.json \
+            --exe cheats/endurance/input/player.exe \
+            --output analysis-results/clone-stage65 |
+            tee analysis-results/clone-stage65/STAGE65_CONSOLE.txt
+          test -s analysis-results/clone-stage65/STAGE65_CLASS_FEASIBILITY.json
+      - name: Validate evidence and publish decision summary
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          o=Path("analysis-results/clone-stage65")
+          j=json.loads((o/"STAGE65_CLASS_FEASIBILITY.json").read_text())
+          assert j["baseline"]["exe_sha256"]=="02a59baab7a4c941f9a01f485082396d61e750a41dc955cff895bef5395441ea"
+          assert j["objects"]>50 and j["actions"]>1000
+          notes=[
+            "# Stage65 — typed clone feasibility, original Endurance project",
+            "",
+            "This audit does not patch original game data, Endurance or Stage53.",
+            f"- Original project: {j['objects']} objects / {j['actions']} actions / {j['commands']} commands",
+            f"- Enemy/non-player object classes explicitly referencing player ID1: {j['other_actors_ref_player']}",
+            f"- Total explicit player target references: {j['player_ref_total']}",
+            f"- Player-ID1 object creation commands: {j['spawn_player_count']}",
+            "- Reference game clone IDs 19/27/74 are NOT portable by numeric ID.",
+            "",
+            "## Existing Endurance definitions for those IDs"]
+          for id in (19,27,74):
+            notes.append(f"- ID {id}: {j[f'object_id_{id}_existing']}")
+          notes+=["","## Consequence",
+            "An independently typed clone needs a valid object-class definition, clone lifecycle/actions/colliders, and compatible enemy routing.",
+            "Having a free numeric ID is not enough: native spawn resolves the real project class.",
+            "Do not transplant reference EXE RVAs or damaged ABI. Keep Stage53 core untouched until a complete, verifiable implementation exists.",
+            "",
+            "## Top explicit references to player ID1"]
+          for x in j["by_actor"][:28]:notes.append(f"- object {x['id']} ({x['name']}): {x['player_references']}")
+          (o/"STAGE65_FEASIBILITY_ES.md").write_text("\n".join(notes)+"\n",encoding="utf-8")
+          print("STAGE65_REPORT_PASS")
+          PY
+      - name: Upload all evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clone-stage65-feasibility-${{ github.run_id }}
+          path: analysis-results/clone-stage65/
+          retention-days: 14
+          if-no-files-found: warn
