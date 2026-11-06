@@ -3,7 +3,7 @@
 import argparse, collections, csv, hashlib, json
 from pathlib import Path
 
-HIGH=("clone","duplicate","duplication","decoy","分身","クローン","複製","コピー","影分身","残像")
+HIGH=("clone","clon","copy","copiar","duplicate","duplication","decoy","分身","クローン","複製","コピー","影分身","残像")
 LOW=("player","spawn","summon","damage","collision","attack","生成","召喚")
 KEYS=("objectid","instanceid","actionid","target","qualifier","commandtype","create","spawn","damage","hp","switch","variable")
 def sha(p):
