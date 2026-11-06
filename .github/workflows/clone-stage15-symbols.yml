@@ -6,6 +6,7 @@ on:
       - "experiments/clone_mode/audit_js_entrypoints.py"
       - "experiments/clone_mode/audit_spawn_abi.py"
       - "experiments/clone_mode/audit_spawn_abi18.py"
+      - "experiments/clone_mode/audit_lifecycle.py"
       - ".github/workflows/clone-stage15-symbols.yml"
 permissions:
   contents: read
@@ -22,6 +23,7 @@ jobs:
       - run: python experiments/clone_mode/audit_js_entrypoints.py
       - run: python experiments/clone_mode/audit_spawn_abi.py
       - run: python experiments/clone_mode/audit_spawn_abi18.py
+      - run: python experiments/clone_mode/audit_lifecycle.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
