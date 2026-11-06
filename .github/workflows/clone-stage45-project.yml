@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "experiments/clone_mode/audit_project_actors_stage45.py"
+      - "experiments/clone_mode/audit_action_targets_stage46.py"
       - ".github/workflows/clone-stage45-project.yml"
 permissions:
   contents: read
@@ -34,4 +35,4 @@ jobs:
           print('STAGE45_PROJECT_INPUT_PASS')
           PY
       - name: Event controller and character project data
-        run: python experiments/clone_mode/audit_project_actors_stage45.py
+        run: python experiments/clone_mode/audit_action_targets_stage46.py
