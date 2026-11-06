@@ -1,0 +1,72 @@
+name: Reference Clone — bounded findings in logs
+on:
+  push:
+    paths:
+      - .github/workflows/reference-clone-findings.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  findings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install parser and 7-Zip
+        run: |
+          set -euo pipefail
+          python -m pip install -q --no-cache-dir ijson==3.4.0 pefile==2024.8.26
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq p7zip-full
+          python experiments/clone_mode/audit_reference_clone.py --self-test
+      - name: Recover and verify uploaded reference game
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/cloneinput /tmp/cloneunpacked analysis-results/clone-reference
+          gh release download fobs-reference-clone-input --repo "$GITHUB_REPOSITORY" --pattern project_decrypted.7z --dir /tmp/cloneinput
+          7z t /tmp/cloneinput/project_decrypted.7z | tail -n 10
+          7z x -y /tmp/cloneinput/project_decrypted.7z -o/tmp/cloneunpacked >/dev/null
+          PROJECT="$(find /tmp/cloneunpacked -type f -name project_decrypted.json | head -1)"
+          EXE="$(find /tmp/cloneunpacked -type f -iname '*.exe' | head -1)"
+          test -s "$PROJECT" && test -s "$EXE"
+          sha256sum "$PROJECT" "$EXE" | tee analysis-results/clone-reference/INPUT_HASHES.txt
+          python experiments/clone_mode/audit_reference_clone.py --project "$PROJECT" --exe "$EXE" --out analysis-results/clone-reference
+      - name: Print candidate evidence and comparison notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("analysis-results/clone-reference/summary.json")
+          s=json.loads(p.read_text(encoding="utf-8"))
+          j=s["project"];e=s["exe"]
+          print("=== REFERENCE_PROJECT_FACTS ===")
+          print("project_size",j["size"],"project_sha256",j["sha256"])
+          print("exe_size",e["size"],"exe_sha256",e["sha256"],"machine",e["machine"])
+          print("objects",j["objects"],"actions",j["actions"],"clone_candidates",j["candidates"])
+          print("=== TOP_CLONE_OBJECTS ===")
+          for t in j["top"][:20]:
+              print("CLONE_OBJECT",json.dumps({"id":t["id"],"name":t["name"],"score":t["score"],
+                 "actions":t["actions"],"relevantActions":t.get("relevantActions",[])[:5]},
+                 ensure_ascii=False,default=str)[:1800])
+          print("=== NATIVE_EXPORTS ===")
+          for item in e["matchingExports"][:55]:
+              if any(z in item["name"].lower() for z in ("create","clone","copy","duplicate","damaged","addhp","targetobject","getobjectplayer","getobjectinstance","collision")):
+                  print("NATIVE",item["rva"],item["name"][:180])
+          print("EVIDENCE_EXTRACT_COMPLETE")
+          PY
+      - name: Upload independent evidence report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reference-clone-findings-${{ github.run_id }}
+          path: analysis-results/clone-reference/
+          retention-days: 14
+          if-no-files-found: warn
