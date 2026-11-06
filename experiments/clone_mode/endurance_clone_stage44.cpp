@@ -877,7 +877,7 @@ static bool InstallHook(const char* label,DWORD rva,const BYTE* expected,
     }
     InterlockedIncrement(&g_hookInstalled);
     char line[128]={};
-    sprintf_s(line,sizeof(line),"HOOK_INSTALLED %s RVA=0x%lx (read-only)",label,
+    sprintf_s(line,sizeof(line),"HOOK_INSTALLED %s RVA=0x%lx (guarded x86 hook)",label,
               static_cast<unsigned long>(rva));
     Log(line);
     return true;
