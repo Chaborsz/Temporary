@@ -1,0 +1,37 @@
+name: Clone Stage45 - inspect real event object project actions
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "experiments/clone_mode/audit_project_actors_stage45.py"
+      - ".github/workflows/clone-stage45-project.yml"
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check ijson==3.4.0
+      - name: Recover original project from user's prior release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/clone-control
+          gh release download fobs-build29-endurance-input --repo "$GITHUB_REPOSITORY" --pattern project_data.zip --dir /tmp/clone-control
+          python - <<'PY'
+          import zipfile
+          with zipfile.ZipFile('/tmp/clone-control/project_data.zip') as z:
+              info=z.getinfo('project_decrypted.json')
+              assert info.file_size==301997021
+              z.extract(info,'/tmp/clone-control')
+          print('STAGE45_PROJECT_INPUT_PASS')
+          PY
+      - name: Event controller and character project data
+        run: python experiments/clone_mode/audit_project_actors_stage45.py
