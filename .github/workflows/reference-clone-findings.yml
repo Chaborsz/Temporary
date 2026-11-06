@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - .github/workflows/reference-clone-findings.yml
+      - experiments/clone_mode/audit_reference_clone_deep.py
   workflow_dispatch:
 permissions:
   contents: read
