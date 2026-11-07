@@ -1,0 +1,25 @@
+name: Stage78 clone core source recovery
+on:
+  push:
+    paths:
+      - ".github/workflows/clone-stage78-source-export.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify exact baseline and package integration sources
+        run: |
+          test -s experiments/clone_mode/endurance_clone_stage49.cpp
+          test -s cheats/endurance/dll/version_proxy.def
+          sha256sum experiments/clone_mode/endurance_clone_stage49.cpp cheats/endurance/dll/version_proxy.def
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fobs-stage78-core-source-${{ github.run_id }}
+          path: |
+            experiments/clone_mode/endurance_clone_stage49.cpp
+            cheats/endurance/dll/version_proxy.def
+          retention-days: 10
