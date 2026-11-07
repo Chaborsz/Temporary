@@ -60,7 +60,7 @@ def main():
    if not isinstance(obj,dict):continue
    oid=obj.get("id");name=str(obj.get("name",""))[:150]
    acts=obj.get("actionList",[]) or [];links=obj.get("actionLinkList",[]) or []
-   if oid in (1,19,22,27,30,72,74,84,92,93,96,195):
+   if oid in (1,12,19,22,27,30,33,55,71,72,74,84,85,91,92,93,96,195,200):
     picked=[]
     for ac in acts:
      if not isinstance(ac,dict):continue
@@ -70,14 +70,14 @@ def main():
       for key in ("switchVariableChange","objectCreate","actionExec","objectMove","objectLock"):
        v=cmd.get(key)
        if not isinstance(v,dict):continue
-       relevant=(oid in (22,27,30,195)) or (key=="switchVariableChange" and v.get("variableId") in (2003,2031,2044,2047)) or (key in ("objectCreate","actionExec") and v.get("objectId") in (1,19,27,74))
+       relevant=(oid in (22,27,30,195)) or (key=="switchVariableChange" and v.get("variableId") in (2,2003,2031,2038,2044,2047,2042,2022,2057)) or (key in ("objectCreate","actionExec") and v.get("objectId") in (1,19,27,74))
        if relevant:
         matched.append({"type":cmd.get("commandType"),"kind":key,"params":v})
      if matched:
       picked.append({"id":ac.get("id"),"name":ac.get("name"),"commands":matched})
     deep_targets[str(oid)]={"name":name,"action_count":len(acts),
        "selected_action_details":picked,
-       "links":links if oid in (27,72,93,195) else []}
+       "links":links if oid in (1,12,27,33,55,71,72,93,195,200) else []}
    ncommands=sum(len(x.get("objCommandList",[]) or []) for x in acts if isinstance(x,dict))
    all_actions+=len(acts);all_commands+=ncommands
    scalar=slim(obj)
