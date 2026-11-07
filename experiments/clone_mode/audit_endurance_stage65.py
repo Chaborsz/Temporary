@@ -54,12 +54,30 @@ def main():
  inventory=[];link_types=collections.Counter();ref_ids=collections.Counter();source_targets=collections.Counter()
  player_targets=collections.Counter();direct_global=collections.Counter();target_commands=collections.Counter()
  per_actor=[];spawned=collections.Counter();create_samples=[];script_examples=[];object_shapes={}
- all_actions=0;all_commands=0;enemy_player_ref=collections.Counter();players_name=[]
+ all_actions=0;all_commands=0;enemy_player_ref=collections.Counter();players_name=[];deep_targets={}
  with pr.open("rb") as f:
   for obj in recursive_objects(ijson.items(f,"objectList.item",use_float=False)):
    if not isinstance(obj,dict):continue
    oid=obj.get("id");name=str(obj.get("name",""))[:150]
    acts=obj.get("actionList",[]) or [];links=obj.get("actionLinkList",[]) or []
+   if oid in (1,19,22,27,30,74,84,92,96,195):
+    picked=[]
+    for ac in acts:
+     if not isinstance(ac,dict):continue
+     matched=[]
+     for cmd in ac.get("objCommandList",[]) or []:
+      if not isinstance(cmd,dict):continue
+      for key in ("switchVariableChange","objectCreate","actionExec","objectMove","objectLock"):
+       v=cmd.get(key)
+       if not isinstance(v,dict):continue
+       relevant=(oid in (22,27,30,195)) or (key=="switchVariableChange" and v.get("variableId") in (2003,2031,2044,2047)) or (key in ("objectCreate","actionExec") and v.get("objectId") in (1,19,27,74))
+       if relevant:
+        matched.append({"type":cmd.get("commandType"),"kind":key,"params":v})
+     if matched:
+      picked.append({"id":ac.get("id"),"name":ac.get("name"),"commands":matched})
+    deep_targets[str(oid)]={"name":name,"action_count":len(acts),
+       "selected_action_details":picked,
+       "links":links if oid in (27,195) else []}
    ncommands=sum(len(x.get("objCommandList",[]) or []) for x in acts if isinstance(x,dict))
    all_actions+=len(acts);all_commands+=ncommands
    scalar=slim(obj)
@@ -134,6 +152,7 @@ def main():
   "object_shapes":object_shapes,"native":native[:220],
   "link_types":link_types.most_common(35),
   "creation_examples":create_samples[:110],"script_examples":script_examples[:110]}
+ (out/"STAGE65_DEEP_ACTION_LINKS.json").write_text(json.dumps(deep_targets,indent=2,ensure_ascii=False,default=str),encoding="utf-8")
  (out/"STAGE65_CLASS_FEASIBILITY.json").write_text(json.dumps(summary,indent=2,ensure_ascii=False,default=str),encoding="utf-8")
  print("STAGE65_INPUT_VALID",json.dumps(summary["baseline"],ensure_ascii=False))
  print("STAGE65_INVENTORY objects",len(inventory),"actions",all_actions,"commands",all_commands)
