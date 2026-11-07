@@ -21,6 +21,19 @@ def classifier(k):
  if k in ("variableObjectId","switchObjectId"):return "player_scoped_variable_or_switch"
  if k=="assignVariableObjectId":return "right_hand_side_variable"
  return "other_player_reference"
+def recursive_objects(items):
+    """Visit project classes inside folders, without flattening their data."""
+    for root in items:
+        stack=[root]
+        while stack:
+            obj=stack.pop()
+            if not isinstance(obj,dict):
+                continue
+            yield obj
+            children=obj.get("children",[])
+            if isinstance(children,list):
+                stack.extend(reversed(children))
+
 def main():
  ap=argparse.ArgumentParser();ap.add_argument("--project",required=True);ap.add_argument("--out",required=True)
  opt=ap.parse_args();out=Path(opt.out);out.mkdir(exist_ok=True,parents=True)
@@ -32,7 +45,7 @@ def main():
       open(opt.project,"rb") as inp:
   wref=csv.DictWriter(fref,fieldnames=FIELDS);wref.writeheader()
   wcrit=csv.DictWriter(fcrit,fieldnames=CRIT_FIELDS);wcrit.writeheader()
-  for obj in ijson.items(inp,"objectList.item",use_float=False):
+  for obj in recursive_objects(ijson.items(inp,"objectList.item",use_float=False)):
    if not isinstance(obj,dict):continue
    oid=obj.get("id");oname=str(obj.get("name",""))[:130]
    for ac in obj.get("actionList",[]) or []:
