@@ -1,0 +1,40 @@
+name: Stage83 canonical inputs for independent object type audit
+on:
+  push:
+    paths:
+      - '.github/workflows/clone-stage83-inputs.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch original project release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p stage83-canonical
+          cp cheats/endurance/input/player.exe stage83-canonical/player.exe
+          gh release download fobs-build29-endurance-input --repo "$GITHUB_REPOSITORY" --pattern project_data.zip --dir stage83-canonical
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,zipfile
+          p=Path('stage83-canonical/player.exe')
+          assert hashlib.sha256(p.read_bytes()).hexdigest()=='02a59baab7a4c941f9a01f485082396d61e750a41dc955cff895bef5395441ea'
+          with zipfile.ZipFile('stage83-canonical/project_data.zip') as z:
+              h=hashlib.sha256()
+              with z.open('project_decrypted.json') as f:
+                  for b in iter(lambda:f.read(1<<20),b''):h.update(b)
+              assert h.hexdigest()=='2a19596ffc6e54c4651780ad9ee0ab37dc98d4b6a0a979d63ec2b32523e1af89'
+          print('EXACT_CANONICAL_INPUTS_PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage83-canonical-inputs-${{ github.run_id }}
+          path: stage83-canonical/
+          retention-days: 14
+          if-no-files-found: error
