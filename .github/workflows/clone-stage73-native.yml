@@ -1,0 +1,31 @@
+name: Stage73 native contact and effect routing audit
+on:
+  push:
+    paths:
+      - experiments/clone_mode/audit_stage73_native.py
+      - .github/workflows/clone-stage73-native.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install binary audit dependencies
+        run: python -m pip install -q pefile==2024.8.26 capstone==5.0.6
+      - name: Analyze canonical player.exe without execution
+        run: |
+          python experiments/clone_mode/audit_stage73_native.py
+          test -s analysis-results/clone-stage73-native/STAGE73_NATIVE_CALLS.json
+      - name: Upload native call graphs and disassembly
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clone-stage73-native-${{ github.run_id }}
+          path: analysis-results/clone-stage73-native
+          retention-days: 14
