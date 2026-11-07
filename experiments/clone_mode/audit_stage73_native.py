@@ -24,6 +24,8 @@ target={
 "object_change_dispatch":0x1401a0,
 "script_command_dispatch":0x149980,
 "link_variable_condition":0x153080,
+"check_link_condition":0x14ea00,
+"check_action_link_condition":0x13e0c0,
 "get_object_variable":0x6bee0,
 "get_object_state":0x12ffc0,
 "viewport_intersects":0x1bca60,
