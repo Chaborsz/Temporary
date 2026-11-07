@@ -65,4 +65,6 @@ with (OUT/"STAGE73_NATIVE_SUMMARY.md").open("w",encoding="utf-8") as f:
         for x in { (c['target_rva'],c['name']) for c in r['calls'] }:
             f.write(f"- {x[0]} {x[1]}\n")
         f.write("\n")
+checks=[{"rva":hex(rv),"name":name} for rv,name in sorted(exports.items()) if "checkLinkCondition" in name or "getCollision" in name or "getAttack" in name or "getDamaged" in name or "getHit" in name]
+(OUT/"STAGE73_CONDITION_EXPORTS.json").write_text(json.dumps(checks,indent=2,ensure_ascii=False),encoding="utf-8")
 print("STAGE73_NATIVE_AUDIT_PASS",len(reports))
