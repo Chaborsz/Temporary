@@ -20,6 +20,7 @@ def sym(rva):
 target={
 "exec_switch_variable":0x146470,
 "action_exec_dispatch":0x148530,
+"object_play_action":0x12fdf0,
 "object_change_dispatch":0x1401a0,
 "script_command_dispatch":0x149980,
 "link_variable_condition":0x153080,
