@@ -60,7 +60,7 @@ def main():
    if not isinstance(obj,dict):continue
    oid=obj.get("id");name=str(obj.get("name",""))[:150]
    acts=obj.get("actionList",[]) or [];links=obj.get("actionLinkList",[]) or []
-   if oid in (1,19,22,27,30,74,84,92,96,195):
+   if oid in (1,19,22,27,30,72,74,84,92,93,96,195):
     picked=[]
     for ac in acts:
      if not isinstance(ac,dict):continue
