@@ -77,4 +77,23 @@ checks=[{"rva":hex(rv),"name":name} for rv,name in sorted(exports.items()) if "c
 relevant=[{"rva":hex(rv),"name":name} for rv,name in sorted(exports.items()) if ("ObjectActionLinkCondition" in name or "SwitchVariable" in name or "getVariableValue" in name or "getVariableData" in name or "PlayerData" in name) and ("get" in name or "SwitchVariable" in name)]
 (OUT/"STAGE79_VARIABLE_CONDITION_EXPORTS.json").write_text(json.dumps(relevant,indent=2,ensure_ascii=False),encoding="utf-8")
 (OUT/"STAGE73_CONDITION_EXPORTS.json").write_text(json.dumps(checks,indent=2,ensure_ascii=False),encoding="utf-8")
+# Stage81: recover all E8 direct callers of object_play_action and condition checker,
+# and map to nearest public symbol, to distinguish auto action transitions from actionExec.
+import bisect
+callsites={}
+for label,rva in (("object_play_action",0x12fdf0),("condition",0x153080),("variable_cmd",0x146470)):
+  refs=[]
+  for section in pe.sections:
+    if not (section.Characteristics & 0x20000000):continue
+    start=section.VirtualAddress
+    raw=section.get_data()
+    for j in range(max(0,len(raw)-4)):
+      if raw[j]!=0xe8:continue
+      disp=struct.unpack_from('<i',raw,j+1)[0]
+      if start+j+5+disp==rva:
+        here=start+j
+        near=max((x for x in starts if x<=here),default=None)
+        refs.append({"call_rva":hex(here),"parent_name":sym(here),"function_start":hex(near) if near is not None else None,"distance":here-near if near is not None else None})
+  callsites[label]=refs
+(OUT/"STAGE81_CRITICAL_NATIVE_CALLERS.json").write_text(json.dumps(callsites,indent=2,ensure_ascii=False))
 print("STAGE73_NATIVE_AUDIT_PASS",len(reports))
