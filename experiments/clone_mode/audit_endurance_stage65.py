@@ -21,6 +21,19 @@ def sha(path):
  return h.hexdigest()
 def slim(obj,limit=500):
  return {str(k):v for k,v in list(obj.items())[:limit] if isinstance(v,(str,int,float,bool)) or v is None}
+def recursive_objects(items):
+    """Yield every object, including classes nested inside folder children."""
+    for root in items:
+        stack=[root]
+        while stack:
+            obj=stack.pop()
+            if not isinstance(obj,dict):
+                continue
+            yield obj
+            children=obj.get("children",[])
+            if isinstance(children,list):
+                stack.extend(reversed(children))
+
 def main():
  ap=argparse.ArgumentParser()
  ap.add_argument("--project",required=True);ap.add_argument("--exe",required=True);ap.add_argument("--output",required=True)
@@ -43,7 +56,7 @@ def main():
  per_actor=[];spawned=collections.Counter();create_samples=[];script_examples=[];object_shapes={}
  all_actions=0;all_commands=0;enemy_player_ref=collections.Counter();players_name=[]
  with pr.open("rb") as f:
-  for obj in ijson.items(f,"objectList.item",use_float=False):
+  for obj in recursive_objects(ijson.items(f,"objectList.item",use_float=False)):
    if not isinstance(obj,dict):continue
    oid=obj.get("id");name=str(obj.get("name",""))[:150]
    acts=obj.get("actionList",[]) or [];links=obj.get("actionLinkList",[]) or []
