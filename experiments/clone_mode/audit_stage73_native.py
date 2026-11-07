@@ -70,5 +70,7 @@ with (OUT/"STAGE73_NATIVE_SUMMARY.md").open("w",encoding="utf-8") as f:
             f.write(f"- {x[0]} {x[1]}\n")
         f.write("\n")
 checks=[{"rva":hex(rv),"name":name} for rv,name in sorted(exports.items()) if "checkLinkCondition" in name or "getCollision" in name or "getAttack" in name or "getDamaged" in name or "getHit" in name]
+relevant=[{"rva":hex(rv),"name":name} for rv,name in sorted(exports.items()) if ("ObjectActionLinkCondition" in name or "SwitchVariable" in name or "getVariableValue" in name or "getVariableData" in name or "PlayerData" in name) and ("get" in name or "SwitchVariable" in name)]
+(OUT/"STAGE79_VARIABLE_CONDITION_EXPORTS.json").write_text(json.dumps(relevant,indent=2,ensure_ascii=False),encoding="utf-8")
 (OUT/"STAGE73_CONDITION_EXPORTS.json").write_text(json.dumps(checks,indent=2,ensure_ascii=False),encoding="utf-8")
 print("STAGE73_NATIVE_AUDIT_PASS",len(reports))
