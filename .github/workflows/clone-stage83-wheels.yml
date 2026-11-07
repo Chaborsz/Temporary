@@ -1,0 +1,26 @@
+name: Stage83 local native analysis dependencies
+on:
+  push:
+    paths:
+      - '.github/workflows/clone-stage83-wheels.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  wheels:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Download exact analytical dependencies for offline CAAS
+        run: |
+          mkdir -p stage83-wheels
+          python -m pip download --disable-pip-version-check --only-binary=:all: --dest stage83-wheels pefile==2024.8.26 capstone==5.0.6 ijson==3.4.0
+          ls -lh stage83-wheels
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stage83-python-wheels-${{ github.run_id }}
+          path: stage83-wheels/
+          retention-days: 7
