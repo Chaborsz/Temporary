@@ -77,7 +77,7 @@ def main():
       picked.append({"id":ac.get("id"),"name":ac.get("name"),"commands":matched})
     deep_targets[str(oid)]={"name":name,"action_count":len(acts),
        "selected_action_details":picked,
-       "links":links if oid in (27,195) else []}
+       "links":links if oid in (27,72,93,195) else []}
    ncommands=sum(len(x.get("objCommandList",[]) or []) for x in acts if isinstance(x,dict))
    all_actions+=len(acts);all_commands+=ncommands
    scalar=slim(obj)
