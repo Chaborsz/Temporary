@@ -19,6 +19,9 @@ def sym(rva):
     return ("%s+0x%x"%(exports[lo],rva-lo)) if lo is not None and rva-lo<0x2000 else ""
 target={
 "exec_switch_variable":0x146470,
+"link_variable_condition":0x153080,
+"get_object_variable":0x6bee0,
+"get_object_state":0x12ffc0,
 "get_target_by_id":0x14d320,
 "get_target_by_group":0x14d270,
 "get_target_instance":0x14d420,
