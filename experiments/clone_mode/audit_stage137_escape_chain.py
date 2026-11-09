@@ -83,10 +83,10 @@ print("STAGE137_ESCAPE_COUNTS",json.dumps({"writers":sum(writer_by_owner.values(
 print("STAGE137_ESCAPE_OWNERS",json.dumps({"writes":writer_by_owner.most_common(30),"reads":read_by_owner.most_common(30),"conditions":cond_by_owner.most_common(30)},ensure_ascii=False))
 print("STAGE137_ESCAPE_NAME_MATCHES",json.dumps([x for x in report["objects"] if NAME.search(x["name"])][:85],ensure_ascii=False)[:12000])
 print("STAGE137_ESCAPE_DEFS",json.dumps(report["definitions"][:100],ensure_ascii=False)[:10000])
-for oid in (1,49,91,103,158,195,218,219,239):
-    print("STAGE137_ESCAPE_OWNER_WRITES",oid,json.dumps([x for x in report["writers"] if x["owner"]==oid][:18],ensure_ascii=False)[:9500])
-    print("STAGE137_ESCAPE_OWNER_READS",oid,json.dumps([x for x in report["readers"] if x["owner"]==oid][:18],ensure_ascii=False)[:9500])
-    print("STAGE137_ESCAPE_OWNER_LINKS",oid,json.dumps([x for x in report["link_conditions"] if x["owner"]==oid][:15],ensure_ascii=False)[:9500])
+for oid in (1,12,49,91,103,158,195,218,219,239):
+    print("STAGE137_ESCAPE_OWNER_WRITES",oid,json.dumps([x for x in report["writers"] if x["owner"]==oid][:18],ensure_ascii=False,default=str)[:9500])
+    print("STAGE137_ESCAPE_OWNER_READS",oid,json.dumps([x for x in report["readers"] if x["owner"]==oid][:18],ensure_ascii=False,default=str)[:9500])
+    print("STAGE137_ESCAPE_OWNER_LINKS",oid,json.dumps([x for x in report["link_conditions"] if x["owner"]==oid][:15],ensure_ascii=False,default=str)[:9500])
 out=Path("/tmp/clone-control/STAGE137_ESCAPE_CHAIN.json")
 out.write_text(json.dumps(report,ensure_ascii=False,indent=2,default=str))
 print("STAGE137_ESCAPE_AUDIT_PASS",out.stat().st_size)
