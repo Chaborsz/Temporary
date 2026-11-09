@@ -27,7 +27,7 @@ with p.open('rb') as f:
                  'changeType','objectChangeType','createType','newObjectId',
                  'afterObjectId','fromObjectId','toObjectId','objectIdBefore','objectIdAfter')
                  and isinstance(v,(str,bool,int,float))}
-          if any(isinstance(v,int) and not isinstance(v,bool) and v in target for v in rel.values()):
+          if any(isinstance(v,int) and not isinstance(v,bool) and v in target and k in ('objectId','targetObjectId','actionExecObjectId','newObjectId','afterObjectId','fromObjectId','toObjectId','objectIdBefore','objectIdAfter') for k,v in rel.items()):
             keyref=(str(oid),key)
             refs[keyref]+=1
             if len(transitions)<160:
