@@ -133,3 +133,5 @@ for _id in (72,103,158,195,218,219,239):
                  'linksOut':sum(1 for l in _obj.get('actionLinkList',[])
                         if l.get('typeIdPair',[[],[]])[0][1]==_aid)},ensure_ascii=False)[:650])
 print('STAGE134_CROSS_OBJECT_PASS')
+
+# Stage135: Build29 ABI getter symbol verification (read-only).
