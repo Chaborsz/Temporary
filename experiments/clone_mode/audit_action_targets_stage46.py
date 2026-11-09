@@ -135,3 +135,5 @@ for _id in (72,103,158,195,218,219,239):
 print('STAGE134_CROSS_OBJECT_PASS')
 
 # Stage135: Build29 ABI getter symbol verification (read-only).
+
+# Stage135: native getter offset matrix verification.
