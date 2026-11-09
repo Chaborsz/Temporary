@@ -65,3 +65,6 @@ print("STAGE46_PROJECT_ACTION_AUDIT_PASS")
 # Stage134: separate read-only native event chain audit using the same verified original inputs.
 import runpy
 runpy.run_path(str(Path(__file__).with_name('audit_stage134_full_chain.py')), run_name='__main__')
+
+# Stage134: native graph from physical contact transitions to resource/movement actions.
+runpy.run_path(str(Path(__file__).with_name('audit_stage134_link_graph.py')), run_name='__main__')
