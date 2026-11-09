@@ -1,0 +1,106 @@
+name: ShironoYakata DEMO native multi-clone x86 version.dll TEST
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [feature/shirono-native-multiclone]
+    paths:
+      - '.github/workflows/shirono-native-multiclone.yml'
+      - 'cheats/shirono/*.cpp'
+      - 'cheats/shirono/*.h'
+      - 'cheats/shirono/*.def'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shirono-native-multiclone
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 25
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+      - name: Build native x86 DLL and unit/proxy tests
+        shell: cmd
+        run: |
+          for /f "delims=" %%V in ('"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath') do @set "VSROOT=%%V"
+          if not defined VSROOT exit /b 1
+          call "%VSROOT%\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x64
+          if errorlevel 1 exit /b 2
+          mkdir cheats\shirono\dist
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /LD /Fe:cheats\shirono\dist\version.dll cheats\shirono\version_proxy.cpp /link /DEF:cheats\shirono\version_proxy.def /OUT:cheats\shirono\dist\version.dll
+          if errorlevel 1 exit /b 3
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /Fe:cheats\shirono\dist\test_policy.exe cheats\shirono\test_policy.cpp /link /SUBSYSTEM:CONSOLE
+          if errorlevel 1 exit /b 4
+          cl /nologo /std:c++17 /W4 /O2 /MT /EHsc /Fe:cheats\shirono\dist\proxy_smoke.exe cheats\endurance\dll\proxy_smoke.cpp /link /SUBSYSTEM:CONSOLE
+          if errorlevel 1 exit /b 5
+      - name: Verify demo SHA, trampoline preimage, import path and DLL exports
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          python -m pip install --disable-pip-version-check pefile==2024.8.26
+          $url='https://github.com/Chaborsz/Temporary/releases/download/ShironoYakata-DEMO/project_decrypted.7z'
+          curl.exe --fail --location --retry 5 --retry-delay 3 $url -o "$env:RUNNER_TEMP\project_decrypted.7z"
+          if($LASTEXITCODE -ne 0){throw 'Release download failed'}
+          $zip=(Get-FileHash "$env:RUNNER_TEMP\project_decrypted.7z" -Algorithm SHA256).Hash.ToLowerInvariant()
+          if($zip -ne '4266d91cbf13a90b6ffc04b1e0465fd0cf918ba44aa20ab272fb6b6c12cda85b'){throw "Bad release SHA: $zip"}
+          New-Item -ItemType Directory -Force "$env:RUNNER_TEMP\Shirono" | Out-Null
+          & 'C:\Program Files\7-Zip\7z.exe' x "$env:RUNNER_TEMP\project_decrypted.7z" "-o$env:RUNNER_TEMP\Shirono" -y
+          if($LASTEXITCODE -ne 0){throw '7-Zip extraction failed'}
+          @'
+          import pefile, hashlib, pathlib, os
+          exe=pathlib.Path(os.environ['RUNNER_TEMP'])/'Shirono/player.exe'
+          data=exe.read_bytes()
+          h=hashlib.sha256(data).hexdigest()
+          assert h=='d91263d4245e029dc0942c1f66bfde712dbc7aeb940737fc3515e48f4f0eb154',h
+          p=pefile.PE(data=data)
+          assert p.FILE_HEADER.Machine==0x14c,hex(p.FILE_HEADER.Machine)
+          assert p.OPTIONAL_HEADER.ImageBase==0x400000,hex(p.OPTIONAL_HEADER.ImageBase)
+          assert data[p.get_offset_from_rva(0x1284a0):][:5]==bytes.fromhex('55 8b ec 6a ff')
+          imports={m.dll.lower():set((x.name or b'').decode('ascii','replace') for x in m.imports) for m in p.DIRECTORY_ENTRY_IMPORT}
+          assert 'version.dll' in imports and {'VerQueryValueW','GetFileVersionInfoW','GetFileVersionInfoSizeW'}<=imports['version.dll']
+          dll=pefile.PE('cheats/shirono/dist/version.dll')
+          assert dll.is_dll() and dll.FILE_HEADER.Machine==0x14c
+          names={x.name.decode('ascii') for x in dll.DIRECTORY_ENTRY_EXPORT.symbols if x.name}
+          assert len(names)==10,names
+          assert {'VerQueryValueW','GetFileVersionInfoW','GetFileVersionInfoSizeW'}<=names
+          print('SHIRONO_EXACT_DEMO_SHA256_PASS')
+          print('SHIRONO_NATIVE_CREATE_PREIMAGE_PASS rva=0x1284a0')
+          print('SHIRONO_PE32_DLL_PROXY_EXPORTS_PASS',len(names))
+          '@ | python -
+          if($LASTEXITCODE -ne 0){throw 'PE identity and exports guard failed'}
+      - name: Run x86 policy tests and test actual system VERSION forwarding
+        shell: cmd
+        run: |
+          cd cheats\shirono\dist
+          test_policy.exe
+          if errorlevel 1 exit /b 2
+          proxy_smoke.exe
+          if errorlevel 1 exit /b 3
+      - name: Publish built DLL in the feature branch
+        if: success()
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- cheats/shirono/dist/version.dll
+          if(-not (git diff --cached --quiet)){
+            git commit -m 'Build verified Shirono native multiclone TEST x86 DLL'
+            git push origin HEAD:feature/shirono-native-multiclone
+            if($LASTEXITCODE -ne 0){throw 'Failed to publish DLL'}
+          }
+      - name: Upload experimental DLL and implementation notes
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ShironoYakata-Native-Multiclone-x86-TEST
+          path: |
+            cheats/shirono/dist/version.dll
+            cheats/shirono/README.md
+          retention-days: 30
+          if-no-files-found: error
