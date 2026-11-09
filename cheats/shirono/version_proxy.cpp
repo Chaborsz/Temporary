@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <cstring>
 #include <cwchar>
+#include <cstdint>
 #include "clone_policy.h"
 
 #pragma comment(lib, "advapi32.lib")
@@ -83,10 +84,17 @@ bool MatchExeHash() {
         BYTE bytes[65536];
         DWORD read = 0;
         bool good = true;
-        while (ReadFile(file, bytes, sizeof(bytes), &read, nullptr) && read) {
-            if (!CryptHashData(hash, bytes, read, 0)) {good = false; break;}
+        for (;;) {
+            if (!ReadFile(file, bytes, sizeof(bytes), &read, nullptr)) {
+                good = false;
+                break;
+            }
+            if (read == 0) break;
+            if (!CryptHashData(hash, bytes, read, 0)) {
+                good = false;
+                break;
+            }
         }
-        if (GetLastError() != ERROR_SUCCESS && read != 0) good = false;
         BYTE digest[32] = {};
         DWORD digestSize = sizeof(digest);
         if (good && CryptGetHashParam(hash, HP_HASHVAL, digest, &digestSize, 0) &&
