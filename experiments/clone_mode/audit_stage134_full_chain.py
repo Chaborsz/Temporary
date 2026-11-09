@@ -158,3 +158,42 @@ print("STAGE134_RVA_FINGERPRINTS",json.dumps(rv))
 out=ROOT/"STAGE134_EVENT_CHAIN_ORIGINAL.json"
 out.write_text(json.dumps(doc,ensure_ascii=False,indent=2,default=str),encoding="utf-8")
 print("STAGE134_COMPLETE_AUDIT_PASS","report_bytes",out.stat().st_size)
+
+# Stage135: locate exact named native exports for action and command IDs.
+n=struct.unpack_from("<I",exe,e_lfanew+24+96)[0] if False else 0
+def exports():
+    # PE32 optional header: export directory RVA,size at optional header+96
+    opt=e_lfanew+24
+    m=struct.unpack_from("<H",exe,opt)[0]
+    assert m==0x10b
+    exp_rva,exp_size=struct.unpack_from("<II",exe,opt+96)
+    def addr(ra):
+        for nm,base,size,ptr in sections:
+            if base<=ra<base+size:return ptr+ra-base
+        raise ValueError(hex(ra))
+    p=addr(exp_rva)
+    fields=struct.unpack_from("<IIHHIIIIIII",exe,p)
+    # IMAGE_EXPORT_DIRECTORY: 40 bytes
+    names_count=struct.unpack_from("<I",exe,p+24)[0]
+    names_rva=struct.unpack_from("<I",exe,p+32)[0]
+    ords_rva=struct.unpack_from("<I",exe,p+36)[0]
+    func_rva=struct.unpack_from("<I",exe,p+28)[0]
+    out=[]
+    for i in range(names_count):
+        nr=struct.unpack_from("<I",exe,addr(names_rva)+4*i)[0]
+        off=addr(nr)
+        end=exe.find(b"\x00",off,off+256)
+        if end<0:continue
+        name=exe[off:end].decode("latin1")
+        if not any(s in name for s in ("getId@ObjectAction","getId@ObjectCommand","getObjectActionData@ObjectAction",
+             "getVariableId@ObjectCommandSwitchVariableChangeData",
+             "getVariableObjectId@ObjectCommandSwitchVariableChangeData",
+             "getObjectId@ObjectCommandActionExecData",
+             "getActionId@ObjectCommandActionExecData",
+             "getTargetObjectId@ObjectCommandObjectMoveData",
+             "getTargettingType@ObjectCommandObjectMoveData")):continue
+        o=struct.unpack_from("<H",exe,addr(ords_rva)+2*i)[0]
+        rva=struct.unpack_from("<I",exe,addr(func_rva)+4*o)[0]
+        out.append((name,hex(rva),rva_bytes(rva,10)))
+    return out
+print("STAGE135_SYMBOLS",json.dumps(exports(),ensure_ascii=False))
