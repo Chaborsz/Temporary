@@ -145,3 +145,5 @@ runpy.run_path(str(Path(__file__).with_name('audit_stage137_escape_chain.py')), 
 
 # Stage138: original game ID143/158 cross-object and transformation audit.
 runpy.run_path(str(Path(__file__).with_name('audit_stage138_identity_regression.py')),run_name='__main__')
+
+# Stage138 strict object ID vs action ID regression cross-check.
