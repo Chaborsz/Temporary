@@ -61,3 +61,7 @@ with src.open("rb") as f:
   print("S46_COMMAND_SAMPLES",id,json.dumps(snippets[:12],ensure_ascii=False,default=str)[:8500])
   print("S46_LINK_SAMPLES",id,json.dumps(linkhits[:8],ensure_ascii=False,default=str)[:4600])
 print("STAGE46_PROJECT_ACTION_AUDIT_PASS")
+
+# Stage134: separate read-only native event chain audit using the same verified original inputs.
+import runpy
+runpy.run_path(str(Path(__file__).with_name('audit_stage134_full_chain.py')), run_name='__main__')
