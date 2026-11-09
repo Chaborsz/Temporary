@@ -197,3 +197,34 @@ def exports():
         out.append((name,hex(rva),rva_bytes(rva,10)))
     return out
 print("STAGE135_SYMBOLS",json.dumps(exports(),ensure_ascii=False))
+
+# Stage135 native selectors: get all getters for four command classes.
+names=("ObjectCommandSwitchVariableChangeData@data@agtk",
+       "ObjectCommandActionExecData@data@agtk",
+       "ObjectCommandObjectMoveData@data@agtk",
+       "ObjectCommandSwitchVariableResetData@data@agtk")
+def relevant_exports():
+    def offset(ra):
+        for nm,base,size,ptr in sections:
+            if base<=ra<base+size:return ptr+ra-base
+        raise ValueError(hex(ra))
+    opt=e_lfanew+24
+    base=offset(struct.unpack_from("<I",exe,opt+96)[0])
+    count=struct.unpack_from("<I",exe,base+24)[0]
+    func=offset(struct.unpack_from("<I",exe,base+28)[0])
+    nam=offset(struct.unpack_from("<I",exe,base+32)[0])
+    ords=offset(struct.unpack_from("<I",exe,base+36)[0])
+    out={}
+    for i in range(count):
+        nr=struct.unpack_from("<I",exe,nam+4*i)[0]
+        no=offset(nr)
+        end=exe.find(b"\x00",no,no+255)
+        if end<0:continue
+        name=exe[no:end].decode("latin1")
+        if not any(w in name for w in names) or not name.startswith("?get"):continue
+        o=struct.unpack_from("<H",exe,ords+2*i)[0]
+        rv=struct.unpack_from("<I",exe,func+4*o)[0]
+        if rv<exp_rva if False else False:pass
+        out[name]=[hex(rv),exe[offset(rv):offset(rv)+7].hex()]
+    return out
+print("STAGE135_COMMAND_GETTERS",json.dumps(relevant_exports(),ensure_ascii=False))
