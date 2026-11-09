@@ -61,7 +61,7 @@ jobs:
           assert p.FILE_HEADER.Machine==0x14c,hex(p.FILE_HEADER.Machine)
           assert p.OPTIONAL_HEADER.ImageBase==0x400000,hex(p.OPTIONAL_HEADER.ImageBase)
           assert data[p.get_offset_from_rva(0x1284a0):][:5]==bytes.fromhex('55 8b ec 6a ff')
-          imports={m.dll.lower():set((x.name or b'').decode('ascii','replace') for x in m.imports) for m in p.DIRECTORY_ENTRY_IMPORT}
+          imports={m.dll.decode('ascii','replace').lower():set((x.name or b'').decode('ascii','replace') for x in m.imports) for m in p.DIRECTORY_ENTRY_IMPORT}
           assert 'version.dll' in imports and {'VerQueryValueW','GetFileVersionInfoW','GetFileVersionInfoSizeW'}<=imports['version.dll']
           dll=pefile.PE('cheats/shirono/dist/version.dll')
           assert dll.is_dll() and dll.FILE_HEADER.Machine==0x14c
