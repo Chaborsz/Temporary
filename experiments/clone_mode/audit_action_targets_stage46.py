@@ -142,3 +142,6 @@ print('STAGE134_CROSS_OBJECT_PASS')
 runpy.run_path(str(Path(__file__).with_name('audit_stage137_escape_chain.py')), run_name='__main__')
 
 # Stage137 retry: escape HUD conditions and Decimal-compatible reporting.
+
+# Stage138: original game ID143/158 cross-object and transformation audit.
+runpy.run_path(str(Path(__file__).with_name('audit_stage138_identity_regression.py')),run_name='__main__')
