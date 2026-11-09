@@ -137,3 +137,6 @@ print('STAGE134_CROSS_OBJECT_PASS')
 # Stage135: Build29 ABI getter symbol verification (read-only).
 
 # Stage135: native getter offset matrix verification.
+
+# Stage137: read-only trace of escape control, UI and ID2031.
+runpy.run_path(str(Path(__file__).with_name('audit_stage137_escape_chain.py')), run_name='__main__')
