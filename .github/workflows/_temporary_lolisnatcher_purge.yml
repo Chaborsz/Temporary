@@ -1,0 +1,59 @@
+name: One-time cleanup of LoliSnatcher GitHub resources
+on:
+  push:
+    paths:
+      - '.github/workflows/_temporary_lolisnatcher_purge.yml'
+permissions:
+  contents: write
+  actions: write
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Remove only LoliSnatcher release, tag, branch and prior workflow runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          tag='lolisnatcher-windows-trueportable-2.5.2-5219'
+          branch='lolisnatcher-canonical-v8'
+          release_id='416762938'
+          echo 'PURGE_START'
+          if gh api "repos/$repo/releases/$release_id" >/dev/null 2>&1; then
+            gh api -X DELETE "repos/$repo/releases/$release_id"
+            echo 'LOLI_RELEASE_DELETED'
+          else
+            echo 'LOLI_RELEASE_ALREADY_ABSENT'
+          fi
+          if gh api "repos/$repo/git/ref/tags/$tag" >/dev/null 2>&1; then
+            gh api -X DELETE "repos/$repo/git/refs/tags/$tag"
+            echo 'LOLI_TAG_DELETED'
+          else
+            echo 'LOLI_TAG_ALREADY_ABSENT'
+          fi
+          if gh api "repos/$repo/branches/$branch" >/dev/null 2>&1; then
+            gh api -X DELETE "repos/$repo/git/refs/heads/$branch"
+            echo 'LOLI_BRANCH_DELETED'
+          else
+            echo 'LOLI_BRANCH_ALREADY_ABSENT'
+          fi
+          # Only exact LoliSnatcher v7/v8 workflows; never touch other projects.
+          workflow_ids=$(gh api "repos/$repo/actions/workflows?per_page=100" --paginate \
+            --jq '.workflows[] | select(.path | test("lolisnatcher-windows-portable-v(7|8)\\.yml$")) | .id' || true)
+          for id in $workflow_ids; do
+            run_ids=$(gh api "repos/$repo/actions/workflows/$id/runs?per_page=100" --paginate \
+              --jq '.workflow_runs[].id' || true)
+            removed=0
+            for run_id in $run_ids; do
+              if gh api -X DELETE "repos/$repo/actions/runs/$run_id" >/dev/null 2>&1; then
+                removed=$((removed + 1))
+              else
+                echo "WORKFLOW_RUN_DELETE_FAILED workflow=$id run=$run_id"
+              fi
+            done
+            echo "LOLI_WORKFLOW_RUNS_DELETED workflow=$id count=$removed"
+          done
+          echo 'PURGE_COMPLETE'
