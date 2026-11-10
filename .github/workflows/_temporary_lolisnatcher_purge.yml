@@ -40,20 +40,22 @@ jobs:
           else
             echo 'LOLI_BRANCH_ALREADY_ABSENT'
           fi
-          # Only exact LoliSnatcher v7/v8 workflows; never touch other projects.
-          workflow_ids=$(gh api "repos/$repo/actions/workflows?per_page=100" --paginate \
-            --jq '.workflows[] | select(.path | test("lolisnatcher-windows-portable-v(7|8)\\.yml$")) | .id' || true)
-          for id in $workflow_ids; do
-            run_ids=$(gh api "repos/$repo/actions/workflows/$id/runs?per_page=100" --paginate \
-              --jq '.workflow_runs[].id' || true)
-            removed=0
-            for run_id in $run_ids; do
-              if gh api -X DELETE "repos/$repo/actions/runs/$run_id" >/dev/null 2>&1; then
-                removed=$((removed + 1))
-              else
-                echo "WORKFLOW_RUN_DELETE_FAILED workflow=$id run=$run_id"
-              fi
-            done
-            echo "LOLI_WORKFLOW_RUNS_DELETED workflow=$id count=$removed"
+          # Enumerate all past runs before deleting any (stable pagination).
+          # Match only LoliSnatcher jobs, including historical fallback/unlock jobs.
+          run_ids=$(gh api "repos/$repo/actions/runs?per_page=100" --paginate \
+            --jq '.workflow_runs[] | select(.name | test("LoliSnatcher"; "i")) | .id')
+          removed=0
+          failed=0
+          for run_id in $run_ids; do
+            if [ "$run_id" = "$GITHUB_RUN_ID" ]; then
+              continue
+            fi
+            if gh api -X DELETE "repos/$repo/actions/runs/$run_id" >/dev/null 2>&1; then
+              removed=$((removed + 1))
+            else
+              echo "HISTORICAL_LOLI_RUN_DELETE_FAILED id=$run_id"
+              failed=$((failed + 1))
+            fi
           done
+          echo "HISTORICAL_LOLI_RUNS_DELETED=$removed FAILED=$failed"
           echo 'PURGE_COMPLETE'
