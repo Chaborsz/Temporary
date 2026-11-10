@@ -228,3 +228,30 @@ def relevant_exports():
         out[name]=[hex(rv),exe[offset(rv):offset(rv)+7].hex()]
     return out
 print("STAGE135_COMMAND_GETTERS",json.dumps(relevant_exports(),ensure_ascii=False))
+
+# Stage144 original Build29 exported condition getter accessors (read-only).
+COND_SUB="ObjectActionLinkConditionSwitchVariableChangedData@data@agtk"
+def condition_exports():
+    def off(ra):
+        for nm,b,sz,p in sections:
+            if b<=ra<b+sz:return p+ra-b
+        raise KeyError(hex(ra))
+    base=e_lfanew+24
+    erva,esz=struct.unpack_from("<II",exe,base+96)
+    d=off(erva)
+    n=struct.unpack_from("<I",exe,d+24)[0]
+    funcs=off(struct.unpack_from("<I",exe,d+28)[0])
+    names=off(struct.unpack_from("<I",exe,d+32)[0])
+    ords=off(struct.unpack_from("<I",exe,d+36)[0])
+    result={}
+    for i in range(n):
+        r=struct.unpack_from("<I",exe,names+4*i)[0];start=off(r)
+        end=exe.find(b'\x00',start,start+255)
+        if end<0:continue
+        name=exe[start:end].decode("latin1")
+        if COND_SUB not in name or not name.startswith("?get"):continue
+        idx=struct.unpack_from("<H",exe,ords+2*i)[0]
+        adr=struct.unpack_from("<I",exe,funcs+4*idx)[0]
+        result[name]=[hex(adr),exe[off(adr):off(adr)+10].hex()]
+    return result
+print("STAGE144_CONDITION_GETTERS",json.dumps(condition_exports()))
